@@ -416,7 +416,15 @@ struct ConstitutiveIntegrator_t {
       return(kc);
     }
   }
+  #else
+  double* ComputeAutodiffPoromechanicalMatrixByFEM(int const& e_mech) {
+    printf("ComputeAutodiffPoromechanicalMatrixByFEM: not available!");
+    exit(0);
+    return(NULL);
+  }
+  #endif
 
+  #if defined HAVE_AUTODIFF
   double* ComputeAutodiffMassConservationMatrixByFEM(void) {
     int neq = Element_GetNbOfEquations(_el);
     int ndif = neq;
@@ -468,6 +476,12 @@ struct ConstitutiveIntegrator_t {
       return(kc);
     }
   }
+  #else
+  double* ComputeAutodiffMassConservationMatrixByFEM(void) {
+    printf("ComputeAutodiffMassConservationMatrixByFEM: not available!");
+    exit(0);
+    return(NULL);
+  }
   #endif
 
   /* Compute matrices by FVM */
@@ -506,6 +520,12 @@ struct ConstitutiveIntegrator_t {
       
       return(km);
     }
+  }
+  #else
+  double* ComputeAutodiffMassConservationMatrixByFVM(void) {
+    printf("ComputeAutodiffMassConservationMatrixByFVM: not available!");
+    exit(0);
+    return(NULL);
   }
   #endif
 
