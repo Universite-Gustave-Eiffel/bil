@@ -1,0 +1,117 @@
+/* Source:
+ *
+ * B. Lothenbach, D.A Kulik, T. Matschei, M. Balonis, L. Baquerizo, B. Dilnesa, G.D. Miron, R.J. Myers,
+ * Cemdata18: A chemical thermodynamic database for hydrated Portland cements and alkali-activated materials,
+ * Cement and Concrete Research 115 (2019) 472–506.
+ */
+ 
+/* Data from table B1 (page 491)
+ *
+ * Master species
+ * --------------
+ * 
+ * The solution primary master species are (15):
+ * 
+ * H2O[0]  , H[+]   , e[−] (electron)
+ * AlO2[−] , Ca[+2] , CO3[−2] , Cl[−] , FeO2[−] , Mg[+2]
+ * NO3[−]  , K[+]   , SiO2[0] , Na[+] , Sr[+2]  , SO4[−2]
+ * 
+ * The solution secondary master species are (9):
+ * 
+ * H2[0]  , O2[0]
+ * CH4[0] , ClO4[-] , NH4[+] , N2[0] , HS[-] , S2O3[-2] , SO3[-2]
+ *
+ *
+ * Solution species
+ * ----------------
+ * 
+ * electron:  e[-]
+ * 
+ * Hydrogen-Oxygen: H[+] , H2O[0] , OH[-] , H2[0] , O2[0]
+ * 
+ * Compound of type I
+ * -------------------
+ * Aluminium: AlO2[-] , Al[+3]   , AlO[+]   , AlOH[+2] , AlO2H[0]
+ * Calcium:   Ca[+2]  , CaOH[+]
+ * Carbon:    CO3[-2] , CO2[0]   , HCO3[-]  , CH4[0]
+ * Clorine:   Cl[-]   , ClO4[-]
+ * Iron:      FeO2[-] , Fe[+2]   , Fe[+3]   , FeO[+]   ,  FeO2H[0] , FeOH[+] , Fe(OH)2[+2] , Fe3(OH)4[+5]
+ * Magnesium: Mg[+2]  , MgOH[+]
+ * Nitrogen:  NO3[-]  , N2[0]    , NH3[0]   , NH4[+]
+ * Potassium: K[+]    , KOH[0]
+ * Silicon:   SiO2[0] , SiO3[-2] , HSiO3[-] , Si4O10[-4]
+ * Sodium:    Na[+]   , NaOH[0]
+ * Strontium: Sr[+2]  , SrOH[+]
+ * Sulfur:    SO4[-2] , SO3[-2]  , HSO4[-]  , HSO3[-]  , S[-2] , S2O3[-2] , HS[-]
+ * 
+ * 
+ * Compound of type II
+ * --------------------
+ * Aluminium-Silicon: AlSiO5[-3] , AlHSiO3[+2]
+ * Aluminium-Sulfur:  AlSO4[+]   , Al(SO4)2[-]
+ * Calcium-Carbon:    CaCO3[0]   , CaHCO3[+]
+ * Calcium-Silicon:   CaHSiO3[+] , CaSiO3[0]
+ * Calcium-Sulfur:    CaSO4[0]
+ * Iron-Carbon:       FeCO3[0]   , FeHCO3[+]
+ * Iron-Chlorine:     FeCl[+]    , FeCl[+2]   , FeCl2[+] , FeCl3[0]
+ * Iron-Silicon:      FeHSiO3[+2]
+ * Iron-Sulfur:       FeHSO4[+]  , FeSO4[0]   , FeSO4[+] , Fe(SO4)2[-]
+ * Magnesium-Carbon:  MgCO3[0]   , MgHCO3[-]
+ * Magnesium-Silicon: MgHSiO3[+] , MgSiO3[0]
+ * Magnesium-Sulfur:  MgSO4[0]
+ * Potassium-Sulfur:  KSO4[-]
+ * Sodium-Carbon:     NaCO3[-]   , NaHCO3[0]
+ * Sodium-Sulfur:     NaSO4[-]
+ * Strontium-Carbon:  SrCO3[0]   , SrHCO3[+]
+ * Strontium-Silicon: SrSiO3[0]
+ * Strontium-Sulfur:  SrSO4[0]
+ * 
+ * Coumpound of type III
+ * ---------------------
+ * Sulfur-Carbon-Nitrogen: SCN[-]
+ */
+  
+  
+/* Data from table B2 (page 493)
+ *
+ * Solid phases
+ * ------------
+ *
+ * Compound of type I:
+ * ===================
+ 
+ * Hydroxides:
+ * -----------
+ * Aluminium: AlOHmic (AH3)
+ * Calcium:   Portlandite (CH) 
+ * Silicon:   Amor-Sl (S)
+ *
+ * Compound of type II:
+ * ====================
+ 
+ * Sulfates:
+ * ---------
+ * Calcium-Sulfur: Gypsum (CSH2)
+ 
+ * Calcium aluminate hydrates:
+ * ---------------------------
+ * Calcium-Aluminium: C3AH6 , C2AH8 , CAH10
+ *
+ * Calcium carbonate:
+ * ------------------
+ * Calcium-Carbon: Calcite (CaCO3)
+ *
+ * Compound of type III:
+ * =====================
+ * AFm phases (C3(A,F).CaX.Hn with X = SO4,CO3,(OH)2,Cl2,...):
+ * -----------------------------------------------------------
+ * Aluminium-Calcium-Sulfur: monosulphate12 (Ca4Al2SO10(H2O)12)
+ * Aluminium-Calcium-Chlorine: (Friedel's salt) C4AClH10 (Ca4Al2Cl2(OH)12(H2O)4)
+ * Aluminium-Calcium-(ChlorineSulfur): (Kuzel's salt) C4AsClH12  (Ca4Al2Cl(SO4)0.5(OH)12(H2O)6)
+ *
+ * AFt phases (C3(A,F).3(CaX).Hn with X = SO4,CO3,(OH)2,Cl2,...):
+ * --------------------------------------------------------------
+ * Aluminium-Calcium-Sulfur: ettringite ((H2O)2Ca6Al2(SO4)3(OH)12(H2O)24))
+ *
+ *
+ */

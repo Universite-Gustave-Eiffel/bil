@@ -226,7 +226,7 @@ _INLINE_ void (HardenedCementChemistry_UpdateChemicalConstants)(HardenedCementCh
   /* Some solubility product constants */
   #define LogKd(R) Log10DissociationConstantOfCementHydrationProduct(R,temp)
   double logk_ch       = LogKd(CH__Ca_2OH) ;
-  double logk_sh       = LogKd(S_2H2O__H4SiO4) ;
+  double logk_sh       = LogKd(S__SiO2) ;
   double logk_csh2     = LogKd(CSH2__Ca_SO4_2H2O) ;
   double logk_ah3      = LogKd(AH3__2Al_6OH) ;
   double logk_afm      = LogKd(AFm_12H__4Ca_2Al_SO4_18H2O) ;
@@ -235,7 +235,7 @@ _INLINE_ void (HardenedCementChemistry_UpdateChemicalConstants)(HardenedCementCh
   double logk_c2ah8    = LogKd(C2AH8__2Ca_2AlO4H4_2OH_3H2O) ;
   double logk_cah10    = LogKd(CAH10__Ca_2AlO4H4_6H2O) ;
   double logk_friedelsalt  = LogKd(FriedelSalt__4Ca_2AlO4H4_2Cl_4OH_4H2O) ;
-  double logk_kuzelsalt    = LogKd(KuzelSalt__4Ca_2AlO4H4_Cl_halfSO4_4OH_6H2O) ;
+  double logk_kuzelsalt    = LogKd(KuzelSalt__4Ca_2AlO4H4_Cl_0d5SO4_4OH_6H2O) ;
   #undef LogKd
   
   #define LogKd(R) Log10DissociationConstantOfCalciumCarbonate(R,temp)
@@ -248,24 +248,26 @@ _INLINE_ void (HardenedCementChemistry_UpdateChemicalConstants)(HardenedCementCh
   #define LogKr(R) Log10EquilibriumConstantOfHomogeneousReactionInWater(R,temp)
   double logk_h2o      = LogKr(H2O__H_OH) ;
   /* Carbon compounds */
-  double logk_h2co3    = LogKr(H2CO3__CO2_H2O) ;
-  double logk_hco3     = LogKr(HCO3_H2O__H2CO3_OH) ;
+  //double logk_h2co3    = LogKr(H2CO3__CO2_H2O) ;
+  //double logk_hco3     = LogKr(HCO3_H2O__H2CO3_OH) ;
+  double logk_hco3     = LogKr(HCO3__CO2_OH) ;
   double logk_co3      = LogKr(CO3_H2O__HCO3_OH) ;
   /* Sulfur compounds */
   double logk_h2so4    = LogKr(H2SO4__HSO4_H) ;
   double logk_hso4     = LogKr(HSO4__SO4_H) ;
   #undef LogKr
 
-  double loga_co2eq = logk_cc - logk_ch + logk_co3 + logk_hco3 + logk_h2co3 + loga_h2o ;
+  //double loga_co2eq = logk_cc - logk_ch + logk_co3 + logk_hco3 + logk_h2co3 + loga_h2o ;
+  double loga_co2eq = logk_cc - logk_ch + logk_co3 + logk_hco3 + loga_h2o ;
   
   double loga_h2so4eq = logk_csh2 - logk_ch + 2*logk_h2o - logk_hso4 - logk_h2so4 ;
   
   
   /* Backup */
-  SetLogKsp(CH,logk_ch) ;
-  SetLogKsp(SH,logk_sh) ;
-  SetLogKsp(CC,logk_cc) ;
-  SetLogKsp(CSH2,logk_csh2) ;
+  SetLogKsp(Portlandite,logk_ch) ;
+  SetLogKsp(AmSilica,logk_sh) ;
+  SetLogKsp(Calcite,logk_cc) ;
+  SetLogKsp(Gypsum,logk_csh2) ;
   SetLogKsp(AH3,logk_ah3) ;
   SetLogKsp(AFm,logk_afm) ;
   SetLogKsp(AFt,logk_aft) ;
@@ -415,9 +417,9 @@ _INLINE_ void (HardenedCementChemistry_ComputeSystem_CaO_SiO2_Na2O_K2O_H2O)(Hard
     T loga_k   = Input(LogA_K) ;
     T loga_oh  = Input(LogA_OH) ;
     /* The IAP of CH, SH */
-    T logk_ch    = LogKsp(CH) ;
+    T logk_ch    = LogKsp(Portlandite) ;
     T logq_ch    = logs_ch + logk_ch ;
-    T logk_sh    = LogKsp(SH) ;
+    T logk_sh    = LogKsp(AmSilica) ;
     T logq_sh    = logs_sh + logk_sh ;
   
     CementSolutionChemistry_SetInput(csc,LogQ_CH,logq_ch) ;
@@ -488,9 +490,9 @@ _INLINE_ void (HardenedCementChemistry_ComputeSystem_CaO_SiO2_Na2O_K2O_Al2O3_H2O
     T loga_k     = Input(LogA_K) ;
     T loga_oh    = Input(LogA_OH) ;
     /* The IAP of CH, SH, AH3 */
-    T logk_ch    = LogKsp(CH) ;
+    T logk_ch    = LogKsp(Portlandite) ;
     T logq_ch    = logs_ch + logk_ch ;
-    T logk_sh    = LogKsp(SH) ;
+    T logk_sh    = LogKsp(AmSilica) ;
     T logq_sh    = logs_sh + logk_sh ;
     T logk_ah3   = LogKsp(AH3) ;
     T logq_ah3   = logs_ah3 + logk_ah3 ;
@@ -641,7 +643,7 @@ _INLINE_ void (HardenedCementChemistry_ComputeSystem_CaO_SiO2_Na2O_K2O_Cl_H2O)(H
     double temp = HardenedCementChemistry_GetRoomTemperature(hcc) ;
     T s_ch       = HardenedCementChemistry_GetSaturationIndexOf(hcc,CH) ;
     T logs_ch    = log(s_ch) ;
-    T logk_ch    = LogKsp(CH) ;
+    T logk_ch    = LogKsp(Portlandite) ;
     T logq_ch    = logk_ch + logs_ch ;
     T logk_c3ah6 = LogKsp(C3AH6) ;
     T logk_ah3   = LogKsp(AH3) ;
@@ -708,9 +710,9 @@ _INLINE_ void (HardenedCementChemistry_ComputeSystem_CaO_SiO2_Na2O_K2O_CO2_H2O_0
     T loga_k   = Input(LogA_K) ;
     T loga_oh  = Input(LogA_OH) ;
     /* The IAP of CH, SH */
-    T logk_ch    = LogKsp(CH) ;
+    T logk_ch    = LogKsp(Portlandite) ;
     T logq_ch    = logs_ch + logk_ch ;
-    T logk_sh    = LogKsp(SH) ;
+    T logk_sh    = LogKsp(AmSilica) ;
     T logq_sh    = logs_sh + logk_sh ;
   
     CementSolutionChemistry_SetInput(csc,LogQ_CH,logq_ch) ;
@@ -796,7 +798,7 @@ _INLINE_ void (HardenedCementChemistry_ComputeSystem_CaO_SiO2_Na2O_K2O_CO2_Cl_H2
     double temp = HardenedCementChemistry_GetRoomTemperature(hcc) ;
     T s_ch       = HardenedCementChemistry_GetSaturationIndexOf(hcc,CH) ;
     T logs_ch    = log(s_ch) ;
-    T logk_ch    = LogKsp(CH) ;
+    T logk_ch    = LogKsp(Portlandite) ;
     T logq_ch    = logk_ch + logs_ch ;
     T logk_c3ah6 = LogKsp(C3AH6) ;
     T logk_ah3   = LogKsp(AH3) ;
@@ -845,9 +847,9 @@ _INLINE_ void (HardenedCementChemistry_ComputeSystem_CaO_SiO2_Na2O_K2O_Al2O3_CO2
     T loga_k     = Input(LogA_K) ;
     T loga_oh    = Input(LogA_OH) ;
     /* The IAP of CH, SH, AH3 */
-    T logk_ch    = LogKsp(CH) ;
+    T logk_ch    = LogKsp(Portlandite) ;
     T logq_ch    = logs_ch + logk_ch ;
-    T logk_sh    = LogKsp(SH) ;
+    T logk_sh    = LogKsp(AmSilica) ;
     T logq_sh    = logs_sh + logk_sh ;
     T logk_ah3   = LogKsp(AH3) ;
     T logq_ah3   = logs_ah3 + logk_ah3 ;
@@ -1029,9 +1031,9 @@ _INLINE_ void (HardenedCementChemistry_ComputeSystem_CaO_SiO2_Na2O_K2O_SO3_H2O_0
   {
     CementSolutionChemistry_t<T>* csc = HardenedCementChemistry_GetCementSolutionChemistry(hcc) ;
     /* The IAP of CH, SH */
-    T logk_ch    = LogKsp(CH) ;
+    T logk_ch    = LogKsp(Portlandite) ;
     T logq_ch    = logs_ch + logk_ch ;
-    T logk_sh    = LogKsp(SH) ;
+    T logk_sh    = LogKsp(AmSilica) ;
     T logq_sh    = logs_sh + logk_sh ;
     T loga_na    = Input(LogA_Na) ;
     T loga_k     = Input(LogA_K) ;
@@ -1084,7 +1086,7 @@ _INLINE_ void (HardenedCementChemistry_ComputeSystem_CaO_SiO2_Na2O_K2O_SO3_H2O_0
     T loga_ca   = CementSolutionChemistry_GetLogActivityOf(csc,Ca) ;
     T loga_so4  = CementSolutionChemistry_GetLogActivityOf(csc,SO4) ;
     T loga_h2o  = 0 ;
-    T logk_csh2 = LogKsp(CSH2) ;
+    T logk_csh2 = LogKsp(Gypsum) ;
     T logs_csh2 = loga_ca + loga_so4 + 2*loga_h2o - logk_csh2 ;
     T s_csh2    = pow(10,logs_csh2) ;
     
@@ -1160,9 +1162,9 @@ _INLINE_ void (HardenedCementChemistry_ComputeSystem_CaO_SiO2_Na2O_K2O_SO3_Al2O3
     T loga_k     = Input(LogA_K) ;
     T loga_oh    = Input(LogA_OH) ;
     /* The IAP of CH, SH, AH3 */
-    T logk_ch    = LogKsp(CH) ;
+    T logk_ch    = LogKsp(Portlandite) ;
     T logq_ch    = logs_ch + logk_ch ;
-    T logk_sh    = LogKsp(SH) ;
+    T logk_sh    = LogKsp(AmSilica) ;
     T logq_sh    = logs_sh + logk_sh ;
     T logk_ah3   = LogKsp(AH3) ;
     T logq_ah3   = logs_ah3 + logk_ah3 ;
@@ -1223,7 +1225,7 @@ _INLINE_ void (HardenedCementChemistry_ComputeSystem_CaO_SiO2_Na2O_K2O_SO3_Al2O3
     T loga_h2o    = CementSolutionChemistry_GetLogActivityOf(csc,H2O) ;
     
     T logq_csh2  = loga_ca + loga_so4 + 2*loga_h2o ;
-    T logk_csh2  = LogKsp(CSH2) ;
+    T logk_csh2  = LogKsp(Gypsum) ;
     T logs_csh2  = logq_csh2 - logk_csh2 ;
     T s_csh2     = pow(10,logs_csh2) ;
     

@@ -14,6 +14,7 @@ Mesh
 Material
 Model = Fick
 porosity = 0.379 
+d_solute = 13.34e-10
 
 
 

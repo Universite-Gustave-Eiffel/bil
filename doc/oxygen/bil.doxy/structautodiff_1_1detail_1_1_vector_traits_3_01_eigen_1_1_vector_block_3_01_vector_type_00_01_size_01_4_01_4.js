@@ -1,0 +1,5 @@
+var structautodiff_1_1detail_1_1_vector_traits_3_01_eigen_1_1_vector_block_3_01_vector_type_00_01_size_01_4_01_4 =
+[
+    [ "ReplaceValueType", "structautodiff_1_1detail_1_1_vector_traits_3_01_eigen_1_1_vector_block_3_01_vector_type_00_01_size_01_4_01_4.html#ad6a7b59d8fe7eaecbbcbaffd67d004da", null ],
+    [ "ValueType", "structautodiff_1_1detail_1_1_vector_traits_3_01_eigen_1_1_vector_block_3_01_vector_type_00_01_size_01_4_01_4.html#af30e9dcb5efe362cbe665ba1ea3cae27", null ]
+];

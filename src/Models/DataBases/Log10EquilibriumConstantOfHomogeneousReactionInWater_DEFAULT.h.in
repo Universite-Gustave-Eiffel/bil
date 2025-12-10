@@ -59,20 +59,31 @@
 /* Ca(OH)2[0] = Ca[2+] + 2OH[-] (to be removed because Ca(OH)2[0] seems not be there) */
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_CaO2H2__Ca_2OH(T) \
         (0)
-
-/* Ca[2+] + H2O = CaOH[+] + H[+] */ /* thermodem */
-#define Log10EquilibriumConstantOfHomogeneousReactionInWater_Ca_H2O__CaOH_H(T) \
-        TemperatureDependenceOfLog10EquilibriumConstant(T,1.3130E02,2.1418E-02,-1.0190E04,-4.8225E01,2.7033E05)
+        
+/* Ca[2+] + 2OH[-] = Ca(OH)2[0] (to be removed because Ca(OH)2[0] seems not be there) */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_Ca_2OH__CaO2H2(T) \
+        (0)
 
 /* CaOH[+] + H[+] = Ca[2+] + H2O */ /* thermodem */
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_CaOH_H__Ca_H2O(T) \
         TemperatureDependenceOfLog10EquilibriumConstant(T,-1.3130E02,-2.1418E-02,1.0190E04,4.8225E01,-2.7033E05)
+        
+/* To be compared with Cemdata18 -> ok */
+
+/* Ca[2+] + H2O[0] = CaOH[+] + H[+] */ /* thermodem */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_Ca_H2O__CaOH_H(T) \
+        (-Log10EquilibriumConstantOfHomogeneousReactionInWater_CaOH_H__Ca_H2O(T)) \
+
 
 
 /* Silicon compounds */
 
 /* H3SiO4[-] + OH[-] = H2SiO4[2-] + H2O */
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_H3SiO4_OH__H2SiO4_H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_293(T,0.691186,5.069842E-02,-1.5903388E+04,-1.022445E+02,1.119669E+06)
+
+/* HSiO3[-] + OH[-] = SiO3[2-] + H2O (the same as above, to be checked) */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_HSiO3_OH__SiO3_H2O(T) \
         TemperatureDependenceOfLog10EquilibriumConstant_293(T,0.691186,5.069842E-02,-1.5903388E+04,-1.022445E+02,1.119669E+06)
 
 /* H3SiO4[-] + H2O = H4SiO4[0] + OH[-] */
@@ -88,6 +99,21 @@
         TemperatureDependenceOfLog10EquilibriumConstant_293(T,-9.88883,0,-1.337205E+03,0,0)
 
 
+/* To be compared with Cemdata18 */
+
+/* SiO2[0] + H2O[0] = HSiO3[-] + H[+] (to be checked)  */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_SiO2_H2O__HSiO3_H(T) \
+        Log10EquilibriumConstantOfHomogeneousReactionInWater_H4SiO4__H3SiO4_H(T)
+
+
+/* SiO2[0] + H2O[0] = SiO3[2-] + 2H[+] (to be checked)  */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_SiO2_H2O__SiO3_2H(T) \
+        (Log10EquilibriumConstantOfHomogeneousReactionInWater_SiO2_H2O__HSiO3_H(T) \
+        +Log10EquilibriumConstantOfHomogeneousReactionInWater_HSiO3_OH__SiO3_H2O(T) \
+        +Log10EquilibriumConstantOfHomogeneousReactionInWater_H2O__H_OH(T))
+
+
+
 /* Sodium compounds */
 
 /* NaOH[0] = Na[+] + OH[-] */
@@ -97,6 +123,9 @@
 /* NaOH[0] + H[+] = Na[+] + H2O */ /*  (ref [3]) */
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_NaOH_H__Na_H2O(T) \
         TemperatureDependenceOfLog10EquilibriumConstant(T,-40.0224,0,4902.5816,15.3,0)
+        
+
+/* To be compared with Cemdata18 -> ok */
 
 /* Na[+] + H2O = NaOH[0] + H[+] */ /* (ref [3]) */
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_Na_H2O__NaOH_H(T) \
@@ -109,13 +138,16 @@
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_KOH__K_OH(T) \
         (0.46)
 
-/*KOH[0] + H[+] = K[+] + H2O */ /* (ref [3]) */
+/*KOH[0] + H[+] = K[+] + H2O */
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_KOH_H__K_H2O(T) \
-        TemperatureDependenceOfLog10EquilibriumConstant(T,-55.77230945322,0,0,0,0)
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,14.5,0,0,0,0)
 
-/* K[+] + H2O = KOH[0] + H[+] */ /* (ref [3]) */
+/* To be compared with Cemdata18 */
+
+/* K[+] + H2O = KOH[0] + H[+] */
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_K_H2O__KOH_H(T) \
-        TemperatureDependenceOfLog10EquilibriumConstant(T,55.77230945322,0,0,0,0)
+        (-Log10EquilibriumConstantOfHomogeneousReactionInWater_KOH_H__K_H2O(T))
+        
 
 
 
@@ -124,7 +156,7 @@
  * Carbonic acid: H2CO3[0]
  * Bicarbonate ion (or hydrogen carbonate ion): HCO3[-]
  * Carbonate ion: CO3[2-] 
- * CO2[0] + H2CO3[0] noted as H2CO3[*] */
+ */
 
 /* CO2[0] + H2O = H2CO3[0] */   /* Hydration reaction of CO2 */
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_CO2_H2O__H2CO3(T) \
@@ -142,17 +174,6 @@
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_HCO3_H2O__H2CO3_OH(T) \
         (-10.4)
 
-/* H2CO3[*] = HCO3[-] + H[+] */
-/*
-#define Log10EquilibriumConstantOfHomogeneousReactionInWater_H2CO3__HCO3_H(T) \
-          (-6.3)
-*/
-
-/* HCO3[-] + H2O = H2CO3[*] + OH[-] */
-/*
-#define Log10EquilibriumConstantOfHomogeneousReactionInWater_HCO3_H2O__H2CO3_OH(T) \
-          (-7.648)
-*/
 
 /* HCO3[-] = CO2[0] + OH[-] */
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_HCO3__CO2_OH(T) \
@@ -173,6 +194,19 @@
 /* CO3[2-] + H2O = HCO3[-] + OH[-] */
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_CO3_H2O__HCO3_OH(T) \
         (-3.67)
+        
+        
+
+/* To be compared with Cemdata18 -> ok (H2CO3 can be neglected) */
+
+/* CO3[2-] + H[+] = HCO3[-] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_CO3_H__HCO3(T) \
+        (10.33)
+
+/* CO3[2-] + 2H[+] = CO2[0] + H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_CO3_2H__CO2_H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_293(T,16.713,6.091964E-02,-2.183437E+04,-1.268339E+02,1.684915E+06)
+
 
 
 /* Sulfur compounds */ /* from EQ3/6 */
@@ -219,6 +253,22 @@
 /* H2S2O4 = S2O4[2-] + 2H[+] */ /*  thermodem */
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_H2S2O4__S2O4_H(T) \
         TemperatureDependenceOfLog10EquilibriumConstant(T,-1.5238E03,-2.4188E-01,8.5504E04,5.5134E02,-5.1466E06)
+        
+
+/* To be compared with Cemdata18 -> ok except that H2SO4 is not in the cemdata base */
+
+/* SO4[2-] + H[+] = HSO4[-] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_SO4_H__HSO4(T) \
+        (-Log10EquilibriumConstantOfHomogeneousReactionInWater_HSO4__SO4_H(T))
+
+/* HSO4[-] + H[+] = H2SO4[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_HSO4_H__H2SO4(T) \
+        (-Log10EquilibriumConstantOfHomogeneousReactionInWater_H2SO4__HSO4_H(T))
+        
+/* SO4[2-] + 2H[+] = H2SO4[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_SO4_2H__H2SO4(T) \
+        (Log10EquilibriumConstantOfHomogeneousReactionInWater_SO4_H__HSO4(T) \
+        -Log10EquilibriumConstantOfHomogeneousReactionInWater_H2SO4__HSO4_H(T))
 
 
 /* Aluminium compounds */
@@ -239,54 +289,67 @@
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_AlO4H4__Al_4OH(T) \
         (-56 + 22.879)
 
-
 /* Al[3+] + 2H2O = Al(OH)2[+] + 2H[+] */ /* (ref [3]) */
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_Al_2H2O__AlO2H2_2H(T) \
-        TemperatureDependenceOfLog10EquilibriumConstant(32.5363,0,-6492.5404,-8.6,0)
+        TemperatureDependenceOfLog10EquilibriumConstant(T,32.5363,0,-6492.5404,-8.6,0)
 
 /* Al(OH)2[+] + 2H[+] = Al[3+] + 2H2O */ /*  (ref [3]) */
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_AlO2H2_2H__Al_2H2O(T) \
-        TemperatureDependenceOfLog10EquilibriumConstant(-32.5363,0,6492.5404,8.6,0)
+        TemperatureDependenceOfLog10EquilibriumConstant(T,-32.5363,0,6492.5404,8.6,0)
 
 /* Al[3+] + 4H2O = Al(OH)4[-] + 4H[+] */ /* (ref [3]) */
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_Al_4H2O__AlO4H4_4H(T) \
-        TemperatureDependenceOfLog10EquilibriumConstant(32.9602,0,-10341.6037,-8.5,0)
+        TemperatureDependenceOfLog10EquilibriumConstant(T,32.9602,0,-10341.6037,-8.5,0)
 
 /* Al(OH)4[-] + 4H[+] = Al[3+] + 4H2O */ /* (ref [3]) */
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_AlO4H4_4H__Al_4H2O(T) \
-        TemperatureDependenceOfLog10EquilibriumConstant(-32.9602,0,10341.6037,8.5,0)
+        TemperatureDependenceOfLog10EquilibriumConstant(T,-32.9602,0,10341.6037,8.5,0)
 
 /* Al[3+] + 3H2O = Al(OH)3 + 3H[+] */ /* (ref [3]) */
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_Al_H2O__AlO3H3_H(T) \
-        TemperatureDependenceOfLog10EquilibriumConstant(91.6640,0,-11712.9732,-27.8,0))
+        TemperatureDependenceOfLog10EquilibriumConstant(T,91.6640,0,-11712.9732,-27.8,0))
 
 /* Al(OH)3 + 3H[+] = Al[3+] + 3H2O */ /*  (ref [3]) */
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_AlO3H3__Al_3H2O_3H(T) \
-        TemperatureDependenceOfLog10EquilibriumConstant(-91.6640,0,11712.9732,27.8,0)
+        TemperatureDependenceOfLog10EquilibriumConstant(T,-91.6640,0,11712.9732,27.8,0)
 
 /* Al[3+] + H2O = AlOH[2+] + H[+] */ /* (ref [3]) */
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_Al_H2O__AlOH_H(T) \
-        TemperatureDependenceOfLog10EquilibriumConstant(-34.5703,0,-869.7066,13.1,0)
+        TemperatureDependenceOfLog10EquilibriumConstant(T,-34.5703,0,-869.7066,13.1,0)
 
 /* AlOH[2+] + H[+] = Al[3+] + H2O */ /* (ref [3]) */
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_AlOH_H__Al_H2O(T) \
-        TemperatureDependenceOfLog10EquilibriumConstant(34.5703,0,869.7066,-13.1,0)
+        TemperatureDependenceOfLog10EquilibriumConstant(T,34.5703,0,869.7066,-13.1,0)
 
 /* Al[3+] + 2H2O = AlO2[-] + 4H[+] */ /* thermodem*/
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_Al_2H2O__AlO2_4H(T) \
-        TemperatureDependenceOfLog10EquilibriumConstant(-1.7805E02,-2.6890E02,1.8672E03,6.6833E01,-7.5044E05)
-
-/* AlO2[-] + 4H[+] = Al[3+] + 2H2O */ /* thermodem*/
-#define Log10EquilibriumConstantOfHomogeneousReactionInWater_AlO2_4H__Al_2H2O(T) \
-        TemperatureDependenceOfLog10EquilibriumConstant(1.7805E02,2.6890E02,-1.8672E03,-6.6833E01,7.5044E05)
+        TemperatureDependenceOfLog10EquilibriumConstant(T,-1.7805E02,-2.6890E-02,1.8672E03,6.6833E01,-7.5044E05)
 
 /* Al[3+] + 2H2O = HAlO2 + 3H[+] */ /* thermodem*/
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_Al_2H2O__HAlO2_3H(T) \
-        TemperatureDependenceOfLog10EquilibriumConstant(3.4561E02,6.0311E-02,-2.5787E04,-1.2376E02,1.1292E04)
+        TemperatureDependenceOfLog10EquilibriumConstant(T,3.4561E02,6.0311E-02,-2.5787E04,-1.2376E02,1.1292E06)
 
 /* HAlO2 + 3H[+] = Al[3+] + 2H2O */ /* thermodem*/ 
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_HAlO2_3H__Al_2H2O(T) \
-        TemperatureDependenceOfLog10EquilibriumConstant(-3.4561E02,-6.0311E-02,2.5787E04,1.2376E02,-1.1292E04)
+        (-Log10EquilibriumConstantOfHomogeneousReactionInWater_Al_2H2O__HAlO2_3H(T))
+
+
+/* To be compared with Cemdata18 -> ok (in cemdata AlO2[-] = AlO4H4[-]  */
+
+/* AlO2[-] + 4H[+] = Al[3+] + 2H2O */ /* thermodem*/
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_AlO2_4H__Al_2H2O(T) \
+        (-Log10EquilibriumConstantOfHomogeneousReactionInWater_Al_2H2O__AlO2_4H(T))
+
+/* AlO2[-] + H[+] = AlO2H[0] */ /* thermodem*/ 
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_AlO2_H__AlO2H(T) \
+        (Log10EquilibriumConstantOfHomogeneousReactionInWater_AlO2_4H__Al_2H2O(T) - \
+        Log10EquilibriumConstantOfHomogeneousReactionInWater_HAlO2_3H__Al_2H2O(T))
+        
+/* AlO2[-] + 3H[+] = AlOH[+2] + H2O */ /* (ref [3]) */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_AlO2_3H__AlOH_H2O(T) \
+        (Log10EquilibriumConstantOfHomogeneousReactionInWater_AlO2_4H__Al_2H2O(T) + \
+        Log10EquilibriumConstantOfHomogeneousReactionInWater_Al_H2O__AlOH_H(T))
+
 
 
 
@@ -311,6 +374,29 @@
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_CaH3SiO4__Ca_H3SiO4(T) \
         TemperatureDependenceOfLog10EquilibriumConstant_293(T,-1.2,0,0,0,0)
 
+
+/* To be compared with Cemdata18 */
+
+/* Ca[2+] + HSiO3[-]  = CaHSiO3[+] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_Ca_HSiO3__CaHSiO3(T) \
+        Log10EquilibriumConstantOfHomogeneousReactionInWater_Ca_H3SiO4__CaH3SiO4(T)
+        
+/* Ca[2+] + SiO2[0] + H2O[0]  = CaHSiO3[+] + H[+] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_Ca_SiO2_H2O__CaHSiO3_H(T) \
+        (Log10EquilibriumConstantOfHomogeneousReactionInWater_Ca_HSiO3__CaHSiO3(T) + \
+        Log10EquilibriumConstantOfHomogeneousReactionInWater_SiO2_H2O__HSiO3_H(T))
+        
+
+/* Ca[2+] + SiO3[2-] = CaSiO3[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_Ca_SiO3__CaSiO3(T) \
+        Log10EquilibriumConstantOfHomogeneousReactionInWater_Ca_H2SiO4__CaH2SiO4(T)
+        
+/* Ca[2+] + SiO2[0] + H2O[0]  = CaSiO3[0] + 2H[+] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_Ca_SiO2_H2O__CaSiO3_2H(T) \
+        (Log10EquilibriumConstantOfHomogeneousReactionInWater_Ca_SiO3__CaSiO3(T) + \
+        Log10EquilibriumConstantOfHomogeneousReactionInWater_SiO2_H2O__SiO3_2H(T))
+        
+
  
 /* Calcium-Carbon compounds */
 
@@ -320,7 +406,7 @@
 
 /* CaHCO3[+] = Ca[2+] + HCO3[-] */
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_CaHCO3__Ca_HCO3(T) \
-        TemperatureDependenceOfLog10EquilibriumConstant_293(T,-1.06756,-3.129400E-01,3.476505E+04,4.787820E+02,0) 
+        (-Log10EquilibriumConstantOfHomogeneousReactionInWater_Ca_HCO3__CaHCO3(T))
 
 /* Ca[2+] + CO3[2-]    = CaCO3[0] */
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_Ca_CO3__CaCO3(T) \
@@ -328,8 +414,15 @@
 
 /* CaCO3[0] = Ca[2+] + CO3[2-] */
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_CaCO3__Ca_CO3(T) \
-        TemperatureDependenceOfLog10EquilibriumConstant_293(T,-3.1836,2.9944401E-01,-3.551275E+04,-4.8581799E+02,0)
+        (-Log10EquilibriumConstantOfHomogeneousReactionInWater_Ca_CO3__CaCO3(T))
 
+
+/* To be compared with Cemdata18 */
+
+/* Ca[2+] + CO3[2-] + H[+] = CaHCO3[+] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_Ca_CO3_H__CaHCO3(T) \
+        (Log10EquilibriumConstantOfHomogeneousReactionInWater_Ca_HCO3__CaHCO3(T) \
+        +Log10EquilibriumConstantOfHomogeneousReactionInWater_CO3_H__HCO3(T))
 
  
 /* Sodium-Carbon compounds */
@@ -343,6 +436,11 @@
         (-1.27) 
 
 
+/* To be compared with Cemdata18 */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_NaHCO3__Na_CO3_H(T) \
+        (Log10EquilibriumConstantOfHomogeneousReactionInWater_NaHCO3__Na_HCO3(T) \
+        +Log10EquilibriumConstantOfHomogeneousReactionInWater_HCO3__CO3_H(T))
+
  
 /* Sodium-Sulfur compounds */
 
@@ -354,7 +452,7 @@
 
 /*  Na[+] + SO4[2-] =  NaSO4[-] */ /* (ref [3]) */
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_Na_SO4__NaSO4(T) \
-        TemperatureDependenceOfLog10EquilibriumConstant(T,-67.9470,0,2908.6947,23.8,0)
+        (-Log10EquilibriumConstantOfHomogeneousReactionInWater_NaSO4__Na_SO4(T))
  
 
  
@@ -368,7 +466,7 @@
 
 /*  K[+] + SO4[2-] = KSO4[-] */ /* (ref [3]) */
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_K_SO4__KSO4(T) \
-        TemperatureDependenceOfLog10EquilibriumConstant(T,-72.9765,0,3150.0583,25.6,0)
+        (-Log10EquilibriumConstantOfHomogeneousReactionInWater_KSO4__K_SO4(T))
 
 
 
@@ -392,7 +490,7 @@
 
 /* CaHSO4[+] = Ca[2+] + HSO4[-] */
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_CaHSO4__Ca_HSO4(T) \
-        (-1.10585)
+        (-Log10EquilibriumConstantOfHomogeneousReactionInWater_Ca_HSO4__CaHSO4(T))
 
 /* Ca[2+] + SO4[2-]    = CaSO4[0] (wrong values which should be changed with those of ref [3] below)
  *                                (kept because used in Yuan's models) */
@@ -416,7 +514,7 @@
 
 /* CaSO4[0] = Ca[2+] + SO4[2-] */ /* (ref [3]) */
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater_CaSO4__Ca_SO4(T) \
-        TemperatureDependenceOfLog10EquilibriumConstant(T,64.2534,0,-2770.0342,-23.1,0)
+        (-Log10EquilibriumConstantOfHomogeneousReactionInWater_Ca_SO4__CaSO4(T))
 
 
 
@@ -511,6 +609,8 @@
  * [4] W. Hummel, U. Berner, E. Curti, F.J. Pearson, T. Thoenen, Nagra/PSI Chemical Thermodynamic Data Base 01/01, Universal Publishers/u-PUBLISH.com, USA, also published as Nagra Technical Report NTB 02 - 16, Nagra, Wettingen, Switzerland, 2002.
  *
  * [5] T. Thoenen, W. Hummel, U. Berner, E. Curti, The PSI/Nagra Chemical Thermodynamic Database 12/07, PSI Report 14-04, Villigen PSI, Switzerland, 2014.
+ * 
+ * [6] https://thermoddem.brgm.fr/databases/phreeqc
  */
 
 

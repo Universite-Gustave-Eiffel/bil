@@ -1,0 +1,26 @@
+var _plasticity_b_ex_m_8c =
+[
+    [ "Plasticity_GetAlphaMicrostructure", "_plasticity_b_ex_m_8c.html#aaea085f2e647323dabdaa2ac826fd375", null ],
+    [ "Plasticity_GetInitialPreconsolidationPressure", "_plasticity_b_ex_m_8c.html#ac30122f62e685ca28de080b4ba975d26", null ],
+    [ "Plasticity_GetInitialSuctionDecreaseHardening", "_plasticity_b_ex_m_8c.html#a94cde3540693418ddd123a9a176ce96f", null ],
+    [ "Plasticity_GetInitialSuctionIncreaseHardening", "_plasticity_b_ex_m_8c.html#a364222d1b4fa573d3efa2a91f3ad0082", null ],
+    [ "Plasticity_GetLoadingCollapseFactorCurve", "_plasticity_b_ex_m_8c.html#aedb87deeae2dd146744ea9fe6371436f", null ],
+    [ "Plasticity_GetMacroscopicInitialVoidRatio", "_plasticity_b_ex_m_8c.html#a32bb3ce042cdcb4cd26effa0d86f746b", null ],
+    [ "Plasticity_GetMicroElasticStiffnessEffectivePressureChanges", "_plasticity_b_ex_m_8c.html#a67e17b6109df69afea2246028b0bbd51", null ],
+    [ "Plasticity_GetMicroscopicInitialVoidRatio", "_plasticity_b_ex_m_8c.html#a99cd24f62058929a2d1c994d42738fa6", null ],
+    [ "Plasticity_GetReferenceConsolidationPressure", "_plasticity_b_ex_m_8c.html#a9e97721a50a1fa12b3f3db71f2137cd0", null ],
+    [ "Plasticity_GetSaturationDegreeCurve", "_plasticity_b_ex_m_8c.html#abd454e06b8c2752f568287708b60100a", null ],
+    [ "Plasticity_GetSlopeCriticalStateLine", "_plasticity_b_ex_m_8c.html#ab03a75701d7a84916c841e14cfaf4e00", null ],
+    [ "Plasticity_GetSlopeSwellingLine", "_plasticity_b_ex_m_8c.html#aa586a9a650bf144f2c969377e6058194", null ],
+    [ "Plasticity_GetSlopeVirginConsolidationLine", "_plasticity_b_ex_m_8c.html#a5d368dad4efe90528aafb8585c24cb77", null ],
+    [ "Plasticity_GetSuctionCohesionCoefficient", "_plasticity_b_ex_m_8c.html#a740ffd7a56986c9ef405edd66106ea36", null ],
+    [ "Plasticity_GetSuctionDecreasingFactorCurve", "_plasticity_b_ex_m_8c.html#a5dcd77ef0531f8ee622e9237ad5bd57e", null ],
+    [ "Plasticity_GetSuctionIncreasingFactorCurve", "_plasticity_b_ex_m_8c.html#a5678834846510c25448befd2c2588fa7", null ],
+    [ "PlasticityBExM_CT", "_plasticity_b_ex_m_8c.html#a5d28e650501c64a2608d65c812dd5c78", null ],
+    [ "PlasticityBExM_FR", "_plasticity_b_ex_m_8c.html#a6b149addab35606c1924f0f44bb84310", null ],
+    [ "PlasticityBExM_RM", "_plasticity_b_ex_m_8c.html#a95247c4637c43ca801ec5afdb5fcda3c", null ],
+    [ "PlasticityBExM_SetModelProp", "_plasticity_b_ex_m_8c.html#a626986f9a10792ae93059e0b27b5162a", null ],
+    [ "PlasticityBExM_SP", "_plasticity_b_ex_m_8c.html#a59c5f279e2bf527b5a3017a0fe3b273e", null ],
+    [ "PlasticityBExM_YF", "_plasticity_b_ex_m_8c.html#a861e962738cdeef9a93e21747cc4b215", null ],
+    [ "PlasticityBExM_SetModelProp", "_plasticity_b_ex_m_8c.html#af489f16a41665d723404304ebbc95733", null ]
+];

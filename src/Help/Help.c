@@ -931,7 +931,7 @@ void (Help_ObjectiveValues)(void)
   Message_Direct("\
   \t V_obj               = objective variation of the unknown \n") ;
   Message_Direct("\
-  \t r                   = relation factor (1 by default) \n") ;
+  \t r                   = relaxation factor (1 by default) \n") ;
 
   Message_Direct("\n") ;
   
@@ -992,9 +992,9 @@ void (Help_TimeStep)(void)
   Message_Direct("\
   The following time steps are then determined in such a way that \n\
   the solution increment is of the order of magnitude of the value \n\
-  defined by the key-word OBJE.\n") ;
+  defined in \"Objective Variations\".\n") ;
   Message_Direct("\
-  The reducing factor is limited to 1.5 and the time step \n\
+  The reduction factor is limited to 1.5 and the time step \n\
   itself to \"dtmax\".\n") ;
   
   Message_Direct("\n") ;

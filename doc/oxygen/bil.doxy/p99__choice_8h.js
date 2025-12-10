@@ -1,0 +1,25 @@
+var p99__choice_8h =
+[
+    [ "P00_CASE_RETURN", "p99__choice_8h.html#a551880e2a157fc7a16a253caaa6530d6", null ],
+    [ "P00_UNIQUE_BIT", "p99__choice_8h.html#a8396c7449326a93b26f5ff52d56843c0", null ],
+    [ "P00_UNIQUE_BIT_", "p99__choice_8h.html#a962f75e82042e87286f8cac9ae2f2be8", null ],
+    [ "P00_UNIQUE_BIT_FUNCTION", "p99__choice_8h.html#a2430743b0974aa809fa1d3d6ac6022c9", null ],
+    [ "P00_UNIQUE_BIT_HASH", "p99__choice_8h.html#a7fa8649fcfb93ee2ac1199ad5f5c7175", null ],
+    [ "P00_UNIQUE_BIT_MULT", "p99__choice_8h.html#ac9608b0d8a678d308d0a88dd156135a5", null ],
+    [ "P00_UNIQUE_BIT_MULT_3", "p99__choice_8h.html#ac4d57dcad3da3e1b288603a4c3b795c8", null ],
+    [ "P00_UNIQUE_BIT_MULT_4", "p99__choice_8h.html#a6fc120f6411d40eaf3ed8166ef5d9009", null ],
+    [ "P00_UNIQUE_BIT_MULT_5", "p99__choice_8h.html#a945fb1e5b1f7814035e823813433c112", null ],
+    [ "P00_UNIQUE_BIT_MULT_6", "p99__choice_8h.html#a347bb34c32cbbe3936016cb954ad8284", null ],
+    [ "P00_UNIQUE_BIT_RETURN", "p99__choice_8h.html#a8d9d11775ea9ef492b7f45724b1a8e31", null ],
+    [ "P99_CASE_RETURN", "p99__choice_8h.html#afe295832b295beee467807d2932712aa", null ],
+    [ "P99_CHOICE_FUNCTION", "p99__choice_8h.html#ac8ac548d29f2b762a19186370158eb52", null ],
+    [ "P00_UNIQUE_BIT", "p99__choice_8h.html#a11e9426d4083e7a152585a9e8835fb6b", null ],
+    [ "P00_UNIQUE_BIT", "p99__choice_8h.html#a7d00ad793acd99fbb3a4a4a44f07c7fc", null ],
+    [ "P00_UNIQUE_BIT", "p99__choice_8h.html#aa11256d4602638606aa53284dfbea9e3", null ],
+    [ "P00_UNIQUE_BIT", "p99__choice_8h.html#aa1ea15794fe3014c5a155e4a2b7799c9", null ],
+    [ "P00_UNIQUE_BIT_FUNCTION", "p99__choice_8h.html#af59452ec10f59eb6345927363add6b45", null ],
+    [ "P00_UNIQUE_BIT_FUNCTION", "p99__choice_8h.html#a7684a41a781755e20125bbace380cca0", null ],
+    [ "P00_UNIQUE_BIT_FUNCTION", "p99__choice_8h.html#a125cfc4a1af8654ab0ab5928247a2e12", null ],
+    [ "P00_UNIQUE_BIT_FUNCTION", "p99__choice_8h.html#a03d52014399efccf610fa4b4dd27c141", null ],
+    [ "P99_CHOICE_FUNCTION", "p99__choice_8h.html#ae74e45b0517e06756167085396172096", null ]
+];

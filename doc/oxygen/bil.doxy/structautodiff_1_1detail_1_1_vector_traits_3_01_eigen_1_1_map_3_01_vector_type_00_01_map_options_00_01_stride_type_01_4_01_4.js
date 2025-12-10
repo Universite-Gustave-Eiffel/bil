@@ -1,0 +1,5 @@
+var structautodiff_1_1detail_1_1_vector_traits_3_01_eigen_1_1_map_3_01_vector_type_00_01_map_options_00_01_stride_type_01_4_01_4 =
+[
+    [ "ReplaceValueType", "structautodiff_1_1detail_1_1_vector_traits_3_01_eigen_1_1_map_3_01_vector_type_00_01_map_options_00_01_stride_type_01_4_01_4.html#a90e94ebd73ea2e9a674744865309cb53", null ],
+    [ "ValueType", "structautodiff_1_1detail_1_1_vector_traits_3_01_eigen_1_1_map_3_01_vector_type_00_01_map_options_00_01_stride_type_01_4_01_4.html#a0ffcdf670366bc24d1554a559da05ec2", null ]
+];

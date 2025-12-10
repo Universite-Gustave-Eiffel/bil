@@ -222,7 +222,7 @@ void (CementSolutionDiffusion_Initialize)(CementSolutionDiffusion_t* csd)
   
     Diff(Ca)       = D(Ca) ;
     Diff(CaOH)     = D(CaOH) ;
-    Diff(CaO2H2)   = D(CaO2H2) ;
+    //Diff(CaO2H2)   = D(CaO2H2) ;
   
     Diff(H4SiO4)   = D(H4SiO4) ;
     Diff(H3SiO4)   = D(H3SiO4) ;
@@ -236,7 +236,7 @@ void (CementSolutionDiffusion_Initialize)(CementSolutionDiffusion_t* csd)
   
     Diff(Cl)       = D(Cl) ;
   
-    Diff(H2CO3)    = D(H2CO3) ;
+    //Diff(H2CO3)    = D(H2CO3) ;
     Diff(HCO3)     = D(HCO3) ;
     Diff(CO3)      = D(CO3) ;
     Diff(CO2)      = D(CO2) ;
@@ -257,7 +257,7 @@ void (CementSolutionDiffusion_Initialize)(CementSolutionDiffusion_t* csd)
     Diff(CaH2SiO4) = D(CaH2SiO4) ;
     Diff(CaH3SiO4) = D(CaH3SiO4) ;
 
-    Diff(CaHSO4)   = D(CaHSO4) ;
+    //Diff(CaHSO4)   = D(CaHSO4) ;
     Diff(CaSO4)    = D(CaSO4) ;
 
 #undef D
@@ -343,7 +343,7 @@ void (CementSolutionDiffusion_UpdateElementFluxes)(CementSolutionDiffusion_t* cs
 {
   double w_ca       = Flux(Ca) ;
   double w_caoh     = Flux(CaOH) ;
-  double w_caoh2    = Flux(CaO2H2) ;
+  //double w_cao2h2   = Flux(CaO2H2) ;
   
   double w_h4sio4   = Flux(H4SiO4) ;
   double w_h3sio4   = Flux(H3SiO4) ;
@@ -356,7 +356,7 @@ void (CementSolutionDiffusion_UpdateElementFluxes)(CementSolutionDiffusion_t* cs
   double w_koh      = Flux(KOH) ;
   
   double w_co2      = Flux(CO2) ;
-  double w_h2co3    = Flux(H2CO3) ;
+  //double w_h2co3    = Flux(H2CO3) ;
   double w_hco3     = Flux(HCO3) ;
   double w_co3      = Flux(CO3) ;
   
@@ -379,23 +379,23 @@ void (CementSolutionDiffusion_UpdateElementFluxes)(CementSolutionDiffusion_t* cs
   double w_cahco3   = Flux(CaHCO3) ;
   
   double w_caso4    = Flux(CaSO4) ;
-  double w_cahso4   = Flux(CaHSO4) ;
+  //double w_cahso4   = Flux(CaHSO4) ;
 
   
   /* Fluxes as element: C, Ca, Si ... */
   /* Compounds type I */
-  double w_ca_l    = w_ca + w_caoh + w_caoh2 ;
+  double w_ca_l    = w_ca + w_caoh ;//+ w_cao2h2 ;
   double w_si_l    = w_h2sio4 + w_h3sio4 + w_h4sio4 ;
   double w_na_l    = w_na + w_naoh ;
   double w_k_l     = w_k + w_koh ;
-  double w_c_l     = w_co2 + w_h2co3 + w_hco3 + w_co3 ;
+  double w_c_l     = w_co2 + w_hco3 + w_co3 ;//+ w_h2co3 ;
   double w_s_l     = w_h2so4 + w_hso4 + w_so4 ;
   double w_al_l    = w_al + w_alo4h4 ;
   double w_cl_l    = w_cl ;
   /* Compounds type II */
   double w_ca_si_l = w_cah2sio4 + w_cah3sio4 ;
   double w_ca_c_l  = w_cahco3 + w_caco3 ;
-  double w_ca_s_l  = w_caso4 + w_cahso4 ;
+  double w_ca_s_l  = w_caso4 ;//+ w_cahso4 ;
   double w_na_c_l  = w_nahco3 + w_naco3 ;
   
   

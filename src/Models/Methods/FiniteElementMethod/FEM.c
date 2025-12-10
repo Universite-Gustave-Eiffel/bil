@@ -966,7 +966,7 @@ _INLINE_ double* (FEM_ComputeConductionMatrix)(FEM_t* fem,IntFct_t* fi,const dou
 
 
 
-_INLINE_ double*  (FEM_ComputePoroelasticMatrix6)(FEM_t* fem,IntFct_t* fi,const double* c,const int dec,const int n_dif,const int idis)
+_INLINE_ double*  (FEM_ComputePoroelasticMatrixOriginal6)(FEM_t* fem,IntFct_t* fi,const double* c,const int dec,const int n_dif,const int idis)
 /** Return a pointer on a FE poroelastic matrix (Ndof x Ndof).
  * 
  *  Ndof = nb of degrees of freedom (= NN*Neq)
@@ -1130,7 +1130,7 @@ _INLINE_ double*  (FEM_ComputePoroelasticMatrix6)(FEM_t* fem,IntFct_t* fi,const 
 
 
 
-_INLINE_ double*  (FEM_ComputePoroelasticMatrixBis)(FEM_t* fem,IntFct_t* fi,const double* c,const int dec,const int n_dif,const int idis)
+_INLINE_ double*  (FEM_ComputePoroelasticMatrixBis6)(FEM_t* fem,IntFct_t* fi,const double* c,const int dec,const int n_dif,const int idis)
 /** Return a pointer on a FE poroelastic matrix (Ndof x Ndof).
  * 
  *  Ndof = nb of degrees of freedom (= NN*Neq)

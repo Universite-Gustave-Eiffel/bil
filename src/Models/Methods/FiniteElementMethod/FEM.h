@@ -17,11 +17,20 @@ struct Buffers_t;
 #define FEM_ComputeElasticMatrix(...) \
         FEM_ComputeStiffnessMatrix(__VA_ARGS__)
 
-#define FEM_ComputePoroelasticMatrix(...) \
-        Utils_CAT_NARG(FEM_ComputePoroelasticMatrix,__VA_ARGS__)(__VA_ARGS__)
+#define FEM_ComputePoroelasticMatrix \
+        FEM_ComputePoroelasticMatrixOriginal
 
-#define FEM_ComputePoroelasticMatrix5(...) \
-        FEM_ComputePoroelasticMatrix6(__VA_ARGS__,0)
+#define FEM_ComputePoroelasticMatrixOriginal(...) \
+        Utils_CAT_NARG(FEM_ComputePoroelasticMatrixOriginal,__VA_ARGS__)(__VA_ARGS__)
+
+#define FEM_ComputePoroelasticMatrixOriginal5(...) \
+        FEM_ComputePoroelasticMatrixOriginal6(__VA_ARGS__,0)
+
+#define FEM_ComputePoroelasticMatrixBis(...) \
+        Utils_CAT_NARG(FEM_ComputePoroelasticMatrixBis,__VA_ARGS__)(__VA_ARGS__)
+
+#define FEM_ComputePoroelasticMatrixBis5(...) \
+        FEM_ComputePoroelasticMatrixBis6(__VA_ARGS__,0)
 
 
 
@@ -162,8 +171,8 @@ extern double*  (FEM_ComputeMassMatrix)(FEM_t*,IntFct_t*,const double*,const int
 extern double*  (FEM_ComputeConductionMatrix)(FEM_t*,IntFct_t*,const double*,const int) ;
 extern double*  (FEM_ComputeConductionMatrix)(FEM_t*,IntFct_t*,double const*,int const,int const);
 extern double*  (FEM_ComputeBiotMatrix)(FEM_t*,IntFct_t*,const double*,const int) ;
-extern double*  (FEM_ComputePoroelasticMatrix6)(FEM_t*,IntFct_t*,const double*,const int,const int,const int) ;
-extern double*  (FEM_ComputePoroelasticMatrixBis)(FEM_t*,IntFct_t*,const double*,const int,const int,const int) ;
+extern double*  (FEM_ComputePoroelasticMatrixOriginal6)(FEM_t*,IntFct_t*,const double*,const int,const int,const int) ;
+extern double*  (FEM_ComputePoroelasticMatrixBis6)(FEM_t*,IntFct_t*,const double*,const int,const int,const int) ;
 extern double*  (FEM_AssemblePoroelasticAndConductionMatrices)(FEM_t*,int const,int const,double const*,double*) ;
 extern void     (FEM_TransformMatrixFromDegree2IntoDegree1)(FEM_t*,const int,const int,double*) ;
 /* Residus */

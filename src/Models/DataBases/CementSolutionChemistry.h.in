@@ -10,6 +10,19 @@
 #include "Session.h"
 #include "GenericData.h"
 #include "InternationalSystemOfUnits.h"
+#include "ElectricChargeOfIonInWater.h"
+#include "Log10EquilibriumConstantOfHomogeneousReactionInWater.h"
+#include "EquilibriumConstantOfHomogeneousReactionInWater.h"
+#include "PartialMolarVolumeOfMoleculeInWater.h"
+#include "MolarMassOfMolecule.h"
+
+/* Shorthands of some units */
+#define Meter      (InternationalSystemOfUnits_OneMeter)
+#define CubicMeter (Meter*Meter*Meter)
+#define Liter      (0.001*CubicMeter)
+#define Mol        (InternationalSystemOfUnits_OneMole)
+#define C0_ref     (Mol / Liter)
+#define LogC0_ref  log10(C0_ref)
 
 #define Ln10      Math_Ln10
 
@@ -52,10 +65,11 @@ _INLINE_ double* (CementSolutionChemistry_GetValence)(void)
 
 _INLINE_ double* (CementSolutionChemistry_CreateValence)(void)
 {
-  size_t sz = CementSolutionChemistry_NbOfSpecies*sizeof(double) ;
-  double* z = (double*) malloc(sz) ;
+  //size_t sz = CementSolutionChemistry_NbOfSpecies*sizeof(double) ;
+  //double* z = (double*) malloc(sz) ;
+  double* z = (double*) Mry_New(double,CementSolutionChemistry_NbOfSpecies) ;
     
-  assert(z) ;
+  //assert(z) ;
     
   CementSolutionChemistry_InitializeValence(z) ;
   
@@ -64,67 +78,158 @@ _INLINE_ double* (CementSolutionChemistry_CreateValence)(void)
 
 
 
-#include "ElectricChargeOfIonInWater.h"
-
 
 _INLINE_ void (CementSolutionChemistry_InitializeValence)(double* z)
 {
   int     n = CementSolutionChemistry_NbOfSpecies ;
-  int i ;
   
-  for(i = 0 ; i < n ; i++) {
-    z[i] = 0. ;
+  for(int i = 0 ; i < n ; i++) {
+    z[i] = 0 ;
   }
   
-/* Shorthands of macros */
-#define Z(A)           ElectricChargeOfIonInWater(A)
-#define Valence(CPD)   z[CementSolutionChemistry_GetIndexOf(CPD)]
-  {
-    Valence(OH)       = Z(OH) ;
-    Valence(H)        = Z(H) ;
-  
-    Valence(Ca)       = Z(Ca) ;
-    Valence(CaOH)     = Z(CaOH) ;
-    Valence(CaO2H2)   = Z(CaO2H2) ;
-  
-    Valence(H4SiO4)   = Z(H4SiO4) ;
-    Valence(H3SiO4)   = Z(H3SiO4) ;
-    Valence(H2SiO4)   = Z(H2SiO4) ;
-  
-    Valence(Na)       = Z(Na) ;
-    Valence(NaOH)     = Z(NaOH) ;
-  
-    Valence(K)        = Z(K) ;
-    Valence(KOH)      = Z(KOH) ;
-  
-    Valence(Cl)       = Z(Cl) ;
-  
-    Valence(H2CO3)    = Z(H2CO3) ;
-    Valence(HCO3)     = Z(HCO3) ;
-    Valence(CO3)      = Z(CO3) ;
-    Valence(CO2)      = Z(CO2) ;
-  
-    Valence(H2SO4)    = Z(H2SO4) ;
-    Valence(HSO4)     = Z(HSO4) ;
-    Valence(SO4)      = Z(SO4) ;
-  
-    Valence(Al)       = Z(Al) ;
-    Valence(AlO4H4)   = Z(AlO4H4) ;
-  
-    Valence(NaHCO3)   = Z(NaHCO3) ;
-    Valence(NaCO3)    = Z(NaCO3) ;
-  
-    Valence(CaHCO3)   = Z(CaHCO3) ;
-    Valence(CaCO3)    = Z(CaCO3) ;
-  
-    Valence(CaH2SiO4) = Z(CaH2SiO4) ;
-    Valence(CaH3SiO4) = Z(CaH3SiO4) ;
+  /* Shorthands of macros */
+  #define Valence(CPD)   z[CementSolutionChemistry_GetIndexOf(CPD)]
+  #define SetValence(CPD) \
+          do {\
+            Valence(CPD) = ElectricChargeOfIonInWater(CPD);\
+          } while(0)
 
-    Valence(CaHSO4)   = Z(CaHSO4) ;
-    Valence(CaSO4)    = Z(CaSO4) ;
+  {
+    /* Hydrogen-Oxygen */
+    SetValence(OH);
+    SetValence(H);
+    /* Compound of type I
+     * ------------------*/
+    /* Aluminium */
+    SetValence(Al);
+    SetValence(AlO4H4);
+    SetValence(AlO2);
+    SetValence(AlO);
+    SetValence(AlOH);
+    SetValence(AlO2H);
+    /* Calcium */
+    SetValence(Ca);
+    SetValence(CaOH);
+    //SetValence(CaO2H2);
+    /* Carbon */
+    //SetValence(H2CO3);
+    SetValence(HCO3);
+    SetValence(CO3);
+    SetValence(CO2);
+    SetValence(CH4);
+    /* Chlorine */
+    SetValence(Cl);
+    SetValence(ClO4);
+    /* Iron */
+    SetValence(Fe);
+    SetValence(Fe_p3);
+    SetValence(FeO);
+    SetValence(FeO2);
+    SetValence(FeOH);
+    SetValence(FeO2H);
+    SetValence(FeO2H2);
+    SetValence(Fe3O4H4);
+    /* Magnesium */
+    SetValence(Mg);
+    SetValence(MgOH);
+    /* Nitrogen */
+    SetValence(N2);
+    SetValence(NH3);
+    SetValence(NH4);
+    SetValence(NO3);
+    /* Potassium */
+    SetValence(K);
+    SetValence(KOH);
+    /* Silicon */
+    //SetValence(H4SiO4);
+    //SetValence(H3SiO4);
+    //SetValence(H2SiO4);
+    SetValence(SiO2);
+    SetValence(SiO3);
+    SetValence(HSiO3);
+    SetValence(Si4O10);
+    /* Sodium */
+    SetValence(Na);
+    SetValence(NaOH);
+    /* Strontium */
+    SetValence(Sr);
+    SetValence(SrOH);
+    /* Sulfur */
+    SetValence(H2SO4);
+    SetValence(HSO4);
+    SetValence(SO4);
+    SetValence(SO3);
+    SetValence(HSO3);
+    SetValence(HSO4);
+    SetValence(S);
+    SetValence(HS);
+    SetValence(S2O3);
+    
+    /* Compound of type II
+     * -------------------*/
+    /* Alumium-Silicon */
+    SetValence(AlSiO5);
+    SetValence(AlHSiO3);
+    /* Aluminium-Sulfur */
+    SetValence(AlSO4);
+    SetValence(AlS2O8);
+    /* Calcium-Carbon */
+    SetValence(CaHCO3);
+    SetValence(CaCO3);
+    /* Calcium-Silicon */
+    //SetValence(CaH2SiO4);
+    //SetValence(CaH3SiO4);
+    SetValence(CaSiO3);
+    SetValence(CaHSiO3);
+    /* Calcium-Sulfur */
+    //SetValence(CaHSO4);
+    SetValence(CaSO4);
+    /* Iron-Carbon */
+    SetValence(FeCO3);
+    SetValence(FeHCO3);
+    /* Iron-Chlorine */
+    SetValence(FeCl);
+    SetValence(FeCl_p2);
+    SetValence(FeCl2);
+    SetValence(FeCl3);
+    /* Iron-Silicon */
+    SetValence(FeHSiO3);
+    /* Iron-Sulfur */
+    SetValence(FeSO4);
+    SetValence(FeSO4_p1);
+    SetValence(FeHSO4);
+    SetValence(FeS2O8);
+    /* Magnesium-Carbon */
+    SetValence(MgCO3);
+    SetValence(MgHCO3);
+    /* Magnesium-Silicon */
+    SetValence(MgSiO3);
+    SetValence(MgHSiO3);
+    /* Magnesium-Sulfur */
+    SetValence(MgSO4);
+    /* Potassium-Sulfur */
+    SetValence(KSO4);
+    /* Sodium-Carbon */
+    SetValence(NaHCO3);
+    SetValence(NaCO3);
+    /* Sodium-Sulfur */
+    SetValence(NaSO4);
+    /* Strontium-Carbon */
+    SetValence(SrCO3);
+    SetValence(SrHCO3);
+    /* Strontium-Silicon */
+    SetValence(SrSiO3);
+    /* Strontium-Sulfur */
+    SetValence(SrSO4);
+    
+    /* Compound of type III
+     * --------------------*/
+     /* Sulfur-Carbon-Nitrogen */
+    SetValence(SCN);
   }
-#undef Valence
-#undef Z
+  
+  #undef SetValence
+  #undef Valence
 }
 
 
@@ -301,10 +406,104 @@ _INLINE_ void (CementSolutionChemistry_AllocateMemory)(CementSolutionChemistry_t
 
 
 
-#include "Log10EquilibriumConstantOfHomogeneousReactionInWater.h"
+template<typename T>
+_INLINE_ void (CementSolutionChemistry_PrintChemicalConstants)(CementSolutionChemistry_t<T>* csc)
+{
+  double temp = CementSolutionChemistry_GetRoomTemperature(csc) ;
+  
+  Log10EquilibriumConstantOfHomogeneousReactionInWater_Print(temp) ;
+  
+  printf("\n") ;
+  
+  fflush(stdout) ;
+}
 
 
-#define LogKeq(CPD)  CementSolutionChemistry_GetLog10EquilibriumConstant(csc,CPD)
+
+
+template<typename T>
+_INLINE_ void (CementSolutionChemistry_CopyConcentrations)(CementSolutionChemistry_t<T>* csc,T* v)
+{
+  {
+    int     n = CementSolutionChemistry_NbOfSpecies ;
+    T* c = CementSolutionChemistry_GetConcentration(csc) ;
+  
+    {
+      int i ;
+      
+      for(i = 0 ; i < n ; i++) {
+        v[i] = c[i] ;
+      }
+    }
+  }
+}
+
+
+
+template<typename T>
+_INLINE_ void (CementSolutionChemistry_CopyLogConcentrations)(CementSolutionChemistry_t<T>* csc,T* v)
+{
+  {
+    int     n = CementSolutionChemistry_NbOfSpecies ;
+    T* logc = CementSolutionChemistry_GetLogConcentration(csc) ;
+  
+    {
+      int i ;
+      
+      for(i = 0 ; i < n ; i++) {
+        v[i] = logc[i] ;
+      }
+    }
+  }
+}
+
+
+
+template<typename T>
+_INLINE_ void (CementSolutionChemistry_CopyChemicalPotential)(CementSolutionChemistry_t<T>* csc,T* v)
+{
+  {
+    int     n = CementSolutionChemistry_NbOfSpecies ;
+    T* logc = CementSolutionChemistry_GetLogConcentration(csc) ;
+    T  epot = CementSolutionChemistry_GetElectricPotential(csc) ;
+    double* z = CementSolutionChemistry_GetValence() ;
+  
+    {
+      int i ;
+      
+      for(i = 0 ; i < n ; i++) {
+        v[i] = Ln10 * logc[i] + z[i] * epot ;
+      }
+    }
+  }
+}
+
+
+
+template<typename T>
+_INLINE_ void (CementSolutionChemistry_UpdateSolution)(CementSolutionChemistry_t<T>* csc)
+{
+  /* Charge density */
+  {
+    T q = CementSolutionChemistry_ComputeChargeDensity(csc) ;
+    
+    CementSolutionChemistry_SetChargeDensity(csc,q) ;
+  }
+  
+  /* Mass density */
+  {
+    T rho_l = CementSolutionChemistry_ComputeLiquidMassDensity(csc) ;
+    
+    CementSolutionChemistry_SetLiquidMassDensity(csc,rho_l) ;
+  }
+  
+  /* Element concentrations */
+  CementSolutionChemistry_UpdateElementConcentrations(csc) ;
+}
+
+
+
+#define LogKeq(CPD)       CementSolutionChemistry_GetLog10EquilibriumConstantOf(csc,CPD)
 
 
 
@@ -319,7 +518,7 @@ _INLINE_ void (CementSolutionChemistry_UpdateChemicalConstants)(CementSolutionCh
   /* Compounds of type I */
   /* Calcium compounds */
   double logk_caoh     = LogKr(CaOH__Ca_OH) ;
-  double logk_caoh2    = LogKr(CaO2H2__Ca_2OH) ;
+  //double logk_cao2h2   = LogKr(CaO2H2__Ca_2OH) ;
   
   /* Silicon compounds */
   double logk_h3sio4   = LogKr(H3SiO4_H2O__H4SiO4_OH) ;
@@ -332,8 +531,9 @@ _INLINE_ void (CementSolutionChemistry_UpdateChemicalConstants)(CementSolutionCh
   double logk_koh      = LogKr(KOH__K_OH) ;
   
   /* Carbon compounds */
-  double logk_h2co3    = LogKr(H2CO3__CO2_H2O) ;
-  double logk_hco3     = LogKr(HCO3_H2O__H2CO3_OH) ;
+  //double logk_h2co3    = LogKr(H2CO3__CO2_H2O) ;
+  //double logk_hco3     = LogKr(HCO3_H2O__H2CO3_OH) ;
+  double logk_hco3     = LogKr(HCO3__CO2_OH) ;
   double logk_co3      = LogKr(CO3_H2O__HCO3_OH) ;
   
   /* Sulfur compounds */
@@ -358,60 +558,49 @@ _INLINE_ void (CementSolutionChemistry_UpdateChemicalConstants)(CementSolutionCh
   double logk_naco3    = LogKr(NaCO3__Na_CO3) ;
   
   /* Calcium-Sulfur compounds */
-  double logk_cahso4   = LogKr(CaHSO4__Ca_HSO4) ;
+  //double logk_cahso4   = LogKr(CaHSO4__Ca_HSO4) ;
   double logk_caso4    = LogKr(CaSO4__Ca_SO4) ;
   
   #undef LogKr
 
   
   
+  #define SetLogKeq(CPD,V)  CementSolutionChemistry_SetLog10EquilibriumConstantOf(csc,CPD,V)
   /* Backup */
-  LogKeq(H2O)      = logk_h2o ;
+  SetLogKeq(H2O,logk_h2o);
   
-  LogKeq(CaOH)     = logk_caoh ;
-  LogKeq(CaO2H2)   = logk_caoh2 ;
+  SetLogKeq(CaOH,logk_caoh);
+  //SetLogKeq(CaO2H2,logk_cao2h2);
   
-  LogKeq(H3SiO4)   = logk_h3sio4 ;
-  LogKeq(H2SiO4)   = logk_h2sio4 ;
+  SetLogKeq(H3SiO4,logk_h3sio4);
+  SetLogKeq(H2SiO4,logk_h2sio4);
   
-  LogKeq(NaOH)     = logk_naoh ;
+  SetLogKeq(NaOH,logk_naoh);
   
-  LogKeq(KOH)      = logk_koh ;
+  SetLogKeq(KOH,logk_koh);
   
-  LogKeq(H2CO3)    = logk_h2co3 ;
-  LogKeq(HCO3)     = logk_hco3 ;
-  LogKeq(CO3)      = logk_co3 ;
+  //SetLogKeq(H2CO3,logk_h2co3);
+  SetLogKeq(HCO3,logk_hco3);
+  SetLogKeq(CO3,logk_co3);
   
-  LogKeq(H2SO4)    = logk_h2so4 ;
-  LogKeq(HSO4)     = logk_hso4 ;
+  SetLogKeq(H2SO4,logk_h2so4);
+  SetLogKeq(HSO4,logk_hso4);
   
-  LogKeq(AlO4H4)   = logk_alo4h4 ;
+  SetLogKeq(AlO4H4,logk_alo4h4);
   
-  LogKeq(CaH3SiO4) = logk_cah3sio4 ;
-  LogKeq(CaH2SiO4) = logk_cah2sio4 ;
+  SetLogKeq(CaH3SiO4,logk_cah3sio4);
+  SetLogKeq(CaH2SiO4,logk_cah2sio4);
   
-  LogKeq(CaHCO3)   = logk_cahco3 ;
-  LogKeq(CaCO3)    = logk_caco3 ;
+  SetLogKeq(CaHCO3,logk_cahco3);
+  SetLogKeq(CaCO3,logk_caco3);
   
-  LogKeq(NaHCO3)   = logk_nahco3 ;
-  LogKeq(NaCO3)    = logk_naco3 ;
+  SetLogKeq(NaHCO3,logk_nahco3);
+  SetLogKeq(NaCO3,logk_naco3);
   
-  LogKeq(CaHSO4)   = logk_cahso4 ;
-  LogKeq(CaSO4)    = logk_caso4 ;
-}
-
-
-
-template<typename T>
-_INLINE_ void (CementSolutionChemistry_PrintChemicalConstants)(CementSolutionChemistry_t<T>* csc)
-{
-  double temp = CementSolutionChemistry_GetRoomTemperature(csc) ;
+  //SetLogKeq(CaHSO4,logk_cahso4);
+  SetLogKeq(CaSO4,logk_caso4);
   
-  Log10EquilibriumConstantOfHomogeneousReactionInWater_Print(temp) ;
-  
-  printf("\n") ;
-  
-  fflush(stdout) ;
+  #undef SetLogKeq
 }
 
 
@@ -422,14 +611,6 @@ _INLINE_ void (CementSolutionChemistry_PrintChemicalConstants)(CementSolutionChe
 #define LogConcentration(CPD) CementSolutionChemistry_GetLogConcentrationOf(csc,CPD)
 //#define Activity(CPD)         CementSolutionChemistry_GetActivityOf(csc,CPD)
 #define LogActivity(CPD)      CementSolutionChemistry_GetLogActivityOf(csc,CPD)
-
-/* Shorthands of some units */
-#define Meter      (InternationalSystemOfUnits_OneMeter)
-#define CubicMeter (Meter*Meter*Meter)
-#define Liter      (0.001*CubicMeter)
-#define Mol        (InternationalSystemOfUnits_OneMole)
-#define C0_ref     (Mol / Liter)
-#define LogC0_ref  log10(C0_ref)
 
 
 
@@ -454,11 +635,11 @@ _INLINE_ void (CementSolutionChemistry_ComputeSystem_CaO_SiO2_Na2O_K2O_H2O)(Ceme
   /* Chemical reactions involving compounds of type I. */
   
   /* Calcium compounds */
-  T loga_ca    = logq_ch - 2*(loga_oh) ;
-  T logk_caoh  = LogKeq(CaOH) ;
-  T loga_caoh  = loga_ca + loga_oh - logk_caoh ; ;
-  T logk_caoh2 = LogKeq(CaO2H2) ;
-  T loga_caoh2 = logq_ch - logk_caoh2 ;
+  T loga_ca     = logq_ch - 2*(loga_oh) ;
+  T logk_caoh   = LogKeq(CaOH) ;
+  T loga_caoh   = loga_ca + loga_oh - logk_caoh ; ;
+  //T logk_cao2h2 = LogKeq(CaO2H2) ;
+  //T loga_cao2h2 = logq_ch - logk_cao2h2 ;
   
   /* Silicon compounds */
   T loga_h4sio4 = logq_sh ;
@@ -493,7 +674,7 @@ _INLINE_ void (CementSolutionChemistry_ComputeSystem_CaO_SiO2_Na2O_K2O_H2O)(Ceme
   
     LogActivity(Ca)        = loga_ca ;
     LogActivity(CaOH)      = loga_caoh ;
-    LogActivity(CaO2H2)    = loga_caoh2 ;
+    //LogActivity(CaO2H2)    = loga_cao2h2 ;
   
     LogActivity(H4SiO4)    = loga_h4sio4 ;
     LogActivity(H3SiO4)    = loga_h3sio4 ;
@@ -519,7 +700,7 @@ _INLINE_ void (CementSolutionChemistry_ComputeSystem_CaO_SiO2_Na2O_K2O_H2O)(Ceme
   
     T logc_ca        = loga_ca       + logc0 ;
     T logc_caoh      = loga_caoh     + logc0 ;
-    T logc_caoh2     = loga_caoh2    + logc0 ;
+    //T logc_cao2h2    = loga_cao2h2   + logc0 ;
   
     T logc_h4sio4    = loga_h4sio4   + logc0 ;
     T logc_h3sio4    = loga_h3sio4   + logc0 ;
@@ -540,7 +721,7 @@ _INLINE_ void (CementSolutionChemistry_ComputeSystem_CaO_SiO2_Na2O_K2O_H2O)(Ceme
   
     Concentration(Ca)        = pow(10,logc_ca) ;
     Concentration(CaOH)      = pow(10,logc_caoh) ;
-    Concentration(CaO2H2)    = pow(10,logc_caoh2) ;
+    //Concentration(CaO2H2)    = pow(10,logc_cao2h2) ;
   
     Concentration(H4SiO4)    = pow(10,logc_h4sio4) ;
     Concentration(H3SiO4)    = pow(10,logc_h3sio4) ;
@@ -562,7 +743,7 @@ _INLINE_ void (CementSolutionChemistry_ComputeSystem_CaO_SiO2_Na2O_K2O_H2O)(Ceme
   
     LogConcentration(Ca)        = logc_ca ;
     LogConcentration(CaOH)      = logc_caoh ;
-    LogConcentration(CaO2H2)    = logc_caoh2 ;
+    //LogConcentration(CaO2H2)    = logc_cao2h2 ;
   
     LogConcentration(H4SiO4)    = logc_h4sio4 ;
     LogConcentration(H3SiO4)    = logc_h3sio4 ;
@@ -608,10 +789,11 @@ _INLINE_ void (CementSolutionChemistry_SupplementSystemWith_CO2)(CementSolutionC
   /* Chemical reactions involving compounds of type I. */
 
   /* Carbon compounds */
-  T logk_h2co3 = LogKeq(H2CO3) ;
-  T loga_h2co3 = loga_co2 + loga_h2o - logk_h2co3 ;
+  //T logk_h2co3 = LogKeq(H2CO3) ;
+  //T loga_h2co3 = loga_co2 + loga_h2o - logk_h2co3 ;
   T logk_hco3  = LogKeq(HCO3) ;
-  T loga_hco3  = loga_h2co3 + loga_oh - (logk_hco3 + loga_h2o) ;
+  //T loga_hco3  = loga_h2co3 + loga_oh - (logk_hco3 + loga_h2o) ;
+  T loga_hco3  = loga_co2 + loga_oh - logk_hco3 ;
   T logk_co3   = LogKeq(CO3) ;
   T loga_co3   = loga_hco3  + loga_oh - (logk_co3  + loga_h2o) ;
   
@@ -635,7 +817,7 @@ _INLINE_ void (CementSolutionChemistry_SupplementSystemWith_CO2)(CementSolutionC
   
   /* Backup activities */
   {
-    LogActivity(H2CO3)  = loga_h2co3 ;
+    //LogActivity(H2CO3)  = loga_h2co3 ;
     LogActivity(HCO3)   = loga_hco3 ;
     LogActivity(CO3)    = loga_co3 ;
     LogActivity(CO2)    = loga_co2 ;
@@ -653,7 +835,7 @@ _INLINE_ void (CementSolutionChemistry_SupplementSystemWith_CO2)(CementSolutionC
     /* Translate into concentrations providing ideality */
     T logc0             = LogC0_ref ;
 
-    T logc_h2co3        = loga_h2co3       + logc0 ;
+    //T logc_h2co3        = loga_h2co3       + logc0 ;
     T logc_hco3         = loga_hco3        + logc0 ;
     T logc_co3          = loga_co3         + logc0 ;
     T logc_co2          = loga_co2         + logc0 ;
@@ -664,7 +846,7 @@ _INLINE_ void (CementSolutionChemistry_SupplementSystemWith_CO2)(CementSolutionC
     T logc_nahco3       = loga_nahco3      + logc0 ;
     T logc_naco3        = loga_naco3       + logc0 ;
     
-    Concentration(H2CO3)     = pow(10,logc_h2co3) ;
+    //Concentration(H2CO3)     = pow(10,logc_h2co3) ;
     Concentration(HCO3)      = pow(10,logc_hco3) ;
     Concentration(CO3)       = pow(10,logc_co3) ;
     Concentration(CO2)       = pow(10,logc_co2) ;
@@ -676,7 +858,7 @@ _INLINE_ void (CementSolutionChemistry_SupplementSystemWith_CO2)(CementSolutionC
     Concentration(NaCO3)     = pow(10,logc_naco3) ;
   
   
-    LogConcentration(H2CO3)  = logc_h2co3 ;
+    //LogConcentration(H2CO3)  = logc_h2co3 ;
     LogConcentration(HCO3)   = logc_hco3 ;
     LogConcentration(CO3)    = logc_co3 ;
     LogConcentration(CO2)    = logc_co2 ;
@@ -762,8 +944,8 @@ _INLINE_ void (CementSolutionChemistry_SupplementSystemWith_SO3_LogA_H2SO4)(Ceme
   
   /* Calcium-sulfur compounds */
   T loga_ca     = LogActivity(Ca) ;
-  T logk_cahso4 = LogKeq(CaHSO4) ;
-  T loga_cahso4 = loga_ca + loga_hso4 - logk_cahso4 ;
+  //T logk_cahso4 = LogKeq(CaHSO4) ;
+  //T loga_cahso4 = loga_ca + loga_hso4 - logk_cahso4 ;
   T logk_caso4  = LogKeq(CaSO4) ;
   T loga_caso4  = loga_ca + loga_so4  - logk_caso4 ;
   
@@ -776,7 +958,7 @@ _INLINE_ void (CementSolutionChemistry_SupplementSystemWith_SO3_LogA_H2SO4)(Ceme
     LogActivity(HSO4)   = loga_hso4 ;
     LogActivity(SO4)    = loga_so4 ;
   
-    LogActivity(CaHSO4) = loga_cahso4 ;
+    //LogActivity(CaHSO4) = loga_cahso4 ;
     LogActivity(CaSO4)  = loga_caso4 ;
   }
   
@@ -789,14 +971,14 @@ _INLINE_ void (CementSolutionChemistry_SupplementSystemWith_SO3_LogA_H2SO4)(Ceme
     T logc_hso4         = loga_hso4   + logc0 ;
     T logc_so4          = loga_so4    + logc0 ;
    
-    T logc_cahso4       = loga_cahso4 + logc0 ;
+    //T logc_cahso4       = loga_cahso4 + logc0 ;
     T logc_caso4        = loga_caso4  + logc0 ;
     
     Concentration(H2SO4)     = pow(10,logc_h2so4) ;
     Concentration(HSO4)      = pow(10,logc_hso4) ;
     Concentration(SO4)       = pow(10,logc_so4) ;
   
-    Concentration(CaHSO4)    = pow(10,logc_cahso4) ;
+    //Concentration(CaHSO4)    = pow(10,logc_cahso4) ;
     Concentration(CaSO4)     = pow(10,logc_caso4) ;
   
   
@@ -804,7 +986,7 @@ _INLINE_ void (CementSolutionChemistry_SupplementSystemWith_SO3_LogA_H2SO4)(Ceme
     LogConcentration(HSO4)   = logc_hso4 ;
     LogConcentration(SO4)    = logc_so4 ;
 
-    LogConcentration(CaHSO4) = logc_cahso4 ;
+    //LogConcentration(CaHSO4) = logc_cahso4 ;
     LogConcentration(CaSO4)  = logc_caso4 ;
   }
 }
@@ -837,8 +1019,8 @@ _INLINE_ void (CementSolutionChemistry_SupplementSystemWith_SO3_LogA_SO4)(Cement
   
   /* Calcium-sulfur compounds */
   T loga_ca     = LogActivity(Ca) ;
-  T logk_cahso4 = LogKeq(CaHSO4) ;
-  T loga_cahso4 = loga_ca + loga_hso4 - logk_cahso4 ;
+  //T logk_cahso4 = LogKeq(CaHSO4) ;
+  //T loga_cahso4 = loga_ca + loga_hso4 - logk_cahso4 ;
   T logk_caso4  = LogKeq(CaSO4) ;
   T loga_caso4  = loga_ca + loga_so4  - logk_caso4 ;
   
@@ -851,7 +1033,7 @@ _INLINE_ void (CementSolutionChemistry_SupplementSystemWith_SO3_LogA_SO4)(Cement
     LogActivity(HSO4)   = loga_hso4 ;
     LogActivity(SO4)    = loga_so4 ;
   
-    LogActivity(CaHSO4) = loga_cahso4 ;
+    //LogActivity(CaHSO4) = loga_cahso4 ;
     LogActivity(CaSO4)  = loga_caso4 ;
   }
   
@@ -864,14 +1046,14 @@ _INLINE_ void (CementSolutionChemistry_SupplementSystemWith_SO3_LogA_SO4)(Cement
     T logc_hso4         = loga_hso4   + logc0 ;
     T logc_so4          = loga_so4    + logc0 ;
    
-    T logc_cahso4       = loga_cahso4 + logc0 ;
+    //T logc_cahso4       = loga_cahso4 + logc0 ;
     T logc_caso4        = loga_caso4  + logc0 ;
     
     Concentration(H2SO4)     = pow(10,logc_h2so4) ;
     Concentration(HSO4)      = pow(10,logc_hso4) ;
     Concentration(SO4)       = pow(10,logc_so4) ;
   
-    Concentration(CaHSO4)    = pow(10,logc_cahso4) ;
+    //Concentration(CaHSO4)    = pow(10,logc_cahso4) ;
     Concentration(CaSO4)     = pow(10,logc_caso4) ;
   
   
@@ -879,7 +1061,7 @@ _INLINE_ void (CementSolutionChemistry_SupplementSystemWith_SO3_LogA_SO4)(Cement
     LogConcentration(HSO4)   = logc_hso4 ;
     LogConcentration(SO4)    = logc_so4 ;
 
-    LogConcentration(CaHSO4) = logc_cahso4 ;
+    //LogConcentration(CaHSO4) = logc_cahso4 ;
     LogConcentration(CaSO4)  = logc_caso4 ;
   }
 }
@@ -1129,91 +1311,7 @@ _INLINE_ void (CementSolutionChemistry_ComputeSystem_CaO_SiO2_Na2O_K2O_SO3_Al2O3
 
 
 
-
-template<typename T>
-_INLINE_ void (CementSolutionChemistry_CopyConcentrations)(CementSolutionChemistry_t<T>* csc,T* v)
-{
-  {
-    int     n = CementSolutionChemistry_NbOfSpecies ;
-    T* c = CementSolutionChemistry_GetConcentration(csc) ;
-  
-    {
-      int i ;
-      
-      for(i = 0 ; i < n ; i++) {
-        v[i] = c[i] ;
-      }
-    }
-  }
-}
-
-
-
-template<typename T>
-_INLINE_ void (CementSolutionChemistry_CopyLogConcentrations)(CementSolutionChemistry_t<T>* csc,T* v)
-{
-  {
-    int     n = CementSolutionChemistry_NbOfSpecies ;
-    T* logc = CementSolutionChemistry_GetLogConcentration(csc) ;
-  
-    {
-      int i ;
-      
-      for(i = 0 ; i < n ; i++) {
-        v[i] = logc[i] ;
-      }
-    }
-  }
-}
-
-
-
-template<typename T>
-_INLINE_ void (CementSolutionChemistry_CopyChemicalPotential)(CementSolutionChemistry_t<T>* csc,T* v)
-{
-  {
-    int     n = CementSolutionChemistry_NbOfSpecies ;
-    T* logc = CementSolutionChemistry_GetLogConcentration(csc) ;
-    T  epot = CementSolutionChemistry_GetElectricPotential(csc) ;
-    double* z = CementSolutionChemistry_GetValence() ;
-  
-    {
-      int i ;
-      
-      for(i = 0 ; i < n ; i++) {
-        v[i] = Ln10 * logc[i] + z[i] * epot ;
-      }
-    }
-  }
-}
-
-
-
-template<typename T>
-_INLINE_ void (CementSolutionChemistry_UpdateSolution)(CementSolutionChemistry_t<T>* csc)
-{
-  /* Charge density */
-  {
-    T q = CementSolutionChemistry_ComputeChargeDensity(csc) ;
-    
-    CementSolutionChemistry_SetChargeDensity(csc,q) ;
-  }
-  
-  /* Mass density */
-  {
-    T rho_l = CementSolutionChemistry_ComputeLiquidMassDensity(csc) ;
-    
-    CementSolutionChemistry_SetLiquidMassDensity(csc,rho_l) ;
-  }
-  
-  /* Element concentrations */
-  CementSolutionChemistry_UpdateElementConcentrations(csc) ;
-}
-
-
-
 /* Shorthands of macros */
-#include "ElectricChargeOfIonInWater.h"
 #define Z(A)          ElectricChargeOfIonInWater(A)
 
 
@@ -1244,7 +1342,7 @@ _INLINE_ int (CementSolutionChemistry_SolveElectroneutrality)(CementSolutionChem
    * 
    * c_ca        (prop to)  q_ch / (c_oh)^2        : +2   +2
    * c_caoh      (prop to)  c_ca * c_oh            : +1   +1
-   * c_caoh2     (prop to)  q_ch                   :  0    0
+   * c_cao2h2    (prop to)  q_ch                   :  0    0
    * 
    * c_h4sio4    (prop to)  q_sh                   :  0    0
    * c_h3sio4    (prop to)  c_h4sio4 / c_h         : -1   -1
@@ -1318,12 +1416,12 @@ _INLINE_ int (CementSolutionChemistry_SolveElectroneutrality)(CementSolutionChem
   
     T c_naco3    = Concentration(NaCO3) ;
   
-    T c_cahso4   = Concentration(CaHSO4) ;
+    //T c_cahso4   = Concentration(CaHSO4) ;
 
     /* Compute the positive charge in a3,a2,a1,a0 for n = +3,+2,+1,0 */
     T a3 = Z(Al)*c_al ;
     T a2 = Z(Ca)*c_ca ;
-    T a1 = Z(H)*c_h + Z(CaHCO3)*c_cahco3 + Z(CaH3SiO4)*c_cah3sio4 + Z(CaOH)*c_caoh + Z(CaHSO4)*c_cahso4 ;
+    T a1 = Z(H)*c_h + Z(CaHCO3)*c_cahco3 + Z(CaH3SiO4)*c_cah3sio4 + Z(CaOH)*c_caoh;// + Z(CaHSO4)*c_cahso4 ;
     T a0 = Z(Na)*c_na + Z(K)*c_k ;
     /* Compute the negative charge in b0,b1,b2 for n = 0,-1,-2 */
     T b0 = Z(Cl)*c_cl ;
@@ -1426,7 +1524,7 @@ _INLINE_ int (CementSolutionChemistry_SolveElectroneutrality)(CementSolutionChem
     Concentration(NaHCO3)   *= y ;
   
     //Concentration(CaSO4)    *= 1 ;
-    Concentration(CaHSO4)   *= x ;
+    //Concentration(CaHSO4)   *= x ;
   }
   
   
@@ -1480,7 +1578,7 @@ _INLINE_ int (CementSolutionChemistry_SolveElectroneutrality)(CementSolutionChem
     LogConcentration(NaHCO3)   += logy ;
   
     //LogConcentration(CaSO4)    += 0 ;
-    LogConcentration(CaHSO4)   += logx ;
+    //LogConcentration(CaHSO4)   += logx ;
   }
   
   CementSolutionChemistry_TranslateConcentrationsIntoActivities(csc) ;
@@ -1493,7 +1591,6 @@ _INLINE_ int (CementSolutionChemistry_SolveElectroneutrality)(CementSolutionChem
 
 
 
-#include "EquilibriumConstantOfHomogeneousReactionInWater.h"
 
 template<typename T>
 _INLINE_ int (CementSolutionChemistry_SolveExplicitElectroneutrality)(CementSolutionChemistry_t<T>* csc)
@@ -1538,37 +1635,67 @@ template<typename T>
 _INLINE_ T (CementSolutionChemistry_ComputeChargeDensity)(CementSolutionChemistry_t<T>* csc)
 /** Return the charge **/
 {
+  /* Hydrogen-Oxygen
+   * ---------------*/
   T c_h        = Concentration(H) ;
   T c_oh       = Concentration(OH) ;
   
-  T c_ca       = Concentration(Ca) ;
-  T c_caoh     = Concentration(CaOH) ;
-  
-  T c_h3sio4   = Concentration(H3SiO4) ;
-  T c_h2sio4   = Concentration(H2SiO4) ;
-  
-  T c_na       = Concentration(Na) ;
-  
-  T c_k        = Concentration(K) ;
-  
-  T c_cl       = Concentration(Cl) ;
-  
-  T c_hco3     = Concentration(HCO3) ;
-  T c_co3      = Concentration(CO3) ;
-  
-  T c_hso4     = Concentration(HSO4) ;
-  T c_so4      = Concentration(SO4) ;
-  
+  /* Compound of type I
+   * ------------------*/
+  /* Aluminium */
   T c_al       = Concentration(Al) ;
   T c_alo4h4   = Concentration(AlO4H4) ;
-  
-  T c_cahso4   = Concentration(CaHSO4) ;
-  
-  T c_cah3sio4 = Concentration(CaH3SiO4) ;
-  
-  T c_naco3    = Concentration(NaCO3) ;
-  
+  /* Calcium */
+  T c_ca       = Concentration(Ca) ;
+  T c_caoh     = Concentration(CaOH) ;
+  /* Carbon */
+  T c_hco3     = Concentration(HCO3) ;
+  T c_co3      = Concentration(CO3) ;
+  /* Chlorine */
+  T c_cl       = Concentration(Cl) ;
+  /* Iron */
+  /* Magnesium */
+  /* Nitrogen */
+  /* Potassium */
+  T c_k        = Concentration(K) ;
+  /* Silicon */
+  T c_h3sio4   = Concentration(H3SiO4) ;
+  T c_h2sio4   = Concentration(H2SiO4) ;
+  /* Sodium */
+  T c_na       = Concentration(Na) ;
+  /* Strontium */
+  /* Sulfur */
+  T c_hso4     = Concentration(HSO4) ;
+  T c_so4      = Concentration(SO4) ;
+
+  /* Compound of type II
+   * -------------------*/
+   /* Aluminium-Silicon */
+   /* Aluminium-Sulfur */
+   /* Calcium-Carbon */
   T c_cahco3   = Concentration(CaHCO3) ;
+   /* Calcium-Silicon */
+  T c_cah3sio4 = Concentration(CaH3SiO4) ;
+   /* Calcium-Sulfur */
+  //T c_cahso4   = Concentration(CaHSO4) ;
+   /* Iron-Carbon */
+   /* Iron-Chlorine */
+   /* Iron-Silicon */
+   /* Iron-Sulfur */
+   /* Magnesium-Carbon */
+   /* Magnesium-Silicon */
+   /* Magnesium-Sulfur */
+   /* Potassium-Sulfur */
+   /* Sodium-Carbon */
+  T c_naco3    = Concentration(NaCO3) ;
+   /* Sodium-Sulfur */
+   /* Strontium-Carbon */
+   /* Strontium-Silicon */
+   /* Strontium-Sulfur */
+   
+  /* Compound of type III
+   * --------------------*/
+   /* Sulfur-Carbon-Nitrogen */
 
 
   /* The charge */
@@ -1584,7 +1711,7 @@ _INLINE_ T (CementSolutionChemistry_ComputeChargeDensity)(CementSolutionChemistr
   T q_ca_si = Z(CaH3SiO4)*c_cah3sio4 ;
   T q_ca_c  = Z(CaHCO3)*c_cahco3 ;
   T q_na_c  = Z(NaCO3)*c_naco3 ;
-  T q_ca_s  = Z(CaHSO4)*c_cahso4 ;
+  T q_ca_s  = 0;//Z(CaHSO4)*c_cahso4 ;
   
   T q = q_0 + q_ca + q_si + q_na + q_k + q_cl + q_c + q_s + q_al \
            + q_ca_si + q_ca_c + q_na_c + q_ca_s ;
@@ -1605,7 +1732,7 @@ _INLINE_ T (CementSolutionChemistry_ComputeChargeDensity)(CementSolutionChemistr
   T TwoI_ca_si = Z(CaH3SiO4)*Z(CaH3SiO4)*c_cah3sio4 ;
   T TwoI_ca_c  = Z(CaHCO3)*Z(CaHCO3)*c_cahco3 ;
   T TwoI_na_c  = Z(NaCO3)*Z(NaCO3)*c_naco3 ;
-  T TwoI_ca_s  = Z(CaHSO4)*Z(CaHSO4)*c_cahso4 ;
+  T TwoI_ca_s  = 0;//Z(CaHSO4)*Z(CaHSO4)*c_cahso4 ;
   
   T TwoI       = TwoI_0 + TwoI_ca + TwoI_si + TwoI_na + TwoI_k + TwoI_cl + TwoI_c + TwoI_s + TwoI_al \
                     + TwoI_ca_si + TwoI_ca_c + TwoI_na_c + TwoI_ca_s ;
@@ -1622,9 +1749,7 @@ _INLINE_ T (CementSolutionChemistry_ComputeChargeDensity)(CementSolutionChemistr
 
 
 /* Shorthands of macros */
-#include "PartialMolarVolumeOfMoleculeInWater.h"
 #define V(A)           (PartialMolarVolumeOfMoleculeInWater(A))
-#include "MolarMassOfMolecule.h"
 #define M(A)           (MolarMassOfMolecule(A))
 
 
@@ -1638,7 +1763,7 @@ _INLINE_ T (CementSolutionChemistry_ComputeLiquidMassDensity)(CementSolutionChem
   
   T c_ca       = Concentration(Ca) ;
   T c_caoh     = Concentration(CaOH) ;
-  T c_caoh2    = Concentration(CaO2H2) ;
+  //T c_cao2h2   = Concentration(CaO2H2) ;
   
   T c_h4sio4   = Concentration(H4SiO4) ;
   T c_h3sio4   = Concentration(H3SiO4) ;
@@ -1653,7 +1778,7 @@ _INLINE_ T (CementSolutionChemistry_ComputeLiquidMassDensity)(CementSolutionChem
   T c_cl       = Concentration(Cl) ;
   
   T c_co2      = Concentration(CO2) ;
-  T c_h2co3    = Concentration(H2CO3) ;
+  //T c_h2co3    = Concentration(H2CO3) ;
   T c_hco3     = Concentration(HCO3) ;
   T c_co3      = Concentration(CO3) ;
   
@@ -1665,7 +1790,7 @@ _INLINE_ T (CementSolutionChemistry_ComputeLiquidMassDensity)(CementSolutionChem
   T c_alo4h4   = Concentration(AlO4H4) ;
   
   T c_caso4    = Concentration(CaSO4) ;
-  T c_cahso4   = Concentration(CaHSO4) ;
+  //T c_cahso4   = Concentration(CaHSO4) ;
   
   T c_cah2sio4 = Concentration(CaH2SiO4) ;
   T c_cah3sio4 = Concentration(CaH3SiO4) ;
@@ -1679,18 +1804,18 @@ _INLINE_ T (CementSolutionChemistry_ComputeLiquidMassDensity)(CementSolutionChem
   
   /* Partial molar volumes */
   T v_h      = c_h*V(H) + c_oh*V(OH) ;
-  T v_ca     = c_ca*V(Ca) + c_caoh*V(CaOH) + c_caoh2*V(CaO2H2) ;
+  T v_ca     = c_ca*V(Ca) + c_caoh*V(CaOH) ;//+ c_cao2h2*V(CaO2H2) ;
   T v_si     = c_h3sio4*V(H3SiO4) + c_h4sio4*V(H4SiO4) + c_h2sio4*V(H2SiO4) ;
   T v_na     = c_na*V(Na) + c_naoh*V(NaOH) ;
   T v_k      = c_k*V(K) + c_koh*V(KOH) ;
   T v_cl     = c_cl*V(Cl) ;
-  T v_c      = c_co2*V(CO2) + c_h2co3*V(H2CO3) + c_hco3*V(HCO3) + c_co3*V(CO3) ;
+  T v_c      = c_co2*V(CO2) + c_hco3*V(HCO3) + c_co3*V(CO3) ;//+ c_h2co3*V(H2CO3) ;
   T v_s      = c_h2so4*V(H2SO4) + c_hso4*V(HSO4) + c_so4*V(SO4) ;
   T v_al     = c_al*V(Al) + c_alo4h4*V(AlO4H4) ;
   T v_ca_si  = c_cah2sio4*V(CaH2SiO4) + c_cah3sio4*V(CaH3SiO4) ;
   T v_ca_c   = c_cahco3*V(CaHCO3) + c_caco3*V(CaCO3) ;
   T v_na_c   = c_nahco3*V(NaHCO3) + c_naco3*V(NaCO3) ;
-  T v_ca_s   = c_cahso4*V(CaHSO4) + c_caso4*V(CaSO4) ;
+  T v_ca_s   = c_caso4*V(CaSO4);// + c_cahso4*V(CaHSO4);
   
   T v_all    = v_h + v_ca + v_si + v_na + v_k + v_c + v_cl + v_s + v_al \
                   + v_ca_si + v_ca_c + v_na_c + v_ca_s ;
@@ -1703,18 +1828,18 @@ _INLINE_ T (CementSolutionChemistry_ComputeLiquidMassDensity)(CementSolutionChem
          
   /* Solution */
   T rho_0     = M(H)*c_h + M(OH)*c_oh + M(H2O)*c_h2o ;
-  T rho_ca    = M(Ca)*c_ca + M(CaOH)*c_caoh + M(CaO2H2)*c_caoh2 ;
+  T rho_ca    = M(Ca)*c_ca + M(CaOH)*c_caoh ;//+ M(CaO2H2)*c_cao2h2 ;
   T rho_si    = M(H3SiO4)*c_h3sio4 + M(H4SiO4)*c_h4sio4 + M(H2SiO4)*c_h2sio4 ;
   T rho_na    = M(Na)*c_na + M(NaOH)*c_naoh ;
   T rho_k     = M(K)*c_k + M(KOH)*c_koh ;
   T rho_cl    = M(Cl)*c_cl ;
-  T rho_c     = M(CO2)*c_co2 + M(H2CO3)*c_h2co3 + M(HCO3)*c_hco3 + M(CO3)*c_co3 ;
+  T rho_c     = M(CO2)*c_co2 + M(HCO3)*c_hco3 + M(CO3)*c_co3 ;//+ M(H2CO3)*c_h2co3 ;
   T rho_s     = M(H2SO4)*c_h2so4 + M(HSO4)*c_hso4 + M(SO4)*c_so4 ;
   T rho_al    = M(Al)*c_al + M(AlO4H4)*c_alo4h4 ;
   T rho_ca_si = M(CaH2SiO4)*c_cah2sio4 + M(CaH3SiO4)*c_cah3sio4 ;
   T rho_ca_c  = M(CaHCO3)*c_cahco3 + M(CaCO3)*c_caco3 ;
   T rho_na_c  = M(NaHCO3)*c_nahco3 + M(NaCO3)*c_naco3 ;
-  T rho_ca_s  = M(CaHSO4)*c_cahso4 + M(CaSO4)*c_caso4 ;
+  T rho_ca_s  = M(CaSO4)*c_caso4;// + M(CaHSO4)*c_cahso4 ;
   
   T rho_l = rho_0 + rho_ca + rho_si + rho_na + rho_k + rho_cl + rho_c + rho_s + rho_al \
                + rho_ca_si + rho_ca_c + rho_na_c + rho_ca_s ;
@@ -1819,7 +1944,7 @@ _INLINE_ void (CementSolutionChemistry_UpdateElementConcentrations)(CementSoluti
   /* Calcium */
   T c_ca       = Concentration(Ca) ;
   T c_caoh     = Concentration(CaOH) ;
-  T c_caoh2    = Concentration(CaO2H2) ;
+  //T c_cao2h2   = Concentration(CaO2H2) ;
   
   /* Silicon */
   T c_h4sio4   = Concentration(H4SiO4) ;
@@ -1836,7 +1961,7 @@ _INLINE_ void (CementSolutionChemistry_UpdateElementConcentrations)(CementSoluti
   
   /* Carbon */
   T c_co2      = Concentration(CO2) ;
-  T c_h2co3    = Concentration(H2CO3) ;
+  //T c_h2co3    = Concentration(H2CO3) ;
   T c_hco3     = Concentration(HCO3) ;
   T c_co3      = Concentration(CO3) ;
   
@@ -1863,23 +1988,23 @@ _INLINE_ void (CementSolutionChemistry_UpdateElementConcentrations)(CementSoluti
   T c_cahco3   = Concentration(CaHCO3) ;
   
   T c_caso4    = Concentration(CaSO4) ;
-  T c_cahso4   = Concentration(CaHSO4) ;
+  //T c_cahso4   = Concentration(CaHSO4) ;
 
   
   /* Concentration as element: C, Ca, Si ... */
   /* Compounds type I */
-  T c_ca_l    = c_ca + c_caoh + c_caoh2 ;
+  T c_ca_l    = c_ca + c_caoh ;//+ c_cao2h2 ;
   T c_si_l    = c_h2sio4 + c_h3sio4 + c_h4sio4 ;
   T c_na_l    = c_na + c_naoh ;
   T c_k_l     = c_k + c_koh ;
-  T c_c_l     = c_co2 + c_h2co3 + c_hco3 + c_co3 ;
+  T c_c_l     = c_co2 + c_hco3 + c_co3 ;//+ c_h2co3 ;
   T c_s_l     = c_h2so4 + c_hso4 + c_so4 ;
   T c_al_l    = c_al + c_alo4h4 ;
   T c_cl_l    = c_cl ;
   /* Compounds type II */
   T c_ca_si_l = c_cah2sio4 + c_cah3sio4 ;
   T c_ca_c_l  = c_cahco3 + c_caco3 ;
-  T c_ca_s_l  = c_caso4 + c_cahso4 ;
+  T c_ca_s_l  = c_caso4;// + c_cahso4 ;
   T c_na_c_l  = c_nahco3 + c_naco3 ;
   
   

@@ -165,83 +165,87 @@ struct Curve_t;
 
 /* Indexes for the primary variables
  * ---------------------------------*/
-#define HardenedCementChemistry_NbOfPrimaryVariables  (14)
+#define HardenedCementChemistry_NbOfPrimaryVariables  (15)
 
 
 /* Different primary variables may be used */
-#define HardenedCementChemistry_H2O          (0)
-#define HardenedCementChemistry_LogA_H2O     (0)
+#define HardenedCementChemistry_P_H2O          (0)
+#define HardenedCementChemistry_P_LogA_H2O     HardenedCementChemistry_P_H2O
 
-#define HardenedCementChemistry_CaO          (1)
-#define HardenedCementChemistry_SI_CH        (1)
-#define HardenedCementChemistry_SI_CH_CC \
-        (1 + HardenedCementChemistry_NbOfPrimaryVariables)
-#define HardenedCementChemistry_SI_CH_Cc \
-        (1 + HardenedCementChemistry_NbOfPrimaryVariables)
-#define HardenedCementChemistry_SI_CH_CSH2 \
-        (1 + 2*HardenedCementChemistry_NbOfPrimaryVariables)
-#define HardenedCementChemistry_SI_CH_CsH2 \
-        (1 + 2*HardenedCementChemistry_NbOfPrimaryVariables)
+#define HardenedCementChemistry_P_CaO          (1)
+#define HardenedCementChemistry_P_SI_CH        HardenedCementChemistry_P_CaO
+#define HardenedCementChemistry_P_SI_CH_CC \
+        (HardenedCementChemistry_P_CaO + HardenedCementChemistry_NbOfPrimaryVariables)
+#define HardenedCementChemistry_P_SI_CH_Cc \
+        (HardenedCementChemistry_P_CaO + HardenedCementChemistry_NbOfPrimaryVariables)
+#define HardenedCementChemistry_P_SI_CH_CSH2 \
+        (HardenedCementChemistry_P_CaO + 2*HardenedCementChemistry_NbOfPrimaryVariables)
+#define HardenedCementChemistry_P_SI_CH_CsH2 \
+        (HardenedCementChemistry_P_CaO + 2*HardenedCementChemistry_NbOfPrimaryVariables)
 
-#define HardenedCementChemistry_SiO2         (2)
-#define HardenedCementChemistry_SI_CSH       (2)
+#define HardenedCementChemistry_P_SiO2         (2)
+#define HardenedCementChemistry_P_SI_CSH       HardenedCementChemistry_P_SiO2
 
-#define HardenedCementChemistry_Al2O3        (3)
-#define HardenedCementChemistry_SI_AH3       (3)
+#define HardenedCementChemistry_P_Al2O3        (3)
+#define HardenedCementChemistry_P_SI_AH3       HardenedCementChemistry_P_Al2O3
 
-#define HardenedCementChemistry_Na2O         (4)
-#define HardenedCementChemistry_LogA_Na      (4)
-#define HardenedCementChemistry_LogC_Na \
-        (4 + HardenedCementChemistry_NbOfPrimaryVariables)
+#define HardenedCementChemistry_P_Na2O         (4)
+#define HardenedCementChemistry_P_LogA_Na      HardenedCementChemistry_P_Na2O
+#define HardenedCementChemistry_P_LogC_Na \
+        (HardenedCementChemistry_P_Na2O + HardenedCementChemistry_NbOfPrimaryVariables)
 
-#define HardenedCementChemistry_K2O          (5)
-#define HardenedCementChemistry_LogA_K       (5)
-#define HardenedCementChemistry_LogC_K \
-        (5 + HardenedCementChemistry_NbOfPrimaryVariables)
+#define HardenedCementChemistry_P_K2O          (5)
+#define HardenedCementChemistry_P_LogA_K       HardenedCementChemistry_P_K2O
+#define HardenedCementChemistry_P_LogC_K \
+        (HardenedCementChemistry_P_K2O + HardenedCementChemistry_NbOfPrimaryVariables)
 
-#define HardenedCementChemistry_CO2          (6)
-#define HardenedCementChemistry_LogA_CO2     (6)
-#define HardenedCementChemistry_LogC_CO2  \
-        (6 + HardenedCementChemistry_NbOfPrimaryVariables)
+#define HardenedCementChemistry_P_CO2          (6)
+#define HardenedCementChemistry_P_LogA_CO2     HardenedCementChemistry_P_CO2
+#define HardenedCementChemistry_P_LogC_CO2  \
+        (HardenedCementChemistry_P_CO2 + HardenedCementChemistry_NbOfPrimaryVariables)
 
-#define HardenedCementChemistry_OH           (7)
-#define HardenedCementChemistry_LogA_OH      (7)
-#define HardenedCementChemistry_LogC_OH   \
-        (7 + HardenedCementChemistry_NbOfPrimaryVariables)
+#define HardenedCementChemistry_P_SO3          (7)
+#define HardenedCementChemistry_P_LogA_H2SO4   HardenedCementChemistry_P_SO3
+#define HardenedCementChemistry_P_LogC_H2SO4  \
+        (HardenedCementChemistry_P_SO3 + HardenedCementChemistry_NbOfPrimaryVariables)
+#define HardenedCementChemistry_P_LogA_SO4 \
+        (HardenedCementChemistry_P_SO3 + 2*HardenedCementChemistry_NbOfPrimaryVariables)
+#define HardenedCementChemistry_P_LogC_SO4 \
+        (HardenedCementChemistry_P_SO3 + 3*HardenedCementChemistry_NbOfPrimaryVariables)
 
-#define HardenedCementChemistry_SO3          (8)
-#define HardenedCementChemistry_LogA_H2SO4   (8)
-#define HardenedCementChemistry_LogC_H2SO4  \
-        (8 + HardenedCementChemistry_NbOfPrimaryVariables)
-#define HardenedCementChemistry_LogA_SO4 \
-        (8 + 2*HardenedCementChemistry_NbOfPrimaryVariables)
-#define HardenedCementChemistry_LogC_SO4 \
-        (8 + 3*HardenedCementChemistry_NbOfPrimaryVariables)
+#define HardenedCementChemistry_P_Cl           (8)
+#define HardenedCementChemistry_P_LogA_Cl      HardenedCementChemistry_P_Cl
+#define HardenedCementChemistry_P_LogC_Cl  \
+        (HardenedCementChemistry_P_Cl + HardenedCementChemistry_NbOfPrimaryVariables)
 
-#define HardenedCementChemistry_Cl           (9)
-#define HardenedCementChemistry_LogA_Cl      (9)
-#define HardenedCementChemistry_LogC_Cl  \
-        (9 + HardenedCementChemistry_NbOfPrimaryVariables)
+#define HardenedCementChemistry_P_Fe2O3        (9)
+#define HardenedCementChemistry_P_LogA_Fe      HardenedCementChemistry_P_Fe2O3
+#define HardenedCementChemistry_P_LogC_Fe \
+        (HardenedCementChemistry_P_Fe2O3 + HardenedCementChemistry_NbOfPrimaryVariables)
 
-#define HardenedCementChemistry_Fe2O3        (10)
-#define HardenedCementChemistry_LogA_Fe      (10)
-#define HardenedCementChemistry_LogC_Fe \
-        (10 + HardenedCementChemistry_NbOfPrimaryVariables)
+#define HardenedCementChemistry_P_MgO          (10)
+#define HardenedCementChemistry_P_LogA_Mg      HardenedCementChemistry_P_MgO
+#define HardenedCementChemistry_P_LogC_Mg \
+        (HardenedCementChemistry_P_MgO + HardenedCementChemistry_NbOfPrimaryVariables)
 
-#define HardenedCementChemistry_MgO          (11)
-#define HardenedCementChemistry_LogA_Mg      (11)
-#define HardenedCementChemistry_LogC_Mg \
-        (11 + HardenedCementChemistry_NbOfPrimaryVariables)
+#define HardenedCementChemistry_P_TiO2         (11)
+#define HardenedCementChemistry_P_LogA_Ti      HardenedCementChemistry_P_TiO2
+#define HardenedCementChemistry_P_LogC_Ti \
+        (HardenedCementChemistry_P_TiO2 + HardenedCementChemistry_NbOfPrimaryVariables)
 
-#define HardenedCementChemistry_TiO2         (12)
-#define HardenedCementChemistry_LogA_Ti      (12)
-#define HardenedCementChemistry_LogC_Ti \
-        (12 + HardenedCementChemistry_NbOfPrimaryVariables)
+#define HardenedCementChemistry_P_P2O5         (12)
+#define HardenedCementChemistry_P_LogA_P       HardenedCementChemistry_P_P2O5
+#define HardenedCementChemistry_P_LogC_P \
+        (HardenedCementChemistry_P_P2O5 + HardenedCementChemistry_NbOfPrimaryVariables)
 
-#define HardenedCementChemistry_P2O5         (13)
-#define HardenedCementChemistry_LogA_P       (13)
-#define HardenedCementChemistry_LogC_P \
-        (13 + HardenedCementChemistry_NbOfPrimaryVariables)
+#define HardenedCementChemistry_P_SrO          (13)
+
+#define HardenedCementChemistry_P_H            (14)
+#define HardenedCementChemistry_P_LogA_OH      HardenedCementChemistry_P_H
+#define HardenedCementChemistry_P_LogC_OH   \
+        (HardenedCementChemistry_P_H + HardenedCementChemistry_NbOfPrimaryVariables)
+#define HardenedCementChemistry_P_LogC_H   \
+        (HardenedCementChemistry_P_H + 2*HardenedCementChemistry_NbOfPrimaryVariables)
 
 
 
@@ -265,7 +269,7 @@ struct Curve_t;
 /* Inputs: implementation
  * ---------------------- */
 #define HardenedCementChemistry_Index(U) \
-        (HardenedCementChemistry_##U)
+        (HardenedCementChemistry_P_##U)
 
 #define HardenedCementChemistry_InputIndex(U) \
         (HardenedCementChemistry_Index(U) % HardenedCementChemistry_NbOfPrimaryVariables)
@@ -278,27 +282,38 @@ struct Curve_t;
 
 
 
+
+/* Macros for the type of hydrates
+ * -------------------------------*/
+#define HardenedCementChemistry_NbOfSolidHydrates  (13)
+
+#define HardenedCementChemistry_CH          (0)
+#define HardenedCementChemistry_Portlandite (0)
+#define HardenedCementChemistry_SH          (1)
+#define HardenedCementChemistry_AmSilica    (1)
+#define HardenedCementChemistry_CC          (2)
+#define HardenedCementChemistry_Cc          (2)
+#define HardenedCementChemistry_Calcite     (2)
+#define HardenedCementChemistry_CSH2        (3)
+#define HardenedCementChemistry_CsH2        (3)
+#define HardenedCementChemistry_Gypsum      (3)
+#define HardenedCementChemistry_AH3         (4)
+#define HardenedCementChemistry_AFm         (5)
+#define HardenedCementChemistry_AFt         (6)
+#define HardenedCementChemistry_C3AH6       (7)
+#define HardenedCementChemistry_C2AH8       (8)
+#define HardenedCementChemistry_CAH10       (9)
+#define HardenedCementChemistry_FriedelSalt (10)
+#define HardenedCementChemistry_KuzelSalt   (11)
+#define HardenedCementChemistry_Aragonite   (12)
+
+
 /* Macros for saturation indexes
  * -----------------------------*/
-#define HardenedCementChemistry_NbOfSaturationIndexes  (12)
-
-#define HardenedCementChemistry_S_CH          (0)
-#define HardenedCementChemistry_S_SH          (1)
-#define HardenedCementChemistry_S_CC          (2)
-#define HardenedCementChemistry_S_Cc          (2)
-#define HardenedCementChemistry_S_CSH2        (3)
-#define HardenedCementChemistry_S_CsH2        (3)
-#define HardenedCementChemistry_S_AH3         (4)
-#define HardenedCementChemistry_S_AFm         (5)
-#define HardenedCementChemistry_S_AFt         (6)
-#define HardenedCementChemistry_S_C3AH6       (7)
-#define HardenedCementChemistry_S_C2AH8       (8)
-#define HardenedCementChemistry_S_CAH10       (9)
-#define HardenedCementChemistry_S_FriedelSalt (10)
-#define HardenedCementChemistry_S_KuzelSalt   (11)
+#define HardenedCementChemistry_NbOfSaturationIndexes  HardenedCementChemistry_NbOfSolidHydrates
 
 #define HardenedCementChemistry_GetSaturationIndexOf(HCC,A) \
-        (HardenedCementChemistry_GetSaturationIndex(HCC)[HardenedCementChemistry_S_##A])
+        (HardenedCementChemistry_GetSaturationIndex(HCC)[HardenedCementChemistry_##A])
         
 #define HardenedCementChemistry_SetSaturationIndexOf(HCC,A,B) \
         do {\
@@ -306,7 +321,7 @@ struct Curve_t;
         } while(0)
 
 #define HardenedCementChemistry_GetLog10SaturationIndexOf(HCC,A) \
-        (HardenedCementChemistry_GetLog10SaturationIndex(HCC)[HardenedCementChemistry_S_##A])
+        (HardenedCementChemistry_GetLog10SaturationIndex(HCC)[HardenedCementChemistry_##A])
         
 #define HardenedCementChemistry_SetLog10SaturationIndexOf(HCC,A,B) \
         do {\
@@ -441,26 +456,11 @@ struct Curve_t;
 
 /* Macros for solubility product constants
  * ---------------------------------------*/
-#define HardenedCementChemistry_NbOfSolubilityProductConstants (12)
-
-#define HardenedCementChemistry_K_CH          (0)
-#define HardenedCementChemistry_K_SH          (1)
-#define HardenedCementChemistry_K_CC          (2)
-#define HardenedCementChemistry_K_Cc          (2)
-#define HardenedCementChemistry_K_CSH2        (3)
-#define HardenedCementChemistry_K_CsH2        (3)
-#define HardenedCementChemistry_K_AH3         (4)
-#define HardenedCementChemistry_K_AFm         (5)
-#define HardenedCementChemistry_K_AFt         (6)
-#define HardenedCementChemistry_K_C3AH6       (7)
-#define HardenedCementChemistry_K_C2AH8       (8)
-#define HardenedCementChemistry_K_CAH10       (9)
-#define HardenedCementChemistry_K_FriedelSalt (10)
-#define HardenedCementChemistry_K_KuzelSalt   (11)
+#define HardenedCementChemistry_NbOfSolubilityProductConstants HardenedCementChemistry_NbOfSolidHydrates
 
 
 #define HardenedCementChemistry_GetLog10SolubilityProductConstantOf(HCC,CPD) \
-        (HardenedCementChemistry_GetLog10Ksp(HCC)[HardenedCementChemistry_K_##CPD])
+        (HardenedCementChemistry_GetLog10Ksp(HCC)[HardenedCementChemistry_##CPD])
         
 #define HardenedCementChemistry_SetLog10SolubilityProductConstantOf(HCC,CPD,A) \
         do {\

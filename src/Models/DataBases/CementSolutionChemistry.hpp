@@ -94,50 +94,64 @@ struct Temperature_t;
 /* Macros for primary variables
  * ----------------------------*/
  
-#define CementSolutionChemistry_NbOfPrimaryVariables  (13)
+#define CementSolutionChemistry_NbOfPrimaryVariables  (15)
 
-/* Different primary variables may be used */
-#define CementSolutionChemistry_CaO          (0)
-#define CementSolutionChemistry_LogQ_CH      (0)
-#define CementSolutionChemistry_LogA_Ca \
-        (0 + CementSolutionChemistry_NbOfPrimaryVariables) // not used yet
+/* Different sets of primary variable may be used */
+#define CementSolutionChemistry_P_H2O          (0)
+#define CementSolutionChemistry_P_LogA_H2O     CementSolutionChemistry_P_H2O
 
-#define CementSolutionChemistry_SiO2         (1)
-#define CementSolutionChemistry_LogQ_SH      (1)
-#define CementSolutionChemistry_LogA_H4SiO4 \
-        (1 + CementSolutionChemistry_NbOfPrimaryVariables) // not used yet
+#define CementSolutionChemistry_P_CaO          (1)
+#define CementSolutionChemistry_P_LogQ_CH      CementSolutionChemistry_P_CaO
+#define CementSolutionChemistry_P_LogA_Ca \
+        (CementSolutionChemistry_P_CaO + CementSolutionChemistry_NbOfPrimaryVariables) // (cemdata) not used yet
 
-#define CementSolutionChemistry_Al2O3        (2)
-#define CementSolutionChemistry_LogQ_AH3     (2)
-#define CementSolutionChemistry_LogA_AlO4H4 \
-        (2 + CementSolutionChemistry_NbOfPrimaryVariables)
+#define CementSolutionChemistry_P_SiO2         (2)
+#define CementSolutionChemistry_P_LogQ_SH      CementSolutionChemistry_P_SiO2
+#define CementSolutionChemistry_P_LogA_SiO2 \
+        (CementSolutionChemistry_P_SiO2 + CementSolutionChemistry_NbOfPrimaryVariables) // (cemdata) not used yet
 
-#define CementSolutionChemistry_Na20         (3)
-#define CementSolutionChemistry_LogA_Na      (3)
+#define CementSolutionChemistry_P_Al2O3        (3)
+#define CementSolutionChemistry_P_LogQ_AH3     CementSolutionChemistry_P_Al2O3
+#define CementSolutionChemistry_P_LogA_AlO4H4 \
+        (CementSolutionChemistry_P_Al2O3 + CementSolutionChemistry_NbOfPrimaryVariables)
+#define CementSolutionChemistry_P_LogA_AlO2 \
+        (CementSolutionChemistry_P_Al2O3 + CementSolutionChemistry_NbOfPrimaryVariables) // synonym (cemdata)
 
-#define CementSolutionChemistry_K2O          (4)
-#define CementSolutionChemistry_LogA_K       (4)
+#define CementSolutionChemistry_P_Na2O         (4)
+#define CementSolutionChemistry_P_LogA_Na      CementSolutionChemistry_P_Na2O // (cemdata)
 
-#define CementSolutionChemistry_CO2          (5)
-#define CementSolutionChemistry_LogA_CO2     (5)
+#define CementSolutionChemistry_P_K2O          (5)
+#define CementSolutionChemistry_P_LogA_K       CementSolutionChemistry_P_K2O // (cemdata)
 
-#define CementSolutionChemistry_LogA_OH      (6)
+#define CementSolutionChemistry_P_CO2          (6)
+#define CementSolutionChemistry_P_LogA_CO2     CementSolutionChemistry_P_CO2
+#define CementSolutionChemistry_P_LogA_CO3 \
+        (CementSolutionChemistry_P_CO2 + CementSolutionChemistry_NbOfPrimaryVariables) // (cemdata) not used yet
 
-#define CementSolutionChemistry_SO3          (7)
-#define CementSolutionChemistry_LogA_H2SO4   (7)
-#define CementSolutionChemistry_LogA_SO4 \
-        (7 + CementSolutionChemistry_NbOfPrimaryVariables)
+#define CementSolutionChemistry_P_SO3          (7)
+#define CementSolutionChemistry_P_LogA_SO4     CementSolutionChemistry_P_SO3
+#define CementSolutionChemistry_P_LogA_H2SO4 \
+        (CementSolutionChemistry_P_SO3 + CementSolutionChemistry_NbOfPrimaryVariables) // (cemdata)
 
-#define CementSolutionChemistry_Cl           (8)
-#define CementSolutionChemistry_LogA_Cl      (8)
+#define CementSolutionChemistry_P_Cl           (8)
+#define CementSolutionChemistry_P_LogA_Cl      CementSolutionChemistry_P_Cl // (cemdata)
 
-#define CementSolutionChemistry_Fe2O3        (9)
+#define CementSolutionChemistry_P_Fe2O3        (9)
+#define CementSolutionChemistry_P_LogA_FeO2    CementSolutionChemistry_P_Fe2O3 // (cemdata) not used yet
 
-#define CementSolutionChemistry_MgO          (10)
+#define CementSolutionChemistry_P_MgO          (10)
+#define CementSolutionChemistry_P_LogA_Mg      CementSolutionChemistry_P_MgO // (cemdata) not used yet
 
-#define CementSolutionChemistry_TiO2         (11)
+#define CementSolutionChemistry_P_TiO2         (11) // not used
 
-#define CementSolutionChemistry_P2O5         (12)
+#define CementSolutionChemistry_P_P2O5         (12) // not used
+
+#define CementSolutionChemistry_P_SrO          (13) // not used
+
+#define CementSolutionChemistry_P_H            (14)
+#define CementSolutionChemistry_P_LogA_OH      CementSolutionChemistry_P_H
+#define CementSolutionChemistry_P_LogA_H \
+        (CementSolutionChemistry_P_H + CementSolutionChemistry_NbOfPrimaryVariables) // (cemdata) not used yet
 
 
        
@@ -170,7 +184,7 @@ struct Temperature_t;
 /* Inputs: implementation
  * ---------------------- */
 #define CementSolutionChemistry_Index(U) \
-        (CementSolutionChemistry_##U)
+        (CementSolutionChemistry_P_##U)
 
 #define CementSolutionChemistry_InputIndex(U) \
         (CementSolutionChemistry_Index(U) % CementSolutionChemistry_NbOfPrimaryVariables)
@@ -186,68 +200,160 @@ struct Temperature_t;
        
 /* List of compound names
  * ----------------------*/
-#define CementSolutionChemistry_NbOfSpecies  (31)
+#define CementSolutionChemistry_NbOfSpecies  (84)
 
 
-/* Macros for the activities/concentrations
- * ----------------------------------------*/
+/* Macros for the solution species (source CEMDATA18)
+ * --------------------------------------------------*/
 
-#define CementSolutionChemistry_A_H2O         (0)
-#define CementSolutionChemistry_A_H           (1)
-#define CementSolutionChemistry_A_OH          (2)
+/* Hydrogen-Oxygen
+ * ---------------*/
+#define CementSolutionChemistry_H2O         (0)
+#define CementSolutionChemistry_H           (1)
+#define CementSolutionChemistry_OH          (2)
+#define CementSolutionChemistry_H2          (3)
+#define CementSolutionChemistry_O2          (4)
 
-#define CementSolutionChemistry_A_Ca          (3)
-#define CementSolutionChemistry_A_CaOH        (4)
-#define CementSolutionChemistry_A_CaO2H2      (5)
+/* Compound of type I
+ * ------------------*/
+/* Aluminium: */
+#define CementSolutionChemistry_Al          (5)
+#define CementSolutionChemistry_AlO4H4      (6)
+#define CementSolutionChemistry_AlO2        (6) // synonym
+#define CementSolutionChemistry_AlO         (7)
+#define CementSolutionChemistry_AlOH        (8)
+#define CementSolutionChemistry_AlO2H       (9)
+/* Calcium: */
+#define CementSolutionChemistry_Ca          (10)
+#define CementSolutionChemistry_CaOH        (11)
+//#define CementSolutionChemistry_CaO2H2      (5) // To be removed!
+/* Carbon: */
+//#define CementSolutionChemistry_H2CO3       (15) // To be removed because small compared to CO2
+#define CementSolutionChemistry_HCO3        (12)
+#define CementSolutionChemistry_CO3         (13)
+#define CementSolutionChemistry_CO2         (14)
+#define CementSolutionChemistry_CH4         (15)
+/* Chlorine: */
+#define CementSolutionChemistry_Cl          (16)
+#define CementSolutionChemistry_ClO4        (17)
+/* Iron: */
+#define CementSolutionChemistry_Fe          (18)
+#define CementSolutionChemistry_FeO2        (19)
+#define CementSolutionChemistry_FeO         (20)
+#define CementSolutionChemistry_FeO2H       (21)
+#define CementSolutionChemistry_FeOH        (22)
+#define CementSolutionChemistry_FeO2H2      (23)
+#define CementSolutionChemistry_Fe3O4H4     (24)
+#define CementSolutionChemistry_Fe_p3       (25)
+/* Magnesium: */
+#define CementSolutionChemistry_Mg          (26)
+#define CementSolutionChemistry_MgOH        (27)
+/* Nitrogen: */
+#define CementSolutionChemistry_NO3         (28)
+#define CementSolutionChemistry_N2          (29)
+#define CementSolutionChemistry_NH3         (30)
+#define CementSolutionChemistry_NH4         (31)
+/* Potassium: */
+#define CementSolutionChemistry_K           (32)
+#define CementSolutionChemistry_KOH         (33)
+/* Silicon: */
+#define CementSolutionChemistry_H2SiO4      (34)
+#define CementSolutionChemistry_SiO3        (34) // synonym
+#define CementSolutionChemistry_H3SiO4      (35)
+#define CementSolutionChemistry_HSiO3       (35) // synonym
+#define CementSolutionChemistry_H4SiO4      (36)
+#define CementSolutionChemistry_SiO2        (36) // synonym
+#define CementSolutionChemistry_Si4O10      (37)
+/* Sodium: */
+#define CementSolutionChemistry_Na          (38)
+#define CementSolutionChemistry_NaOH        (39)
+/* Strontium: */
+#define CementSolutionChemistry_Sr          (40)
+#define CementSolutionChemistry_SrOH        (41)
+/* Sulfur: */
+#define CementSolutionChemistry_H2SO4       (42) // sulfuric acid (not present in cemdata)
+#define CementSolutionChemistry_HSO4        (43)
+#define CementSolutionChemistry_SO4         (44)
+#define CementSolutionChemistry_S2O3        (45)
+#define CementSolutionChemistry_HS          (46)
+#define CementSolutionChemistry_S           (47)
+#define CementSolutionChemistry_SO3         (48)
+#define CementSolutionChemistry_HSO3        (49)
 
-#define CementSolutionChemistry_A_H2SiO4      (6)
-#define CementSolutionChemistry_A_H3SiO4      (7)
-#define CementSolutionChemistry_A_H4SiO4      (8)
+/* Compound of type II
+ * -------------------*/
+/* Aluminium-Silicon: */
+#define CementSolutionChemistry_AlSiO5      (50)
+#define CementSolutionChemistry_AlHSiO3     (51)
+/* Aluminium-Sulfur: */
+#define CementSolutionChemistry_AlSO4       (52)
+#define CementSolutionChemistry_AlS2O8      (53)
+/* Calcium-Carbon: */
+#define CementSolutionChemistry_CaHCO3      (54)
+#define CementSolutionChemistry_CaCO3       (55)
+/* Calcium-Silicon: */
+#define CementSolutionChemistry_CaH2SiO4    (56)
+#define CementSolutionChemistry_CaSiO3      (56) // synonym
+#define CementSolutionChemistry_CaH3SiO4    (57)
+#define CementSolutionChemistry_CaHSiO3     (57) // synonym
+/* Calcium-Sulfur: */
+//#define CementSolutionChemistry_CaHSO4      (26) // To be removed (not present in cemdata)
+#define CementSolutionChemistry_CaSO4       (58)
+/* Iron-Carbon: */
+#define CementSolutionChemistry_FeCO3       (59)
+#define CementSolutionChemistry_FeHCO3      (60)
+/* Iron-Chlorine: */
+#define CementSolutionChemistry_FeCl        (61)
+#define CementSolutionChemistry_FeCl_p2     (62)
+#define CementSolutionChemistry_FeCl2       (63)
+#define CementSolutionChemistry_FeCl3       (64)
+/* Iron-Silicon: */
+#define CementSolutionChemistry_FeHSiO3     (65)
+/* Iron-Sulfur: */
+#define CementSolutionChemistry_FeHSO4      (66)
+#define CementSolutionChemistry_FeSO4       (67)
+#define CementSolutionChemistry_FeSO4_p1    (68)
+#define CementSolutionChemistry_FeS2O8      (69)
+/* Magnesium-Carbon: */
+#define CementSolutionChemistry_MgCO3       (70)
+#define CementSolutionChemistry_MgHCO3      (71)
+/* Magnesium-Silicon: */
+#define CementSolutionChemistry_MgHSiO3     (72)
+#define CementSolutionChemistry_MgSiO3      (73)
+/* Magnesium-Sulfur: */
+#define CementSolutionChemistry_MgSO4       (74)
+/* Potassium-Sulfur: */
+#define CementSolutionChemistry_KSO4        (75)
+/* Sodium-Carbon: */
+#define CementSolutionChemistry_NaHCO3      (76)
+#define CementSolutionChemistry_NaCO3       (77)
+/* Sodium-Sulfur: */
+#define CementSolutionChemistry_NaSO4       (78)
+/* Strontium-Carbon: */
+#define CementSolutionChemistry_SrCO3       (79)
+#define CementSolutionChemistry_SrHCO3      (80)
+/* Strontium-Silicon: */
+#define CementSolutionChemistry_SrSiO3      (81)
+/* Strontium-Sulfur: */
+#define CementSolutionChemistry_SrSO4       (82)
 
-#define CementSolutionChemistry_A_CaH2SiO4    (9)
-#define CementSolutionChemistry_A_CaH3SiO4    (10)
+/* Compound of type III
+ * --------------------*/
+/* Sulfur-Carbon-Nitrogen: */
+#define CementSolutionChemistry_SCN         (83)
 
-#define CementSolutionChemistry_A_Na          (11)
-#define CementSolutionChemistry_A_NaOH        (12)
 
-#define CementSolutionChemistry_A_K           (13)
-#define CementSolutionChemistry_A_KOH         (14)
 
-#define CementSolutionChemistry_A_H2CO3       (15)
-#define CementSolutionChemistry_A_HCO3        (16)
-#define CementSolutionChemistry_A_CO3         (17)
-#define CementSolutionChemistry_A_CO2         (18)
 
-#define CementSolutionChemistry_A_CaHCO3      (19)
-#define CementSolutionChemistry_A_CaCO3       (20)
 
-#define CementSolutionChemistry_A_NaHCO3      (21)
-#define CementSolutionChemistry_A_NaCO3       (22)
 
-#define CementSolutionChemistry_A_H2SO4       (23)
-#define CementSolutionChemistry_A_HSO4        (24)
-#define CementSolutionChemistry_A_SO4         (25)
-#define CementSolutionChemistry_A_SO3         (xx)
-#define CementSolutionChemistry_A_S2O3        (xx)
 
-#define CementSolutionChemistry_A_H2S         (xx)
-#define CementSolutionChemistry_A_HS          (xx)
-#define CementSolutionChemistry_A_S           (xx)
-#define CementSolutionChemistry_A_S0          (xx)
-
-#define CementSolutionChemistry_A_CaHSO4      (26)
-#define CementSolutionChemistry_A_CaSO4       (27)
-
-#define CementSolutionChemistry_A_Cl          (28)
-
-#define CementSolutionChemistry_A_Al          (29)
-#define CementSolutionChemistry_A_AlO4H4      (30)
 
 
 
 
 #define CementSolutionChemistry_GetIndexOf(CPD) \
-        Utils_CAT(CementSolutionChemistry_A_,CPD)
+        Utils_CAT(CementSolutionChemistry_,CPD)
 
 
 #define CementSolutionChemistry_GetConcentrationOf(CSC,CPD) \
@@ -330,10 +436,15 @@ struct Temperature_t;
 
 
 
-/* Macros for equilibrium constants (same indices as A_CPD)
- * -------------------------------------------------------*/
-#define CementSolutionChemistry_GetLog10EquilibriumConstant(CSC,CPD) \
+/* Macros for equilibrium constants (same indices as CementSolutionChemistry_CPD)
+ * ------------------------------------------------------------------------------*/
+#define CementSolutionChemistry_GetLog10EquilibriumConstantOf(CSC,CPD) \
        (CementSolutionChemistry_GetLog10Keq(CSC)[CementSolutionChemistry_GetIndexOf(CPD)])
+       
+#define CementSolutionChemistry_SetLog10EquilibriumConstantOf(CSC,CPD,V) \
+        do {\
+         (CementSolutionChemistry_GetLog10Keq(CSC)[CementSolutionChemistry_GetIndexOf(CPD)]) = V;\
+       } while(0)
 
 
 

@@ -1,0 +1,4 @@
+var struct_eigen_1_1_scalar_binary_op_traits_3_01_t_00_01autodiff_1_1_variable_3_01_t_01_4_00_01_bin_op_01_4 =
+[
+    [ "ReturnType", "struct_eigen_1_1_scalar_binary_op_traits_3_01_t_00_01autodiff_1_1_variable_3_01_t_01_4_00_01_bin_op_01_4.html#a092e882e3a298e9c6abcc6b841c33fb6", null ]
+];

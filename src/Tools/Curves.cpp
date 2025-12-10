@@ -197,7 +197,7 @@ int   Curves_ReadCurves(Curves_t* curves,const char* dline)
 
   {    
     if(Curves_CannotAppendCurves(curves,n_curves)) {
-      arret("Curves_ReadCurves (4) : trop de courbes") ;
+      arret("Curves_ReadCurves(4): too many curves!") ;
     }
   }
   

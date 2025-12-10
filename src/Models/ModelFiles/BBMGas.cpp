@@ -75,7 +75,7 @@ struct MPM_t: public MaterialPointMethod_t<Values_t> {
   template<typename T>
   MaterialPointMethod_Integrate_t<Values_t,T> Integrate;
   Values_t<double>* Integrate(Element_t* el,double const& t,double const& dt,Values_t<double> const& val_n,Values_t<double>& val) {return(Integrate<double>(el,t,dt,val_n,val));}
-  #ifdef USE_AUTODIFF
+  #ifdef HAVE_AUTODIFF
   Values_t<real>* Integrate(Element_t* el,double const& t,double const& dt,Values_t<double> const& val_n,Values_t<real>& val) {return(Integrate<real>(el,t,dt,val_n,val));}
   #endif
   MaterialPointMethod_Initialize_t<Values_t>  Initialize;
@@ -1138,7 +1138,7 @@ Values_t<T>* MPM_t::Integrate(Element_t* el,const double& t,const double& dt,Val
         
         #if 1
         if(young < 0) {
-          printf("Element index: %d\n",Element_GetElementIndex(el));
+          printf("Element index: %ld\n",Element_GetElementIndex(el));
           printf("stress:\n") ;
           Math_PrintMatrix(sig_n,3) ;
           printf("signet = %g\n",signet_n) ;

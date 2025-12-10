@@ -1,0 +1,5 @@
+var structautodiff_1_1detail_1_1_vector_traits_3_01_eigen_1_1_matrix_3_01_scalar_00_01_rows_00_01_co6799d329a4302720d87bf916e87c5050 =
+[
+    [ "ReplaceValueType", "structautodiff_1_1detail_1_1_vector_traits_3_01_eigen_1_1_matrix_3_01_scalar_00_01_rows_00_01_co6799d329a4302720d87bf916e87c5050.html#aa194dfe6009c555fbf0e0d8dc7a8c08e", null ],
+    [ "ValueType", "structautodiff_1_1detail_1_1_vector_traits_3_01_eigen_1_1_matrix_3_01_scalar_00_01_rows_00_01_co6799d329a4302720d87bf916e87c5050.html#a1572df88121ed9b0cb6c773872369dfc", null ]
+];

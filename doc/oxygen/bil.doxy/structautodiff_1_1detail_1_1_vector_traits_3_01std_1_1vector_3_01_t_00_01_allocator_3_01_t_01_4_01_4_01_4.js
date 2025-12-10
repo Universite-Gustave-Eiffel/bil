@@ -1,0 +1,5 @@
+var structautodiff_1_1detail_1_1_vector_traits_3_01std_1_1vector_3_01_t_00_01_allocator_3_01_t_01_4_01_4_01_4 =
+[
+    [ "ReplaceValueType", "structautodiff_1_1detail_1_1_vector_traits_3_01std_1_1vector_3_01_t_00_01_allocator_3_01_t_01_4_01_4_01_4.html#aa76abd38a48893c370d6b41f49a41fab", null ],
+    [ "ValueType", "structautodiff_1_1detail_1_1_vector_traits_3_01std_1_1vector_3_01_t_00_01_allocator_3_01_t_01_4_01_4_01_4.html#aecaeabaa9da616ae42bb20787878260d", null ]
+];

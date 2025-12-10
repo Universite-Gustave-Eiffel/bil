@@ -4,7 +4,7 @@
 #include <math.h>
 #include "CommonModel.h"
 
-/* Plasticity interface */
+/* Put here the suited interfaces (this is only an example) */
 #include "Plasticity.h"
 
 /* Choose the finite element method */
@@ -76,18 +76,18 @@ using Values_d = Values_t<double> ;
 #define Values_Index(V)  CustomValues_Index(Values_d,V,double)
 
 
-struct MPM_t: public MaterialPointModel_t<Values_d> {
-  MaterialPointModel_SetInputs_t<Values_d> SetInputs;
-  MaterialPointModel_Integrate_t<Values_d> Integrate;
-  MaterialPointModel_Initialize_t<Values_d>  Initialize;
-  MaterialPointModel_SetTangentMatrix_t<Values_d> SetTangentMatrix;
-  MaterialPointModel_SetTransferMatrix_t<Values_d> SetTransferMatrix;
+struct MPM_t: public MaterialPointMethod_t<Values_d> {
+  MaterialPointModel_SetInputs_t<Values_t> SetInputs;
+  MaterialPointModel_Integrate_t<Values_t> Integrate;
+  MaterialPointModel_Initialize_t<Values_t>  Initialize;
+  MaterialPointModel_SetTangentMatrix_t<Values_t> SetTangentMatrix;
+  MaterialPointModel_SetTransferMatrix_t<Values_t> SetTransferMatrix;
   MaterialPointModel_SetIndexOfPrimaryVariables_t SetIndexOfPrimaryVariables;
   MaterialPointModel_SetIncrementOfPrimaryVariables_t SetIncrementOfPrimaryVariables;
 } ;
 
 
-
+/* Put here the implicit values to be saved */
 struct ImplicitValues_t {
   double Displacement[3];
   double Strain[9];
@@ -105,6 +105,7 @@ struct ImplicitValues_t {
 
 
 
+/* Put here the explicit values to be saved */
 struct ExplicitValues_t {
   double Permeability1;
   double Permeability2;
@@ -112,24 +113,25 @@ struct ExplicitValues_t {
 
 
 
+/* Put here the constant values to be saved */
 struct ConstantValues_t {
   double InitialStress[9];
 };
 
 
 
-/* The parameters below are read in the input data file */
+/* Put here the parameters that are read from the input data file */
 struct Parameters_t {
   double Coef1;
   double Coef2;
   double Coef3;
   double InitialStress[9];
 };
+
+MPM_t mpm;
 }
 
 using namespace BaseName();
-
-static MPM_t mpm;
 
 
 

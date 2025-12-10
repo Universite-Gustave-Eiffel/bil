@@ -50,7 +50,7 @@ struct MaterialPointMethod_t {
    *  double const t         = current time
    *  double const dt        = time increment (i.e. the previous time is t-dt)
    *  double const* const* u = pointer to pointer to primary nodal unknowns
-   *  int const p            = p^th interpolation Gauss point of the FE
+   *  int const p            = p^th node (FVM) or Gauss point (FEM) of the element
    *  V<T> val               = custom values at the current time
    *  V<double> const val_n  = custom values at the previous time (always an input)
    */
@@ -63,9 +63,10 @@ struct MaterialPointMethod_t {
    */
 
   virtual V<double>* Integrate(Element_t*,double const&,double const&,V<double> const&,V<double>&){return(NULL);}
-  /** On input: (el,t,dt,p,val_n,val)
+  /** On input: (el,t,dt,val_n,val) with val initialized with the primary nodal unknowns.
    *  On output:
-   *  val is updated from the integration of the constitutive law from t-dt to t.
+   *  val is updated from the integration of the constitutive law from t-dt to t,
+   *  i.e. the implicit and the explicit values.
    * 
    *  Return a pointer to val.
    **/
@@ -75,9 +76,9 @@ struct MaterialPointMethod_t {
   #endif
 
   virtual V<double>* Initialize(Element_t*,double const&,V<double>&){return(NULL);}
-  /** On input: (el,t,val)
+  /** On input: (el,t,val) with val initialized with the primary nodal unknowns.
    *  On output:
-   *  val is initialized.
+   *  val is fully initialized, including the implicit, the explicit and the constant values.
    * 
    *  Return a pointer to val.
    */
@@ -86,7 +87,12 @@ struct MaterialPointMethod_t {
   /** On input: (el,t,dt,p,val,dval,k,c)
    *  k = the k^th column of the tangent matrix to be filled.
    *  dval = the derivatives of val wrt the k^th primary unknown.
-   *  c = pointer to the matrix to be partially filled (only the column k).
+   *    Note: in FVM the derivative of the fluxes wrt the k^th primary unkown (in dval)
+   *    are computed with the values of dval instead of the gradients. Typically from
+   *    the node p to node q: d(W_pq)/d(Uk_p) = - K_pq d(X_p)/d(Uk_p). Therefore to get
+   *    the real derivative we must divide the result by the distance from p to q.
+   *  c = pointer to the matrix to be partially filled for the components of the column k and
+   *  possibly for any other column if their components don't depend on the derivatives of val.
    * 
    *  On output:
    *  c is updated.
@@ -115,7 +121,7 @@ struct MaterialPointMethod_t {
    *  grdval = value gradients
    * 
    *  On output:
-   *  val[i] and val[j] are updated.
+   *  val[i] and val[j] are updated for the fluxes between i and j.
    * 
    *  Return a pointer to val.
    */

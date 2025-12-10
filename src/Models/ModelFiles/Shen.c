@@ -421,7 +421,7 @@ void ComputePhysicoChemicalProperties(double TK)
 
   K_CH = DissociationConstantOfCementHydrationProduct(CH__Ca_2OH,TK) ;
   K_CC = DissociationConstantOfCalciumCarbonate(Calcite__Ca_CO3,TK) ;
-  K_SH = DissociationConstantOfCementHydrationProduct(S_2H2O__H4SiO4,TK) ;
+  K_SH = DissociationConstantOfCementHydrationProduct(S__SiO2,TK) ;
   
   /* Diffusion Coefficient Of Molecules In Water (dm2/s) */
   d_oh         = DiffusionCoefficientOfMoleculeInWater(OH,TK)*dm2 ;

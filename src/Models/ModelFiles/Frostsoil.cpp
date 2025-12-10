@@ -95,7 +95,7 @@ struct MPM_t: public MaterialPointMethod_t<Values_t> {
   template<typename T>
   MaterialPointMethod_Integrate_t<Values_t,T> Integrate;
   Values_t<double>* Integrate(Element_t* el,double const& t,double const& dt,Values_t<double> const& val_n,Values_t<double>& val) {return(Integrate<double>(el,t,dt,val_n,val));}
-  #ifdef USE_AUTODIFF
+  #ifdef HAVE_AUTODIFF
   Values_t<real>* Integrate(Element_t* el,double const& t,double const& dt,Values_t<double> const& val_n,Values_t<real>& val) {return(Integrate<real>(el,t,dt,val_n,val));}
   #endif
   MaterialPointMethod_Initialize_t<Values_t>  Initialize;
@@ -352,7 +352,7 @@ static Elasticity_t* elasty ;
 template<typename T>
 static T effectivediffusioncoef(double,T);
 template static double  effectivediffusioncoef(double,double) ;
-#ifdef USE_AUTODIFF
+#ifdef HAVE_AUTODIFF
 template static real  effectivediffusioncoef(double,real) ;
 #endif
 template<typename T>
@@ -375,7 +375,7 @@ T effectivediffusioncoef(double phi,T s)
 template<typename T>
 static T thermalconductivity(double,T);
 template static double thermalconductivity(double,double) ;
-#ifdef USE_AUTODIFF
+#ifdef HAVE_AUTODIFF
 template static real thermalconductivity(double,real) ;
 #endif
 template<typename T>
@@ -463,7 +463,7 @@ static void    ComputePhysicoChemicalProperties(void) ;
 template<typename T>
 static T activity(T,T);
 template static double  activity(double,double) ;
-#ifdef USE_AUTODIFF
+#ifdef HAVE_AUTODIFF
 template static real  activity(real,real) ;
 #endif
 
@@ -472,7 +472,7 @@ static double  activity_w_ideal(double,double) ;
 template<typename T>
 static T lna_i(T,T,double,double,double,T);
 template static double  lna_i(double,double,double,double,double,double) ;
-#ifdef USE_AUTODIFF
+#ifdef HAVE_AUTODIFF
 template static real  lna_i(real,real,double,double,double,real) ;
 #endif
 

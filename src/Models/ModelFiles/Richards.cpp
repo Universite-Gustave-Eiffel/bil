@@ -63,20 +63,18 @@ struct MPM_t: public MaterialPointMethod_t<Values_t> {
   template<typename T>
   MaterialPointMethod_Integrate_t<Values_t,T> Integrate;
   Values_t<double>* Integrate(Element_t* el,double const& t,double const& dt,Values_t<double> const& val_n,Values_t<double>& val) {return(Integrate<double>(el,t,dt,val_n,val));}
-  #ifdef USE_AUTODIFF
+  #ifdef HAVE_AUTODIFF
   Values_t<real>* Integrate(Element_t* el,double const& t,double const& dt,Values_t<double> const& val_n,Values_t<real>& val) {return(Integrate<real>(el,t,dt,val_n,val));}
   #endif
   MaterialPointMethod_Initialize_t<Values_t>  Initialize;
   MaterialPointMethod_SetTangentMatrix_t<Values_t> SetTangentMatrix;
   MaterialPointMethod_SetTransferMatrix_t<Values_t> SetTransferMatrix;
   MaterialPointMethod_SetIndexOfPrimaryVariables_t SetIndexOfPrimaryVariables;
-  #ifndef USE_AUTODIFF
   void SetIncrementOfPrimaryVariables(Element_t* el,double* dui) { 
     ObVal_t* obval = Element_GetObjectiveValue(el);
 
     dui[0]  = 1.e-2*ObVal_GetValue(obval + U_LIQ);
   }
-  #endif
 } ;
 
 
@@ -129,7 +127,7 @@ struct Parameters_t {
   double MacroFunctionIndex[3];
 };
 
-static MPM_t mpm;
+MPM_t mpm;
 }
 
 using namespace BaseName();

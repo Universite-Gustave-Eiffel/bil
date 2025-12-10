@@ -364,7 +364,7 @@ struct MPM_t: public MaterialPointMethod_t<Values_t> {
   
   #if 1
   Values_t<double>* Integrate(Element_t* el,double const& t,double const& dt,Values_t<double> const& val_n,Values_t<double>& val) {return(Integrate<double>(el,t,dt,val_n,val));}
-  #ifdef USE_AUTODIFF
+  #ifdef HAVE_AUTODIFF
   Values_t<real>* Integrate(Element_t* el,double const& t,double const& dt,Values_t<double> const& val_n,Values_t<real>& val) {return(Integrate<real>(el,t,dt,val_n,val));}
   #endif
   #endif
@@ -379,7 +379,7 @@ struct MPM_t: public MaterialPointMethod_t<Values_t> {
   /* This instantiation doesn't provide a correct virtual call (I don't know why!) */
   #if 0
   template Values_t<double>* MPM_t::Integrate<double>(Element_t*,const double&,const double&,Values_d const&,Values_t<double>&);
-  #ifdef USE_AUTODIFF
+  #ifdef HAVE_AUTODIFF
   template Values_t<real>* MPM_t::Integrate<real>(Element_t*,double const&,double const&,Values_t<double> const&,Values_t<real>&);
   #endif
   #endif
@@ -413,23 +413,6 @@ MPM_t mpm;
 }
 
 using namespace BaseName();
-
- 
-static double phi0;
-static double phi_min;
-static double kl_int;
-static double kg_int;
-static double frac;
-static double phi_r;
-static double a_2;
-static double c_2 ;
-static double rate_calcite;
-static double n_ch0;
-static double n_csh0;
-static double c_na0;
-static double c_k0;
-static double rate_friedelsalt;
-static double p_c3;
 
 
 
@@ -748,7 +731,7 @@ static double rho_l0 ;
 
 static CementSolutionDiffusion_t* csd = NULL ;
 static HardenedCementChemistry_t<double>* hcc_d = NULL ;
-#ifdef USE_AUTODIFF
+#ifdef HAVE_AUTODIFF
 static HardenedCementChemistry_t<real>* hcc_r = NULL ;
 #endif
 
@@ -756,7 +739,7 @@ template<typename T>
 static HardenedCementChemistry_t<T>* hcc_func(void) {
   if constexpr(std::is_same_v<T,double>) {
     return(hcc_d);
-    #ifdef USE_AUTODIFF
+    #ifdef HAVE_AUTODIFF
   } else if constexpr(std::is_same_v<T,real>) {
     return(hcc_r);
     #endif
@@ -779,7 +762,6 @@ static HardenedCementChemistry_t<T>* hcc_func(void) {
 
 void ComputePhysicoChemicalProperties(double TK)
 {
-
   /* Diffusion Coefficient Of Molecules In Air (dm2/s) */
   d_co2   = DiffusionCoefficientOfMoleculeInAir(CO2,TK) ;
   d_vap   = DiffusionCoefficientOfMoleculeInAir(H2O,TK) ;
@@ -857,25 +839,6 @@ int pm(const char* s)
 
 void GetProperties(Element_t* el,double t)
 {
-  /* To retrieve the material properties */
-  Parameters_t& par = ((Parameters_t*) Element_GetProperty(el))[0] ;
-  
-  phi0             = par.InitialPorosity;
-  phi_min          = par.MinimumPorosity;
-  kl_int           = par.IntrinsicPermeability_liquid;
-  kg_int           = par.IntrinsicPermeability_gas;
-  frac             = par.FractionalLengthOfPoreBodies;
-  phi_r            = par.PorosityFractionAtVanishingPermeability;
-  a_2              = par.DissolutionRate_portlandite;
-  c_2              = par.DissolutionKineticCoef_portlandite ;
-  rate_calcite     = par.PrecipitationRate_calcite;
-  n_ch0            = par.InitialContent_portlandite;
-  n_csh0           = par.InitialContent_csh;
-  c_na0            = par.InitialConcentration_sodium;
-  c_k0             = par.InitialConcentration_potassium;
-  rate_friedelsalt = par.PrecipitationRate_friedelsalt;
-  p_c3             = par.CapillaryPressureLimitOfAsymptoticSaturation;
-
   saturationcurve         = Element_FindCurve(el,"s_l") ;
   relativepermliqcurve    = Element_FindCurve(el,"kl_r") ;
 #ifdef E_AIR
@@ -999,7 +962,7 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
     
   /* Default initialization */
   {
-    n_csh0 = par.InitialContent_csh;
+    double n_csh0 = par.InitialContent_csh;
     
     if(n_csh0 == 0) {
       n_csh0 = 1. ;
@@ -1008,7 +971,7 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
   }
   
   {
-    n_ch0 = par.InitialContent_portlandite;
+    double n_ch0 = par.InitialContent_portlandite;
     
     if(n_ch0 == 0) {
       n_ch0 = 1. ;
@@ -1050,17 +1013,16 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
     double R_0 = par.CrystalRadius_portlandite; /* (dm) */
     double t_ch = par.CharacteristicTimeOfDiffusionInCalcite_co2; /* (s) */
     double D   = par.DiffusionCoefficientInCalcite_co2; /* (mol/dm/s) */
-    
-    n_ch0 = par.InitialContent_portlandite;
-    a_2 = n_ch0/t_ch ;  /* (mol/dm3/s) M. Thiery, PhD thesis, p 227 */
-    c_2 = h*R_0/D ;     /* (no dim) M. Thiery, PhD thesis p 228 */
+    double n_ch0 = par.InitialContent_portlandite;
+    double a_2 = n_ch0/t_ch ;  /* (mol/dm3/s) M. Thiery, PhD thesis, p 227 */
+    double c_2 = h*R_0/D ;     /* (no dim) M. Thiery, PhD thesis p 228 */
   
     par.DissolutionRate_portlandite = a_2 ;
     par.DissolutionKineticCoef_portlandite = c_2 ;
   }
   
   {
-    frac = par.FractionalLengthOfPoreBodies ;
+    double frac = par.FractionalLengthOfPoreBodies ;
     
     if(frac == 0) {
       frac = 0.8 ;
@@ -1076,7 +1038,7 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
     if(!hcc_d) hcc_d = HardenedCementChemistry_Create<double>() ;
     HardenedCementChemistry_SetRoomTemperature(hcc_d,TEMPERATURE) ;
     
-    #ifdef USE_AUTODIFF
+    #ifdef HAVE_AUTODIFF
     if(!hcc_r) hcc_r = HardenedCementChemistry_Create<real>() ;
     HardenedCementChemistry_SetRoomTemperature(hcc_r,TEMPERATURE) ;
     #endif
@@ -1111,7 +1073,7 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
         Curve_t* curve = Curves_GetCurve(curves) + i ;
       
         HardenedCementChemistry_SetCurveOfCalciumSiliconRatioInCSH(hcc_d,curve) ;
-        #ifdef USE_AUTODIFF
+        #ifdef HAVE_AUTODIFF
         HardenedCementChemistry_SetCurveOfCalciumSiliconRatioInCSH(hcc_r,curve) ;
         #endif
       }
@@ -1120,7 +1082,7 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
         Curve_t* curve = Curves_GetCurve(curves) + i ;
       
         HardenedCementChemistry_SetCurveOfWaterSiliconRatioInCSH(hcc_d,curve) ;
-        #ifdef USE_AUTODIFF
+        #ifdef HAVE_AUTODIFF
         HardenedCementChemistry_SetCurveOfWaterSiliconRatioInCSH(hcc_r,curve) ;
         #endif
       }
@@ -1129,7 +1091,7 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
         Curve_t* curve = Curves_GetCurve(curves) + i ;
       
         HardenedCementChemistry_SetCurveOfSaturationIndexOfSH(hcc_d,curve) ;
-        #ifdef USE_AUTODIFF
+        #ifdef HAVE_AUTODIFF
         HardenedCementChemistry_SetCurveOfSaturationIndexOfSH(hcc_r,curve) ;
         #endif
       }
@@ -1601,7 +1563,11 @@ int  ComputeOutputs(Element_t* el,double t,double* s,Result_t* r)
     
     Result_Store(r + i++,ptC(CaHCO3),"c_cahco3",1) ;
     Result_Store(r + i++,ptC(CaCO3),"c_caco3aq",1) ;
-    Result_Store(r + i++,ptC(CaO2H2),"c_caoh2aq",1) ;
+    //Result_Store(r + i++,ptC(CaO2H2),"c_caoh2aq",1) ;
+    {
+      double zero = 0;
+      Result_Store(r + i++,&zero,"c_caoh2aq",1) ;
+    }
     
     Result_Store(r + i++,ptC(NaHCO3),"c_nahco3",1) ;
     Result_Store(r + i++,ptC(NaCO3),"c_naco3",1) ;
@@ -1793,11 +1759,26 @@ int MPM_t::SetTangentMatrix(Element_t* el,double const& t,double const& dt,int c
 
 void  MPM_t::SetIndexOfPrimaryVariables(Element_t* el,int* ind)
 {
-  ind[0] = Values_Index(U_calcium);
-  
-  for(int k = 1 ; k < NEQ ; k++) {
-    ind[k] = ind[0] + k;
-  }
+  ind[E_CALCIUM] = Values_Index(U_calcium);
+  #ifdef E_SILICON
+  ind[E_SILICON] = Values_Index(U_silicon);
+  #endif
+  ind[E_SODIUM] = Values_Index(U_sodium);
+  ind[E_POTASSIUM] = Values_Index(U_potassium);
+  ind[E_CHARGE] = Values_Index(U_charge);
+  ind[E_MASS] = Values_Index(U_mass);
+  #ifdef E_CARBON
+  ind[E_CARBON] = Values_Index(U_carbon);
+  #endif
+  #ifdef E_ENEUTRAL
+  ind[E_ENEUTRAL] = Values_Index(U_eneutral);
+  #endif
+  #ifdef E_CHLORINE
+  ind[E_CHLORINE] = Values_Index(U_chlorine);
+  #endif
+  #ifdef E_AIR
+  ind[E_AIR] = Values_Index(U_air);
+  #endif
 }
 
 
@@ -1981,6 +1962,20 @@ template <typename T>
 Values_t<T>* MPM_t::Integrate(Element_t* el,const double& t,const double& dt,Values_d const& val_n,Values_t<T>& val)
 /** Compute the secondary variables from the primary ones. */
 {
+  /* To retrieve the material properties */
+  Parameters_t& par = ((Parameters_t*) Element_GetProperty(el))[0] ;
+  double phi0             = par.InitialPorosity;
+  double phi_min          = par.MinimumPorosity;
+  double kl_int           = par.IntrinsicPermeability_liquid;
+  double kg_int           = par.IntrinsicPermeability_gas;
+  double a_2              = par.DissolutionRate_portlandite;
+  double c_2              = par.DissolutionKineticCoef_portlandite ;
+  double rate_calcite     = par.PrecipitationRate_calcite;
+  double rate_friedelsalt = par.PrecipitationRate_friedelsalt;
+  double p_c3             = par.CapillaryPressureLimitOfAsymptoticSaturation;
+  double n_ch0            = par.InitialContent_portlandite;
+  double n_csh0           = par.InitialContent_csh;
+  
   #ifdef E_CARBON
   T logc_co2   = val.U_carbon ;
   #else
@@ -2436,6 +2431,14 @@ Values_d*  MPM_t::SetFluxes(Element_t* el,double const& t,int const& i,int const
 
 Values_d*  MPM_t::Initialize(Element_t* el,double const& t,Values_d& val)
 {
+  /* To retrieve the material properties */
+  Parameters_t& par = ((Parameters_t*) Element_GetProperty(el))[0] ;
+  
+  double n_ch0            = par.InitialContent_portlandite;
+  double n_csh0           = par.InitialContent_csh;
+  double c_na0            = par.InitialConcentration_sodium;
+  double c_k0             = par.InitialConcentration_potassium;
+  
   double c_na_tot = c_na0 ;
   double c_k_tot  = c_k0 ;
   double c_na       = pow(10,val.U_sodium) ;
@@ -2697,6 +2700,9 @@ template<typename T>
 double PermeabilityCoefficient_KozenyCarman(Element_t const* el,T const phi)
 /* Kozeny-Carman model */
 {
+  /* To retrieve the material properties */
+  Parameters_t& par = ((Parameters_t*) Element_GetProperty(el))[0] ;
+  double phi0             = par.InitialPorosity;
   T coeff_permeability ;
   
   {
@@ -2720,6 +2726,11 @@ T PermeabilityCoefficient_VermaPruess(Element_t const* el,T const phi)
  * phi_r = fraction of initial porosity (phi/phi0) at which permeability is 0 
  */
 {
+  /* To retrieve the material properties */
+  Parameters_t& par = ((Parameters_t*) Element_GetProperty(el))[0] ;
+  double phi0             = par.InitialPorosity;
+  double frac             = par.FractionalLengthOfPoreBodies;
+  double phi_r            = par.PorosityFractionAtVanishingPermeability;
   T coeff_permeability ;
   
   {

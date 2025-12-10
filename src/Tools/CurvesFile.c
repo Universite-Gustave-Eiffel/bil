@@ -47,6 +47,8 @@ static GenericFunction_t Mualem_gas ;
 static GenericFunction_t Millington ;
 static GenericFunction_t MonlouisBonnaire ;
 static GenericFunction_t CSH3EndMembers ;
+static GenericFunction_t CSHss;
+static GenericFunction_t CASHss;
 static GenericFunction_t CSHLangmuirN ;
 static GenericFunction_t RedlichKwongCO2 ;
 static GenericFunction_t FenghourCO2 ;
@@ -68,13 +70,14 @@ static GenericFunction_t MolarVolumeOfCO2CH4Mixture ;
 
 
 static double (vangenuchten)(double,double) ;
-static double (fraction_Silica)(double*,double*,int,double) ;
 static double (MolarDensityOfCO2_RedlichKwong)(double,double) ;
 static double (ViscosityOfCO2_Fenghour)(double,double) ;
 static double (langmuir)(double,double,double,double) ;
 static double (MolarVolumeOfCO2CH4Mixture_RedlichKwong)(double,double,double) ;
 static double (PartialFugacityOfCO2CH4Mixture_RedlichKwong)(double,double,double,const char*) ;
 static double (RedlichKwong)(double,double,double,double) ;
+static double (SolidSolutionSolver)(int const,double const*,double const*);
+
 
 
 
@@ -551,6 +554,10 @@ int   (CurvesFile_WriteCurves)(CurvesFile_t* curvesfile)
       } else if(!strncmp(YLABEL,"S_SH",4)) {
         PasteColumn(CSH3EndMembers,y_Tob,y_Jen,"S_SH") ;
       } else {
+        strcpy(YLABEL,"S_SH") ;
+        PasteColumn(CSH3EndMembers,y_Tob,y_Jen,"S_SH") ;
+        ycol += 1 ;
+        strcpy(YLABEL,"X_CSH") ;
         PasteColumn(CSH3EndMembers,y_Tob,y_Jen,"X_CSH") ;
         ycol += 1 ;
         strcpy(YLABEL,"Z_CSH") ;
@@ -558,9 +565,122 @@ int   (CurvesFile_WriteCurves)(CurvesFile_t* curvesfile)
         ycol += 1 ;
         strcpy(YLABEL,"V_CSH") ;
         PasteColumn(CSH3EndMembers,y_Tob,y_Jen,"V_CSH") ;
-        ycol += 1 ;
-        strcpy(YLABEL,"S_SH") ;
-        PasteColumn(CSH3EndMembers,y_Tob,y_Jen,"S_SH") ;
+      }
+      
+    } else if(String_Is(YMODEL,"CSHss")){
+      int const N = 10;
+      double x[N];
+      double y[N];
+      double logk[N];
+      int n;
+      
+      /* Reading inputs: n, x[], y[], logk[] */
+      {
+        double input[3*N];
+        char* c = line;
+      
+        //sscanf(line,"{ %*[^= ] = %d , %*[^= ] = %lf }",&n,) ;
+        c += String_Scan(c,"{ %*[^= ] = %d",&n) ;
+      
+        if(n > N) {
+          arret("CurvesFile_WriteCurves: the max nb of end-members is %d",N);
+        }
+      
+        String_ScanArray(c,3*n," , %*[^= ] = %lf",input);
+      
+        for(int i = 0 ; i < n ; i++) {
+          x[i] = input[3*i];
+          y[i] = input[3*i + 1];
+          logk[i] = input[3*i + 2];
+        }
+      }
+      
+      if(String_Is(YLABEL,"LogQ_SH")) {
+        PasteColumn(CSHss,n,x,y,logk,"LogQ_SH");
+      } else if(String_Is(YLABEL,"Ca/Si"))  {
+        PasteColumn(CSHss,n,x,y,logk,"Ca/Si");
+      } else if(String_Is(YLABEL,"K_f"))  {
+        PasteColumn(CSHss,n,x,y,logk,"K_f");
+      } else {
+        strcpy(YLABEL,"LogQ_SH");
+        PasteColumn(CSHss,n,x,y,logk,"LogQ_SH");
+        ycol += 1;
+        strcpy(YLABEL,"Ca/si");
+        PasteColumn(CSHss,n,x,y,logk,"Ca/Si");
+        ycol += 1;
+        strcpy(YLABEL,"K_f");
+        PasteColumn(CSHss,n,x,y,logk,"K_f");
+        for(int i = 0 ; i < n ; i++) {
+          char str[10];
+          
+          ycol += 1;
+          sprintf(str,"F_CSH_%d",i+1);
+          strcpy(YLABEL,str);
+          PasteColumn(CSHss,n,x,y,logk,str);
+        }
+      }
+      
+    } else if(String_Is(YMODEL,"CASHss")){
+      int const N = 10;
+      double logq_ah3;
+      double x[N];
+      double y[N];
+      double a[N];
+      double logk[N];
+      int n;
+      
+      /* Reading inputs: n, x[], y[], a[], logk[] */
+      {
+        double input[4*N];
+        char* c = line;
+      
+        c += String_Scan(c,"{ %*[^= ] = %lf , %*[^= ] = %d",&logq_ah3,&n) ;
+      
+        if(n > N) {
+          arret("CurvesFile_WriteCurves: the max nb of end-members is %d",N);
+        }
+      
+        String_ScanArray(c,4*n," , %*[^= ] = %lf",input);
+      
+        for(int i = 0 ; i < n ; i++) {
+          x[i] = input[4*i];
+          a[i] = input[4*i + 1];
+          y[i] = input[4*i + 2];
+          logk[i] = input[4*i + 3];
+        }
+      }
+      
+      if(String_Is(YLABEL,"LogQ_SH")) {
+        PasteColumn(CASHss,logq_ah3,n,x,a,y,logk,"LogQ_SH");
+      } else if(String_Is(YLABEL,"Ca/Si"))  {
+        PasteColumn(CASHss,logq_ah3,n,x,a,y,logk,"Ca/Si");
+      } else if(String_Is(YLABEL,"Al/Si"))  {
+        PasteColumn(CASHss,logq_ah3,n,x,a,y,logk,"Al/Si");
+      } else if(String_Is(YLABEL,"K_f"))  {
+        PasteColumn(CASHss,logq_ah3,n,x,a,y,logk,"K_f");
+      } else {
+        strcpy(YLABEL,"LogQ_AH3");
+        PasteColumn(CASHss,logq_ah3,n,x,a,y,logk,"LogQ_AH3");
+        ycol += 1;
+        strcpy(YLABEL,"LogQ_SH");
+        PasteColumn(CASHss,logq_ah3,n,x,a,y,logk,"LogQ_SH");
+        ycol += 1;
+        strcpy(YLABEL,"Ca/si");
+        PasteColumn(CASHss,logq_ah3,n,x,a,y,logk,"Ca/Si");
+        ycol += 1;
+        strcpy(YLABEL,"Al/si");
+        PasteColumn(CASHss,logq_ah3,n,x,a,y,logk,"Al/Si");
+        ycol += 1;
+        strcpy(YLABEL,"K_f");
+        PasteColumn(CASHss,logq_ah3,n,x,a,y,logk,"K_f");
+        for(int i = 0 ; i < n ; i++) {
+          char str[10];
+          
+          ycol += 1;
+          sprintf(str,"F_CASH_%d",i+1);
+          strcpy(YLABEL,str);
+          PasteColumn(CASHss,logq_ah3,n,x,a,y,logk,str);
+        }
       }
       
     } else if(String_Is(YMODEL,"CSHLangmuirN")){
@@ -697,7 +817,6 @@ void (CurvesFile_PasteXaxisColumn)(CurvesFile_t* curvesfile, const char *xlabel,
   {
     char  scale = CurvesFile_GetScaleType(curvesfile) ;
     int n_points = CurvesFile_GetNbOfPoints(curvesfile) ;
-    int i ;
     
     if(scale == 'l') {
       if(x_1 <= 0. || x_2 <= 0.) {
@@ -706,7 +825,7 @@ void (CurvesFile_PasteXaxisColumn)(CurvesFile_t* curvesfile, const char *xlabel,
     }
     
     /* Write the column x-axis */
-    for(i = 0 ; i < n_points ; i++){
+    for(int i = 0 ; i < n_points ; i++){
       int    n1 = n_points - 1 ;
       double n  = ((double) i)/n1 ;
       double x ;
@@ -929,7 +1048,6 @@ double (Expressions)(double x,va_list args)
   char*  expr = va_arg(args,char*) ;
   char*  ylabel = va_arg(args,char*) ;
   char*  xlabel = va_arg(args,char*) ;
-  int NbOfCurves = Curves_GetNbOfCurves(curves) ;
   double y[10] = {0,0,0,0,0,0,0,0,0,0} ;
   char   line[CurvesFile_MaxLengthOfTextLine] ;
   char *c = expr ;
@@ -937,6 +1055,7 @@ double (Expressions)(double x,va_list args)
   /* Compute the curve values */
   for(c = expr ; *c ; c++) {
     if(*c == '$') {
+      int NbOfCurves = Curves_GetNbOfCurves(curves) ;
       int i = *(c + 1) - '0' ;
       
       if(i > NbOfCurves || i > 10) {
@@ -1300,7 +1419,7 @@ double (CSH3EndMembers)(double s_CH,va_list args)
       a_CSH[j] = pow(k_CH*s_CH,x_CSH[j])*pow(k_SH,y_CSH[j])/k_CSH[j] ;
     }
           
-    s_SH = fraction_Silica(a_CSH,y_CSH,3,s_SH) ;
+    s_SH = SolidSolutionSolver(3,a_CSH,y_CSH) ;
           
     for(j = 0 ; j < 3 ; j++) {
       q_CSH[j] = a_CSH[j]*pow(s_SH,y_CSH[j]) ;
@@ -1329,6 +1448,148 @@ double (CSH3EndMembers)(double s_CH,va_list args)
         output = x_m ;
       } else {
         arret("CSH3EndMembers") ;
+      }
+    }
+  }
+      
+  return(output) ;
+}
+
+      
+double (CSHss)(double logq_ch,va_list args)
+{
+  /* Ion activity product of CH (Portlandite) */
+  double q_ch  = pow(10,logq_ch);
+  int n     = va_arg(args,int) ;
+  double* x = va_arg(args,double*) ;
+  double* y = va_arg(args,double*) ;
+  double* logk = va_arg(args,double*) ;
+  char* outputtype = va_arg(args,char*) ;
+  double output ;
+  int const N = 10;
+  
+  if(n > N) {
+    arret("CSHss: too many end-members!");
+  }
+
+
+  {
+    double q_sh;
+    double a[N];
+    
+    for(int j = 0 ; j < n ; j++) {
+      a[j] = pow(q_ch,x[j])*pow(10,-logk[j]) ;
+    }
+
+    /* Solve:
+     *   Sum_i (Q_CH)^xi*(Q_SH)^yi/K_i - 1 = 0
+     *   for Q_SH 
+     */
+    q_sh = SolidSolutionSolver(n,a,y);
+          
+    {
+      double f[N];
+      double x_m = 0;
+      double y_m = 0;
+          
+      for(int j = 0 ; j < n ; j++) {
+        f[j] = a[j]*pow(q_sh,y[j]) ;
+        x_m += f[j]*x[j] ;
+        y_m += f[j]*y[j] ;
+      }
+                  
+      if(String_Is(outputtype,"LogQ_SH")) {
+        output = log10(q_sh);
+      } else if(String_Is(outputtype,"Ca/Si")) {
+        output = x_m/y_m ;
+      } else if(String_Is(outputtype,"K_f")) {
+        output = pow(q_ch,x_m/y_m)*q_sh;
+      } else if(String_Is(outputtype,"F_CSH_",6)) {
+        int i = outputtype[6] - '1';
+        
+        if(i < n) {
+          output = f[i];
+        } else {
+          arret("CSHss: not in range");
+        }
+      } else {
+        arret("CSHss") ;
+      }
+    }
+  }
+      
+  return(output) ;
+}
+
+      
+double (CASHss)(double logq_ch,va_list args)
+{
+  /* Ion activity product of CH (Portlandite) */
+  double q_ch  = pow(10,logq_ch);
+  /* Ion activity product of AH3 */
+  double logq_ah3 = va_arg(args,double) ;
+  double q_ah3    = pow(10,logq_ah3);
+  int n     = va_arg(args,int) ;
+  double* nc = va_arg(args,double*) ;
+  double* na = va_arg(args,double*) ;
+  double* ns = va_arg(args,double*) ;
+  double* logk = va_arg(args,double*) ;
+  char* outputtype = va_arg(args,char*) ;
+  double output ;
+  int const N = 10;
+  
+  if(n > N) {
+    arret("CASHss: too many end-members!");
+  }
+
+
+  {
+    double q_sh;
+    double a[N];
+    
+    for(int j = 0 ; j < n ; j++) {
+      a[j] = pow(q_ch,nc[j])*pow(q_ah3,na[j])*pow(10,-logk[j]) ;
+    }
+
+    /* Solve:
+     *   Sum_i (Q_CH)^nci*(Q_SH)^nsi/K_i - 1 = 0
+     *   for Q_SH 
+     */
+    q_sh = SolidSolutionSolver(n,a,ns);
+          
+    {
+      double f[N];
+      double nc_m = 0;
+      double na_m = 0;
+      double ns_m = 0;
+          
+      for(int j = 0 ; j < n ; j++) {
+        f[j] = a[j]*pow(q_sh,ns[j]) ;
+        nc_m += f[j]*nc[j] ;
+        na_m += f[j]*na[j] ;
+        ns_m += f[j]*ns[j] ;
+      }
+                  
+      if(String_Is(outputtype,"LogQ_SH")) {
+        output = log10(q_sh);
+      } else if(String_Is(outputtype,"LogQ_AH3")) {
+        output = logq_ah3;
+      } else if(String_Is(outputtype,"Ca/Si")) {
+        output = nc_m/ns_m ;
+      } else if(String_Is(outputtype,"Al/Si")) {
+        output = na_m/ns_m ;
+      } else if(String_Is(outputtype,"K_f")) {
+        output = pow(q_ch,nc_m/ns_m)*pow(q_ah3,na_m/ns_m)*q_sh;
+      } else if(String_Is(outputtype,"F_CASH_",7)) {
+        int i = outputtype[7] - '1';
+        
+        if(i < n) {
+          output = f[i];
+        } else {
+          arret("CASHss: not in range");
+        }
+      } else {
+        arret("CASHss") ;
       }
     }
   }
@@ -1461,38 +1722,90 @@ double (vangenuchten)(double p,double m)
   else return(1) ;
 }
 
-double (fraction_Silica)(double *a,double *y,int n,double q0)
-/**  */
+
+double (SolidSolutionSolver)(int const n,double const* a,double const* b)
+/** Solve the equation:  Sum_i a_i * (x^b_i) = 1
+ *  for x, with a_i >= 0 and b_i > 0.
+ * 
+ *  Inputs:
+ *  n    = number of end-members
+ *  a, b = pointers to n doubles
+ *  
+ *  Output: x.
+ * 
+ *  Return x.
+ */
 {
-  double err,tol = 1e-8 ;
-  double q = q0 ;
-  int    i = 0 ;
-  
-  do {
-    double f  = - 1 ;
-    double df = 0 ;
-    double dq ;
-    int    j ;
+  double x;
     
-    for(j = 0 ; j < n ; j++) {
-      double fj = a[j]*pow(q,y[j]) ;
+  /* Initialization of x */
+  {
+    double sum_a = 0;
+    double b_min = b[0];
+    double b_max = b_min;
+    
+    for(int j = 0 ; j < n ; j++) {
+      sum_a += a[j];
+      if(b[j] > b_max) b_max = b[j];
+      if(b[j] < b_min) b_min = b[j];
+    }
+    
+    if(b_min <= 0) {
+      arret("SolidSolutionSolver: the b's should be > 0!");
+    }
+    
+    x = 0.5*(pow(sum_a,-1/b_max) + pow(sum_a,-1/b_min));
+    #if 0
+    if(sum_a < 1) {
+      x = pow(sum_a,-1/b_max);
+    } else {
+      x = pow(sum_a,-1/b_min);
+    }
+    #endif
+  }
+
+  /* Solve */
+  {
+    double x0 = x;
+    int  iter = 0;
+    int niter = 20;
+    int convergencenotattained = 1;
       
-      f  += fj ;
-      df += y[j]*fj/q ;
-    }
+    while(convergencenotattained) {
+      double residu  = - 1 ;
+      double dresidu = 0 ;
+        
+      for(int j = 0 ; j < n ; j++) {
+        double fj = a[j]*pow(x,b[j]) ;
+          
+        residu  += fj ;
+        dresidu += b[j]*fj/x ;
+      }
+        
+      /* Convergence check */
+      {
+        double dx = (dresidu) ? -residu/dresidu : 0;
+        double err = fabs(dx/x0) ;
+        double tol = 1e-8 ;
+          
+        convergencenotattained = 0;
+          
+        if(err > tol) {
+          convergencenotattained = 1;
+        }
+        
+        x += dx ;
+      }
+        
+      if(iter++ > niter) {
+        printf("x_ini = %e\n",x0) ;
+        printf("x     = %e\n",x) ;
+        arret("SolidSolutionSolver: not converged") ;
+      }
+    };
+  }
     
-    dq = -f/df ;
-    err = fabs(dq/q) ;
-    q += dq ;
-    
-    if(i++ > 20) {
-      printf("q0 = %e\n",q0) ;
-      printf("q  = %e\n",q) ;
-      arret("fraction_Silica : non convergence") ;
-    }
-  } while(err > tol) ;
-  
-  return(q) ;
+  return(x);
 }
 
 

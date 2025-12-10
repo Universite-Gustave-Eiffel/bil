@@ -1,0 +1,376 @@
+#ifndef LOG10EQUILIBRIUMCONSTANTOFHOMOGENEOUSREACTIONINWATER_CEMDATA18_H
+#define LOG10EQUILIBRIUMCONSTANTOFHOMOGENEOUSREACTIONINWATER_CEMDATA18_H
+
+
+#include "TemperatureDependenceOfLog10EquilibriumConstant.h"
+
+
+/* Data from table B1 (page 491) of:
+ * 
+ * B. Lothenbach, D.A Kulik, T. Matschei, M. Balonis, L. Baquerizo, B. Dilnesa, G.D. Miron, R.J. Myers,
+ * Cemdata18: A chemical thermodynamic database for hydrated Portland cements and alkali-activated materials,
+ * Cement and Concrete Research 115 (2019) 472–506.
+ */
+ 
+/* Master species
+ * --------------
+ * 
+ * The solution primary master species are (15):
+ * 
+ * H2O[0]  , H[+]   , e[−] (electron)
+ * AlO2[−] , Ca[+2] , CO3[−2] , Cl[−] , FeO2[−] , Mg[+2]
+ * NO3[−]  , K[+]   , SiO2[0] , Na[+] , Sr[+2]  , SO4[−2]
+ * 
+ * The solution secondary master species are (9):
+ * 
+ * H2[0]  , O2[0]
+ * CH4[0] , ClO4[-] , NH4[+] , N2[0] , HS[-] , S2O3[-2] , SO3[-2]
+ */
+ 
+ /* Solution species
+  * ----------------
+  * 
+  * electron:  e[-]
+  * 
+  * Hydrogen-Oxygen: H[+] , H2O[0] , OH[-] , H2[0] , O2[0]
+  * 
+  * Compound of type I
+  * -------------------
+  * Aluminium: ALO2[-] , Al[+3]   , AlO[+]   , AlOH[+2] , AlO2H[0]
+  * Calcium:   Ca[+2]  , CaOH[+]
+  * Carbon:    CO3[-2] , CO2[0]   , HCO3[-]  , CH4[0]
+  * Clorine:   Cl[-]   , ClO4[-]
+  * Iron:      FeO2[-] , Fe[+2]   , Fe[+3]   , FeO[+]   ,  FeO2H[0] , FeOH[+] , Fe(OH)2[+2] , Fe3(OH)4[+5]
+  * Magnesium: Mg[+2]  , MgOH[+]
+  * Nitrogen:  NO3[-]  , N2[0]    , NH3[0]   , NH4[+]
+  * Potassium: K[+]    , KOH[0]
+  * Silicon:   SiO2[0] , SiO3[-2] , HSiO3[-] , Si4O10[-4]
+  * Sodium:    Na[+]   , NaOH[0]
+  * Strontium: Sr[+2]  , SrOH[+]
+  * Sulfur:    SO4[-2] , SO3[-2]  , HSO4[-]  , HSO3[-]  , S[-2] , S2O3[-2] , HS[-]
+  * 
+  * 
+  * Compound of type II
+  * --------------------
+  * Aluminium-Silicon: AlSiO5[-3] , AlHSiO3[+2]
+  * Aluminium-Sulfur:  AlSO4[+]   , Al(SO4)2[-]
+  * Calcium-Carbon:    CaCO3[0]   , CaHCO3[+]
+  * Calcium-Silicon:   CaHSiO3[+] , CaSiO3[0]
+  * Calcium-Sulfur:    CaSO4[0]
+  * Iron-Carbon:       FeCO3[0]   , FeHCO3[+]
+  * Iron-Chlorine:     FeCl[+]    , FeCl[+2]   , FeCl2[+] , FeCl3[0]
+  * Iron-Silicon:      FeHSiO3[+2]
+  * Iron-Sulfur:       FeHSO4[+]  , FeSO4[0]   , FeSO4[+] , Fe(SO4)2[-]
+  * Magnesium-Carbon:  MgCO3[0]   , MgHCO3[-]
+  * Magnesium-Silicon: MgHSiO3[+] , MgSiO3[0]
+  * Magnesium-Sulfur:  MgSO4[0]
+  * Potassium-Sulfur:  KSO4[-]
+  * Sodium-Carbon:     NaCO3[-]   , NaHCO3[0]
+  * Sodium-Sulfur:     NaSO4[-]
+  * Strontium-Carbon:  SrCO3[0]   , SrHCO3[+]
+  * Strontium-Silicon: SrSiO3[0]
+  * Strontium-Sulfur:  SrSO4[0]
+  * 
+  * Coumpound of type III
+  * ---------------------
+  * Sulfur-Carbon-Nitrogen: SCN[-]
+  */
+
+
+/* From table B1 (page 491) of B. Lothenbach et al
+ * ----------------------------------------------- */
+ 
+/* SO4[-2] + AlO2[-] + 4H[+] = AlSO4[+] + 2H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_SO4_AlO2_4H__AlSO4_2H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,26.8,-159164,261.8)
+
+/* 2SO4[-2] + AlO2[-] + 4H[+] = Al(SO4)2[-] + 2H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_2SO4_AlO2_4H__AlSO4SO4_2H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,28.8,-165197,463.6)
+
+/* AlO2[-] + 4H[+] = Al[+3] + 2H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_AlO2_4H__Al_2H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,22.9,-176821,71.1)
+
+/* AlO2[-] + 3H[+] + SiO2[0] = AlHSiO3[+2] + H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_AlO2_3H_SiO2__AlHSiO3_H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,20.5,-106764,-136)
+
+/* AlO2[-] + 2H[+] = AlO[+] + H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_AlO2_2H__AlO_H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,12.3,-73951,-0.7)
+
+/* AlO2[-] + H[+] = AlO2H[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_AlO2_H__AlO2H(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,6.4,-21554,-160.2)
+
+/* AlO2[-] + 3H[+] = AlOH[+2] + H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_AlO2_3H__AlOH_H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,17.9,-127582,180.4)
+
+/* AlO2[-] + H2O[0] + SiO2[0] = AlSiO5[-3] + 2H[+] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_AlO2_H2O_SiO2__AlSiO5_2H(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,-22.6,71975,0)
+
+/* CO3[-2] + Ca[+2] = CaCO3[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_CO3_Ca__CaCO3(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,3.2,16462,196.4)
+
+/* CO3[-2] + Ca[+2] + H[+] = CaHCO3[+] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_CO3_Ca_H__CaHCO3(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,11.4,-13562,554.0)
+
+/* Ca[2+] + H2O[0] + SiO2[0] = CaHSiO3[+] + H[+] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_Ca_H2O_SiO2__CaHSiO3_H(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,-8.6,30328,48.9)
+
+/* Ca[2+] + SO4[-2] = CaSO4[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_Ca_SO4__CaSO4(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,2.3,4336,192.4)
+        
+/* Ca[2+] + H2O[0] = CaOH[+] + H[+] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_Ca_H2O__CaOH_H(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,-12.8,77301,-38.4)
+
+/* Ca[2+] + H2O[0] + SiO2[0] = CaSiO3[0] + 2H[+] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_Ca_H2O_SiO2__CaSiO3_2H(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,-18.5,48743,0)
+
+/* CO3[-2] + 8e[-] + 10H[+] = CH4[0] + 3H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_CO3_8e_10H__CH4_3H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,38.2,-270138677.3,)
+
+/* Cl[-] + 4H2O[0] = ClO4[-] + 8e[-] + 8H[+] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_Cl_4H2O__ClO4_8e_8H(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,-187.7,1181308,687.6)
+
+/* CO3[-2] + 2H[+] = CO2[0] + H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_CO3_2H__CO2_H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,16.7,-24408,607.8)
+
+/* CO3[-2] + e[-] + 4H[+] + FeO2[-] = FeCO3[0] + 2H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_CO3_e_4H_FeO2__FeCO3_2H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,39.0,-216144,537.5)
+
+/* CO3[-2] + e[-] + 5H[+] + FeO2[-] = FeHCO3[+] + 2H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_CO3_e_5H_FeO2__FeHCO3_2H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,46.9,-246735,892.0)
+
+/* SO4[-2] + e[-] + 5H[+] + FeO2[-] = FeHSO4[+] + 2H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_SO4_e_5H_FeO2__FeHSO4_2H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,37.7,-208704,975.6)
+
+/* SO4[-2] + 5H[+] + FeO2[-] = FeHSO4[+2] + 2H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_SO4_5H_FeO2__FeHSO4_2H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,26.1,-200163,1078.5)
+
+/* SO4[-2] + e[-] + 4H[+] + FeO2[-] = FeSO4[0] + 2H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_SO4_e_4H_FeO2__FeSO4_2H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,36.9,-212106,535.7)
+
+/* SO4[-2] + 4H[+] + FeO2[-] = FeSO4[+] + 2H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_SO4_4H_FeO2__FeSO4_2H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,25.6,-160671,505.8)
+
+/* 2SO4[-2] + 4H[+] + FeO2[-] = Fe(SO4)2[-] + 2H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_2SO4_4H_FeO2__FeS2O8_2H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,27.0,162930,707.5)
+
+/* e[-] + 4H[+] + FeO2[-] = Fe[+2] + 2H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_e_4H_FeO2__Fe_2H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,34.6,-220183,338.8)
+
+/* 4H[+] + FeO2[-] = Fe[+3] + 2H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_4H_FeO2__Fe_2H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,21.6,-177529,308.9)
+
+/* FeO2[-] + 3H[+] + SiO2[0] = FeHSiO3[+2] + H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_FeO2_3H_SiO2__FeHSiO3_H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,21.5,-148472,101.9)
+
+/* Cl[-] + e[-] + 4H[+] + FeO2[-] = FeCl[+] + 2H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_Cl_e_4H_FeO2__FeCl_2H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,34.8,-218887,580.2)
+
+/* Cl[-] + 4H[+] + FeO2[-] = FeCl[+2] + 2H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_Cl_4H_FeO2__FeCl_2H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,23.1,-173502,523.0)
+
+/* 2Cl[-] + 4H[+] + FeO2[-] = FeCl2[+] + 2H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_2Cl_4H_FeO2__FeCl2_2H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,23.7,-179471,931.3)
+        
+/* 3Cl[-] + 4H[+] + FeO2[-] = FeCl3[0] + 2H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_3Cl_4H_FeO2__FeCl3_2H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,22.7,-190999,1121.3)
+
+/* 2H[+] + FeO2[-] = FeO[+] + H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_2H_FeO2__FeO_H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,15.9,-97152,109.3)
+
+/* H[+] + FeO2[-] = FeO2H[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_H_FeO2__FeO2H(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,9.0,-37130,-77.2)
+
+/* e[-] + 3H[+] + FeO2[-] = FeOH[+] + H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_e_3H_FeO2__FeOH_H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,25.1,-167718,358.9)
+
+/* 3H[+] + FeO2[-] = Fe(OH)2[+2] + H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_3H_FeO2__FeO2H2_H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,19.4,-134855,276.6)
+
+/* 2FeO2[-] + 6H[+] = Fe2(OH)2[+4] + 2H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_2FeO2_6H__Fe2O2H2_2H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,40.3,-298572,617.9)
+
+/* 3FeO2[-] + 8H[+] = Fe3(OH)4[+5] + 2H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_3FeO2_8H__Fe3O4H4_2H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,58.5,-472753,926.8)
+
+/* 2e[-] + 2H[+] = H2[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_2e_2H__H2(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,-3.1,-4018,138.0)
+        
+/* SO4[-2] + 8e[-] + 10H[+] = H2S[0] + 4H2O */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_SO4_8e_10H__H2S_4H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,40.7,-272852,631.4)
+
+/* CO3[-2] + NO3[-] + 10e[-] + 13H[+] = HCN[0] + 6H2O */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_CO3_NO3_10e_13H__HCN_6H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,117.4,-729336,664.1)
+
+/* CO3[-2] + H[+] = HCO3[-] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_CO3_H__HCO3(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,10.3,-14699,254.5)
+
+/* SO4[-2} + 8e[-] + 9H[+] = HS[-] + 4H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_SO4_8e_9H__HS_4H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,33.7,-250044,358.3)
+
+/* H2O[0] + SiO2[0] = HSiO3[-] + H[+] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_H2O_SiO2__HSiO3_H(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,-9.8,29057,-207.0)
+
+/* SO4[-2] + 2e[-] + 3H[+] = HSO3[-] + H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_SO4_2e_3H__HSO3_H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,3.8,-3885,307.2)
+
+/* SO4[-2] + H[+] = HSO4[-] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_SO4_H__HSO4(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,2.0,20464,288.8)
+
+/* SO4[-2] + K[+] = KSO4[-] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_SO4_K__KSO4(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,0.9,3070,212.6)
+
+/* H2O[0] + K[+] = KOH[0] + H[+] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_H2O_K__KOH_H(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,-14.5,63874,-168.8)
+
+/* CO3[-2] + Mg[+2] = MgCO3[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_CO3_Mg__MgCO3(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,3.0,9124,194.5)
+
+/* CO3[-2] + Mg[+2] + H[+] = MgHCO3[-] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_CO3_Mg_H__MgHCO3(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,11.4,-12725,565.4)
+
+/* Mg[+2] + H2O[0] + SiO2[0] = MgHSiO3[+] + H[+] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_Mg_H2O_SiO2__MgHSiO3_H(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,-8.3,25758,60.5)
+
+/* Mg[+2] + H2O[0] = MgOH[+] + H[+] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_Mg_H2O_MgOH_H(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,-11.4,61794,75.5)
+
+/* Mg[+2] + H2O[0] + SiO2[0] = MgSiO3[0] + 2H[+] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_MgH2O_SiO2__MgSiO3_2H(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,-17.4,85125,-363.0)
+
+/* SO4[-2] + Mg[+2] = MgSO4[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_SO4_Mg__MgSO4(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,2.4,6855,197.4)
+
+/* 2NO3[-] + 10e[-] + 12H[+] = N2[0] + 6H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_2NO3_10e_12H__N2_6H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,207.3,-1311876,675.7)
+
+/* CO3[-2] + Na[+] = NaCO3[-] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_CO3_Na__NaCO3(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,1.3,-22969,199.9)
+
+/* CO3[-2] + Na[+] + H[+] = NaHCO3[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_CO3_Na_H__NaHCO3(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,10.1,-13909,451.5)
+
+/* SO4[-2] + Na[+] = NaSO4[-] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_SO4_Na__NaSO4(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,0.7,3314,197.9)
+
+/* Na[+] + H2O[0] = NaOH[0] + H[+] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_Na_H2O__NaOH_H(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,-14.2,56026,-126.9)
+
+/* NO3[-] + 8e[-] + 9H[+] = NH3[0] + 3H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_NO3_8e_9H__NH3_3H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,109.9,-732284,254.4)
+
+/* NO3[-] + 8e[-] + 10H[+] = NH4[+] + 3H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_NO3_8e_10H__NH4_3H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,119.1,-784011,244.6)
+
+/* 2H2O[0] = O2[0] + 4e[-] + 4H[+] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_2H2O__O2_4e_4H(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,-86.0,559525,141.1)
+
+/* H2O[0] = OH[-] + H[+] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_H2O__OH_H(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,-14.0,55872,-211.7)
+
+/* SO4[-2] + 8e[-] + 8H[+] = S[-2] + 4H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_SO4_8e_8H__S_4H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,14.7,-250044,358.3)
+
+/* 2SO4[-2] + 8e[-] + 10H[+] = S2O3[-2] + 5H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_2SO4_8e_10H__S2O3_5H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,38.0,-259866,555.2)
+
+/* CO3[-2] + NO3[-] + SO4[-2] + 16e[-] + 20H[+] = SCN[-] + 10H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_CO3_NO3_SO4_16e_2OH__SCN_10H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,156.9,-990513,1105.5)
+
+/* 2H2O[0] + 4SiO2[0] = Si4O10[-4] + 4H[+] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_2H2O_5SiO2__Si4O10_4H(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,-36.3,207202,0)
+
+/* H2O[0] + SiO2[0] = SiO3[-2] + 2H[+] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_H2O_SiO2__SiO3_2H(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,-23.1,75000,0)
+
+/* SO4[-2] + 2e[-] + 2H[+] = SO3[-2] + H2O[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_SO4_2e_2H__SO3_H2O(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,-3.4,-13070,31.6)
+
+/* CO3[-2] + Sr[+2] = SrCO3[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_CO3_Sr__SrCO3(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,2.8,18891,196.6)
+
+/* CO3[-2] + Sr[+2] + H[+] = SrHCO3[+] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_CO3_Sr_H__SrHCO3(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,11.5,-12816,541.0)
+
+/* SO4[-2] + Sr[+2] = SrSO4[0] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_SO4_Sr__SrSO4(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,2.3,9071,197.1)
+
+/* Sr[+2] + H2O[0] = SrOH[+] + H[+] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_Sr_H2O__SrOH_H(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,-13.3,82619,-65.5)
+
+/* Sr[+2] + H2O[0] + SiO2[0] = SrSiO3[0] + 2H[+] */
+#define Log10EquilibriumConstantOfHomogeneousReactionInWater_Sr_H2O_SiO2__SrSiO3_2H(T) \
+        TemperatureDependenceOfLog10EquilibriumConstant_298(T,-18.8,107184,0.1)
+
+
+#endif

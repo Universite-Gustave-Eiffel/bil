@@ -1834,7 +1834,8 @@ int  ComputeOutputs(Element_t* el,double t,double* s,Result_t* r)
     Result_Store(r + i++,ptC(SO4  ),"c_so4",1) ;
     
     Result_Store(r + i++,ptC(CaSO4  ),"c_caso4aq",1) ;
-    Result_Store(r + i++,ptC(CaHSO4 ),"c_cahso4",1) ;
+    //Result_Store(r + i++,ptC(CaHSO4 ),"c_cahso4",1) ;
+    Result_Store(r + i++,&zero,"c_cahso4",1) ;
     
     Result_Store(r + i++,ptC(Al    ),"c_al",1) ;
     Result_Store(r + i++,ptC(AlO4H4),"c_alo4h4",1) ;

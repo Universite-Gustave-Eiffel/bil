@@ -1304,6 +1304,7 @@ int  ComputeOutputs(Element_t* el,double t,double* s,Result_t* r)
   FVM_t* fvm = FVM_GetInstance(el) ;
   double** u   = Element_ComputePointerToCurrentNodalUnknowns(el) ;
   int    nso = 53 ;
+  double zero = 0;
   int    i ;
 
   /* if(Element_IsSubmanifold(el)) return(0) ; */
@@ -1359,7 +1360,8 @@ int  ComputeOutputs(Element_t* el,double t,double* s,Result_t* r)
     Result_Store(r + i++,ptC(SO4  ),"c_so4",1) ;
     
     Result_Store(r + i++,ptC(CaSO4),"c_caso4aq",1) ;
-    Result_Store(r + i++,ptC(CaHSO4 ),"c_cahso4",1) ;
+    //Result_Store(r + i++,ptC(CaHSO4 ),"c_cahso4",1) ;
+    Result_Store(r + i++,&zero,"c_cahso4",1) ;
 
     Result_Store(r + i++,ptC(K  ),"c_k",1) ;
     Result_Store(r + i++,ptC(KOH),"c_koh",1) ;
