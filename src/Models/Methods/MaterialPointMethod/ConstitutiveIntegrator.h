@@ -11,6 +11,12 @@ template<typename MPM>
 struct ConstitutiveIntegrator_t {
   private:
   template<typename T> using V = typename MPM::template Value_type<T>;
+  Element_t* _el;
+  double _t;
+  double _dt;
+  LocalVariables_t<V<double>> _var;
+  LocalVariables_t<V<double>> _var_n;
+  MPM* _mpm;
   
   public:
   /* Constructors */
@@ -752,14 +758,6 @@ struct ConstitutiveIntegrator_t {
   
   
   private:
-  Element_t* _el;
-  double _t;
-  double _dt;
-  LocalVariables_t<V<double>> _var;
-  LocalVariables_t<V<double>> _var_n;
-  MPM* _mpm;
-  
-  
   /* Accessors */
   #if 0
   V<double>* SetInputs(double const* const* u,int const& p,V<double>& v) {

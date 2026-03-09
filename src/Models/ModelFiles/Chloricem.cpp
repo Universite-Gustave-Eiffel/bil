@@ -2062,7 +2062,6 @@ Values_t<T>* MPM_t::Integrate(Element_t* el,const double& t,const double& dt,Val
     HardenedCementChemistry_ComputeSystem(hcc,CaO_SiO2_Na2O_K2O_CO2_Cl_H2O) ;
     #else
     HardenedCementChemistry_SetAqueousConcentrationOf(hcc,Cl,c_cl) ;
-    HardenedCementChemistry_SetLogAqueousConcentrationOf(hcc,Cl,logc_cl) ;
     HardenedCementChemistry_ComputeSystem(hcc,CaO_SiO2_Na2O_K2O_CO2_H2O) ;
     #endif
 
@@ -2518,7 +2517,6 @@ Values_d*  MPM_t::Initialize(Element_t* el,double const& t,Values_d& val)
     HardenedCementChemistry_ComputeSystem(hcc,CaO_SiO2_Na2O_K2O_CO2_Cl_H2O) ;
     #else
     HardenedCementChemistry_SetAqueousConcentrationOf(hcc,Cl,c_cl) ;
-    HardenedCementChemistry_SetLogAqueousConcentrationOf(hcc,Cl,logc_cl) ;
     HardenedCementChemistry_ComputeSystem(hcc,CaO_SiO2_Na2O_K2O_CO2_H2O) ;
     #endif
 
@@ -2638,7 +2636,6 @@ int concentrations_oh_na_k(double c_co2,double u_calcium,double u_silicon,double
     HardenedCementChemistry_ComputeSystem(hcc,CaO_SiO2_Na2O_K2O_CO2_Cl_H2O) ;
 #else
     HardenedCementChemistry_SetAqueousConcentrationOf(hcc,Cl,c_cl) ;
-    HardenedCementChemistry_SetLogAqueousConcentrationOf(hcc,Cl,logc_cl) ;
     HardenedCementChemistry_ComputeSystem(hcc,CaO_SiO2_Na2O_K2O_CO2_H2O) ;
 #endif
 

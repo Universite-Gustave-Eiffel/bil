@@ -580,7 +580,7 @@ int MPM_t::SetTangentMatrix(Element_t* el,double const& t,double const& dt,int c
       
       {
         Session_Open() ;
-        Message_SetVerbosity(0) ;
+        Message_SetNewVerbosity(0) ;
         
         Message_Direct("\n") ;
         Message_Direct("Start a calculation of microstructure matrix (tangent matrix): %s",DataFile_GetFileName(df)) ;
@@ -699,7 +699,7 @@ Values_d* MPM_t::Integrate(Element_t* el,const double& t,const double& dt,Values
 
         
         Session_Open() ;
-        Message_SetVerbosity(99) ;
+        Message_SetNewVerbosity(99) ;
         
         Message_Direct("\n") ;
         Message_Direct("Start a calculation of microstructure: %s",DataFile_GetFileName(df)) ;

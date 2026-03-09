@@ -8,7 +8,6 @@
 
 #include "Message.h"
 #include "Mry.h"
-#include "Math_.h"
 #include "Curve.h"
 
 #include "autodiff.h"
@@ -149,7 +148,9 @@ Curve_t* Curve_CreateInverse(Curve_t const* curve,const char scale)
     double *yo  = Curve_GetYValue(curve) ;
     double *yi  = Curve_CreateSamplingOfX(evruc) ;
     double *xi  = Curve_GetYValue(evruc) ;
+    #define MAX(a,b)   (((a) > (b)) ? (a) : (b))
     double ymax = MAX(fabs(yo[0]),fabs(yo[n - 1])) ;
+    #undef MAX
     double err ;
     double tol = 1.e-10*ymax ;
     int i ;

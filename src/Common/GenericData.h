@@ -7,10 +7,6 @@ struct GenericData_t; //typedef struct GenericData_t     GenericData_t ;
 struct TypeId_t;
 
 
-
-
-
-
 #define GenericData_MaxLengthOfKeyWord           (50)
 
 
@@ -83,8 +79,32 @@ struct TypeId_t;
 
 
 
+#define GenericData_Initialize(GD, ...) \
+        ((GD)->Initialize(__VA_ARGS__))
+        
+#define GenericData_Append(GD, ...) \
+        ((GD) ? (GD)->Append(__VA_ARGS__) : __VA_ARGS__)
+        
+#define GenericData_First(GD) \
+        ((GD)->First())
+        
+#define GenericData_Last(GD) \
+        ((GD)->Last())
+        
+#define GenericData_Find(GD, ...) \
+        ((GD)->Find(__VA_ARGS__))
+
+
+#define GenericData_New    GenericData_t::New
+#define GenericData_Create GenericData_t::Create
+#define GenericData_Delete GenericData_t::Delete
+
+
+
+
 #include "GenericObject.h"
 #include <stdio.h>
+#include <string.h>
 
 /* Generic data */
 struct GenericData_t {
@@ -115,12 +135,215 @@ struct GenericData_t {
   void SetNextGenericData(GenericData_t* x){_next = x;}
   void SetPreviousGenericData(GenericData_t* x){_prev = x;}
   void SetDelete(void (*x)(void*)){_delete = x;}
+  
+  /* Other methods */
+  private:
+  GenericData_t* Last(void){
+  /** Return the last generic data or NULL pointer. */
+    GenericData_t* gdat = this;
+    
+    if(gdat) {
+      GenericData_t* next;
+    
+      while((next = gdat->GetNextGenericData())) gdat = next;
+    }
+  
+    return(gdat);
+  }
+
+  GenericData_t* First(void){
+  /** Return the first generic data or NULL pointer. */
+    GenericData_t* gdat = this;
+    
+    if(gdat) {
+      GenericData_t* prev;
+    
+      while((prev = gdat->GetPreviousGenericData())) gdat = prev;
+    }
+  
+    return(gdat) ;
+  }
+
+  public:
+  GenericData_t* Append(GenericData_t* b){
+  /** Append "b" to "this". 
+   *  Return the appended generic data (ie "this" or "b") or NULL pointer. */
+    /* Add b at the end of this */
+    GenericData_t* lasta  = Last() ;
+    
+    /* The condition is useless since "lasta" must not be NULL.  */
+    if(lasta) lasta->SetNextGenericData(b) ;
+    if(b) b->SetPreviousGenericData(lasta) ;
+    
+    return(this) ;
+  }
+
+  GenericData_t* Find(const char* name){
+  /** Return the generic data named as "name" or NULL pointer. */
+    {
+      GenericData_t* next = this ;
+    
+      while(next) {
+        if(GenericData_Is(next,name)) return(next) ;
+        next = next->GetNextGenericData() ;
+      }
+    }
+  
+    {
+      GenericData_t* prev = this ;
+    
+      while(prev) {
+        if(GenericData_Is(prev,name)) return(prev) ;
+        prev = prev->GetPreviousGenericData() ;
+      }
+    }
+  
+    return(NULL) ;
+  }
+  #if 1
+  template<typename T>
+  void Initialize(size_t,T*,const char*);
+  inline static GenericData_t* New(void);
+  template<typename T>
+  inline static GenericData_t* Create(size_t,T*,const char*);
+  inline static void Delete(void*);
+  #endif
 } ;
 
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <assert.h>
+#include "TypeId.h"
+#include "Mry.h"
+
+#if 1
+template<typename T>
+void GenericData_t::Initialize(size_t n,T* data,const char* name){
+    TypeId_Set(GetTypeId(),data);
+    SetNbOfData(n);
+    
+    {
+      #define GenericData_MIN(a,b)   (((a) < (b)) ? (a) : (b))
+      size_t len = GenericData_MIN(strlen(name),GenericData_MaxLengthOfKeyWord) ;
+      #undef GenericData_MIN
+      
+      strncpy(GetName(),name,len) ;
+      GetName()[len] = '\0' ;
+    }
+}
+
+
+GenericData_t* GenericData_t::New(void)
+{
+  GenericData_t* gdat = (GenericData_t*) Mry_New(GenericData_t) ;
+  
+  /* Allocation for the name */
+  {
+    char* name = (char*) Mry_New(char,GenericData_MaxLengthOfKeyWord + 1) ;
+    
+    gdat->SetName(name) ;
+    strcpy(gdat->GetName(),"\0") ;
+  }
+  
+  {
+    TypeId_t* typ = TypeId_Create();
+    
+    gdat->SetTypeId(typ);
+    gdat->SetNbOfData(0);
+  }
+  
+  {
+    gdat->SetNextGenericData(NULL);
+    gdat->SetPreviousGenericData(NULL);
+  }
+  
+  gdat->SetDelete(&GenericData_Delete);
+  
+  return(gdat) ;
+}
+
+
+template<typename T>
+GenericData_t* GenericData_t::Create(size_t n,T* data,const char* name)
+{
+  GenericData_t* gdat = New();
+  
+  gdat->Initialize(n,data,name) ;
+  
+  return(gdat) ;
+}
+
+
+void GenericData_t::Delete(void* self)
+{
+  GenericData_t* gdat = (GenericData_t*) self;
+  
+  if(gdat) {
+    {
+      char* name = gdat->GetName();
+
+      if(name) {
+        Mry_Free(name);
+        gdat->SetName(NULL);
+      }
+    }
+    
+    {
+      TypeId_t* typ = gdat->GetTypeId();
+    
+      if(typ) {
+        size_t n = gdat->GetNbOfData();
+        void* data = TypeId_GetData(typ);
+
+        if(data) {
+          size_t sz = TypeId_GetSize(typ);
+          
+          for(size_t i = 0 ; i < n ; i++) {
+            void* data_i = ((char*) data) + i*sz;
+            
+            TypeId_DeleteData(typ,data_i);
+          }
+
+          Mry_Free(data);
+        }
+
+        TypeId_Delete(typ); // Do nothing!
+        Mry_Free(typ);
+        
+        gdat->SetTypeId(NULL);
+      }
+    }
+  
+    /* Delete also the linked generic data  */
+    {
+      GenericData_t*   prev = gdat->GetPreviousGenericData();
+      GenericData_t*   next = gdat->GetNextGenericData();
+      
+      /* Connect prev and next */
+      if(prev) prev->SetNextGenericData(next);
+      if(next) next->SetPreviousGenericData(prev);
+    
+      if(prev) {
+        Delete(prev);
+        Mry_Free(prev);
+        gdat->SetPreviousGenericData(NULL);
+      }
+  
+      if(next) {
+        Delete(next);
+        Mry_Free(next);
+        gdat->SetNextGenericData(NULL);
+      }
+    }
+  }
+}
+#endif
 
 
 
+#if 0
 inline GenericData_t* (GenericData_New)       (void) ;
 template<typename T>
 inline GenericData_t* (GenericData_Create)    (size_t,T*,const char*) ;
@@ -135,9 +358,10 @@ inline GenericData_t* (GenericData_Find)      (GenericData_t*,const char*) ;
 inline void           (GenericData_Delete)       (void*) ;
 
 
+#include "GenericData.h.in"
+#endif
+
 /* For the macros */
 #include "TypeId.h"
-
-#include "GenericData.h.in"
 
 #endif

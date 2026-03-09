@@ -1,6 +1,3 @@
-#include "Message.h"
-#include "Session.h"
-#include "GenericData.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -8,19 +5,17 @@
 #include <strings.h>
 #include <stdarg.h>
 #include <time.h>
-#include <Mry.h>
 #include <assert.h>
+#include "Mry.h"
+#include "Session.h"
+#include "GenericData.h"
 #include "DistributedMS.h"
 
 
-static Message_t*  (Message_GetInstance)(void) ;
-static Message_t*  (Message_Create)(void) ;
-
-
-
+#define _INLINE_ inline
 
 /* Extern functions */
-Message_t*  (Message_GetInstance)(void)
+_INLINE_ Message_t*  (Message_GetInstance)(void)
 {
   GenericData_t* gdat = Session_FindGenericData(Message_t,"Message") ;
   
@@ -39,93 +34,7 @@ Message_t*  (Message_GetInstance)(void)
 
 
 
-
-Message_t*  (Message_Create)(void)
-{
-  Message_t* msg = (Message_t*) Mry_New(Message_t) ;
-  
-  {
-    char* date = (char*) Mry_New(char,26) ;
-    
-    Message_GetLaunchDate(msg) = date ;
-  }
-  
-  {
-    time_t* now = (time_t*) Mry_New(time_t) ;
-    
-    Message_GetLaunchTime(msg) = now ;
-  }
-  
-  Message_GetDelete(msg) = &Message_Delete ;
-  
-  Message_Initialize(msg) ;
-  
-  return(msg) ;
-}
-
-
-
-void  (Message_Delete)(void* self)
-{
-  Message_t* msg = (Message_t*) self ;
-  
-  free(Message_GetLaunchDate(msg)) ;
-  free(Message_GetLaunchTime(msg)) ;
-  Message_GetDelete(msg) = NULL ;
-}
-
-
-
-
-void (Message_Initialize)(Message_t* msg)
-{
-  {
-    clock_t start = clock() ;
-  
-    Message_GetLaunchClock(msg) = start ;
-    Message_GetSavedClock(msg) = start ;
-  }
-  
-  {
-    time_t* now = Message_GetLaunchTime(msg) ;
-  
-    time(now) ;
-  }
-  
-  {
-    char* date = Message_GetLaunchDate(msg) ;
-    time_t* now = Message_GetLaunchTime(msg) ;
-    
-    strcpy(date,ctime(now)) ;
-  }
-  
-  Message_GetVerbosity(msg)  = 4 ;
-}
-
-
-
-void (Message_FatalError0)(const char* fmt, ...)
-{
-  fflush(stdout) ;
-  
-  fprintf(stderr,"\nBil fatal error...\n") ;
-  
-  {
-    va_list args ;
-    va_start(args,fmt) ;
-    vfprintf(stderr,fmt,args) ;
-    va_end(args) ;
-  }
-  
-  fprintf(stderr,"\n...stop\n") ;
-  fflush(stderr) ;
-  
-  exit(EXIT_SUCCESS) ;
-}
-
-
-
-void (Message_RuntimeError0)(const char* fmt, ...)
+_INLINE_ void (Message_RuntimeError0)(const char* fmt, ...)
 {
   Message_t* msg = Message_GetInstance() ;
   
@@ -153,7 +62,7 @@ void (Message_RuntimeError0)(const char* fmt, ...)
 
 
 
-void (Message_InputError)(const char* name,const int i)
+_INLINE_ void (Message_InputError)(const char* name,const int i)
 {
   Message_t* msg = Message_GetInstance() ;
   
@@ -178,7 +87,7 @@ void (Message_InputError)(const char* name,const int i)
 
 
 
-void (Message_Warning)(const char* fmt, ...)
+_INLINE_ void (Message_Warning)(const char* fmt, ...)
 {
   Message_t* msg = Message_GetInstance() ;
   
@@ -204,7 +113,7 @@ void (Message_Warning)(const char* fmt, ...)
 
 
 
-void (Message_Info)(const char* fmt, ...)
+_INLINE_ void (Message_Info)(const char* fmt, ...)
 {
   Message_t* msg = Message_GetInstance() ;
   
@@ -230,7 +139,7 @@ void (Message_Info)(const char* fmt, ...)
 
 
 
-int (Message_Direct)(const char* fmt, ...)
+_INLINE_ int (Message_Direct)(const char* fmt, ...)
 {
   Message_t* msg = Message_GetInstance() ;
   int n ;
@@ -253,7 +162,7 @@ int (Message_Direct)(const char* fmt, ...)
 }
 
 
-char* (Message_LaunchDate)(void)
+_INLINE_ char* (Message_LaunchDate)(void)
 {
   Message_t* msg = Message_GetInstance() ;
   
@@ -261,7 +170,7 @@ char* (Message_LaunchDate)(void)
 }
 
 
-double (Message_CPUTime)(void)
+_INLINE_ double (Message_CPUTime)(void)
 {
   Message_t* msg = Message_GetInstance() ;
   double start = (double) Message_GetLaunchClock(msg) ;
@@ -269,13 +178,13 @@ double (Message_CPUTime)(void)
   double t_cpu = end - start ;
   double elapsed = (t_cpu) / CLOCKS_PER_SEC ;
   
-  Message_GetSavedClock(msg) = clock();
+  Message_SetSavedClock(msg,clock());
   
   return(elapsed) ;
 }
 
 
-double (Message_CPUTimeInterval)(void)
+_INLINE_ double (Message_CPUTimeInterval)(void)
 {
   Message_t* msg = Message_GetInstance() ;
   double start = (double) Message_GetSavedClock(msg) ;
@@ -287,12 +196,14 @@ double (Message_CPUTimeInterval)(void)
 }
 
 
-int (Message_SetVerbosity)(const int newverb)
+_INLINE_ int (Message_SetNewVerbosity)(const int newverb)
 {
   Message_t* msg = Message_GetInstance() ;
   int oldverb = Message_GetVerbosity(msg) ;
   
-  Message_GetVerbosity(msg)  = newverb ;
+  Message_SetVerbosity(msg,newverb) ;
   
   return(oldverb) ;
 }
+
+#undef _INLINE_

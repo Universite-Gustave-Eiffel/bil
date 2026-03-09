@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "Mry.h"
-#include "Message.h"
 
 
 
-void* Mry_Allocate(size_t size)
+#define _INLINE_ inline
+
+_INLINE_ void* Mry_Allocate(size_t size)
 {
   void* ptr ;
 
@@ -21,7 +21,7 @@ void* Mry_Allocate(size_t size)
 
 
 
-void* Mry_AllocateZeroed(size_t num, size_t size)
+_INLINE_ void* Mry_AllocateZeroed(size_t num, size_t size)
 {
   void* ptr;
 
@@ -36,7 +36,7 @@ void* Mry_AllocateZeroed(size_t num, size_t size)
 
 
 
-void* Mry_Realloc(void* ptr, size_t size)
+_INLINE_ void* Mry_Realloc(void* ptr, size_t size)
 {
   if(!size) return (NULL);
   
@@ -49,8 +49,10 @@ void* Mry_Realloc(void* ptr, size_t size)
 
 
 
-void Mry_Free(void* ptr)
+_INLINE_ void Mry_Free(void* ptr)
 {
   if(ptr == NULL) return;
   free(ptr);
 }
+
+#undef _INLINE_

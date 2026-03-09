@@ -102,7 +102,6 @@ Mesh_t*  (Mesh_New)(void)
 
 Mesh_t*  (Mesh_Create)(DataFile_t* datafile,Materials_t* materials,Geometry_t* geometry)
 {
-  //Mesh_t* mesh = Mesh_New() ;
   Mesh_t* mesh = (Mesh_t*) Mry_New(Mesh_t) ;
   
   {
@@ -183,7 +182,7 @@ void (Mesh_Delete)(void* self)
     
     if(elts) {
       Elements_Delete(elts) ;
-      free(elts) ;
+      Mry_Free(elts) ;
     }
     
     Mesh_GetElements(mesh) = NULL ;
@@ -194,7 +193,7 @@ void (Mesh_Delete)(void* self)
     
     if(nodes) {
       Nodes_Delete(nodes) ;
-      free(nodes) ;
+      Mry_Free(nodes) ;
     }
     
     Mesh_GetNodes(mesh) = NULL ;
@@ -627,7 +626,7 @@ void (Mesh_WriteGraph)(Mesh_t* mesh,const char* nom,const char* format)
   fclose(fic_graph) ;
   
   Graph_Delete(graph) ;
-  free(graph) ;
+  Mry_Free(graph) ;
 }
 
 
@@ -678,7 +677,7 @@ void   (Mesh_WriteInversePermutation)(Mesh_t* mesh,const char* nom,const char* f
 int*   (Mesh_ComputeInversePermutationOfNodes)(Mesh_t* mesh,const char* format)
 {
   size_t n_no = Mesh_GetNbOfNodes(mesh) ;
-  int*   iperm = (int*) malloc(n_no*sizeof(int)) ;
+  int*   iperm = (int*) Mry_New(int,n_no) ;
   
   if(!iperm) {
     arret("Mesh_ComputeInversePermutationOfNodes(1): not enough memory") ;
@@ -716,7 +715,7 @@ int*   (Mesh_ComputeInversePermutationOfNodes)(Mesh_t* mesh,const char* format)
     }
   
     Graph_Delete(graph) ;
-    free(graph) ;
+    Mry_Free(graph) ;
     
     /* From the package HSL_MC40 */
     {
@@ -766,7 +765,7 @@ int*   (Mesh_ComputeInversePermutationOfElements)(Mesh_t* mesh,const char* forma
   Element_t* elt = Mesh_GetElement(mesh) ;
   size_t  nno = Mesh_GetNbOfNodes(mesh) ;
   size_t  nelt = Mesh_GetNbOfElements(mesh) ;
-  int*   norder = (int*) malloc(nelt*sizeof(int)) ;
+  int*   norder = (int*) Mry_New(int,nelt) ;
   
   if(!norder) {
     arret("Mesh_ComputeInversePermutationOfElements(1): not enough memory") ;

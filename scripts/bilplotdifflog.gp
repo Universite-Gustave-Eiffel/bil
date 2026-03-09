@@ -45,7 +45,7 @@ set logscale y
 
 absolute(x) = ((abs(x) > 0) ? abs(x) : 1.e-99)
 
-do for [i = 2:99] {
+do for [i = 2:200] {
 plot   file1 us 1:(absolute(column(i))) w lp lt 1 title sprintf("%s i=%d",file1,i) \
       ,file2 us 1:(absolute(column(i))) w lp lt 2 title sprintf("%s i=%d",file2,i)
       

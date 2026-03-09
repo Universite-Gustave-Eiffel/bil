@@ -545,7 +545,6 @@ int  ComputeOutputs(Element_t* el,double t,double* s,Result_t* r)
   double* ve = Element_GetExplicitTerm(el) ;
   IntFct_t* intfct = Element_GetIntFct(el) ;
   int np = IntFct_GetNbOfPoints(intfct) ;
-  CI_t ci(mpm) ;
   
   /* initialization */
   {
@@ -555,9 +554,6 @@ int  ComputeOutputs(Element_t* el,double t,double* s,Result_t* r)
       Result_SetValuesToZero(r + i) ;
     }
   }
-
-  
-  ci.Set(el,t,0,u,vi,u,vi) ;
   
   {
     int dim = Element_GetDimensionOfSpace(el) ;
@@ -565,6 +561,7 @@ int  ComputeOutputs(Element_t* el,double t,double* s,Result_t* r)
     /* Interpolation functions at s */
     double* a = Element_ComputeCoordinateInReferenceFrame(el,s) ;
     int p = IntFct_ComputeFunctionIndexAtPointOfReferenceFrame(intfct,a) ;
+    //Values_d& val = *mpm.OutputValues(el,t,p) ;
     /* Pressure */
     double p1 = Element_ComputeUnknown(el,u,intfct,p,U_P1) ;
     /* Displacement */

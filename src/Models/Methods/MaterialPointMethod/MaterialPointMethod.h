@@ -57,13 +57,16 @@ struct MaterialPointMethod_t {
   virtual V<double>* SetInputs(Element_t*,double const&,int const&,double const* const*,V<double>&) = 0;//{return(NULL);}
   /** On input: (el,t,p,u,val)
    *  On output:
-   *  val is initialized with the primary nodal unknowns (strain,pressure,temperature,etc...)
+   *  val is initialized with:
+   *    - the primary nodal unknowns (displacements,pressure,temperature,etc...)
+   *    - their gradients (strain,pressure gradient,temperature gradient,etc...)
    * 
    *  Return a pointer to val
    */
 
   virtual V<double>* Integrate(Element_t*,double const&,double const&,V<double> const&,V<double>&){return(NULL);}
-  /** On input: (el,t,dt,val_n,val) with val initialized with the primary nodal unknowns.
+  /** On input: (el,t,dt,val_n,val) with val initialized with the primary unknowns
+   *  (see SetInputs above).
    *  On output:
    *  val is updated from the integration of the constitutive law from t-dt to t,
    *  i.e. the implicit and the explicit values.
@@ -76,7 +79,8 @@ struct MaterialPointMethod_t {
   #endif
 
   virtual V<double>* Initialize(Element_t*,double const&,V<double>&){return(NULL);}
-  /** On input: (el,t,val) with val initialized with the primary nodal unknowns.
+  /** On input: (el,t,val) with val initialized with the primary unknowns
+   *  (see SetInputs above).
    *  On output:
    *  val is fully initialized, including the implicit, the explicit and the constant values.
    * 
@@ -88,11 +92,14 @@ struct MaterialPointMethod_t {
    *  k = the k^th column of the tangent matrix to be filled.
    *  dval = the derivatives of val wrt the k^th primary unknown.
    *    Note: in FVM the derivative of the fluxes wrt the k^th primary unkown (in dval)
-   *    are computed with the values of dval instead of the gradients. Typically from
-   *    the node p to node q: d(W_pq)/d(Uk_p) = - K_pq d(X_p)/d(Uk_p). Therefore to get
-   *    the real derivative we must divide the result by the distance from p to q.
-   *  c = pointer to the matrix to be partially filled for the components of the column k and
-   *  possibly for any other column if their components don't depend on the derivatives of val.
+   *    are computed with the values of the derivatives itself instead of the gradients.
+   *    Typically from the node p to node q: d(W_pq)/d(Uk_p) = - K_pq d(X_p)/d(Uk_p). 
+   *    Therefore to get the real derivative, we must divide the result by the distance
+   *    from p to q and take the opposite sign.
+   *  c = pointer to the matrix to be partially filled for the components of the column k.
+   *  If the computation process doesn't involve the derivative dval (e.g. an elastic matrix)
+   *  it is possible to compute the entire matrix at the first pass (k = 0) and do nothing at
+   *  the other passes (k > 0).
    * 
    *  On output:
    *  c is updated.
@@ -121,7 +128,8 @@ struct MaterialPointMethod_t {
    *  grdval = value gradients
    * 
    *  On output:
-   *  val[i] and val[j] are updated for the fluxes between i and j.
+   *  val[i] and val[j] are updated for the fluxes from i to j and
+   *  j to i respectively.
    * 
    *  Return a pointer to val.
    */

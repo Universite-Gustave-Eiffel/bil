@@ -6,14 +6,16 @@
 
 /* Electric Charge of Ions in Water */
 
-/* Compound of type I
- * ------------------*/
-/* Hydrogen-Oxygen */
+/* Hydrogen-Oxygen
+ * --------------- */
 #define ElectricChargeOfIonInWater_H2O         (0)
 #define ElectricChargeOfIonInWater_H           (+1)
 #define ElectricChargeOfIonInWater_OH          (-1)
 #define ElectricChargeOfIonInWater_H2          (0)
 #define ElectricChargeOfIonInWater_O2          (0)
+
+/* Compound of type I
+ * ------------------*/
 /* Aluminium */
 #define ElectricChargeOfIonInWater_Al          (+3)
 #define ElectricChargeOfIonInWater_AlO4H4      (-1)
@@ -41,8 +43,9 @@
 #define ElectricChargeOfIonInWater_FeO2        (-1)
 #define ElectricChargeOfIonInWater_FeOH        (+1)
 #define ElectricChargeOfIonInWater_FeO2H       (0)
-#define ElectricChargeOfIonInWater_FeO2H2      (+2)
+#define ElectricChargeOfIonInWater_FeOH_p2     (+2)
 #define ElectricChargeOfIonInWater_Fe3O4H4     (+5)
+#define ElectricChargeOfIonInWater_Fe2O2H2     (+4)
 /* Magnesium */
 #define ElectricChargeOfIonInWater_Mg          (+2)
 #define ElectricChargeOfIonInWater_MgOH        (+1)
@@ -56,17 +59,18 @@
 #define ElectricChargeOfIonInWater_KOH         (0)
 /* Silicon */
 #define ElectricChargeOfIonInWater_H2SiO4      (-2)
+#define ElectricChargeOfIonInWater_SiO3        (-2)
 #define ElectricChargeOfIonInWater_H3SiO4      (-1)
+#define ElectricChargeOfIonInWater_HSiO3       (-1)
 #define ElectricChargeOfIonInWater_H4SiO4      (0)
 #define ElectricChargeOfIonInWater_SiO2        (0)
-#define ElectricChargeOfIonInWater_SiO3        (-2)
-#define ElectricChargeOfIonInWater_HSiO3       (-1)
 #define ElectricChargeOfIonInWater_Si4O10      (-4)
 /* Sodium */
 #define ElectricChargeOfIonInWater_Na          (+1)
 #define ElectricChargeOfIonInWater_NaOH        (0)
 /* Strontium */
 #define ElectricChargeOfIonInWater_Sr          (+2)
+#define ElectricChargeOfIonInWater_SrO         (0)
 #define ElectricChargeOfIonInWater_SrOH        (+1)
 /* Sulfur */
 #define ElectricChargeOfIonInWater_S           (-2)
@@ -77,6 +81,7 @@
 #define ElectricChargeOfIonInWater_HSO3        (-1)
 #define ElectricChargeOfIonInWater_S2O3        (-2)
 #define ElectricChargeOfIonInWater_H2SO4       (0)
+#define ElectricChargeOfIonInWater_H2S         (0)
 
 
 /* Compound of type II
@@ -114,6 +119,7 @@
 #define ElectricChargeOfIonInWater_FeSO4_p1    (+1)
 #define ElectricChargeOfIonInWater_FeHSO4      (+1)
 #define ElectricChargeOfIonInWater_FeS2O8      (-1)
+#define ElectricChargeOfIonInWater_FeHSO4_p2   (+2)
 /* Magnesium-Carbon */
 #define ElectricChargeOfIonInWater_MgCO3       (0)
 #define ElectricChargeOfIonInWater_MgHCO3      (-1)
@@ -122,6 +128,8 @@
 #define ElectricChargeOfIonInWater_MgHSiO3     (+1)
 /* Magnesium-Sulfur */
 #define ElectricChargeOfIonInWater_MgSO4       (0)
+/* Nitrogen-Carbon */
+#define ElectricChargeOfIonInWater_HCN         (0)
 /* Potassium-Sulfur */
 #define ElectricChargeOfIonInWater_KSO4        (-1)
 /* Sodium-Carbon */

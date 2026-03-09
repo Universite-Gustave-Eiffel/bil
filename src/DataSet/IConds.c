@@ -45,7 +45,7 @@ IConds_t* (IConds_New)(const int n_iconds)
       ICond_t* ic  = ICond_New() ;
       
       icond[i] = ic[0] ;
-      free(ic) ;
+      Mry_Free(ic) ;
     }
 
     IConds_GetICond(iconds) = icond ;
@@ -134,23 +134,7 @@ void (IConds_Delete)(void* self)
 {
   IConds_t* iconds = (IConds_t*) self ;
   
-  free(IConds_GetFileNameOfNodalValues(iconds)) ;
-  
-  #if 0
-  {
-    int n_iconds = IConds_GetNbOfIConds(iconds) ;
-    ICond_t* icond  = IConds_GetICond(iconds) ;
-    int i ;
-
-    for(i = 0 ; i < n_iconds ; i++) {
-      ICond_t* bc  = icond + i ;
-      
-      ICond_Delete(bc) ;
-    }
-    
-    free(icond) ;
-  }
-  #endif
+  Mry_Free(IConds_GetFileNameOfNodalValues(iconds)) ;
   
   #if 1
   {
@@ -159,7 +143,7 @@ void (IConds_Delete)(void* self)
     
     Mry_Delete(icond,n_iconds,ICond_Delete) ;
     
-    free(icond) ;
+    Mry_Free(icond) ;
   }
   #endif
 }

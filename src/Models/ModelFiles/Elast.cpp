@@ -657,7 +657,7 @@ double* MicrostructureElasticTensor(DataSet_t* dataset,double* c)
         /* For eack (k,l) compute the stresses Sij = Cijkl */
         {
           Session_Open() ;
-          Message_SetVerbosity(0) ;
+          Message_SetNewVerbosity(0) ;
         
           Message_Direct("\n") ;
           Message_Direct("Start a microstructure calculation") ;

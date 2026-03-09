@@ -997,9 +997,8 @@ int ComputeInitialState(Element_t* el)
         HardenedCementChemistry_SetInput(hcc,LogC_OH,logc_oh) ;
     
         HardenedCementChemistry_SetAqueousConcentrationOf(hcc,Cl,1.e-99) ;
-        HardenedCementChemistry_SetLogAqueousConcentrationOf(hcc,Cl,-99) ;
   
-        HardenedCementChemistry_ComputeSystem(hcc,CaO_SiO2_Na2O_K2O_SO3_Al2O3_H2O) ;
+        HardenedCementChemistry_ComputeSystem(hcc,CaO_SiO2_Na2O_K2O_SO3_Al2O3_H2O,0) ;
       
         HardenedCementChemistry_SolveElectroneutrality(hcc) ;
       }
@@ -2005,9 +2004,8 @@ void  ComputeSecondaryVariables(Element_t* el,double t,double dt,double* x_n,dou
     HardenedCementChemistry_SetElectricPotential(hcc,psi) ;
     
     HardenedCementChemistry_SetAqueousConcentrationOf(hcc,Cl,1.e-99) ;
-    HardenedCementChemistry_SetLogAqueousConcentrationOf(hcc,Cl,-99) ;
   
-    HardenedCementChemistry_ComputeSystem(hcc,CaO_SiO2_Na2O_K2O_SO3_Al2O3_H2O) ;
+    HardenedCementChemistry_ComputeSystem(hcc,CaO_SiO2_Na2O_K2O_SO3_Al2O3_H2O,0) ;
 
 #ifndef E_eneutral
   #if (ELECTRONEUTRALITY == IMPLICIT)

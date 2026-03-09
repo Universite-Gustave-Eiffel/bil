@@ -1129,11 +1129,10 @@ int ComputeInitialState(Element_t* el)
         HardenedCementChemistry_SetElectricPotential(hcc,psi) ;
   
         #ifdef E_Chlorine
-        HardenedCementChemistry_ComputeSystem(hcc,CaO_SiO2_Na2O_K2O_SO3_Al2O3_Cl_H2O) ;
+        HardenedCementChemistry_ComputeSystem(hcc,CaO_SiO2_Na2O_K2O_SO3_Al2O3_Cl_H2O,0) ;
         #else
         HardenedCementChemistry_SetAqueousConcentrationOf(hcc,Cl,c_cl) ;
-        HardenedCementChemistry_SetLogAqueousConcentrationOf(hcc,Cl,logc_cl) ;
-        HardenedCementChemistry_ComputeSystem(hcc,CaO_SiO2_Na2O_K2O_SO3_Al2O3_H2O) ;
+        HardenedCementChemistry_ComputeSystem(hcc,CaO_SiO2_Na2O_K2O_SO3_Al2O3_H2O,0) ;
         #endif
       
         HardenedCementChemistry_SolveElectroneutrality(hcc) ;
@@ -2194,11 +2193,10 @@ void  ComputeSecondaryVariables(Element_t* el,double t,double dt,double* x_n,dou
     HardenedCementChemistry_SetInput(hcc,LogC_Cl,logc_cl) ;
   
 #ifdef E_Chlorine
-    HardenedCementChemistry_ComputeSystem(hcc,CaO_SiO2_Na2O_K2O_SO3_Al2O3_Cl_H2O) ;
+    HardenedCementChemistry_ComputeSystem(hcc,CaO_SiO2_Na2O_K2O_SO3_Al2O3_Cl_H2O,0) ;
 #else
     HardenedCementChemistry_SetAqueousConcentrationOf(hcc,Cl,c_cl) ;
-    HardenedCementChemistry_SetLogAqueousConcentrationOf(hcc,Cl,logc_cl) ;
-    HardenedCementChemistry_ComputeSystem(hcc,CaO_SiO2_Na2O_K2O_SO3_Al2O3_H2O) ;
+    HardenedCementChemistry_ComputeSystem(hcc,CaO_SiO2_Na2O_K2O_SO3_Al2O3_H2O,0) ;
 #endif
 
 #ifndef E_eneutral

@@ -13,6 +13,7 @@
 
 
 extern void Log10DissociationConstantOfCementHydrationProduct_Print(double) ;
+extern void Log10DissociationConstantOfCementHydrationProduct_PrintCEMDATA(double);
 
 
 #define Log10DissociationConstantOfCementHydrationProduct(R,T) \
@@ -29,6 +30,16 @@ extern void Log10DissociationConstantOfCementHydrationProduct_Print(double) ;
  * ==================================== */
 
 #include "RefThermoDataBases/CEMDATA/Log10EquilibriumConstantOfHomogeneousReactionInWater_CEMDATA18.h.in"
+
+
+#define Log10DissociationConstantOfCementHydrationProduct_M075SH_3H__1d5Mg_2SiO2_4H2O(T)\
+        (Log10DissociationConstantOfCementHydrationProduct_M075SH__1d5Mg_2SiO2_3OH_H2O(T)\
+        -3*Log10EquilibriumConstantOfHomogeneousReactionInWater_H2O__OH_H(T))
+
+#define Log10DissociationConstantOfCementHydrationProduct_M15SH_3H__1d5Mg_1SiO2_4H2O(T)\
+        (Log10DissociationConstantOfCementHydrationProduct_M15SH__1d5Mg_1SiO2_3OH_H2O(T)\
+        -3*Log10EquilibriumConstantOfHomogeneousReactionInWater_H2O__OH_H(T))
+
 
 #define Log10DissociationConstantOfCementHydrationProduct_CH__Ca_2OH(T) \
         (Log10DissociationConstantOfCementHydrationProduct_Portlandite_2H__Ca_2H2O(T) \

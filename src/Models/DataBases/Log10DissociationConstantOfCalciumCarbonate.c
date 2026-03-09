@@ -33,7 +33,7 @@ void Log10DissociationConstantOfCalciumCarbonate_Print(double T)
     int c2 = c1+11 ;\
     int n = printf(R) ;\
     while(n < c1) n += printf(" ") ;\
-    n += printf("| % g",logk) ;\
+    n += printf("| % 3.1f",logk) ;\
     while(n < c2) n += printf(" ") ;\
     printf("\n") ;\
   }

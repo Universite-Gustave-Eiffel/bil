@@ -19,6 +19,8 @@
 # Old C source files (specific to bil)
 *.cold
 *.hold
+*.old
+*.old
 
 # Specific Bil files
 *.sto

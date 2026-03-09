@@ -1,18 +1,6 @@
 #ifndef MRY_H
 #define MRY_H
 
-#ifdef __CPLUSPLUS
-extern "C" {
-#endif
-
-
-#include <stdio.h>
-
-extern void*     (Mry_Allocate)(size_t) ;
-extern void*     (Mry_AllocateZeroed)(size_t,size_t) ;
-extern void*     (Mry_Realloc)(void*,size_t) ;
-extern void      (Mry_Free)(void*) ;
-
 
 
 #define Mry_New(...) \
@@ -38,7 +26,7 @@ extern void      (Mry_Free)(void*) ;
             for(std::remove_const_t<decltype(N)> Mry_i = 0 ; Mry_i < N ; Mry_i++) { \
               T* Mry_v0 = CREATE ; \
               Mry_v[Mry_i] = Mry_v0[0] ; \
-              free(Mry_v0) ; \
+              Mry_Free(Mry_v0) ; \
             } \
           } while(0); \
           Mry_v ; \
@@ -56,12 +44,66 @@ extern void      (Mry_Free)(void*) ;
         
 
 
-#ifdef __CPLUSPLUS
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+
+#define _INLINE_ inline
+
+_INLINE_ void* Mry_Allocate(size_t size)
+{
+  void* ptr ;
+
+  if(!size) return (NULL);
+  
+  ptr = malloc(size) ;
+  
+  assert(ptr) ;
+  
+  return (ptr);
 }
-#endif
+
+
+
+_INLINE_ void* Mry_AllocateZeroed(size_t num, size_t size)
+{
+  void* ptr;
+
+  if(!size) return (NULL);
+  
+  ptr = calloc(num, size);
+  
+  assert(ptr) ;
+  
+  return (ptr);
+}
+
+
+
+_INLINE_ void* Mry_Realloc(void* ptr, size_t size)
+{
+  if(!size) return (NULL);
+  
+  ptr = realloc(ptr, size);
+  
+  assert(ptr) ;
+  
+  return (ptr);
+}
+
+
+
+_INLINE_ void Mry_Free(void* ptr)
+{
+  if(ptr == NULL) return;
+  free(ptr);
+}
+
+#undef _INLINE_
+
 
 /* For the macros */
 #include "Utils.h"
 #include <type_traits>
-//#include <stdarg.h>
+
 #endif

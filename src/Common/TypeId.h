@@ -3,7 +3,7 @@
 
 
 /* Forward declarations */
-struct TypeId_t; //typedef struct TypeId_t    TypeId_t ;
+struct TypeId_t;
 struct BConds_t;
 struct BCond_t;
 struct Buffer_t;
@@ -223,41 +223,13 @@ struct Views_t;
 //#include <type_traits>
 using TypeId_Variant_t = std::variant<TypeId_List>;
 
-
-extern void Damage_Delete(void*);
-extern void DataSet_Delete(void*);
-extern void Elasticity_Delete(void*);
-extern void ElementsSol_Delete(void*);
-extern void Exception_Delete(void*);
-extern void FEM_Delete(void*);
-extern void FEM2_Delete(void*);
-extern void FVM_Delete(void*);
-extern void InternationalSystemOfUnits_Delete(void*);
-extern void Math_Delete(void*);
-extern void Message_Delete(void*);
-extern void Options_Delete(void*);
-extern void Plasticity_Delete(void*);
-extern void Solutions_Delete(void*);
-extern void Solver_Delete(void*);
-extern void Solvers_Delete(void*);
-#ifdef HAVE_SUPERLUDIST
-extern void dScalePermstructFree(void*);
-extern void dLUstructFree(void*);
-extern void superlu_gridexit(void*);
-#endif
-#ifdef HAVE_PETSC
-#include <petsc.h>
-//extern void KSPDestroy(KSP*);
-//extern void PCDestroy(PC*);
-#endif
-
 //#include "GenericObject.h"
 
 
 #include <stdio.h>
 #include <stdexcept>
 #include <limits>
-#include "Message.h"
+#include <stdarg.h>
 #include "Mry.h"
 
 
@@ -297,7 +269,12 @@ struct TypeId_t {
     try {
       _var   = x;
     } catch (const std::bad_variant_access& ex) {
-      Message_FatalError("%s",ex.what());
+      fflush(stdout);
+      fprintf(stderr,"\nError in TypeId_t::Set...\n");
+      fprintf(stderr,"bad variant access: %s",ex.what());
+      fprintf(stderr,"\n...stop\n");
+      fflush(stderr);
+      exit(EXIT_SUCCESS);
     }
     _index = _var.index();
     _size  = sizeof(T);
@@ -322,7 +299,69 @@ struct TypeId_t {
     if(this) {}
   }
   
-  void  DeleteData(void* self) {
+  inline void  DeleteData(void*);
+  
+  /* Safely convert from size_t to int. */
+  static int ConvertFromSizeToInt(size_t size) {
+    if(size > TypeId_MaxSizeToInt) {
+      throw std::overflow_error("size_t value is too big to fit into an int.");
+    }
+    return static_cast<int>(size);
+  }
+} ;
+
+
+
+
+#if 0
+extern void Damage_Delete(void*);
+extern void DataSet_Delete(void*);
+extern void Elasticity_Delete(void*);
+extern void ElementsSol_Delete(void*);
+extern void Exception_Delete(void*);
+extern void FEM_Delete(void*);
+extern void FEM2_Delete(void*);
+extern void FVM_Delete(void*);
+extern void InternationalSystemOfUnits_Delete(void*);
+extern void Math_Delete(void*);
+//extern void Message_Delete(void*);
+extern void Options_Delete(void*);
+extern void Plasticity_Delete(void*);
+extern void Solutions_Delete(void*);
+extern void Solver_Delete(void*);
+extern void Solvers_Delete(void*);
+#ifdef HAVE_SUPERLUDIST
+extern void dScalePermstructFree(void*);
+extern void dLUstructFree(void*);
+extern void superlu_gridexit(void*);
+#endif
+#else
+#include "Damage.h"
+#include "DataSet.h"
+#include "Elasticity.h"
+#include "ElementsSol.h"
+#include "Exception.h"
+#include "FEM.h"
+#include "FEM2.h"
+#include "FVM.h"
+#include "InternationalSystemOfUnits.h"
+#include "Math_.h"
+#include "Message.h"
+#include "Options.h"
+#include "Plasticity.h"
+#include "Solutions.h"
+#include "Solver.h"
+#include "Solvers.h"
+#endif
+#ifdef HAVE_SUPERLUDIST
+#include "superlu.h"
+#endif
+#ifdef HAVE_PETSC
+#include <petsc.h>
+#endif
+
+
+void  TypeId_t::DeleteData(void* self) {
     if(this->Holds<char>()) {
     } else if(this->Holds<double>()) {
     } else if(this->Holds<int>()) {
@@ -379,16 +418,7 @@ struct TypeId_t {
     }
 
     return ;
-  }
-  
-  /* Safely convert from size_t to int. */
-  static int ConvertFromSizeToInt(size_t size) {
-    if(size > TypeId_MaxSizeToInt) {
-      throw std::overflow_error("size_t value is too big to fit into an int.");
-    }
-    return static_cast<int>(size);
-  }
-} ;
+}
 
 
 

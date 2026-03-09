@@ -19,7 +19,7 @@ extern void       (Views_Delete)(void*) ;
 #define Views_GetView(views)           ((views)->view)
 
 
-#define Views_MaxNbOfViews           (100)
+#define Views_MaxNbOfViews           (200)
 
 
 struct Views_t {            /* Views */

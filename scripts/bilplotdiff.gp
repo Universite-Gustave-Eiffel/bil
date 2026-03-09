@@ -42,7 +42,7 @@ set linetype 8 lw 2 pi -10 ps 2  pt 7  linecolor rgb "light-goldenrod"
 set linetype 9 lw 2 pi -10 ps 2  pt 8  linecolor rgb "light-goldenrod"
 
 
-do for [i = 2:99] {
+do for [i = 2:200] {
 plot   file1 us 1:i w lp lt 1 title sprintf("%s i=%d",file1,i) \
       ,file2 us 1:i w lp lt 2 title sprintf("%s i=%d",file2,i)
       

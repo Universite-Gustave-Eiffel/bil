@@ -737,6 +737,7 @@ int  ComputeOutputs(Element_t* el,double t,double* s,Result_t* r)
     /* Interpolation functions at s */
     double* a = Element_ComputeCoordinateInReferenceFrame(el,s) ;
     int p = IntFct_ComputeFunctionIndexAtPointOfReferenceFrame(intfct,a) ;
+    //Values_d& val = *mpm.OutputValues(el,t,p) ;
     /* Pressure */
     double p_l = Element_ComputeUnknown(el,u,intfct,p,U_P_L) ;
     double p_g = Element_ComputeUnknown(el,u,intfct,p,U_P_G) ;

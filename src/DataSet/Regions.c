@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include "Message.h"
-#include "DataFile.h"
 #include "String_.h"
 #include "Mry.h"
 #include "Regions.h"
@@ -55,12 +54,14 @@ int (Regions_FindRegionIndex)(Regions_t* regions,const char* name)
   
   if(j < n_regions) {
     return(j) ;
-  } else if(j < Regions_MaxNbOfRegions) {
+  } else if(n_regions < Regions_MaxNbOfRegions) {
     j = n_regions ;
     Regions_GetNbOfRegions(regions) = n_regions + 1 ;
     strncpy(Region_GetRegionName(region + j),name,Region_MaxLengthOfRegionName) ;
     
     return(j) ;
+  } else {
+    Message_FatalError("Too many regions: increase Regions_MaxNbOfRegions!");
   }
 
   return(-1) ;

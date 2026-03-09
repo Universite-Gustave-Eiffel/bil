@@ -8,9 +8,10 @@ struct Temperature_t;
 
 
 
-extern CementSolutionDiffusion_t* (CementSolutionDiffusion_Create)(void) ;
+extern CementSolutionDiffusion_t* (CementSolutionDiffusion_Create)(void);
 extern void   (CementSolutionDiffusion_Delete)(void*);
-extern void   (CementSolutionDiffusion_ComputeFluxes)(CementSolutionDiffusion_t*) ;
+extern void   (CementSolutionDiffusion_ComputeFluxes)(CementSolutionDiffusion_t*);
+extern void   (CementSolutionDiffusion_Initialize)(CementSolutionDiffusion_t*);
 
 
 
@@ -55,7 +56,10 @@ extern void   (CementSolutionDiffusion_ComputeFluxes)(CementSolutionDiffusion_t*
         
 
 #define CementSolutionDiffusion_SetRoomTemperature(CSD,T) \
-        Temperature_SetRoomTemperature(CementSolutionDiffusion_GetTemperature(CSD),T)
+        do {\
+        Temperature_SetRoomTemperature(CementSolutionDiffusion_GetTemperature(CSD),T);\
+        CementSolutionDiffusion_Initialize(CSD);\
+      } while(0)
 
 
 
@@ -100,6 +104,18 @@ extern void   (CementSolutionDiffusion_ComputeFluxes)(CementSolutionDiffusion_t*
 
 #define CementSolutionDiffusion_GetElementFluxOf(CSD,A) \
         (CementSolutionDiffusion_GetElementFlux(CSD)[CementSolutionChemistry_E_##A])
+        
+        
+
+#define CementSolutionDiffusion_SetElementFluxOf(CSD,A) \
+        do {\
+          double* c = CementSolutionDiffusion_GetFlux(CSD);\
+          double z = 0;\
+          for(int i : CementSolutionChemistry_Range_##A) {\
+            z += c[i];\
+          }\
+          (CementSolutionDiffusion_GetElementFlux(CSD)[CementSolutionChemistry_E_##A]) = z;\
+        } while(0)
        
 
 

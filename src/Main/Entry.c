@@ -303,19 +303,13 @@ void Entry_CLI(Entry_t* entry)
     double temp = atof(((char**) Context_GetMiscellaneous(ctx))[1]) ;
     
     {
-      HardenedCementChemistry_t<double>* hcc = HardenedCementChemistry_Create<double>() ;
+      HardenedCementChemistry_t<double>* hcc = HardenedCementChemistry_Create<double>();
+      CementSolutionChemistry_t<double>* csc = HardenedCementChemistry_GetCementSolutionChemistry(hcc);
     
       HardenedCementChemistry_SetRoomTemperature(hcc,temp) ;
       HardenedCementChemistry_PrintChemicalConstants(hcc) ;
-      HardenedCementChemistry_Delete(hcc) ;
-    }
-    
-    {
-      CementSolutionChemistry_t<double>* csc = CementSolutionChemistry_Create<double>() ;
-      
-      CementSolutionChemistry_SetRoomTemperature(csc,temp) ;
       CementSolutionChemistry_PrintChemicalConstants(csc) ;
-      CementSolutionChemistry_Delete(csc) ;
+      HardenedCementChemistry_Delete(hcc) ;
     }
     
     return ;

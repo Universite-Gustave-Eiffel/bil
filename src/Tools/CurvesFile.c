@@ -93,20 +93,6 @@ CurvesFile_t*   (CurvesFile_Create)(void)
     CurvesFile_GetTextFile(curvesfile) = textfile ;
   }
   
-  
-  /* Memory space for the file position */
-  /*
-  {
-    fpos_t* pos = (fpos_t*) malloc(sizeof(fpos_t)) ;
-    
-    if(!pos) {
-      arret("CurvesFile_Create(3)") ;
-    }
-    CurvesFile_GetFilePositionStartingInputData(curvesfile) = pos ;
-  }
-  */
-  
-  
   /* Memory space for the text line to be read */
   {
     int n = CurvesFile_MaxLengthOfTextLine ;
@@ -571,12 +557,12 @@ int   (CurvesFile_WriteCurves)(CurvesFile_t* curvesfile)
       int const N = 10;
       double x[N];
       double y[N];
-      double logk[N];
+      double logk[N+2];
       int n;
       
       /* Reading inputs: n, x[], y[], logk[] */
       {
-        double input[3*N];
+        double input[3*N+2];
         char* c = line;
       
         //sscanf(line,"{ %*[^= ] = %d , %*[^= ] = %lf }",&n,) ;
@@ -586,26 +572,28 @@ int   (CurvesFile_WriteCurves)(CurvesFile_t* curvesfile)
           arret("CurvesFile_WriteCurves: the max nb of end-members is %d",N);
         }
       
-        String_ScanArray(c,3*n," , %*[^= ] = %lf",input);
+        String_ScanArray(c,3*n+2," , %*[^= ] = %lf",input);
       
         for(int i = 0 ; i < n ; i++) {
           x[i] = input[3*i];
           y[i] = input[3*i + 1];
           logk[i] = input[3*i + 2];
         }
+        logk[n] = input[3*n];
+        logk[n+1] = input[3*n+1];
       }
       
-      if(String_Is(YLABEL,"LogQ_SH")) {
-        PasteColumn(CSHss,n,x,y,logk,"LogQ_SH");
-      } else if(String_Is(YLABEL,"Ca/Si"))  {
+      if(String_Is(YLABEL,"S_SH")) {
+        PasteColumn(CSHss,n,x,y,logk,"S_SH");
+      } else if(String_Is(YLABEL,"X_CSH"))  {
         PasteColumn(CSHss,n,x,y,logk,"Ca/Si");
       } else if(String_Is(YLABEL,"K_f"))  {
         PasteColumn(CSHss,n,x,y,logk,"K_f");
       } else {
-        strcpy(YLABEL,"LogQ_SH");
-        PasteColumn(CSHss,n,x,y,logk,"LogQ_SH");
+        strcpy(YLABEL,"S_SH");
+        PasteColumn(CSHss,n,x,y,logk,"S_SH");
         ycol += 1;
-        strcpy(YLABEL,"Ca/si");
+        strcpy(YLABEL,"X_CSH");
         PasteColumn(CSHss,n,x,y,logk,"Ca/Si");
         ycol += 1;
         strcpy(YLABEL,"K_f");
@@ -1456,10 +1444,9 @@ double (CSH3EndMembers)(double s_CH,va_list args)
 }
 
       
-double (CSHss)(double logq_ch,va_list args)
+double (CSHss)(double s_ch,va_list args)
 {
-  /* Ion activity product of CH (Portlandite) */
-  double q_ch  = pow(10,logq_ch);
+  /* s_ch = saturation index of CH (Portlandite) */
   int n     = va_arg(args,int) ;
   double* x = va_arg(args,double*) ;
   double* y = va_arg(args,double*) ;
@@ -1474,18 +1461,20 @@ double (CSHss)(double logq_ch,va_list args)
 
 
   {
-    double q_sh;
+    double s_sh;
     double a[N];
+    double logk_ch = logk[n];
+    double logk_sh = logk[n+1];
     
     for(int j = 0 ; j < n ; j++) {
-      a[j] = pow(q_ch,x[j])*pow(10,-logk[j]) ;
+      a[j] = pow(s_ch,x[j])*pow(10,x[j]*logk_ch+y[j]*logk_sh-logk[j]) ;
     }
 
     /* Solve:
-     *   Sum_i (Q_CH)^xi*(Q_SH)^yi/K_i - 1 = 0
-     *   for Q_SH 
+     *   Sum_i (S_CH)^xi*(S_SH)^yi*(K_CH)^xi*(K_SH^yi)/K_i - 1 = 0
+     *   for S_SH 
      */
-    q_sh = SolidSolutionSolver(n,a,y);
+    s_sh = SolidSolutionSolver(n,a,y);
           
     {
       double f[N];
@@ -1493,17 +1482,17 @@ double (CSHss)(double logq_ch,va_list args)
       double y_m = 0;
           
       for(int j = 0 ; j < n ; j++) {
-        f[j] = a[j]*pow(q_sh,y[j]) ;
+        f[j] = a[j]*pow(s_sh,y[j]) ;
         x_m += f[j]*x[j] ;
         y_m += f[j]*y[j] ;
       }
                   
-      if(String_Is(outputtype,"LogQ_SH")) {
-        output = log10(q_sh);
+      if(String_Is(outputtype,"S_SH")) {
+        output = s_sh;
       } else if(String_Is(outputtype,"Ca/Si")) {
         output = x_m/y_m ;
       } else if(String_Is(outputtype,"K_f")) {
-        output = pow(q_ch,x_m/y_m)*q_sh;
+        output = pow(10,x_m*logk_ch+y_m*logk_sh)*pow(s_ch,x_m)*pow(s_sh,y_m);
       } else if(String_Is(outputtype,"F_CSH_",6)) {
         int i = outputtype[6] - '1';
         
@@ -1750,11 +1739,15 @@ double (SolidSolutionSolver)(int const n,double const* a,double const* b)
       if(b[j] < b_min) b_min = b[j];
     }
     
-    if(b_min <= 0) {
-      arret("SolidSolutionSolver: the b's should be > 0!");
+    if(b_min < 0) {
+      arret("SolidSolutionSolver: the b's should not be < 0!");
     }
     
-    x = 0.5*(pow(sum_a,-1/b_max) + pow(sum_a,-1/b_min));
+    if(b_min > 0) {
+      x = 0.5*(pow(sum_a,-1/b_max) + pow(sum_a,-1/b_min));
+    } else {
+      x = 0.5*(pow(sum_a,-1/b_max));
+    }
     #if 0
     if(sum_a < 1) {
       x = pow(sum_a,-1/b_max);

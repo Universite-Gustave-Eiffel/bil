@@ -3,6 +3,7 @@
 
 
 extern void Log10EquilibriumConstantOfHomogeneousReactionInWater_Print(double) ;
+extern void Log10EquilibriumConstantOfHomogeneousReactionInWater_PrintCEMDATA(double);
 
 
 #define Log10EquilibriumConstantOfHomogeneousReactionInWater(R,T) \

@@ -9,7 +9,7 @@ Geometry
 
 Mesh
 3 0. 0. 0.6
-0.001
+0.0002
 1 100
 1 1
 
@@ -28,10 +28,13 @@ Curves = desorbCN
 Curves = relpermCN  s_l = Range{x1 = 0 , x2 = 1 , n = 101} kl_r = Mualem_liq(1){m = 0.45}
 Curves = V_CSH
 #Curves_log = cementpaste  p_c = Range{x1 = 1.e5 , x2 = 2.e9 , n = 2000} s_l  = Van-Genuchten(1){ p0 = 5.7643e7 , m = 0.45}
+Curves_log = csh4t S_CH = Range{x0 = 1.e-20 , x1 = 1 , n = 201} X_CSH = CSHss(1){n = 4 , x1 = 1, y1 = 1.5 , logk1 = 12.5 , x2 = 1.25 , y2 = 1.25 , logk2 = 18.1 , x3 = 1.5 , y3 = 1 , logk3 = 25.3 , x4 = 0 , y4 = 1 , logk4 = -2.7 , logkch = 22.8 , logksh = -2.7} S_SH = CSHss(1){n = 4 , x1 = 1, y1 = 1.5 , logk1 = 12.5 , x2 = 1.25 , y2 = 1.25 , logk2 = 18.1 , x3 = 1.5 , y3 = 1 , logk3 = 25.3 , x4 = 0 , y4 = 1 , logk4 = -2.7 , logkch = 22.8 , logksh = -2.7}
+
+UseAutodiff = 0
 
 
 Fields
-8
+9
 Value = -15 		        Gradient = 0. 0. 0.     Point = 0. 0. 0. 
 Value = -0.158		        Gradient = 0. 0. 0.     Point = 0. 0. 0.  
 Value = -70.50000E+06 		Gradient = 0. 0. 0.     Point = 0. 0. 0.
@@ -40,27 +43,30 @@ Value = 0.03		        Gradient = 0. 0. 0.     Point = 0. 0. 0.
 Value = 1   		        Gradient = 0. 0. 0.     Point = 0. 0. 0.    
 Value = 1  		        Gradient = 0. 0. 0.     Point = 0. 0. 0.
 Type = grid 		        File = CN_satb
+Value = -1.5 		        Gradient = 0. 0. 0.     Point = 0. 0. 0. 
 
 
 Initialization
-5
+6
 Region = 2 	Unknown = logc_co2      Field = 1       Function = 0
 Region = 2 	Unknown = p_l           Field = 8       Function = 0
 Region = 2 	Unknown = psi           Field = 0       Function = 0
 Region = 2 	Unknown = z_si          Field = 6       Function = 0
 Region = 2 	Unknown = z_ca          Field = 7       Function = 0
+Region = 2 	Unknown = logc_oh       Field = 9       Function = 0
 
 
 Functions
-1
+2
 N = 2 F(0) = 1. F(3600) = 0.16
+N = 5 F(0) = 1. F(60) = 0.9 F(360) = 0.8 F(3600) = 0.7 F(86400) = 0.16
 
 
 Boundary Conditions
 3
 Region = 1 	Unknown = psi           Field = 0       Function = 0
 Region = 1 	Unknown = p_l           Field = 3       Function = 0
-Region = 1 	Unknown = logc_co2      Field = 1       Function = 1
+Region = 1 	Unknown = logc_co2      Field = 1       Function = 2
 
 
 Loads
