@@ -41,7 +41,7 @@ Value = 1.      Gradient = 0 0 0      Point = 0 0 0
 
 
 Initialization
-7
+8
 Region = 2    Unknown = p_l       Field = 0    Function = 0
 Region = 2    Unknown = logc_cl   Field = 1    Function = 1
 Region = 2    Unknown = z_ca      Field = 1    Function = 2
@@ -49,16 +49,19 @@ Region = 2    Unknown = z_si      Field = 1    Function = 0
 Region = 2    Unknown = logc_na   Field = 1    Function = 3
 Region = 2    Unknown = logc_k    Field = 1    Function = 4
 Region = 2    Unknown = psi       Field = 0    Function = 0
+Region = 2    Unknown = logc_oh   Field = 1    Function = 6
 
 
 
 Functions
-5
+6
 N = 2     F(0) = -4         F(86400) = -0.28133
 N = 2     F(0) = 1          F(86400) = -2.7766
 N = 2     F(0) = -0.92082   F(86400) = -0.20761
 N = 2     F(0) = -0.63927   F(86400) = -2.4948
 N = 1     F(0) = -4
+N = 1     F(0) = -1.5
+
 
 
 

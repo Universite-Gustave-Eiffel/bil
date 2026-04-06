@@ -521,22 +521,30 @@ _INLINE_ void (HardenedCementChemistry_UpdateChemicalConstantsCEMDATA)(HardenedC
 
   #define LogKeq(R) Log10EquilibriumConstantOfHomogeneousReactionInWater(R,temp)
   {
+    /* Solubility product constants */
     double logk_ch       = LogKd(Portlandite_2H__Ca_2H2O);
     double logk_cc       = LogKd(Cal__CO3_Ca);
     double logk_csh2     = LogKd(Gp__Ca_SO4_2H2O);
-    /* Some other constants */
-    double loga_h2o   = 0 ;
-    /* Carbon compounds */
+    double logk_c3ah6    = LogKd(C3AH6_4H__3Ca_2AlO2_8H2O);
+    double logk_alohmic  = LogKd(AlOHmic__AlO2_H_H2O);
+    double logk_ah3      = 2*logk_alohmic;
+    /* Equilibrium constants */
     double logk_co2      = LogKeq(CO3_2H__CO2_H2O);
-    /* Sulfur compounds */
     double logk_h2so4    = LogKeq(SO4_2H__H2SO4);
-
-    double loga_co2eq = logk_cc - logk_ch + logk_co2 + loga_h2o ;
-    double loga_h2so4eq = logk_csh2 - logk_ch + logk_h2so4 ;
+    
+    /* The constants below satisfy the following equations:
+     *   1. logs_ch  - logs_cc   = loga_co2_CcH   - (loga_co2 - loga_h2o)
+     *   2. logs_ch  - logs_csh2 = loga_h2so4_CsH - loga_h2so4
+     *   3. logs_ah3 - logs_c3h6 = 3*(logs_ch_CAH - logs_ch)
+     */
+    double loga_co2_CcH = logk_cc - logk_ch + logk_co2;
+    double loga_h2so4_CsH = logk_csh2 - logk_ch + logk_h2so4;
+    double logs_ch_CAH = (logk_c3ah6 - logk_ah3)/3 - logk_ch;
   
     /* Backup */
-    HardenedCementChemistry_SetLog10EquilibriumCO2Activity(hcc,loga_co2eq) ;
-    HardenedCementChemistry_SetLog10EquilibriumH2SO4Activity(hcc,loga_h2so4eq) ;
+    HardenedCementChemistry_SetLog10aCO2_CcH(hcc,loga_co2_CcH);
+    HardenedCementChemistry_SetLog10aH2SO4_CsH(hcc,loga_h2so4_CsH);
+    HardenedCementChemistry_SetLog10SaturationIndexOfCH_CAH(hcc,logs_ch_CAH);
   }
   #undef LogKeq
   #undef SetLogKsp
@@ -581,7 +589,7 @@ _INLINE_ void (HardenedCementChemistry_PrintChemicalConstants)(HardenedCementChe
   double temp = HardenedCementChemistry_GetRoomTemperature(hcc) ;
 
   Log10DissociationConstantOfCementHydrationProduct_PrintCEMDATA(temp);
-  //Log10DissociationConstantOfCementHydrationProduct_Print(temp);
+  Log10DissociationConstantOfCementHydrationProduct_Print(temp);
   //Log10DissociationConstantOfCalciumCarbonate_Print(temp);
   
   fflush(stdout) ;
@@ -611,21 +619,28 @@ _INLINE_ void (HardenedCementChemistry_PrintChemicalConstants)(HardenedCementChe
 
 /* Properties of the phase diagram of CaO-CO2-H2O */
 /* CO2 activity at the invariant point of the phase diagram */
-#define Log10a_CO2eq   (HardenedCementChemistry_GetLog10EquilibriumCO2Activity(hcc))
-#define Log10S_CH_CO2eq(loga_co2)       MIN(Log10a_CO2eq - loga_co2,0)
+#define Log10aCO2_CcH   HardenedCementChemistry_GetLog10aCO2_CcH(hcc)
 /* Saturation Index of Dissolved CH */
 /* si_ca should be the saturation index of the system CH-CC */
-#define Log10SaturationIndexOfCH_CO2(si_ca,loga_co2)   ((si_ca) + Log10S_CH_CO2eq(loga_co2))
+#define Log10SaturationIndexOfCH_CO2(si_ca,loga_co2)   ((si_ca) + MIN(Log10aCO2_CcH-(loga_co2),0))
 
 
 /* Properties of the phase diagram of CaO-SO3-H2O */
 /* H2SO4 activity at the invariant point of the phase diagram */
-#define Log10a_H2SO4eq    (HardenedCementChemistry_GetLog10EquilibriumH2SO4Activity(hcc))
-#define Log10S_CH_H2SO4eq(loga_h2so4)       MIN(Log10a_H2SO4eq - loga_h2so4,0)
+#define Log10aH2SO4_CsH    HardenedCementChemistry_GetLog10aH2SO4_CsH(hcc)
 /* Saturation Index of Dissolved CH */
 /* si_ca should be the saturation index of the system CH-CSH2 */
-#define Log10SaturationIndexOfCH_H2SO4(si_ca,loga_h2so4)  ((si_ca) + Log10S_CH_H2SO4eq(loga_h2so4))
+#define Log10SaturationIndexOfCH_H2SO4(si_ca,loga_h2so4)  ((si_ca) + MIN(Log10aH2SO4_CsH-(loga_h2so4),0))
 
+
+/* Properties of the phase diagram of CaO-Al2O3-H2O */
+/* Saturation index of CH at the invariant point of the phase diagram */
+#define Log10SaturationIndexOfCH_CAH   HardenedCementChemistry_GetLog10SaturationIndexOfCH_CAH(hcc)
+/* Saturation index of dissolved AH3 or AlOHmic */
+/* si_al should be the saturation index of the system AH3-C3AH6 */
+#define Log10SaturationIndexOfAH3_CH(si_al,logs_ch) ((si_al) + 3*MIN(Log10SaturationIndexOfCH_CAH-(logs_ch),0))
+/* si_al should be the saturation index of the system AlOHmic-C1.5A0.5H3 */
+#define Log10SaturationIndexOfAlOHmic_CH(si_al,logs_ch)  ((si_al) + 1.5*MIN(Log10SaturationIndexOfCH_CAH-(logs_ch),0))
 
 
 /* Properties of the phase diagram of CaO-SiO2-H2O (C-S-H) */
@@ -642,12 +657,12 @@ _INLINE_ void (HardenedCementChemistry_PrintChemicalConstants)(HardenedCementChe
 
 /* CC Properties (Calcite) */
 /* Saturation Index of Dissolved CC */
-//#define Log10SaturationIndexOfCC(logs_ch,loga_co2)      (logs_ch + loga_co2 - Log10a_CO2eq)
+//#define Log10SaturationIndexOfCC(logs_ch,loga_co2)      (logs_ch + loga_co2 - Log10aCO2_CcH)
 
 
 /* CSH2 Properties (Gypsum) */
 /* Saturation Index of Dissolved CSH2 */
-//#define Log10SaturationIndexOfCSH2(logs_ch,loga_h2so4)    (logs_ch + loga_h2so4 - Log10a_H2SO4eq)
+//#define Log10SaturationIndexOfCSH2(logs_ch,loga_h2so4)    (logs_ch + loga_h2so4 - Log10aH2SO4_CsH)
 
 
 /* Properties of the phase diagram of Al2O3-H2O */
@@ -687,11 +702,13 @@ _INLINE_ void (HardenedCementChemistry_InitPrimaryVariables)(HardenedCementChemi
   #define InputLogWaterActivity \
           (Input(LogA_H2O) + LogActivityCoefficientOfWater(ionicstrength))
   
+  
   if(HardenedCementChemistry_InputIs(hcc,O,LogA_H2O)) {
     LogActivity(H2O) = InputLogWaterActivity;
   } else {
     arret("HardenedCementChemistry_InitPrimaryVariables: not available");
   }
+  
   
   if(HardenedCementChemistry_InputIs(hcc,H,LogC_OH)) {
     T loga_h2o = LogActivity(H2O);
@@ -702,28 +719,23 @@ _INLINE_ void (HardenedCementChemistry_InitPrimaryVariables)(HardenedCementChemi
     arret("HardenedCementChemistry_InitPrimaryVariables: not available");
   }
   
-  if(HardenedCementChemistry_InputIs(hcc,Al,LogC_AlO2)) {
-    LogActivity(AlO2) = InputLogActivity(AlO2);
-  } else if(HardenedCementChemistry_InputIs(hcc,Al,SI_AlOHmic)) {
-    T loga_h2o     = LogActivity(H2O);
-    T loga_h       = LogActivity(H);
-    T si_al        = Input(SI_AH3);
-    T logk_alohmic = GetLogKsp(AlOHmic); // logk_alohmic + logs_alohmic = loga_alo2 + loga_h + loga_h2o
-    T logs_alohmic = Log10SaturationIndexOfAlOHmic(si_al);
-    
-    LogActivity(AlO2) = logk_alohmic + logs_alohmic - loga_h - loga_h2o;
-  } else {
-    arret("HardenedCementChemistry_InitPrimaryVariables: not available");
-  }
   
-  /* The saturation index of CH */
-  if(HardenedCementChemistry_InputIs(hcc,Ca,SI_CH_CC) && HardenedCementChemistry_InputIs(hcc,C,LogC_CO2)) {
+  if(HardenedCementChemistry_InputIs(hcc,Ca,SI_CH_CC)) {
     T loga_h2o = LogActivity(H2O);
     T loga_h   = LogActivity(H);
     T si_ca    = Input(SI_CH_CC);
-    T loga_co2 = InputLogActivity(CO2);
+    T loga_co2;
+    if(HardenedCementChemistry_InputIs(hcc,C,LogC_CO3)) {
+      T loga_co3 = InputLogActivity(CO3);
+      T logk_co2 = GetLogKeq(CO2); // logk_co2 = loga_co2 + loga_h2o - loga_co3 - 2*loga_h
+      loga_co2 = logk_co2 - loga_h2o + loga_co3 + 2*loga_h;
+    } else if(HardenedCementChemistry_InputIs(hcc,C,LogC_CO2)) {
+      loga_co2 = InputLogActivity(CO2);
+    } else {
+      arret("HardenedCementChemistry_InitPrimaryVariables: not available");
+    }
+    T logs_ch  = Log10SaturationIndexOfCH_CO2(si_ca,loga_co2-loga_h2o);
     T logk_ch  = GetLogKsp(Portlandite); // logk_ch + logs_ch = loga_ca + 2*loga_h2o - 2*loga_h
-    T logs_ch  = Log10SaturationIndexOfCH_CO2(si_ca,loga_co2);
     
     LogActivity(Ca) = logk_ch + logs_ch - 2*loga_h2o + 2*loga_h;
     
@@ -743,7 +755,36 @@ _INLINE_ void (HardenedCementChemistry_InitPrimaryVariables)(HardenedCementChemi
     arret("HardenedCementChemistry_InitPrimaryVariables: not available");
   }
   
-  if(HardenedCementChemistry_InputIs(hcc,C,LogC_CO2)) {
+  
+  if(HardenedCementChemistry_InputIs(hcc,Al,LogC_AlO2)) {
+    LogActivity(AlO2) = InputLogActivity(AlO2);
+  } else if(HardenedCementChemistry_InputIs(hcc,Al,SI_AlOHmic)) {
+    T loga_h2o     = LogActivity(H2O);
+    T loga_h       = LogActivity(H);
+    T si_al        = Input(SI_AlOHmic);
+    T logk_alohmic = GetLogKsp(AlOHmic); // logk_alohmic + logs_alohmic = loga_alo2 + loga_h + loga_h2o
+    T logs_alohmic = Log10SaturationIndexOfAlOHmic(si_al);
+    
+    LogActivity(AlO2) = logk_alohmic + logs_alohmic - loga_h - loga_h2o;
+  } else if(HardenedCementChemistry_InputIs(hcc,Al,SI_AH3_C3AH6)) {
+    T si_al    = Input(SI_AH3_C3AH6);
+    T loga_ca  = LogActivity(Ca);
+    T loga_h   = LogActivity(H);
+    T loga_h2o = LogActivity(H2O);
+    T logk_ch  = GetLogKsp(Portlandite);// logk_ch + logs_ch = loga_ca + 2*loga_h2o - 2*loga_h
+    T logk_ah3 = 2*GetLogKsp(AlOHmic);// logk_ah3 + logs_ah3 = 2*(loga_alo2 + loga_h + loga_h2o)
+    T logs_ch  = loga_ca + 2*loga_h2o - 2*loga_h - logk_ch;
+    T logs_ah3 = Log10SaturationIndexOfAH3_CH(si_al,logs_ch);
+        
+    LogActivity(AlO2) = 0.5*(logk_ah3 + logs_ah3) - loga_h - loga_h2o;
+  } else {
+    arret("HardenedCementChemistry_InitPrimaryVariables: not available");
+  }
+  
+  
+  if(HardenedCementChemistry_InputIs(hcc,C,LogC_CO3)) {
+    LogActivity(CO3) = InputLogActivity(CO3);
+  } else if(HardenedCementChemistry_InputIs(hcc,C,LogC_CO2)) {
     T loga_h2o = LogActivity(H2O);
     T loga_h   = LogActivity(H);
     T loga_co2 = InputLogActivity(CO2);
@@ -756,11 +797,13 @@ _INLINE_ void (HardenedCementChemistry_InitPrimaryVariables)(HardenedCementChemi
     arret("HardenedCementChemistry_InitPrimaryVariables: not available");
   }
   
+  
   if(HardenedCementChemistry_InputIs(hcc,Cl,LogC_Cl)) {
     LogActivity(Cl) = InputLogActivity(Cl);
   } else {
     arret("HardenedCementChemistry_InitPrimaryVariables: not available");
   }
+  
   
   if(HardenedCementChemistry_InputIs(hcc,Fe,LogC_FeO2)) {
     LogActivity(FeO2) = InputLogActivity(FeO2);
@@ -768,11 +811,13 @@ _INLINE_ void (HardenedCementChemistry_InitPrimaryVariables)(HardenedCementChemi
     arret("HardenedCementChemistry_InitPrimaryVariables: not available");
   }
   
+  
   if(HardenedCementChemistry_InputIs(hcc,Mg,LogC_Mg)) {
     LogActivity(Mg) = InputLogActivity(Mg);
   } else {
     arret("HardenedCementChemistry_InitPrimaryVariables: not available");
   }
+  
   
   if(HardenedCementChemistry_InputIs(hcc,N,LogC_NO3)) {
     LogActivity(NO3) = InputLogActivity(NO3);
@@ -780,11 +825,13 @@ _INLINE_ void (HardenedCementChemistry_InitPrimaryVariables)(HardenedCementChemi
     arret("HardenedCementChemistry_InitPrimaryVariables: not available");
   }
   
+  
   if(HardenedCementChemistry_InputIs(hcc,K,LogC_K)) {
     LogActivity(K) = InputLogActivity(K);
   } else {
     arret("HardenedCementChemistry_InitPrimaryVariables: not available");
   }
+  
   
   if(HardenedCementChemistry_InputIs(hcc,Si,SI_CSH)) {
     /* SI_CSH is the saturation index of C-S-H ie log(S_SH/S_SHeq) */ 
@@ -806,17 +853,20 @@ _INLINE_ void (HardenedCementChemistry_InitPrimaryVariables)(HardenedCementChemi
     arret("HardenedCementChemistry_InitPrimaryVariables: not available");
   }
   
+  
   if(HardenedCementChemistry_InputIs(hcc,Na,LogC_Na)) {
     LogActivity(Na) = InputLogActivity(Na);
   } else {
     arret("HardenedCementChemistry_InitPrimaryVariables: not available");
   }
   
+  
   if(HardenedCementChemistry_InputIs(hcc,Sr,LogC_Sr)) {
     LogActivity(Sr) = InputLogActivity(Sr);
   } else {
     arret("HardenedCementChemistry_InitPrimaryVariables: not available");
   }
+  
   
   if(HardenedCementChemistry_InputIs(hcc,S,LogC_SO4)) {
     LogActivity(SO4) = InputLogActivity(SO4);
@@ -896,11 +946,9 @@ _INLINE_ void (HardenedCementChemistry_ComputeSystemDEFAULT)(HardenedCementChemi
 
 
 #undef Log10SaturationIndexOfCH
-#undef Log10a_CO2eq
-#undef Log10S_CH_CO2eq
+#undef Log10aCO2_CcH
 #undef Log10SaturationIndexOfCH_CO2
-#undef Log10a_H2SO4eq
-#undef Log10S_CH_H2SO4eq
+#undef Log10aH2SO4_CsH
 #undef Log10SaturationIndexOfCH_H2SO4
 #undef SaturationIndexOfSHCurve
 #undef Log10SaturationIndexOfCSH

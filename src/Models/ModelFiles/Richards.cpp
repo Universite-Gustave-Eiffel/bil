@@ -140,16 +140,6 @@ using namespace BaseName();
 #define SaturationDegree(pc)                Curve_ComputeValue(SATURATION_CURVE,pc)
 #define RelativePermeabilityToLiquid(pc)    Curve_ComputeValue(RELATIVEPERM_CURVE,pc)
 
-
-static double Porosity;
-static double IntrinsicPermeability;
-static double ReferenceGasPressure;
-static double Gravity;
-static double LiquidMassDensity;
-static double LiquidViscosity;
-static double* MacroGradient;
-static double* MacroFunctionIndex;
-
 static double macrograd[3];
 
 
@@ -162,13 +152,14 @@ static double* MacroGrad(Element_t*,double) ;
 
 double* MacroGrad(Element_t* el,double t)
 {
+  Parameters_t param = ((Parameters_t*) Element_GetProperty(el))[0] ;
   Functions_t* fcts = Material_GetFunctions(Element_GetMaterial(el)) ;
   Function_t*  fct = Functions_GetFunction(fcts) ;
   int nf = Functions_GetNbOfFunctions(fcts) ;
   double  f[3] = {0,0,0} ;
     
   for(int i = 0 ; i < 3 ; i++) {
-    double& fctindex = MacroFunctionIndex[i] ;
+    double& fctindex = param.MacroFunctionIndex[i] ;
     int idx = (int) floor(fctindex + 0.5) ;
     
     if(0 < idx && idx < nf + 1) {
@@ -177,7 +168,7 @@ double* MacroGrad(Element_t* el,double t)
       f[i] = Function_ComputeValue(macrogradfct,t) ;
     }
         
-    macrograd[i] = MacroGradient[i] * f[i] ;
+    macrograd[i] = param.MacroGradient[i] * f[i] ;
   }
     
   return(macrograd);
@@ -223,17 +214,6 @@ int pm(const char *s) {
 
 void GetProperties(Element_t* el,double t)
 {
-/* To retrieve the material properties */
-  Parameters_t param = ((Parameters_t*) Element_GetProperty(el))[0] ;
-
-  Porosity = param.Porosity;
-  IntrinsicPermeability = param.IntrinsicPermeability;
-  ReferenceGasPressure = param.ReferenceGasPressure;
-  Gravity = param.Gravity;
-  LiquidMassDensity = param.LiquidMassDensity;
-  LiquidViscosity = param.LiquidViscosity;
-  MacroGradient = param.MacroGradient;
-  MacroFunctionIndex = param.MacroFunctionIndex;
 }
 
 
@@ -434,7 +414,8 @@ int  ComputeOutputs(Element_t *el,double t,double *s,Result_t *r)
     /* Interpolation functions at s */
     double* a = Element_ComputeCoordinateInReferenceFrame(el,s) ;
     int p = IntFct_ComputeFunctionIndexAtPointOfReferenceFrame(intfct,a) ;
-    double pg  = ReferenceGasPressure;
+    Parameters_t param = ((Parameters_t*) Element_GetProperty(el))[0];
+    double pg  = param.ReferenceGasPressure;
     /* pressures */
     double pl  = Element_ComputeUnknown(el,u,intfct,p,U_P_L) ;
     double pc  = pg - pl ;
@@ -512,7 +493,7 @@ int MPM_t::SetTransferMatrix(Element_t* el,double const& dt,int const& p,Values_
 
 
 void MPM_t::SetIndexOfPrimaryVariables(Element_t* el,int* ind) {
-  ind[0]  = Values_Index(Pressure_liquid); 
+  ind[0]  = Values_Index(Pressure_liquid);
 }
 
 
@@ -545,14 +526,15 @@ Values_d* MPM_t::SetInputs(Element_t* el,const double& t,const int& p,double con
 template <typename T>
 Values_t<T>* MPM_t::Integrate(Element_t* el,const double& t,const double& dt,Values_d const& val_n,Values_t<T>& val)
 {
+  Parameters_t param = ((Parameters_t*) Element_GetProperty(el))[0];
   int dim = Element_GetDimensionOfSpace(el);
   /* Parameters */
-  double& rho_l   = LiquidMassDensity;
-  double& phi     = Porosity;
-  double& gravity = Gravity;
-  double& pg      = ReferenceGasPressure;
-  double& mu_l    = LiquidViscosity;
-  double& k_int   = IntrinsicPermeability;
+  double& rho_l   = param.LiquidMassDensity;
+  double& phi     = param.Porosity;
+  double& gravity = param.Gravity;
+  double& pg      = param.ReferenceGasPressure;
+  double& mu_l    = param.LiquidViscosity;
+  double& k_int   = param.IntrinsicPermeability;
   /* Pressures */
   T pl  = val.Pressure_liquid;
   T pc  = pg - pl;
@@ -600,11 +582,12 @@ Values_t<T>* MPM_t::Integrate(Element_t* el,const double& t,const double& dt,Val
 
 Values_d* MPM_t::Initialize(Element_t* el,double const& t,Values_d& val)
 {
+  Parameters_t param = ((Parameters_t*) Element_GetProperty(el))[0];
   /* Parameters */
-  double& rho_l   = LiquidMassDensity;
-  double& pg      = ReferenceGasPressure;
-  double& mu_l    = LiquidViscosity;
-  double& k_int   = IntrinsicPermeability;
+  double& rho_l   = param.LiquidMassDensity;
+  double& pg      = param.ReferenceGasPressure;
+  double& mu_l    = param.LiquidViscosity;
+  double& k_int   = param.IntrinsicPermeability;
   /* Pressures */
   double pl   = val.Pressure_liquid;
   double pc   = pg - pl;

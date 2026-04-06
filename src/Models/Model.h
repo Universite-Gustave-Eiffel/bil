@@ -24,6 +24,7 @@ struct IntFcts_t;
 struct ShapeFcts_t;
 struct Load_t;
 struct Result_t;
+struct Results_t;
 struct Material_t;
 struct DataFile_t;
 struct Geometry_t;
@@ -34,19 +35,29 @@ struct Views_t;
 /*  Typedef names of Methods */
 #include <stdio.h>
 
-typedef int    (Model_SetModelProperties_t)  (Model_t*) ;
-typedef int    (Model_ComputePropertyIndex_t)(const char*) ;
-typedef int    (Model_PrintModelProperties_t)(Model_t*,FILE*) ;
-typedef int    (Model_ComputeInitialState_t) (Element_t*,double) ;
-typedef int    (Model_ComputeExplicitTerms_t)(Element_t*,double) ;
-typedef int    (Model_ComputeImplicitTerms_t)(Element_t*,double,double) ;
-typedef int    (Model_ComputeMatrix_t)       (Element_t*,double,double,double*) ;
-typedef int    (Model_ComputeResidu_t)       (Element_t*,double,double,double*) ;
-typedef int    (Model_DefineElementProperties_t)(Element_t*,IntFcts_t*,ShapeFcts_t*) ;
-typedef int    (Model_ComputeLoads_t)(Element_t*,double,double,Load_t*,double*) ;
-typedef int    (Model_ComputeOutputs_t)(Element_t*,double,double*,Result_t*) ;
-typedef int    (Model_ReadMaterialProperties_t)(Material_t*,DataFile_t*) ;
-typedef void   (Model_ComputeMaterialProperties_t)(Element_t*,double) ;
+using Model_SetModelProperties_t = int (Model_t*);
+using Model_ComputePropertyIndex_t = int (const char*);
+using Model_PrintModelProperties_t = int (Model_t*,FILE*);
+using Model_ComputeInitialState_t = int (Element_t*,double);
+using Model_ComputeExplicitTerms_t = int (Element_t*,double);
+using Model_ComputeImplicitTerms_t = int (Element_t*,double,double);
+using Model_ComputeMatrix_t = int (Element_t*,double,double,double*);
+using Model_ComputeResidu_t = int (Element_t*,double,double,double*);
+using Model_DefineElementProperties_t = int (Element_t*,IntFcts_t*,ShapeFcts_t*);
+using Model_ComputeLoads_t = int (Element_t*,double,double,Load_t*,double*);
+using Model_ReadMaterialProperties_t = int (Material_t*,DataFile_t*);
+using Model_ComputeMaterialProperties_t = void (Element_t*,double);
+using Model_ComputeOutputs_t = int (Element_t*,double,double*,Result_t*);
+
+
+#if 0
+using Model_ComputeOutputs_t1 = int (Element_t*,double,double*,Result_t*);
+using Model_ComputeOutputs_t2 = int (Element_t*,double,double*,Results_t*);
+#include <variant>
+using Model_ComputeOutputs_t = std::variant<Model_ComputeOutputs_t1,Model_ComputeOutputs_t2>;
+#define Model_GetComputeOutputs(MOD) \
+        std::get_if<((MOD)->computeoutputs)->index()>((MOD)->computeoutputs)
+#endif
 
 
 extern Model_t*  (Model_New)       (void) ;

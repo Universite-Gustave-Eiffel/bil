@@ -57,6 +57,16 @@
  * where x = 2.6 (for water)
  * M = Molecular weight of solvent (18 g/mole for water)
  * V = Molal volume of solute (m3/kg)
+ *
+ * 4- Nernst-Hartley equation
+ *
+ * D = RT|z| lambda^0 /F^2
+ *
+ * lambda^0 = limiting equivalent conductance
+ *
+ * 5- Wilke-Chang correlation
+ *
+ * D = 7.4e-18 (\phi M)^0.5 T / eta V^0.6
  */
  
  
@@ -64,6 +74,17 @@
  * Molecular Diffusion Coefficient in Water At Temperature T = 298 K (m2/s) 
  * kT/(6 p h)   = 24.5e-20  m3/s at T = 298 K
  * kT/(6 p h r) = 24.5e-10  m2/s for r = 1 Angstrom = 1.e-10 m
+ */
+ 
+/* From Thoughreact (Anthony Soive)
+ * Ionic charge ; Effective electrostatic radius ; Diffusion coef at 298 K
+ * -1           ; 1.81e-10                       ; 13.53e-10
+ * -2           ; 3.00e-10                       ; 8.167e-10
+ * -3           ; 4.20e-10                       ; 5.833e-10
+ * +1           ; 2.31e-10                       ; 10.61e-10
+ * +2           ; 2.80e-10                       ; 8.750e-10
+ * +3           ; 3.60e-10                       ; 6.806e-10
+ * +4           ; 4.50e-10                       ; 5.444e-10
  */
  
 /* Hydrogen-Oxygen
@@ -80,9 +101,9 @@
 #define DiffusionCoefficientOfMoleculeInWater_Al           (5.41e-10)   /* (g) */
 #define DiffusionCoefficientOfMoleculeInWater_AlO4H4       (1.04e-9)    /* (h) */
 #define DiffusionCoefficientOfMoleculeInWater_AlO2         (1.04e-9)
-#define DiffusionCoefficientOfMoleculeInWater_AlO          (0)
-#define DiffusionCoefficientOfMoleculeInWater_AlOH         (0)
-#define DiffusionCoefficientOfMoleculeInWater_AlO2H        (0)
+#define DiffusionCoefficientOfMoleculeInWater_AlO          (0.54e-9)   /* N-H */
+#define DiffusionCoefficientOfMoleculeInWater_AlOH         (0.5e-9)    /* N-H */
+#define DiffusionCoefficientOfMoleculeInWater_AlO2H        (0.9e-9)    /* W-C */
 /* Calcium */
 #define DiffusionCoefficientOfMoleculeInWater_Ca           (7.92e-10)
 #define DiffusionCoefficientOfMoleculeInWater_CaOH         (12.25e-10)   /* r = 2 A */
@@ -97,20 +118,20 @@
 #define DiffusionCoefficientOfMoleculeInWater_Cl           (20.32e-10)
 #define DiffusionCoefficientOfMoleculeInWater_ClO4         (17.92e-10)
 /* Iron */
-#define DiffusionCoefficientOfMoleculeInWater_Fe           (7.19e-10)
-#define DiffusionCoefficientOfMoleculeInWater_Fe_p3        (6.04e-10)
-#define DiffusionCoefficientOfMoleculeInWater_FeO2         (0)
-#define DiffusionCoefficientOfMoleculeInWater_FeO          (0)
-#define DiffusionCoefficientOfMoleculeInWater_FeO2H        (0)
-#define DiffusionCoefficientOfMoleculeInWater_FeOH         (0)
-#define DiffusionCoefficientOfMoleculeInWater_FeOH_p2      (0)
-#define DiffusionCoefficientOfMoleculeInWater_Fe3O4H4      (0)
-#define DiffusionCoefficientOfMoleculeInWater_Fe2O2H2      (0)
+#define DiffusionCoefficientOfMoleculeInWater_Fe           (7.19e-10)  /* (i) */
+#define DiffusionCoefficientOfMoleculeInWater_Fe_p3        (6.04e-10)  /* (i) */
+#define DiffusionCoefficientOfMoleculeInWater_FeO2         (0.78e-9)   /* N-H */
+#define DiffusionCoefficientOfMoleculeInWater_FeO          (0.56e-9)   /* N-H */
+#define DiffusionCoefficientOfMoleculeInWater_FeO2H        (0.88e-9)   /* W-C */
+#define DiffusionCoefficientOfMoleculeInWater_FeOH         (0.56e-9)   /* N-H */
+#define DiffusionCoefficientOfMoleculeInWater_FeOH_p2      (0.47e-9)   /* N-H */
+#define DiffusionCoefficientOfMoleculeInWater_Fe3O4H4      (0.23e-9)   /* estimated */
+#define DiffusionCoefficientOfMoleculeInWater_Fe2O2H2      (0.28e-9)   /* estimated */
 /* Magnesium */
 #define DiffusionCoefficientOfMoleculeInWater_Mg           (7.06e-10)
-#define DiffusionCoefficientOfMoleculeInWater_MgOH         (0)
+#define DiffusionCoefficientOfMoleculeInWater_MgOH         (0.63e-9)   /* N-H */
 /* Nitrogen */
-#define DiffusionCoefficientOfMoleculeInWater_NO3          (19.02e-10)
+#define DiffusionCoefficientOfMoleculeInWater_NO3          (19.02e-10)  /* (i) */
 #define DiffusionCoefficientOfMoleculeInWater_N2           (20.e-10) /* (g) */
 #define DiffusionCoefficientOfMoleculeInWater_NH3          (15.e-10) /* (g) */
 #define DiffusionCoefficientOfMoleculeInWater_NH4          (19.57e-10) /* r = 1.36 A */
@@ -124,23 +145,23 @@
 #define DiffusionCoefficientOfMoleculeInWater_HSiO3        (10.7e-10)
 #define DiffusionCoefficientOfMoleculeInWater_H2SiO4       (12.25e-10)   /* r = 2 A (e) */
 #define DiffusionCoefficientOfMoleculeInWater_SiO3         (12.25e-10)   /* r = 2 A (e) */
-#define DiffusionCoefficientOfMoleculeInWater_Si4O10       (0)
+#define DiffusionCoefficientOfMoleculeInWater_Si4O10       (0.35e-9)    /* estimated */
 /* Sodium */
 #define DiffusionCoefficientOfMoleculeInWater_Na           (13.34e-10)  /* (g) */
 #define DiffusionCoefficientOfMoleculeInWater_NaOH         (13.34e-10)  /* (g) */
 /* Strontium */
 #define DiffusionCoefficientOfMoleculeInWater_Sr           (7.9e-10)    /* (i) */
-#define DiffusionCoefficientOfMoleculeInWater_SrOH         (0)
+#define DiffusionCoefficientOfMoleculeInWater_SrOH         (0.60e-9)   /* N-H */
 /* Sulfur */
 #define DiffusionCoefficientOfMoleculeInWater_SO4          (10.6e-10)   /* (a,b) */
 #define DiffusionCoefficientOfMoleculeInWater_H2SO4        (1.5e-9)
 #define DiffusionCoefficientOfMoleculeInWater_HSO4         (13.85e-10)  /* (g)*/
 #define DiffusionCoefficientOfMoleculeInWater_HSO3         (15.45e-10)  /* (g)*/
 #define DiffusionCoefficientOfMoleculeInWater_HS           (17.31e-10)  /* (g)*/
-#define DiffusionCoefficientOfMoleculeInWater_S            (0)
+#define DiffusionCoefficientOfMoleculeInWater_S            (7.31e-10)  /* (i) */
 #define DiffusionCoefficientOfMoleculeInWater_SO3          (9.53e-10)
 #define DiffusionCoefficientOfMoleculeInWater_S2O3         (11.32e-10)
-#define DiffusionCoefficientOfMoleculeInWater_H2S          (0)
+#define DiffusionCoefficientOfMoleculeInWater_H2S          (1.61e-9)   /* (k) */
 /* Cesium */
 #define DiffusionCoefficientOfMoleculeInWater_Cs           (20.5e-10)   /* (d) */
 
@@ -148,14 +169,14 @@
 /* Compounds of type II
  * -------------------- */
 /* Aluminium-Silicon */
-#define DiffusionCoefficientOfMoleculeInWater_AlSiO5        (0)
-#define DiffusionCoefficientOfMoleculeInWater_AlHSiO3        (0)
+#define DiffusionCoefficientOfMoleculeInWater_AlSiO5       (0.40e-9)  /* estimated */
+#define DiffusionCoefficientOfMoleculeInWater_AlHSiO3      (0.45e-9)  /* estimated */
 /* Aluminium-Sulfur */
-#define DiffusionCoefficientOfMoleculeInWater_AlSO4        (0)
-#define DiffusionCoefficientOfMoleculeInWater_AlS2O8        (0)
+#define DiffusionCoefficientOfMoleculeInWater_AlSO4        (0.55e-9)  /* N-H */
+#define DiffusionCoefficientOfMoleculeInWater_AlS2O8       (0.48e-9)  /* estimated */
 /* Calcium-Carbon */
 #define DiffusionCoefficientOfMoleculeInWater_CaCO3        (14.3e-10)
-#define DiffusionCoefficientOfMoleculeInWater_CaHCO3       (9.42e-10)    /* r = 2.6 A */
+#define DiffusionCoefficientOfMoleculeInWater_CaHCO3       (5.06e-10)    /* (i) */
 /* Calcium-Silicon */
 #define DiffusionCoefficientOfMoleculeInWater_CaH3SiO4     (12.25e-10)   /* r = 2 A */
 #define DiffusionCoefficientOfMoleculeInWater_CaH2SiO4     (12.25e-10)   /* r = 2 A */
@@ -165,45 +186,45 @@
 #define DiffusionCoefficientOfMoleculeInWater_CaSO4        (1.43e-9)
 #define DiffusionCoefficientOfMoleculeInWater_CaHSO4       (1.07e-9)
 /* Iron-Carbon */
-#define DiffusionCoefficientOfMoleculeInWater_FeCO3        (0)
-#define DiffusionCoefficientOfMoleculeInWater_FeHCO3        (0)
+#define DiffusionCoefficientOfMoleculeInWater_FeCO3        (0.85e-9)  /* W-C */
+#define DiffusionCoefficientOfMoleculeInWater_FeHCO3       (0.53e-9)  /* N-H */
 /* Iron-Chlorine */
-#define DiffusionCoefficientOfMoleculeInWater_FeCl        (0)
-#define DiffusionCoefficientOfMoleculeInWater_FeCl_p2        (0)
-#define DiffusionCoefficientOfMoleculeInWater_FeCl2        (0)
-#define DiffusionCoefficientOfMoleculeInWater_FeCl3        (0)
+#define DiffusionCoefficientOfMoleculeInWater_FeCl         (0.60e-9)  /* N-H */
+#define DiffusionCoefficientOfMoleculeInWater_FeCl_p2      (0.48e-9)  /* N-H */
+#define DiffusionCoefficientOfMoleculeInWater_FeCl2        (0.55e-9)  /* N-H */
+#define DiffusionCoefficientOfMoleculeInWater_FeCl3        (0.87e-9)  /* W-C */
 /* Iron-Silicon */
-#define DiffusionCoefficientOfMoleculeInWater_FeHSiO3        (0)
+#define DiffusionCoefficientOfMoleculeInWater_FeHSiO3      (0.45e-9)  /* estimated */
 /* Iron-Sulfur */
-#define DiffusionCoefficientOfMoleculeInWater_FeHSO4        (0)
-#define DiffusionCoefficientOfMoleculeInWater_FeSO4        (0)
-#define DiffusionCoefficientOfMoleculeInWater_FeSO4_p1        (0)
-#define DiffusionCoefficientOfMoleculeInWater_FeS2O8        (0)
-#define DiffusionCoefficientOfMoleculeInWater_FeHSO4_p2        (0)
+#define DiffusionCoefficientOfMoleculeInWater_FeHSO4       (0.49e-9)  /* N-H */
+#define DiffusionCoefficientOfMoleculeInWater_FeSO4        (0.86e-9)  /* W-C */
+#define DiffusionCoefficientOfMoleculeInWater_FeSO4_p1     (0.54e-9)  /* N-H */
+#define DiffusionCoefficientOfMoleculeInWater_FeS2O8       (0.50e-9)  /* estimated */
+#define DiffusionCoefficientOfMoleculeInWater_FeHSO4_p2    (0.46e-9)  /* N-H */
 /* Magnesium-Carbon */
-#define DiffusionCoefficientOfMoleculeInWater_MgCO3        (0)
-#define DiffusionCoefficientOfMoleculeInWater_MgHCO3        (0)
+#define DiffusionCoefficientOfMoleculeInWater_MgCO3        (0.85e-9)  /* W-C */
+#define DiffusionCoefficientOfMoleculeInWater_MgHCO3       (4.78e-10)  /* (i) */
 /* Magnesium-Silicon */
-#define DiffusionCoefficientOfMoleculeInWater_MgHSiO3        (0)
-#define DiffusionCoefficientOfMoleculeInWater_MgSiO3        (0)
+#define DiffusionCoefficientOfMoleculeInWater_MgHSiO3      (0.57e-9)  /* estimated */
+#define DiffusionCoefficientOfMoleculeInWater_MgSiO3       (0.84e-9)  /* W-C */
 /* Magnesium-Sulfur */
-#define DiffusionCoefficientOfMoleculeInWater_MgSO4        (0)
+#define DiffusionCoefficientOfMoleculeInWater_MgSO4        (0.85e-9)   /* (d) */
 /* Nitrogen-Carbon */
-#define DiffusionCoefficientOfMoleculeInWater_HCN        (0)
+#define DiffusionCoefficientOfMoleculeInWater_HCN          (1.75e-9)  /* (l) */
 /* Potassium-Sulfur */
-#define DiffusionCoefficientOfMoleculeInWater_KSO4        (0)
+#define DiffusionCoefficientOfMoleculeInWater_KSO4         (7.46e-10) /* (i) */
 /* Sodium-Carbon */
-#define DiffusionCoefficientOfMoleculeInWater_NaCO3        (13.3e-10)
+#define DiffusionCoefficientOfMoleculeInWater_NaCO3        (5.85e-10) /* (i) */
 #define DiffusionCoefficientOfMoleculeInWater_NaHCO3       (13.3e-10)    /* r = 2.6 A */
 /* Sodium-Sulfur */
-#define DiffusionCoefficientOfMoleculeInWater_NaSO4        (0)
+#define DiffusionCoefficientOfMoleculeInWater_NaSO4        (6.18e-10) /* (i) */
 /* Strontium-Carbon */
-#define DiffusionCoefficientOfMoleculeInWater_SrCO3        (0)
-#define DiffusionCoefficientOfMoleculeInWater_SrHCO3        (0)
+#define DiffusionCoefficientOfMoleculeInWater_SrCO3        (0.84e-9)  /* W-C */
+#define DiffusionCoefficientOfMoleculeInWater_SrHCO3       (0.57e-9)  /* N-H */
 /* Strontium-Silicon */
-#define DiffusionCoefficientOfMoleculeInWater_SrSiO3        (0)
+#define DiffusionCoefficientOfMoleculeInWater_SrSiO3       (0.82e-9)  /* W-C */
 /* Strontium-Sulfur */
-#define DiffusionCoefficientOfMoleculeInWater_SrSO4        (0)
+#define DiffusionCoefficientOfMoleculeInWater_SrSO4        (0.83e-9)  /* W-C */
 
 /* Compounds of type III
  * --------------------- */
@@ -222,6 +243,9 @@
  * (g) D. R. Lide, ed., CRC Handbook of Chemistry and Physics, 90th Edition, CRC Press/Taylor and Francis, Boca Raton, FL, 2009.
  * (h) James E. Mackin and Robert C.Aller (1983), The infinite dilution diffusion coefficient for Al(OH)4 at 25C, Geochimica et Cosmochimica Acta Vol. 47. pp. 959-961.
  * (i) https://www.aqion.de/site/diffusion-coefficients
+ * (j) Lasaga (1979), J. Geophys. Res. 84.
+ * (k) Tamini et al (1994).
+ * (l) Cussler (1997).
  */
 
 #endif

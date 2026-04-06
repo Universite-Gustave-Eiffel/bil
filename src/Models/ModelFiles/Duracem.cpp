@@ -50,7 +50,8 @@
 #include "CementSolutionDiffusion.h"
 
 #ifdef HAVE_AUTODIFF
-#define USE_AUTODIFF ((bool) Element_GetProperty(el)[18])
+#define USE_AUTODIFF ((bool) Element_GetProperty(el)[20])
+//#define USE_AUTODIFF false
 #endif
 
 #define TITLE   "Mother model of durability of CBM (2024)"
@@ -419,6 +420,8 @@ struct Parameters_t {
   double CrystalRadius_portlandite;
   double DiffusionCoefficientInCalcite_co2;
   double CharacteristicTimeOfDiffusionInCalcite_co2;
+  double TortuosityCoefficient_liquid;
+  double TortuosityCoefficient_gas;
   double UseAutodiff;
 };
 
@@ -844,6 +847,10 @@ int pm(const char* s)
     return (Parameters_Index(CapillaryPressureLimitOfAsymptoticSaturation)) ;
   } else       if(!strcmp(s,"PrecipitationRate_friedelsalt")) {
     return (Parameters_Index(PrecipitationRate_friedelsalt)) ;
+  } else       if(!strcmp(s,"TortuosityCoefficient_liquid")) {
+    return (Parameters_Index(TortuosityCoefficient_liquid)) ;
+  } else       if(!strcmp(s,"TortuosityCoefficient_gas")) {
+    return (Parameters_Index(TortuosityCoefficient_gas)) ;
   } else       if(!strcmp(s,"UseAutodiff")) {
     return (Parameters_Index(UseAutodiff)) ;
   } else return(-1) ;
@@ -1041,6 +1048,22 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
     if(frac == 0) {
       frac = 0.8 ;
       par.FractionalLengthOfPoreBodies = frac ;
+    }
+  }
+  
+  {
+    double tau = par.TortuosityCoefficient_liquid;
+    
+    if(tau == 0) {
+      par.TortuosityCoefficient_liquid = 1;
+    }
+  }
+  
+  {
+    double tau = par.TortuosityCoefficient_gas;
+    
+    if(tau == 0) {
+      par.TortuosityCoefficient_gas = 1;
     }
   }
   
@@ -1516,6 +1539,7 @@ int  ComputeOutputs(Element_t* el,double t,double* s,Result_t* r)
   }
 
   {
+    Parameters_t& par = ((Parameters_t*) Element_GetProperty(el))[0];
     int j = FVM_FindLocalCellIndex(fvm,s) ;
     Values_d& val = *mpm.OutputValues(el,t,j) ;
     HardenedCementChemistry_t<double>* hcc = hcc_d ;
@@ -1699,7 +1723,7 @@ int  ComputeOutputs(Element_t* el,double t,double* s,Result_t* r)
       double s_l        = val.SaturationDegree_liquid ;
       double phi        = val.Porosity ;
       double coeff_permeability = PermeabilityCoefficient(el,phi) ;
-      double taul       = TortuosityToLiquid(phi,s_l) ;
+      double taul       = par.TortuosityCoefficient_liquid*TortuosityToLiquid(phi,s_l);
 
       Result_Store(r + i++,&taul,"tortuosity to liquid",1) ;
       Result_Store(r + i++,&coeff_permeability,"permeability coef",1) ;
@@ -2033,6 +2057,8 @@ Values_t<T>* MPM_t::Integrate(Element_t* el,const double& t,const double& dt,Val
   double p_c3             = par.CapillaryPressureLimitOfAsymptoticSaturation;
   double n_ch0            = par.InitialContent_portlandite;
   double n_csh0           = par.InitialContent_csh;
+  double tau_l            = par.TortuosityCoefficient_liquid;
+  double tau_g            = par.TortuosityCoefficient_gas;
   
   #ifdef E_CARBON
   T logc_co2   = val.U_carbon ;
@@ -2083,6 +2109,9 @@ Values_t<T>* MPM_t::Integrate(Element_t* el,const double& t,const double& dt,Val
     }
     #endif
     
+    #ifdef E_CARBON
+    HardenedCementChemistry_SetInput(hcc,LogC_CO2,logc_co2aq) ;
+    #endif
 
     #if defined (U_ZN_Ca_S)
     {
@@ -2105,15 +2134,13 @@ Values_t<T>* MPM_t::Integrate(Element_t* el,const double& t,const double& dt,Val
     }
   
     HardenedCementChemistry_SetInput(hcc,LogA_H2O,loga_w) ;
-    #ifdef E_CARBON
-    HardenedCementChemistry_SetInput(hcc,LogC_CO2,logc_co2aq) ;
-    #endif
     HardenedCementChemistry_SetInput(hcc,LogC_Na,logc_na) ;
     HardenedCementChemistry_SetInput(hcc,LogC_K,logc_k) ;
     HardenedCementChemistry_SetInput(hcc,LogC_OH,logc_oh) ;
     HardenedCementChemistry_SetElectricPotential(hcc,psi) ;
     #ifdef E_CHLORINE
     HardenedCementChemistry_SetInput(hcc,LogC_Cl,logc_cl) ;
+    HardenedCementChemistry_SetInput(hcc,SI_AH3_C3AH6,0);
     #endif
     
     HardenedCementChemistry_ComputeSystem(hcc,ionicstrength);
@@ -2331,9 +2358,9 @@ Values_t<T>* MPM_t::Integrate(Element_t* el,const double& t,const double& dt,Val
     /* Diffusive transport in liquid and gas phases */
     {
       /* tortuosity liquid */
-      T tauliq =  TortuosityToLiquid(phi,s_l) ;
+      T tauliq =  tau_l*TortuosityToLiquid(phi,s_l) ;
       /* tortuosity gas */
-      T taugas  = TortuosityToGas(phi,s_l) ;
+      T taugas  = tau_g*TortuosityToGas(phi,s_l) ;
       
       val.DiffusionCoefficient_carbondioxide = phi_g * taugas * d_co2 ;
       val.DiffusionCoefficient_watervapor    = phi_g * taugas * d_vap ;
@@ -2537,6 +2564,8 @@ Values_d*  MPM_t::Initialize(Element_t* el,double const& t,Values_d& val)
   double logc_oh    = -7 ;
   #endif
   HardenedCementChemistry_t<double>* hcc = hcc_d ;
+  
+  HardenedCementChemistry_Init(hcc);
       
   if(c_na_tot > 0 && c_k_tot > 0) {
     c_na   = c_na_tot ;
@@ -2563,7 +2592,11 @@ Values_d*  MPM_t::Initialize(Element_t* el,double const& t,Values_d& val)
     double logc_na    = log10(c_na) ;
     double logc_k     = log10(c_k) ;
     double psi        = 0 ;
-
+    
+    #ifdef E_CARBON
+    HardenedCementChemistry_SetInput(hcc,LogC_CO2,logc_co2aq) ;
+    #endif
+    
     #if defined (U_ZN_Ca_S)
     {
       double si_ch_cc = Log10SaturationIndexOfCcH(u_calcium) ;
@@ -2585,15 +2618,13 @@ Values_d*  MPM_t::Initialize(Element_t* el,double const& t,Values_d& val)
     }
         
     HardenedCementChemistry_SetInput(hcc,LogA_H2O,0) ;
-    #ifdef E_CARBON
-    HardenedCementChemistry_SetInput(hcc,LogC_CO2,logc_co2aq) ;
-    #endif
     HardenedCementChemistry_SetInput(hcc,LogC_Na,logc_na) ;
     HardenedCementChemistry_SetInput(hcc,LogC_K,logc_k) ;
     HardenedCementChemistry_SetInput(hcc,LogC_OH,logc_oh) ;
     HardenedCementChemistry_SetElectricPotential(hcc,psi) ;
     #ifdef E_CHLORINE
     HardenedCementChemistry_SetInput(hcc,LogC_Cl,logc_cl) ;
+    HardenedCementChemistry_SetInput(hcc,SI_AH3_C3AH6,0);
     #endif
   
     HardenedCementChemistry_ComputeSystem(hcc,0);
@@ -2683,11 +2714,18 @@ int concentrations_oh_na_k(double c_co2,double u_calcium,double u_silicon,double
   double err,tol = 1.e-8 ;
   HardenedCementChemistry_t<double>* hcc = hcc_d ;
   
-
+  HardenedCementChemistry_Init(hcc);
+  
   /* Solve cement chemistry */
   {
+    #ifdef E_CARBON
     double logc_co2aq = log10(k_h*c_co2);
+    #endif
     double logc_cl    = log10(c_cl) ;
+    
+    #ifdef E_CARBON
+    HardenedCementChemistry_SetInput(hcc,LogC_CO2,logc_co2aq) ;
+    #endif
 
     #if defined (U_ZN_Ca_S)
     {
@@ -2710,8 +2748,8 @@ int concentrations_oh_na_k(double c_co2,double u_calcium,double u_silicon,double
     }
   
     HardenedCementChemistry_SetInput(hcc,LogA_H2O,0) ;
-    HardenedCementChemistry_SetInput(hcc,LogC_CO2,logc_co2aq) ;
     HardenedCementChemistry_SetInput(hcc,LogC_Cl,logc_cl) ;
+    HardenedCementChemistry_SetInput(hcc,SI_AH3_C3AH6,0);
   }
   
   int i = 0 ;

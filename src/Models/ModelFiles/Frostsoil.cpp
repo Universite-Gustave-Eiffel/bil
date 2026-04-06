@@ -185,7 +185,7 @@ struct Parameters_t {
   double CapillaryPressureFraction;
 };
 
-static MPM_t mpm;
+MPM_t mpm;
 }
 
 using namespace BaseName();

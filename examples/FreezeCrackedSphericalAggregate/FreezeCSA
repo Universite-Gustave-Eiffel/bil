@@ -64,10 +64,10 @@ Region = 300 Unknown = p_l  Field = 1 Function = 3
 
 Functions
 5
-Fichier = tem
-Fichier = cs
+File = tem
+File = cs
 N = 1 F(0) = 1.e5
-Fichier = cs
+File = cs
 N = 1 F(0) = 520
 
 

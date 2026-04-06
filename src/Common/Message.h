@@ -7,17 +7,35 @@ struct Message_t;
 
 #define Message_Create          Message_t::Create
 #define Message_Delete          Message_t::Delete
+#define Message_GetInstance     Message_t::GetInstance
 #define Message_FatalError0     Message_t::FatalError
-#define Message_RuntimeError0   Message_t::RuntimeError
-#define Message_InputError      Message_t::InputError
-#define Message_Warning         Message_t::Warning
-#define Message_Info            Message_t::Info
-#define Message_Direct          Message_t::Direct
-#define Message_Initialize      Message_t::Initialize
-#define Message_LaunchDate      Message_t::LaunchDate
-#define Message_CPUTime         Message_t::CPUTime
-#define Message_CPUTimeInterval Message_t::CPUTimeInterval
-#define Message_SetNewVerbosity Message_t::SetNewVerbosity
+
+#define Message_RuntimeError0 \
+        Message_GetInstance()->RuntimeError
+        
+#define Message_InputError \
+        Message_GetInstance()->InputError
+        
+#define Message_Warning \
+        Message_GetInstance()->Warning
+        
+#define Message_Info \
+        Message_GetInstance()->Info
+        
+#define Message_Direct \
+        Message_GetInstance()->Direct
+
+#define Message_LaunchDate \
+        Message_GetInstance()->GetLaunchDate
+        
+#define Message_CPUTime \
+        Message_GetInstance()->CPUTime
+        
+#define Message_CPUTimeInterval \
+        Message_GetInstance()->CPUTimeInterval
+        
+#define Message_SetNewVerbosity \
+        Message_GetInstance()->SetNewVerbosity
 
 
 #define Message_GetLaunchClock(MSG) \
@@ -65,7 +83,12 @@ struct Message_t;
 #include <time.h>
 #include <string.h>
 #include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <strings.h>
 #include "Mry.h"
+#include "DistributedMS.h"
 
 struct Message_t {
   private:
@@ -148,53 +171,8 @@ struct Message_t {
     exit(EXIT_SUCCESS);
   }
   
-  inline static Message_t* GetInstance(void);
-  inline static void RuntimeError(const char*, ...);
-  inline static void InputError(const char*,const int);
-  inline static void Warning(const char*, ...);
-  inline static void Info(const char*, ...);
-  inline static int Direct(const char*, ...);
-  inline static char* LaunchDate(void);
-  inline static double CPUTime(void);
-  inline static double CPUTimeInterval(void);
-  inline static int SetNewVerbosity(const int);
-};
-
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <string.h>
-#include <strings.h>
-#include <stdarg.h>
-#include <time.h>
-#include <assert.h>
-#include "Mry.h"
-#include "Session.h"
-#include "GenericData.h"
-#include "DistributedMS.h"
-
-
-Message_t* Message_t::GetInstance(void){
-    GenericData_t* gdat = Session_FindGenericData(Message_t,"Message");
-    
-    if(!gdat) {
-      Message_t* msg = Create();
-      
-      gdat = GenericData_Create(1,msg,"Message");
-      
-      Session_AddGenericData(gdat);
-      
-      assert(gdat == Session_FindGenericData(Message_t,"Message"));
-    }
-    
-    return((Message_t*) GenericData_GetData(gdat));
-}
-
-void Message_t::RuntimeError(const char* fmt, ...){
-    Message_t* msg = GetInstance();
-    
-    if(!msg || msg->GetVerbosity() < 1) {
+  void RuntimeError(const char* fmt, ...){
+    if(GetVerbosity() < 1) {
       exit(EXIT_SUCCESS);
       return;
     }
@@ -214,12 +192,10 @@ void Message_t::RuntimeError(const char* fmt, ...){
     fflush(stderr);
     
     exit(EXIT_SUCCESS);
-}
-
-void Message_t::InputError(const char* name,const int i){
-    Message_t* msg = GetInstance();
-    
-    if(!msg || msg->GetVerbosity() < 1) {
+  }
+  
+  void InputError(const char* name,const int i){
+    if(GetVerbosity() < 1) {
       exit(EXIT_SUCCESS);
       return;
     }
@@ -236,14 +212,12 @@ void Message_t::InputError(const char* name,const int i){
     fflush(stderr);
     
     exit(EXIT_SUCCESS);
-}
+  }
 
-void Message_t::Warning(const char* fmt, ...){
-    Message_t* msg = GetInstance();
-    
+  void Warning(const char* fmt, ...){
     if(DistributedMS_RankOfCallingProcess) return;
     
-    if(!msg || msg->GetVerbosity() < 2) return;
+    if(GetVerbosity() < 2) return;
     
     fflush(stdout);
     
@@ -259,14 +233,12 @@ void Message_t::Warning(const char* fmt, ...){
     
     fprintf(stderr,"\n");
     fflush(stderr);
-}
+  }
 
-void Message_t::Info(const char* fmt, ...){
-    Message_t* msg = GetInstance();
-    
+  void Info(const char* fmt, ...){
     if(DistributedMS_RankOfCallingProcess) return;
     
-    if(!msg || msg->GetVerbosity() < 3) return;
+    if(GetVerbosity() < 3) return;
     
     fflush(stdout);
     
@@ -282,15 +254,14 @@ void Message_t::Info(const char* fmt, ...){
     
     fprintf(stdout,"\n");
     fflush(stdout);
-}
+  }
 
-int Message_t::Direct(const char* fmt, ...){
-    Message_t* msg = GetInstance();
+  int Direct(const char* fmt, ...){
     int n;
     
     if(DistributedMS_RankOfCallingProcess) return(0);
     
-    if(!msg || msg->GetVerbosity() < 4) return(0);
+    if(GetVerbosity() < 4) return(0);
     
     fflush(stdout);
     
@@ -303,43 +274,59 @@ int Message_t::Direct(const char* fmt, ...){
     
     fflush(stdout);
     return(n);
-}
-
-char* Message_t::LaunchDate(void){
-    Message_t* msg = GetInstance();
-    
-    return(msg->GetLaunchDate());
-}
-
-double Message_t::CPUTime(void){
-    Message_t* msg = GetInstance();
-    double start = (double) msg->GetLaunchClock();
+  }
+  
+  double CPUTime(void){
+    double start = (double) GetLaunchClock();
     double end   = (double) clock();
     double t_cpu = end - start;
     double elapsed = (t_cpu) / CLOCKS_PER_SEC;
     
-    msg->SetSavedClock(clock());
+    SetSavedClock(clock());
     
     return(elapsed);
-}
-
-double Message_t::CPUTimeInterval(void){
-    Message_t* msg = GetInstance();
-    double start = (double) msg->GetSavedClock();
+  }
+  
+  double CPUTimeInterval(void){
+    double start = (double) GetSavedClock();
     double end   = (double) clock();
     double t_cpu = end - start;
     double elapsed = (t_cpu) / CLOCKS_PER_SEC;
     
     return(elapsed);
-}
-
-int Message_t::SetNewVerbosity(const int newverb){
-    Message_t* msg = GetInstance();
-    int oldverb = msg->GetVerbosity();
+  }
+  
+  int SetNewVerbosity(const int newverb){
+    int oldverb = GetVerbosity();
     
-    msg->SetVerbosity(newverb);
+    SetVerbosity(newverb);
     
     return(oldverb);
+  }
+  
+  inline static Message_t* GetInstance(void);
+};
+
+
+#include <assert.h>
+#include "Session.h"
+#include "GenericData.h"
+
+
+Message_t* Message_t::GetInstance(void){
+    GenericData_t* gdat = Session_FindGenericData(Message_t,"Message");
+    
+    if(!gdat) {
+      Message_t* msg = Create();
+      
+      gdat = GenericData_Create(1,msg,"Message");
+      
+      Session_AddGenericData(gdat);
+      
+      assert(gdat == Session_FindGenericData(Message_t,"Message"));
+    }
+    
+    return((Message_t*) GenericData_GetData(gdat));
 }
 
 #endif

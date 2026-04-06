@@ -159,6 +159,8 @@ struct Curve_t;
         (HardenedCementChemistry_P_Al + HardenedCementChemistry_NbOfPrimaryVariables)
 #define HardenedCementChemistry_P_SI_AlOHmic \
         (HardenedCementChemistry_P_Al + 2*HardenedCementChemistry_NbOfPrimaryVariables)
+#define HardenedCementChemistry_P_SI_AH3_C3AH6 \
+        (HardenedCementChemistry_P_Al + 3*HardenedCementChemistry_NbOfPrimaryVariables)
 /* Calcium (Ca) */
 #define HardenedCementChemistry_P_Ca           CementSolutionChemistry_P_Ca
 #define HardenedCementChemistry_P_LogC_Ca      HardenedCementChemistry_P_Ca
@@ -262,22 +264,22 @@ struct Curve_t;
 #define HardenedCementChemistry_5CA               (0),(2.75,-2.25,0.25,1.25,0,0,0,0,0,0,0,0,0,0)
 #define HardenedCementChemistry_5CNA              (1),(2.75,-2.75,0.25,1.25,0,0,0,0,0,0,0,0.5,0,0)
 #define HardenedCementChemistry_AlOHam            (2),(1,1,1,0,0,0,0,0,0,0,0,0,0,0)
-#define HardenedCementChemistry_AlO3H3am          HardenedCementChemistry_AlOHam // synonym
+#define HardenedCementChemistry_AlO3H3am          HardenedCementChemistry_AlOHam
 #define HardenedCementChemistry_AlOHmic           (3),(1,1,1,0,0,0,0,0,0,0,0,0,0,0)
-#define HardenedCementChemistry_AlO3H3mic         HardenedCementChemistry_AlOHmic // synonym
-#define HardenedCementChemistry_AH3               HardenedCementChemistry_AlOHmic // synonym
+#define HardenedCementChemistry_AlO3H3mic         HardenedCementChemistry_AlOHmic
+#define HardenedCementChemistry_AH3               HardenedCementChemistry_AlOHmic
 #define HardenedCementChemistry_AmorSl            (4),(0,0,0,0,0,0,0,0,0,0,1,0,0,0)
-#define HardenedCementChemistry_AmSilica          HardenedCementChemistry_AmorSl // synonym
-#define HardenedCementChemistry_SH                HardenedCementChemistry_AmorSl // synonym
+#define HardenedCementChemistry_AmSilica          HardenedCementChemistry_AmorSl
+#define HardenedCementChemistry_SH                HardenedCementChemistry_AmorSl
 #define HardenedCementChemistry_Anh               (5),(0,0,0,1,0,0,0,0,0,0,0,0,0,1)
-#define HardenedCementChemistry_Anhydrite         HardenedCementChemistry_Anh // synonym
+#define HardenedCementChemistry_Anhydrite         HardenedCementChemistry_Anh
 #define HardenedCementChemistry_Arg               (6),(0,0,0,1,1,0,0,0,0,0,0,0,0,0)
-#define HardenedCementChemistry_Aragonite         HardenedCementChemistry_Arg // synonym
+#define HardenedCementChemistry_Aragonite         HardenedCementChemistry_Arg
 #define HardenedCementChemistry_Brc               (7),(2,-2,0,0,0,0,0,1,0,0,0,0,0,0)
-#define HardenedCementChemistry_Brucite           HardenedCementChemistry_Brc // synonym
+#define HardenedCementChemistry_Brucite           HardenedCementChemistry_Brc
 #define HardenedCementChemistry_C2AClH5           (8),(6,-2,1,2,0,1,0,0,0,0,0,0,0,0)
 #define HardenedCementChemistry_C2AH7d5           (9),(8.5,-2,2,2,0,0,0,0,0,0,0,0,0,0)
-#define HardenedCementChemistry_C2AH8             HardenedCementChemistry_C2AH7d5 // synonym
+#define HardenedCementChemistry_C2AH8             HardenedCementChemistry_C2AH7d5
 #define HardenedCementChemistry_C2AH65            (10),(8,-3,1,2,0,0,0,0,0,0,0,0,0,0)
 #define HardenedCementChemistry_C2S               (11),(2,-4,0,2,0,0,0,0,0,0,1,0,0,0)
 #define HardenedCementChemistry_C3A               (12),(2,-4,2,3,0,0,0,0,0,0,0,0,0,0)
@@ -290,24 +292,24 @@ struct Curve_t;
 #define HardenedCementChemistry_C3FS1d34H3d32     (19),(5.32,-4,0,3,0,0,2,0,0,0,1.32,0,0,0)
 #define HardenedCementChemistry_C3S               (20),(3,-6,0,3,0,0,0,0,0,0,1,0,0,0)
 #define HardenedCementChemistry_C4AClH10          (21),(12,-4,2,4,0,2,0,0,0,0,0,0,0,0)
-#define HardenedCementChemistry_FriedelSalt       HardenedCementChemistry_C4AClH10 // synonym
+#define HardenedCementChemistry_FriedelSalt       HardenedCementChemistry_C4AClH10
 #define HardenedCementChemistry_C4FeCl2H10        (22),(12,-4,0,4,0,2,2,0,0,0,0,0,0,0)
 #define HardenedCementChemistry_C4AF              (23),(2,-4,2,4,0,0,2,0,0,0,0,0,0,0)
 #define HardenedCementChemistry_C4AH11            (24),(14,-6,2,4,0,0,0,0,0,0,0,0,0,0)
 #define HardenedCementChemistry_C4AH13            (25),(16,-6,2,4,0,0,0,0,0,0,0,0,0,0)
 #define HardenedCementChemistry_C4AH19            (26),(22,-6,2,4,0,0,0,0,0,0,0,0,0,0)
 #define HardenedCementChemistry_C4AsClH12         (27),(14,-4,2,4,0,1,0,0,0,0,0,0,0,0.5)
-#define HardenedCementChemistry_KuzelSalt         HardenedCementChemistry_C4AsClH12 // synonym
+#define HardenedCementChemistry_KuzelSalt         HardenedCementChemistry_C4AsClH12
 #define HardenedCementChemistry_C4FH13            (28),(16,-6,0,4,0,0,2,0,0,0,0,0,0,0)
 #define HardenedCementChemistry_C12A7             (29),(5,-10,14,12,0,0,0,0,0,0,0,0,0,0)
 #define HardenedCementChemistry_CA2               (30),(-1,2,4,1,0,0,0,0,0,0,0,0,0,0)
 #define HardenedCementChemistry_CA                (31),(0,0,2,1,0,0,0,0,0,0,0,0,0,0)
 #define HardenedCementChemistry_CAH10             (32),(10,0,2,1,0,0,0,0,0,0,0,0,0,0)
 #define HardenedCementChemistry_Cal               (33),(0,0,0,1,1,0,0,0,0,0,0,0,0,0)
-#define HardenedCementChemistry_CC                HardenedCementChemistry_Cal // synonym
-#define HardenedCementChemistry_Calcite           HardenedCementChemistry_Cal // synonym
+#define HardenedCementChemistry_CC                HardenedCementChemistry_Cal
+#define HardenedCementChemistry_Calcite           HardenedCementChemistry_Cal
 #define HardenedCementChemistry_Cls               (34),(0,0,0,0,0,0,0,0,0,0,0,0,1,1)
-#define HardenedCementChemistry_SrSO4             HardenedCementChemistry_Cls // synonym
+#define HardenedCementChemistry_SrSO4             HardenedCementChemistry_Cls
 #define HardenedCementChemistry_CSH3TT2C          (35),(4,-3,0,1.5,0,0,0,0,0,0,1,0,0,0)
 #define HardenedCementChemistry_CSH3TT5C          (36),(3.75,-2.5,0,1.25,0,0,0,0,0,0,1.25,0,0,0)
 #define HardenedCementChemistry_CSH3TTobH         (37),(3.5,-2,0,1,0,0,0,0,0,0,1.5,0,0,0)
@@ -327,7 +329,7 @@ struct Curve_t;
 #define HardenedCementChemistry_ECSH2SrSH         (51),(3,-2,0,0,0,0,0,0,0,0,0,1,1,0)
 #define HardenedCementChemistry_ECSH2TobCa        (52),(2.66,-1.66,0,0.83,0,0,0,0,0,0,1,0,0,0)
 #define HardenedCementChemistry_ettringite        (53),(34,-4,2,6,0,0,0,0,0,0,0,0,0,3)
-#define HardenedCementChemistry_AFt               HardenedCementChemistry_ettringite // synonym
+#define HardenedCementChemistry_AFt               HardenedCementChemistry_ettringite
 #define HardenedCementChemistry_ettringite03_ss   (54),(11.3,-1.32,0.67,2,0,0,0,0,0,0,0,0,0,1)
 #define HardenedCementChemistry_ettringite05      (55),(17,-2,1,3,0,0,0,0,0,0,0,0,0,1.5)
 #define HardenedCementChemistry_ettringite9       (56),(11,-4,2,6,0,0,0,0,0,0,0,0,0,3)
@@ -347,10 +349,10 @@ struct Curve_t;
 #define HardenedCementChemistry_FeO3H3mic         (70),(1,1,0,0,0,0,1,0,0,0,0,0,0,0)
 #define HardenedCementChemistry_FeCO3pr           (71),(-2,4,0,0,1,0,1,0,0,0,0,0,0,0)
 #define HardenedCementChemistry_Gbs               (72),(1,1,1,0,0,0,0,0,0,0,0,0,0,0)
-#define HardenedCementChemistry_Gibbsite          HardenedCementChemistry_Gbs // synonym
+#define HardenedCementChemistry_Gibbsite          HardenedCementChemistry_Gbs
 #define HardenedCementChemistry_Gp                (73),(2,0,0,1,0,0,0,0,0,0,0,0,0,1)
-#define HardenedCementChemistry_CSH2              HardenedCementChemistry_Gp // synonym
-#define HardenedCementChemistry_Gypsum            HardenedCementChemistry_Gp // synonym
+#define HardenedCementChemistry_CSH2              HardenedCementChemistry_Gp
+#define HardenedCementChemistry_Gypsum            HardenedCementChemistry_Gp
 #define HardenedCementChemistry_Gr                (74),(-3,6,0,0,1,0,0,0,0,0,0,0,0,0)
 #define HardenedCementChemistry_Gt                (75),(0,1,0,0,0,0,1,0,0,0,0,0,0,0)
 #define HardenedCementChemistry_Hem               (76),(-1,2,0,0,0,0,2,0,0,0,0,0,0,0)
@@ -386,7 +388,7 @@ struct Curve_t;
 #define HardenedCementChemistry_monosulphate9     (106),(11,-4,2,4,0,0,0,0,0,0,0,0,0,1)
 #define HardenedCementChemistry_monosulphate10_5  (107),(12.5,-4,2,4,0,0,0,0,0,0,0,0,0,1)
 #define HardenedCementChemistry_monosulphate12    (108),(14,-4,2,4,0,0,0,0,0,0,0,0,0,1)
-#define HardenedCementChemistry_AFm               HardenedCementChemistry_monosulphate12 // synonym
+#define HardenedCementChemistry_AFm               HardenedCementChemistry_monosulphate12
 #define HardenedCementChemistry_monosulphate14    (109),(16,-4,2,4,0,0,0,0,0,0,0,0,0,1)
 #define HardenedCementChemistry_monosulphate16    (110),(18,-4,2,4,0,0,0,0,0,0,0,0,0,1)
 #define HardenedCementChemistry_monosulphate1205  (111),(7,-2,1,2,0,0,0,0,0,0,0,0,0,0.5)
@@ -395,7 +397,7 @@ struct Curve_t;
 #define HardenedCementChemistry_NaSiOH            (114),(0.7,-0.5,0,0,0,0,0,0,0,0,0,0.5,0,0)
 #define HardenedCementChemistry_OrdDol            (115),(0,0,0,1,2,0,0,1,0,0,0,0,0,0)
 #define HardenedCementChemistry_Portlandite       (116),(2,-2,0,1,0,0,0,0,0,0,0,0,0,0)
-#define HardenedCementChemistry_CH                HardenedCementChemistry_Portlandite // synonym
+#define HardenedCementChemistry_CH                HardenedCementChemistry_Portlandite
 #define HardenedCementChemistry_Py                (117),(-10,20,0,0,0,0,0,0,0,0,1,0,0,2)
 #define HardenedCementChemistry_Qtz               (118),(0,0,0,0,0,0,0,0,0,0,1,0,0,0)
 #define HardenedCementChemistry_Sd                (119),(-2,4,0,0,1,0,1,0,0,0,0,0,0,0)
@@ -566,28 +568,38 @@ struct Curve_t;
 
 /* Macros for constants
  * --------------------*/
-#define HardenedCementChemistry_NbOfConstants (2)
+#define HardenedCementChemistry_NbOfConstants (3)
 
-#define HardenedCementChemistry_A_CO2_EQ      (0)
-#define HardenedCementChemistry_A_H2SO4_EQ    (1)
+#define HardenedCementChemistry_A_CO2_CcH      (0)
+#define HardenedCementChemistry_A_H2SO4_CsH    (1)
+#define HardenedCementChemistry_S_CH_CAH       (2)
 
 
-/* Equilibrium CO2 concentration */
-#define HardenedCementChemistry_GetLog10EquilibriumCO2Activity(HCC) \
-        (HardenedCementChemistry_GetConstant(HCC)[HardenedCementChemistry_A_CO2_EQ])
+/* CO2 activity at the invariant point of the phase diagram CaO-CO2-H2O */
+#define HardenedCementChemistry_GetLog10aCO2_CcH(HCC) \
+        (HardenedCementChemistry_GetConstant(HCC)[HardenedCementChemistry_A_CO2_CcH])
         
-#define HardenedCementChemistry_SetLog10EquilibriumCO2Activity(HCC,A) \
+#define HardenedCementChemistry_SetLog10aCO2_CcH(HCC,A) \
         do {\
-          HardenedCementChemistry_GetLog10EquilibriumCO2Activity(HCC) = A;\
+          HardenedCementChemistry_GetLog10aCO2_CcH(HCC) = A;\
         } while(0)
 
-/* Equilibrium H2SO4 concentration */
-#define HardenedCementChemistry_GetLog10EquilibriumH2SO4Activity(HCC) \
-        (HardenedCementChemistry_GetConstant(HCC)[HardenedCementChemistry_A_H2SO4_EQ])
+/* H2SO4 activity at the invariant point of the phase diagram CaO-SO3-H2O */
+#define HardenedCementChemistry_GetLog10aH2SO4_CsH(HCC) \
+        (HardenedCementChemistry_GetConstant(HCC)[HardenedCementChemistry_A_H2SO4_CsH])
         
-#define HardenedCementChemistry_SetLog10EquilibriumH2SO4Activity(HCC,A) \
+#define HardenedCementChemistry_SetLog10aH2SO4_CsH(HCC,A) \
         do {\
-          HardenedCementChemistry_GetLog10EquilibriumH2SO4Activity(HCC) = A;\
+          HardenedCementChemistry_GetLog10aH2SO4_CsH(HCC) = A;\
+        } while(0)
+
+/* Saturation index of CH at the invariant point of the phase diagram CaO-Al2O3-H2O */
+#define HardenedCementChemistry_GetLog10SaturationIndexOfCH_CAH(HCC) \
+        (HardenedCementChemistry_GetConstant(HCC)[HardenedCementChemistry_S_CH_CAH])
+        
+#define HardenedCementChemistry_SetLog10SaturationIndexOfCH_CAH(HCC,A) \
+        do {\
+          HardenedCementChemistry_GetLog10SaturationIndexOfCH_CAH(HCC) = A;\
         } while(0)
 
 

@@ -313,29 +313,6 @@ struct TypeId_t {
 
 
 
-#if 0
-extern void Damage_Delete(void*);
-extern void DataSet_Delete(void*);
-extern void Elasticity_Delete(void*);
-extern void ElementsSol_Delete(void*);
-extern void Exception_Delete(void*);
-extern void FEM_Delete(void*);
-extern void FEM2_Delete(void*);
-extern void FVM_Delete(void*);
-extern void InternationalSystemOfUnits_Delete(void*);
-extern void Math_Delete(void*);
-//extern void Message_Delete(void*);
-extern void Options_Delete(void*);
-extern void Plasticity_Delete(void*);
-extern void Solutions_Delete(void*);
-extern void Solver_Delete(void*);
-extern void Solvers_Delete(void*);
-#ifdef HAVE_SUPERLUDIST
-extern void dScalePermstructFree(void*);
-extern void dLUstructFree(void*);
-extern void superlu_gridexit(void*);
-#endif
-#else
 #include "Damage.h"
 #include "DataSet.h"
 #include "Elasticity.h"
@@ -352,7 +329,7 @@ extern void superlu_gridexit(void*);
 #include "Solutions.h"
 #include "Solver.h"
 #include "Solvers.h"
-#endif
+
 #ifdef HAVE_SUPERLUDIST
 #include "superlu.h"
 #endif

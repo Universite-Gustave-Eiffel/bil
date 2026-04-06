@@ -20,7 +20,6 @@
 *.cold
 *.hold
 *.old
-*.old
 
 # Specific Bil files
 *.sto

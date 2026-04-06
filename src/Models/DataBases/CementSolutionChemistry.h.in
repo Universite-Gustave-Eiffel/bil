@@ -311,8 +311,8 @@ _INLINE_ void (CementSolutionChemistry_CopyConcentrations)(CementSolutionChemist
 template<typename T>
 _INLINE_ void (CementSolutionChemistry_CopyChemicalPotential)(CementSolutionChemistry_t<T>* csc,T* v)
 {
-  constexpr double min = std::numeric_limits<double>::min();
-  constexpr double logmin = log(min);
+  //constexpr double min = std::numeric_limits<double>::min();
+  //constexpr double logmin = log(min);
   int   n = CementSolutionChemistry_NbOfSpecies;
   T* log10a = CementSolutionChemistry_GetLogActivity(csc);
   //T* c    = CementSolutionChemistry_GetConcentration(csc);

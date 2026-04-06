@@ -205,21 +205,29 @@ void Log10DissociationConstantOfCementHydrationProduct_PrintCEMDATA(double T)
   REACSUBTITLE("---------------") ;
   #define LogKeq(R) Log10EquilibriumConstantOfHomogeneousReactionInWater(R,T)
   {
+    /* Solubility product constants */
     double logk_ch       = LogKd(Portlandite_2H__Ca_2H2O);
     double logk_cc       = LogKd(Cal__CO3_Ca);
     double logk_csh2     = LogKd(Gp__Ca_SO4_2H2O);
-    /* Some other constants */
-    double loga_h2o   = 0 ;
-    /* Carbon compounds */
+    double logk_c3ah6    = LogKd(C3AH6_4H__3Ca_2AlO2_8H2O);
+    double logk_alohmic  = LogKd(AlOHmic__AlO2_H_H2O);
+    double logk_ah3      = 2*logk_alohmic;
+    /* Equilibrium constants */
     double logk_co2      = LogKeq(CO3_2H__CO2_H2O);
-    /* Sulfur compounds */
     double logk_h2so4    = LogKeq(SO4_2H__H2SO4);
-
-    double loga_co2eq = logk_cc - logk_ch + logk_co2 + loga_h2o ;
-    double loga_h2so4eq = logk_csh2 - logk_ch + logk_h2so4 ;
+    
+    /* The constants below satisfy the following equations:
+     *   1. logs_ch  - logs_cc   = loga_co2_CcH   - (loga_co2 - loga_h2o)
+     *   2. logs_ch  - logs_csh2 = loga_h2so4_CsH - loga_h2so4
+     *   3. logs_ah3 - logs_c3h6 = 3*(logs_ch_CAH - logs_ch)
+     */
+    double loga_co2_CcH = logk_cc - logk_ch + logk_co2;
+    double loga_h2so4_CsH = logk_csh2 - logk_ch + logk_h2so4;
+    double logs_ch_CAH = (logk_c3ah6 - logk_ah3)/3 - logk_ch;
   
-    PREACT("Log(a_co2eq)",loga_co2eq) ;
-    PREACT("Log(a_h2so4eq)",loga_h2so4eq) ;
+    PREACT("Log(a_co2_CcH)",loga_co2_CcH) ;
+    PREACT("Log(a_h2so4_CsH)",loga_h2so4_CsH) ;
+    PREACT("Log(s_ch_CAH)",logs_ch_CAH) ;
   }
   #undef LogKeq
   #undef LogKd
@@ -336,24 +344,31 @@ void Log10DissociationConstantOfCementHydrationProduct_Print(double T)
   
   #define LogKeq(R) Log10EquilibriumConstantOfHomogeneousReactionInWater(R,T)
   {
+    /* Solubility product constants */
     double logk_ch       = LogKd(CH__Ca_2OH) ;
     double logk_cc       = LogKd(Calcite__Ca_CO3) ;
     double logk_csh2     = LogKd(CSH2__Ca_SO4_2H2O) ;
-    /* Some other constants */
-    double loga_h2o   = 0 ;
+    double logk_c3ah6    = LogKd(C3AH6__3Ca_2AlO4H4_4OH);
+    double logk_ah3      = LogKd(AH3_2OH__2AlO4H4);
+    /* Equilibrium constants */
     double logk_h2o      = LogKeq(H2O__H_OH);
-    /* Carbon compounds */
     double logk_hco3     = LogKeq(HCO3__CO2_OH);
     double logk_co3      = LogKeq(CO3_H2O__HCO3_OH);
-    /* Sulfur compounds */
     double logk_h2so4    = LogKeq(H2SO4__HSO4_H);
     double logk_hso4     = LogKeq(HSO4__SO4_H);
-
-    double loga_co2eq = logk_cc - logk_ch + logk_co3 + logk_hco3 + loga_h2o ;
-    double loga_h2so4eq = logk_csh2 - logk_ch + 2*logk_h2o - logk_hso4 - logk_h2so4 ;
+    
+    /* The constants below satisfy the following equations:
+     *   1. logs_ch  - logs_cc   = loga_co2_CcH   - (loga_co2 - loga_h2o)
+     *   2. logs_ch  - logs_csh2 = loga_h2so4_CsH - loga_h2so4
+     *   3. logs_ah3 - logs_c3h6 = 3*(logs_ch_CAH - logs_ch)
+     */
+    double loga_co2_CcH = logk_cc - logk_ch + logk_co3 + logk_hco3;
+    double loga_h2so4_CsH = logk_csh2 - logk_ch + 2*logk_h2o - logk_hso4 - logk_h2so4;
+    double logs_ch_CAH = (logk_c3ah6 - logk_ah3)/3 - logk_ch;
   
-    PREACT("Log(a_co2eq)",loga_co2eq) ;
-    PREACT("Log(a_h2so4eq)",loga_h2so4eq) ;
+    PREACT("Log(a_co2_CcH)",loga_co2_CcH) ;
+    PREACT("Log(a_h2so4_CsH)",loga_h2so4_CsH) ;
+    PREACT("Log(s_ch_CAH)",logs_ch_CAH) ;
   }
   #undef LogKeq
   #undef LogKd

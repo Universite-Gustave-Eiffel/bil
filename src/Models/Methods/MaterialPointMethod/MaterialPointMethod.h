@@ -56,8 +56,7 @@ struct MaterialPointMethod_t {
    */
   virtual V<double>* SetInputs(Element_t*,double const&,int const&,double const* const*,V<double>&) = 0;//{return(NULL);}
   /** On input: (el,t,p,u,val)
-   *  On output:
-   *  val is initialized with:
+   *  On output, val is initialized with:
    *    - the primary nodal unknowns (displacements,pressure,temperature,etc...)
    *    - their gradients (strain,pressure gradient,temperature gradient,etc...)
    * 
@@ -67,8 +66,7 @@ struct MaterialPointMethod_t {
   virtual V<double>* Integrate(Element_t*,double const&,double const&,V<double> const&,V<double>&){return(NULL);}
   /** On input: (el,t,dt,val_n,val) with val initialized with the primary unknowns
    *  (see SetInputs above).
-   *  On output:
-   *  val is updated from the integration of the constitutive law from t-dt to t,
+   *  On output, val is updated from the integration of the constitutive law from t-dt to t,
    *  i.e. the implicit and the explicit values.
    * 
    *  Return a pointer to val.
@@ -81,8 +79,7 @@ struct MaterialPointMethod_t {
   virtual V<double>* Initialize(Element_t*,double const&,V<double>&){return(NULL);}
   /** On input: (el,t,val) with val initialized with the primary unknowns
    *  (see SetInputs above).
-   *  On output:
-   *  val is fully initialized, including the implicit, the explicit and the constant values.
+   *  On output, val is fully initialized, i.e. the set of (implicit, explicit, constant) values.
    * 
    *  Return a pointer to val.
    */
@@ -96,13 +93,12 @@ struct MaterialPointMethod_t {
    *    Typically from the node p to node q: d(W_pq)/d(Uk_p) = - K_pq d(X_p)/d(Uk_p). 
    *    Therefore to get the real derivative, we must divide the result by the distance
    *    from p to q and take the opposite sign.
-   *  c = pointer to the matrix to be partially filled for the components of the column k.
+   *  c = pointer to the matrices to be partially filled for the components of the column k.
    *  If the computation process doesn't involve the derivative dval (e.g. an elastic matrix)
    *  it is possible to compute the entire matrix at the first pass (k = 0) and do nothing at
    *  the other passes (k > 0).
    * 
-   *  On output:
-   *  c is updated.
+   *  On output, c is updated.
    * 
    *  Return the shift (the size of the matrix: ncols*nrows) if succeeds 
    *  or < 0 if fails.
@@ -113,10 +109,9 @@ struct MaterialPointMethod_t {
 
   virtual int SetTransferMatrix(Element_t*,double const&,int const&,V<double> const&,double*){return(-1);}
   /** On input: (el,dt,p,val,c)
-   *  c = pointer to the transfer matrix to be filled
+   *  c = pointer to the transfer matrices to be filled
    * 
-   *  On output:
-   *  c is updated.
+   *  On output, c is updated.
    * 
    *  Return the shift (the size of the matrix: ncols*nrows)
    *  Example: if there are ndif diffusion process, shift = 9*ndif*ndif
@@ -127,8 +122,7 @@ struct MaterialPointMethod_t {
    *  i,j = node numbers from which and to which fluxes are computed.
    *  grdval = value gradients
    * 
-   *  On output:
-   *  val[i] and val[j] are updated for the fluxes from i to j and
+   *  On output, val[i] and val[j] are updated for the fluxes from i to j and
    *  j to i respectively.
    * 
    *  Return a pointer to val.
@@ -140,8 +134,7 @@ struct MaterialPointMethod_t {
    *  ind[k] = index of the k^th unknown in the custom values struct
    *  ncol = nb of the tangent matrix columns
    * 
-   *  On ouput:
-   *  ind[k] are updated
+   *  On ouput, ind[k] are updated
    */
 
   virtual void SetIncrementOfPrimaryVariables(Element_t*,double*){}
@@ -151,8 +144,7 @@ struct MaterialPointMethod_t {
    *  dui[k] = arbitrary small increment of the k^th unknown used for 
    *           the numerical derivatives (see operator Differentiate)
    * 
-   *  On ouput:
-   *  dui[k] are updated
+   *  On ouput, dui[k] are updated
    */
 
   void DefineNbOfInternalValues(Element_t* el,size_t N) {

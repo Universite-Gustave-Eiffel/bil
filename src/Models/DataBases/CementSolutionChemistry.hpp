@@ -205,7 +205,7 @@ struct Temperature_t;
 /* Aluminium: */
 #define CementSolutionChemistry_Al          (5),(-2,4,1,0,0,0,0,0,0,0,0,0,0,0)
 #define CementSolutionChemistry_AlO2        (6),(0,0,1,0,0,0,0,0,0,0,0,0,0,0)
-#define CementSolutionChemistry_AlO4H4      CementSolutionChemistry_AlO2 // synonym
+#define CementSolutionChemistry_AlO4H4      CementSolutionChemistry_AlO2
 #define CementSolutionChemistry_AlO         (7),(-1,2,1,0,0,0,0,0,0,0,0,0,0,0)
 #define CementSolutionChemistry_AlOH        (8),(-1,3,1,0,0,0,0,0,0,0,0,0,0,0)
 #define CementSolutionChemistry_AlO2H       (9),(0,1,1,0,0,0,0,0,0,0,0,0,0,0)
@@ -243,11 +243,11 @@ struct Temperature_t;
 #define CementSolutionChemistry_KOH         (33),(1,-1,0,0,0,0,0,0,0,1,0,0,0,0)
 /* Silicon: */
 #define CementSolutionChemistry_SiO3        (34),(1,-2,0,0,0,0,0,0,0,0,1,0,0,0)
-#define CementSolutionChemistry_H2SiO4      CementSolutionChemistry_SiO3 // synonym
+#define CementSolutionChemistry_H2SiO4      CementSolutionChemistry_SiO3
 #define CementSolutionChemistry_HSiO3       (35),(1,-1,0,0,0,0,0,0,0,0,1,0,0,0)
-#define CementSolutionChemistry_H3SiO4      CementSolutionChemistry_HSiO3 // synonym
+#define CementSolutionChemistry_H3SiO4      CementSolutionChemistry_HSiO3
 #define CementSolutionChemistry_SiO2        (36),(0,0,0,0,0,0,0,0,0,0,1,0,0,0)
-#define CementSolutionChemistry_H4SiO4      CementSolutionChemistry_SiO2 // synonym
+#define CementSolutionChemistry_H4SiO4      CementSolutionChemistry_SiO2
 #define CementSolutionChemistry_Si4O10      (37),(2,-4,0,0,0,0,0,0,0,0,4,0,0,0)
 /* Sodium: */
 #define CementSolutionChemistry_Na          (38),(0,0,0,0,0,0,0,0,0,0,0,1,0,0)
@@ -279,9 +279,9 @@ struct Temperature_t;
 #define CementSolutionChemistry_CaCO3       (55),(0,0,0,1,1,0,0,0,0,0,0,0,0,0)
 /* Calcium-Silicon: */
 #define CementSolutionChemistry_CaSiO3      (56),(1,-2,0,1,0,0,0,0,0,0,1,0,0,0)
-#define CementSolutionChemistry_CaH2SiO4    CementSolutionChemistry_CaSiO3 // synonym
+#define CementSolutionChemistry_CaH2SiO4    CementSolutionChemistry_CaSiO3
 #define CementSolutionChemistry_CaHSiO3     (57),(1,-1,0,1,0,0,0,0,0,0,1,0,0,0)
-#define CementSolutionChemistry_CaH3SiO4    CementSolutionChemistry_CaHSiO3 // synonym
+#define CementSolutionChemistry_CaH3SiO4    CementSolutionChemistry_CaHSiO3
 /* Calcium-Sulfur: */
 #define CementSolutionChemistry_CaSO4       (58),(0,0,0,1,0,0,0,0,0,0,0,0,0,1)
 /* Iron-Carbon: */
