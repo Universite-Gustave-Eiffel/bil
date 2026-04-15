@@ -1,0 +1,24 @@
+name: Publish MkDocs
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - name: Set up Python
+        uses: actions/setup-python@v5.6.0
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install -r requirements-docs.txt
+
+      - name: Deploy to GitHub Pages
+        run: mkdocs gh-deploy --force

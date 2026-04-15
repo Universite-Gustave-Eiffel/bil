@@ -1,0 +1,115 @@
+site_name: Bil
+site_description: A modeling platform based on finite element/volume methods
+site_author: P. Dangla (Université Gustave Eiffel)
+repo_url: https://github.com/dangla/bil
+repo_name: dangla/bil
+docs_dir: docs
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.footer
+    - search.highlight
+    - search.suggest
+    - content.code.copy
+    - content.code.annotate
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.arithmatex:
+      generic: true
+  - tables
+  - attr_list
+  - md_in_html
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
+nav:
+  - Introduction: index.md
+  - Running Bil: running_bil.md
+  # - Examples:
+    # - Overview: examples.md
+    # - Flow:
+    #   - Overview: flow_examples.md
+    #   - M1: M1_model.md
+    #   - M2: M2_model.md
+    #   - M5: M5_model.md
+    #   - M10-1: M10-1_model.md
+    #   - M10-2: M10-2_model.md
+    #   - Richards 2D: Richards-2d.md
+    # - Mechanics:
+    #   - Overview: mechanics_examples.md
+    #   - Elast0: Elast0_model.md
+    #   - Elasd: Elasd_model.md
+    #   - Plast: Plast_model.md
+    #   - BBM: BBM_model.md
+    #   - Poroplast: Poroplast_model.md
+    # - Poromechanics:
+    #   - Overview: poromechanics_examples.md
+    #   - M7: M7_model.md
+    #   - M7-1: M7-1_model.md
+    # - Freeze-Thaw:
+    #   - Overview: freezethaw_examples.md
+    #   - Frostaco: Frostaco_model.md
+    #   - Frostaco3d: Frostaco3d_model.md
+    # - Durability & Chemistry:
+    #   - Overview: durability_examples.md
+    #   - Fick: Fick_model.md
+    #   - Duracem: Duracem_model.md
+    #   - Chloricem: Chloricem_model.md
+    #   - ChloricemSCM: ChloricemSCM_model.md
+    #   - ChloricemEla: ChloricemEla_model.md
+    #   - ChloricemDLM: ChloricemDLM_model.md
+    #   - Sulfaco: Sulfaco_model.md
+    #   - Sulfuricem: Sulfuricem_model.md
+    #   - Sulfaconew: Sulfaconew_model.md
+    #   - SulfacoESA3d: SulfacoESA3d_model.md
+    # - Coupled Transfers:
+    #   - Overview: coupledtransfers_examples.md
+    #   - DWS1: DWS1_model.md
+    #   - Yuan1: Yuan1_model.md
+    #   - Shen: Shen_model.md
+    #   - usoil: usoil_model.md
+    # - Specialized:
+    #   - Overview: specialized_examples.md
+    #   - MechaMic: MechaMic_model.md
+    #   - M2 VoronoiFVM: M2_VoronoiFVM.md
+  - Internal Architecture: fonctionnement_bil.md
+  - How to Add a New Model: adding_a_model.md
