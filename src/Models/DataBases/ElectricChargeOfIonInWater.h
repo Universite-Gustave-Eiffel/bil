@@ -122,7 +122,7 @@
 #define ElectricChargeOfIonInWater_FeHSO4_p2   (+2)
 /* Magnesium-Carbon */
 #define ElectricChargeOfIonInWater_MgCO3       (0)
-#define ElectricChargeOfIonInWater_MgHCO3      (-1)
+#define ElectricChargeOfIonInWater_MgHCO3      (+1)
 /* Magnesium-Silicon */
 #define ElectricChargeOfIonInWater_MgSiO3      (0)
 #define ElectricChargeOfIonInWater_MgHSiO3     (+1)

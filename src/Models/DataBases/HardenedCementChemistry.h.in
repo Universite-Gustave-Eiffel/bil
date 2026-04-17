@@ -26,8 +26,6 @@
 #define C0_ref     (Mol / Liter)
 #define LogC0_ref  log10(C0_ref)
 
-#define _INLINE_ inline
-
 
 #define _INLINE_ inline
 

@@ -84,7 +84,7 @@ Copyright @value{COPYRIGHT}
 
 Patrick Dangla
 
-Bil is a modeling platform based on finite element/volume methods dedicated to coupled problems involved in environmental engineering, geomechanical engineering, material sciences, etc.. This is the @cite{Bil Reference Manual} for Bil @value{BIL-VERSION} (@today{}).
+Bil is an open-source software designed for the simulation of coupled phenomena in continuum mechanics, geomechanics, environmental engineering and materials sciences. This is the @cite{Bil Reference Manual} for Bil @value{BIL-VERSION} (@today{}).
 @end ifnottex
 
 @c =========================================================================
@@ -180,7 +180,7 @@ Version history
 @node Introduction, Running Bil, Copying conditions, Top
 @chapter Introduction
 
-Bil is a modeling platform based on finite element/volume methods dedicated to coupled problems involved in environmental engineering, geomechanical engineering, material sciences, etc.. Bil is distributed under the terms of the GNU General Public License (GnuGPL). The source code can be downloaded at
+Bil is an open-source software, based on finite element/volume methods, designed for the simulation of coupled phenomena in continuum mechanics, geomechanics, environmental engineering and materials sciences. Bil is distributed under the terms of the GNU General Public License (GnuGPL). The source code can be downloaded at
 @sp 1
 @center @value{BIL-WEB}
 @sp 1

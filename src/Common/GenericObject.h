@@ -17,6 +17,17 @@
 typedef void (GenericObject_Delete_t)(void*) ;
 
 
+#include <type_traits>
+
+template <typename T,typename = int>
+struct GenericObject_Has: std::false_type {};
+
+template <typename T>
+struct GenericObject_Has<T,decltype((void) T::Delete,0)> : std::true_type {};
+
+template<typename T>
+constexpr bool GenericObject_HasDelete = GenericObject_Has<T>::value;
+
 #endif
 #if 0
 
