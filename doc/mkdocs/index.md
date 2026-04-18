@@ -23,11 +23,11 @@ Bil does not include a mesh generator or a built-in post-processing tool. It rel
 
 | Domain | Available models |
 |--------|-----------------|
-| **Flow** | Richards equation (1D/2D), second Fick's law, two-phase liquid-gas flow |
+| **Flow & diffusion** | Richards equation, Fick's second law, two-phase flow |
 | **Mechanics** | Elasticity, elasticity with damage, hardening plasticity (Drucker-Prager, Cam-Clay, BBM) |
 | **Poromechanics** | Biot's poroelasticity, poroplasticity |
-| **Phase change** | Freeze-thaw in concrete and soils (1D, 2D, 3D) |
-| **Durability & chemistry** | Carbonation, chloride ingress, sulfate attack, acid attack |
+| **Phase change** | Freeze-thaw in concrete and soils |
+| **Durability & chemistry** | Carbonation, chloride ingress, sulfate attack, acid attack in concrete |
 | **Coupled transfers** | Drying-wetting-salt, unsaturated soils |
 | **Specialized** | Multi-scale mechanics by FEM² |
 
@@ -35,11 +35,14 @@ Bil does not include a mesh generator or a built-in post-processing tool. It rel
 
 ```bash
 # Clone the repository
-git clone https://github.com/dangla/bil.git
-cd bil
+git clone https://github.com/Universite-Gustave-Eiffel/bil
+cd bil-master
 
-# Compile
+# Compile and installation (see README)
+mkdir build & cd build
+cmake ..
 make
+sudo make install
 
 # Run a calculation
 bil -iperm my_file     # node renumbering (bandwidth optimization)

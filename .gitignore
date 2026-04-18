@@ -44,6 +44,8 @@ include/bil.h
 # Specific folders
 build
 __pycache__
+.venv
+site
 
 # Specific files
 ._sync_*

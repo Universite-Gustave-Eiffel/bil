@@ -3,7 +3,7 @@ site_description: A modeling platform based on finite element/volume methods
 site_author: P. Dangla (Université Gustave Eiffel)
 repo_url: https://github.com/Universite-Gustave-Eiffel/bil
 repo_name: Universite-Gustave-Eiffel/bil
-docs_dir: docs
+docs_dir: doc/mkdocs
 
 theme:
   name: material

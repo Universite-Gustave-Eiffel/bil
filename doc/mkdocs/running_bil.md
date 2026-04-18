@@ -3,7 +3,7 @@
 ## Synopsis
 
 ```
-bil [options] my_file
+bil [options] [my_file]
 ```
 
 If `my_file` is provided, Bil computes the solution of the problem described in that input file.
@@ -55,7 +55,7 @@ bil -help
 
 ### Example input file
 
-The following example illustrates a drainage problem for a 1 m sand column governed by Richards' equation. The column is initially saturated with liquid pressure $p_l = p_{atm} - g(x-1)$. At $t = 0$, the column is drained from the bottom by imposing $p_l = p_{atm}$.
+The following example illustrates a drainage problem for a 1 m sand column governed by Richards' equation. The column is initially saturated with liquid pressure $p_l(x) = p_{atm} - 9.81(x-1)$. At $t = 0$, the column is drained from the bottom by imposing $p_l = p_{atm}$.
 
 ```
 # Drainage of a sand column
@@ -78,19 +78,19 @@ Curves = tab                    # retention curve file: columns p_c, S_l, k_rl
 
 Fields
 2
-Type = affine Value = 1.e5 Gradient = -9.81 Point = 1.   # p_l = 1e5 - 9.81*(x-1)
-Type = affine Value = 1.e5 Gradient = 0.   Point = 0.   # constant p_l = 1e5
+Type = affine Value = 1.e5 Gradient = -9.81 Point = 1.  # p_l = 1e5 - 9.81*(x-1)
+Type = affine Value = 1.e5 Gradient = 0.    Point = 0.  # constant p_l = 1e5
 
 Initialization
 1
-Region = 2 Unknown = p_l Field = 1   # initial p_l in region 2
+Region = 2 Unknown = p_l Field = 1   # initial p_l in region 2 (i.e. between 0 and 1)
 
 Functions
 0                               # no time function
 
 Boundary Conditions
 1
-Region = 1 Unknown = p_l Field = 2 Function = 0   # p_l = 1e5 at bottom
+Region = 1 Unknown = p_l Field = 2 Function = 0   # p_l = 1e5 in region 1 (i.e. at bottom x = 0)
 
 Loads
 0
@@ -136,6 +136,8 @@ The first three columns contain the node coordinates. The following columns cont
 ---
 
 ## Other files
+
+Bil produces some files and sometimes needs other files to run properly. The name of these files are formed with the name of the input data file and suffixes:
 
 | File | Description |
 |------|-------------|
