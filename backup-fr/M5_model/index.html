@@ -1,0 +1,2754 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A modeling platform based on finite element/volume methods">
+      
+      
+        <meta name="author" content="P. Dangla (Université Gustave Eiffel)">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Modèle M5 — Transferts couplés eau–air en milieu poreux non saturé (isotherme 1D) - Bil - documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#modele-m5-transferts-couples-eauair-en-milieu-poreux-non-sature-isotherme-1d" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Bil - documentation" class="md-header__button md-logo" aria-label="Bil - documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Bil - documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Modèle M5 — Transferts couplés eau–air en milieu poreux non saturé (isotherme 1D)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Universite-Gustave-Eiffel/bil" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Universite-Gustave-Eiffel/bil
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Introduction
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../running_bil/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Running Bil
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../examples/" class="md-tabs__link">
+          
+  
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code_architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../adding_a_model/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  How to Add a New Model
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Bil - documentation" class="md-nav__button md-logo" aria-label="Bil - documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Bil - documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Universite-Gustave-Eiffel/bil" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Universite-Gustave-Eiffel/bil
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../running_bil/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Running Bil
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flow
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Flow
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/flow_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/M1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/M2_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/Fick_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fick
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/Richards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Richards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mechanics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mechanics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/mechanics_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/Elast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/Elasd_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elasd
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/Plast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/BBM_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BBM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poromechanics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Poromechanics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Poromechanics/poromechanics_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Poromechanics/M7_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Poromechanics/Poroplast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poroplast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Phase change
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase change
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PhaseChange/phasechange_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PhaseChange/Frostaco_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frostaco
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PhaseChange/Frostaco3d_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frostaco3d
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durability & Chemistry
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Durability & Chemistry
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/durability_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Duracem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Duracem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Chloricem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chloricem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Sulfaco_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfaco
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Sulfuricem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfuricem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Sulfaconew_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfaconew
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Coupled Transfers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Coupled Transfers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/coupledtransfers_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/DWS1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DWS1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/Yuan1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Yuan1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/Shen_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/usoil_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    usoil
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8" id="__nav_3_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specialized
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Specialized
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Specialized/specialized_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Specialized/MechaMic_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MechaMic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code_architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adding_a_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to Add a New Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-des-matieres" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table des matières
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-contexte-et-objectif" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Contexte et objectif
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-hypotheses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Hypothèses
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-variables-et-notation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Variables et notation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Variables et notation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inconnues-primaires" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inconnues primaires
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variables-secondaires" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variables secondaires
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#constantes-physico-chimiques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constantes physico-chimiques
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-modele-mathematique" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Modèle mathématique
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Modèle mathématique">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-equations-de-conservation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Équations de conservation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-lois-de-flux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Lois de flux
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-relations-constitutives-thermodynamiques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Relations constitutives thermodynamiques
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3 Relations constitutives thermodynamiques">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#equilibre-vapeurliquide-loi-de-kelvin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Équilibre vapeur–liquide (loi de Kelvin)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#masses-volumiques-des-phases-gazeuses-gaz-ideal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Masses volumiques des phases gazeuses (gaz idéal)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-courbes-de-retention-et-permeabilites-relatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Courbes de rétention et perméabilités relatives
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.4 Courbes de rétention et perméabilités relatives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#materiau-1-barriere-p_c3-106-pa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Matériau 1 — Barrière (\(p_{c3} = 10^6\) Pa)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#materiau-2-sol-p_c3-2-times-105-pa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Matériau 2 — Sol (\(p_{c3} = 2 \times 10^5\) Pa)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#permeabilite-relative-gaz-commune-aux-deux-materiaux-modele-de-mualem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Perméabilité relative gaz (commune aux deux matériaux, modèle de Mualem)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regularisation-de-la-saturation-au-voisinage-de-s_l-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Régularisation de la saturation au voisinage de \(s_l = 1\)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-modele-de-tortuosite-et-diffusion-gazeuse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Modèle de tortuosité et diffusion gazeuse
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-conditions-aux-limites-et-initiales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Conditions aux limites et initiales
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Conditions aux limites et initiales">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#conditions-initiales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditions initiales
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conditions-aux-limites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditions aux limites
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-cas-test-barriere-ouvragee-sous-sechage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Cas test : barrière ouvragée sous séchage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Cas test : barrière ouvragée sous séchage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parametres-de-simulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paramètres de simulation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#physique-attendue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physique attendue
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-discretisation-numerique" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Discrétisation numérique
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-references-bibliographiques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Références bibliographiques
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Références bibliographiques">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#milieux-poreux-non-satures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Milieux poreux non saturés
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#courbes-de-retention-et-permeabilites-relatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Courbes de rétention et perméabilités relatives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#equilibre-vapeurliquide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Équilibre vapeur–liquide
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diffusion-gazeuse-et-tortuosite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diffusion gazeuse et tortuosité
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stockage-de-dechets-et-barrieres-de-confinement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stockage de déchets et barrières de confinement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-numerique" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implémentation numérique
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="modele-m5-transferts-couples-eauair-en-milieu-poreux-non-sature-isotherme-1d">Modèle M5 — Transferts couplés eau–air en milieu poreux non saturé (isotherme 1D)</h1>
+<blockquote>
+<p><strong>Fichiers sources :</strong>
+<code>src/Models/ModelFiles/M5.c</code> · <code>examples/m5/m5</code> · <code>docs/M5_VoronoiFVM.jl</code></p>
+<p><strong>Auteur du modèle Bil :</strong> P. Dangla (Université Gustave Eiffel)</p>
+</blockquote>
+<hr />
+<h2 id="table-des-matieres">Table des matières</h2>
+<ol>
+<li><a href="#1-contexte-et-objectif">Contexte et objectif</a></li>
+<li><a href="#2-hypothèses">Hypothèses</a></li>
+<li><a href="#3-variables-et-notation">Variables et notation</a></li>
+<li><a href="#4-modèle-mathématique">Modèle mathématique</a></li>
+<li>4.1 <a href="#41-équations-de-conservation">Équations de conservation</a></li>
+<li>4.2 <a href="#42-lois-de-flux">Lois de flux</a></li>
+<li>4.3 <a href="#43-relations-constitutives-thermodynamiques">Relations constitutives thermodynamiques</a></li>
+<li>4.4 <a href="#44-courbes-de-rétention-et-perméabilités-relatives">Courbes de rétention et perméabilités relatives</a></li>
+<li>4.5 <a href="#45-modèle-de-tortuosité-et-diffusion-gazeuse">Modèle de tortuosité et diffusion gazeuse</a></li>
+<li><a href="#5-conditions-aux-limites-et-initiales">Conditions aux limites et initiales</a></li>
+<li><a href="#6-cas-test--barrière-ouvragée-sous-séchage">Cas test : barrière ouvragée sous séchage (<code>examples/m5/m5</code>)</a></li>
+<li><a href="#7-discrétisation-numérique">Discrétisation numérique</a></li>
+<li><a href="#8-références-bibliographiques">Références bibliographiques</a></li>
+</ol>
+<hr />
+<h2 id="1-contexte-et-objectif">1. Contexte et objectif</h2>
+<p>Le modèle M5 décrit les transferts <strong>isothermes couplés eau–air</strong> dans un milieu poreux partiellement saturé. Il est typiquement utilisé pour simuler le <strong>séchage et la réhumidification de matériaux cimentaires ou de sols</strong> soumis à des conditions hydriques variables.</p>
+<p>Le cas test <code>examples/m5/m5</code> représente une <strong>barrière ouvragée</strong> (p. ex. argile compactée ou béton) en contact avec un sol naturel humide. La barrière, initialement très sèche, se réhumidifie progressivement depuis l'interface avec le sol sur une échelle de temps centennale. Ce scénario est représentatif de la problématique des <strong>stockages de déchets radioactifs</strong> ou des <strong>barrières de confinement</strong> en génie civil.</p>
+<p>Le domaine est unidimensionnel de longueur <span class="arithmatex">\(L = 1.225\)</span> m, composé de deux matériaux :</p>
+<table>
+<thead>
+<tr>
+<th>Zone</th>
+<th><span class="arithmatex">\(x\)</span> [m]</th>
+<th>Matériau</th>
+<th><span class="arithmatex">\(\phi\)</span> [-]</th>
+<th><span class="arithmatex">\(k_\text{int}\)</span> [m²]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Barrière</td>
+<td><span class="arithmatex">\([0,\ 0.425]\)</span></td>
+<td>Argile/béton compacté</td>
+<td>0.30</td>
+<td><span class="arithmatex">\(10^{-20}\)</span></td>
+</tr>
+<tr>
+<td>Sol</td>
+<td><span class="arithmatex">\([0.425,\ 1.225]\)</span></td>
+<td>Sol naturel</td>
+<td>0.05</td>
+<td><span class="arithmatex">\(10^{-19}\)</span></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-hypotheses">2. Hypothèses</h2>
+<ol>
+<li><strong>Isotherme</strong> : la température est uniforme et constante (<span class="arithmatex">\(T = 293\)</span> K). Les propriétés physico-chimiques (viscosités, diffusivité, pression de vapeur saturante) sont des constantes.</li>
+<li><strong>Porosité rigide</strong> : le squelette solide est indéformable ; <span class="arithmatex">\(\phi = \text{const}\)</span>.</li>
+<li><strong>Deux phases fluides</strong> : phase liquide (eau) et phase gazeuse (mélange binaire vapeur d'eau + air sec). La phase gazeuse est considérée comme un <strong>gaz idéal</strong>.</li>
+<li><strong>Trois constituants</strong> : eau liquide, vapeur d'eau (H₂O gazeux), air sec.</li>
+<li><strong>Équilibre local vapeur–liquide</strong> (hypothèse de Kelvin) : la pression de vapeur est une fonction univoque de la pression liquide à travers la loi de Kelvin.</li>
+<li><strong>Pas de gravité</strong> dans le cas test (domaine horizontal, <span class="arithmatex">\(g = 0\)</span>).</li>
+<li><strong>Loi de Darcy</strong> pour le transport advectif de chaque phase fluide.</li>
+<li><strong>Loi de Fick</strong> pour la diffusion de vapeur dans le gaz.</li>
+<li><strong>Continuité des pressions capillaires</strong> à l'interface entre matériaux.</li>
+</ol>
+<hr />
+<h2 id="3-variables-et-notation">3. Variables et notation</h2>
+<h3 id="inconnues-primaires">Inconnues primaires</h3>
+<table>
+<thead>
+<tr>
+<th>Symbole</th>
+<th>Signification</th>
+<th>Unité</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(p_l\)</span></td>
+<td>Pression de la phase liquide</td>
+<td>Pa</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(p_a\)</span></td>
+<td>Pression partielle de l'air sec</td>
+<td>Pa</td>
+</tr>
+</tbody>
+</table>
+<p>La pression gazeuse totale et la pression capillaire en découlent :</p>
+<div class="arithmatex">\[p_g = p_v(p_l) + p_a, \qquad p_c = p_g - p_l\]</div>
+<h3 id="variables-secondaires">Variables secondaires</h3>
+<table>
+<thead>
+<tr>
+<th>Symbole</th>
+<th>Signification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(s_l\)</span></td>
+<td>Degré de saturation en eau liquide</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(s_g = 1 - s_l\)</span></td>
+<td>Degré de saturation en gaz</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(p_v\)</span></td>
+<td>Pression partielle de vapeur d'eau</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\rho_v,\ \rho_a,\ \rho_g\)</span></td>
+<td>Masses volumiques : vapeur, air sec, gaz total</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(k_{rl},\ k_{rg}\)</span></td>
+<td>Perméabilités relatives liquide et gaz</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(c_v = \rho_v/\rho_g\)</span></td>
+<td>Fraction massique de vapeur dans le gaz</td>
+</tr>
+</tbody>
+</table>
+<h3 id="constantes-physico-chimiques">Constantes physico-chimiques</h3>
+<table>
+<thead>
+<tr>
+<th>Symbole</th>
+<th>Valeur</th>
+<th>Signification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(T\)</span></td>
+<td>293 K</td>
+<td>Température</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(R\)</span></td>
+<td>8.314 J/(mol·K)</td>
+<td>Constante des gaz parfaits</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(M_w\)</span></td>
+<td>18×10⁻³ kg/mol</td>
+<td>Masse molaire de l'eau</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(M_a\)</span></td>
+<td>28.8×10⁻³ kg/mol</td>
+<td>Masse molaire de l'air sec</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(V_w\)</span></td>
+<td>18×10⁻⁶ m³/mol</td>
+<td>Volume molaire de l'eau liquide</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\rho_l\)</span></td>
+<td>1000 kg/m³</td>
+<td>Masse volumique de l'eau liquide</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\mu_l\)</span></td>
+<td>10⁻³ Pa·s</td>
+<td>Viscosité dynamique de l'eau</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\mu_g\)</span></td>
+<td>1.8×10⁻⁵ Pa·s</td>
+<td>Viscosité dynamique du gaz</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(p_{v0}\)</span></td>
+<td>2460 Pa</td>
+<td>Pression de vapeur saturante à <span class="arithmatex">\(T\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(p_{l0}\)</span></td>
+<td>10⁵ Pa</td>
+<td>Pression de référence liquide</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(D_{av0}\)</span></td>
+<td>2.56×10⁻⁵ m²/s</td>
+<td>Diffusivité H₂O dans l'air à <span class="arithmatex">\((T,\ p_{g0})\)</span></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-modele-mathematique">4. Modèle mathématique</h2>
+<h3 id="41-equations-de-conservation">4.1 Équations de conservation</h3>
+<p>Le système est composé de <strong>deux équations de bilan de masse</strong> intégrées sur le volume élémentaire représentatif (VER) :</p>
+<p><strong>Conservation de la masse totale d'eau</strong> (liquide + vapeur) :</p>
+<div class="arithmatex">\[\frac{\partial m_T}{\partial t} + \nabla \cdot \mathbf{W}_T = 0\]</div>
+<p>avec</p>
+<div class="arithmatex">\[m_T = \rho_l\,\phi\,s_l + \rho_g\,\phi\,s_g\]</div>
+<p><strong>Conservation de la masse d'air sec</strong> :</p>
+<div class="arithmatex">\[\frac{\partial m_A}{\partial t} + \nabla \cdot \mathbf{W}_A = 0\]</div>
+<p>avec</p>
+<div class="arithmatex">\[m_A = \rho_a\,\phi\,s_g\]</div>
+<blockquote>
+<p><strong>Remarque :</strong> Le terme <span class="arithmatex">\(\rho_g\,\phi\,s_g\)</span> dans <span class="arithmatex">\(m_T\)</span> regroupe vapeur et air car le flux total gaz <span class="arithmatex">\(\mathbf{W}_g\)</span> est indivisible dans la loi de Darcy. La séparation liquide/vapeur est assurée par le bilan air.</p>
+</blockquote>
+<h3 id="42-lois-de-flux">4.2 Lois de flux</h3>
+<p>Le flux total eau <span class="arithmatex">\(\mathbf{W}_T\)</span> et le flux air <span class="arithmatex">\(\mathbf{W}_A\)</span> sont :</p>
+<div class="arithmatex">\[\mathbf{W}_T = \mathbf{W}_l + \mathbf{W}_g, \qquad \mathbf{W}_A = \mathbf{W}_g - \mathbf{W}_v\]</div>
+<p><strong>Flux de Darcy</strong> pour les phases liquide et gazeuse (sans gravité) :</p>
+<div class="arithmatex">\[\mathbf{W}_l = -K_{D,l}\,\nabla p_l, \qquad K_{D,l} = \frac{\rho_l\,k_\text{int}\,k_{rl}(p_c)}{\mu_l}\]</div>
+<div class="arithmatex">\[\mathbf{W}_g = -K_{D,g}\,\nabla p_g, \qquad K_{D,g} = \frac{\rho_g\,k_\text{int}\,k_{rg}(p_c)}{\mu_g}\]</div>
+<p><strong>Flux de vapeur</strong> (advection dans le gaz + diffusion de Fick) :</p>
+<div class="arithmatex">\[\mathbf{W}_v = c_v\,\mathbf{W}_g - K_{F,v}\,\nabla\rho_v, \qquad K_{F,v} = \phi\,s_g\,\tau\,D_{av}\]</div>
+<p>où <span class="arithmatex">\(D_{av} = D_{av0}\,p_{g0}/p_g\)</span> est la diffusivité de la vapeur dans l'air à la pression <span class="arithmatex">\(p_g\)</span> (loi de correction en pression), et <span class="arithmatex">\(\tau\)</span> est le facteur de tortuosité (voir §4.5).</p>
+<blockquote>
+<p><strong>Avec gravité</strong> (<span class="arithmatex">\(g \neq 0\)</span>), la loi de Darcy s'écrit en charge hydraulique : <span class="arithmatex">\(\mathbf{W}_\alpha = -K_{D,\alpha}\,\nabla H_\alpha\)</span> avec <span class="arithmatex">\(H_\alpha = p_\alpha - \rho_\alpha\,g\,z\)</span>.</p>
+</blockquote>
+<h3 id="43-relations-constitutives-thermodynamiques">4.3 Relations constitutives thermodynamiques</h3>
+<h4 id="equilibre-vapeurliquide-loi-de-kelvin">Équilibre vapeur–liquide (loi de Kelvin)</h4>
+<p>La pression de vapeur à l'équilibre thermodynamique est donnée par la relation de Kelvin :</p>
+<div class="arithmatex">\[\boxed{p_v = p_{v0}\,\exp\!\left(\frac{V_w}{RT}\,(p_l - p_{l0})\right)}\]</div>
+<p>On en déduit l'humidité relative :</p>
+<div class="arithmatex">\[h_r = \frac{p_v}{p_{v0}} = \exp\!\left(\frac{V_w}{RT}\,(p_l - p_{l0})\right)\]</div>
+<p>Cette relation couple directement <span class="arithmatex">\(p_l\)</span> à la teneur en vapeur : une pression liquide très négative (milieu sec) se traduit par une faible humidité relative.</p>
+<h4 id="masses-volumiques-des-phases-gazeuses-gaz-ideal">Masses volumiques des phases gazeuses (gaz idéal)</h4>
+<div class="arithmatex">\[\rho_v = \frac{p_v\,M_w}{RT}, \qquad \rho_a = \frac{p_a\,M_a}{RT}, \qquad \rho_g = \rho_v + \rho_a\]</div>
+<h3 id="44-courbes-de-retention-et-permeabilites-relatives">4.4 Courbes de rétention et perméabilités relatives</h3>
+<p>Les courbes sont fournies sous forme analytique (expressions Van Genuchten) dans le fichier <code>examples/m5/m5</code>.</p>
+<h4 id="materiau-1-barriere-p_c3-106-pa">Matériau 1 — Barrière (<span class="arithmatex">\(p_{c3} = 10^6\)</span> Pa)</h4>
+<p><strong>Saturation</strong> (Van Genuchten) :</p>
+<div class="arithmatex">\[s_l(p_c) = \left[1 + \left(\frac{p_c}{1.5 \times 10^6}\right)^{1.064}\right]^{-0.06}\]</div>
+<p><strong>Perméabilité relative liquide</strong> :</p>
+<div class="arithmatex">\[k_{rl}(p_c) = \left[1 + \left(\frac{p_c}{3 \times 10^6}\right)^{2}\right]^{-0.5}\]</div>
+<h4 id="materiau-2-sol-p_c3-2-times-105-pa">Matériau 2 — Sol (<span class="arithmatex">\(p_{c3} = 2 \times 10^5\)</span> Pa)</h4>
+<p><strong>Saturation</strong> :</p>
+<div class="arithmatex">\[s_l(p_c) = \left[1 + \left(\frac{p_c}{10^7}\right)^{1.7}\right]^{-0.412}\]</div>
+<p><strong>Perméabilité relative liquide</strong> :</p>
+<div class="arithmatex">\[k_{rl}(p_c) = \left[1 + \left(\frac{p_c}{10^7}\right)^{2}\right]^{-1}\]</div>
+<h4 id="permeabilite-relative-gaz-commune-aux-deux-materiaux-modele-de-mualem">Perméabilité relative gaz (commune aux deux matériaux, modèle de Mualem)</h4>
+<div class="arithmatex">\[k_{rg}(s_l) = (1 - s_l)^2\,\left(1 - s_l^{5/3}\right)\]</div>
+<h4 id="regularisation-de-la-saturation-au-voisinage-de-s_l-1">Régularisation de la saturation au voisinage de <span class="arithmatex">\(s_l = 1\)</span></h4>
+<p>Pour éviter la dégénérescence de la matrice de capacité lorsque <span class="arithmatex">\(p_c \to 0\)</span>, la saturation est régularisée pour <span class="arithmatex">\(p_c &lt; p_{c3}\)</span> par un raccordement exponentiel :</p>
+<div class="arithmatex">\[s_l(p_c) = 1 - (1 - s_l(p_{c3}))\,\exp\!\left(\frac{p_c - p_{c3}}{p_{c3}}\right), \quad p_c &lt; p_{c3}\]</div>
+<p>Cette formule assure la continuité de <span class="arithmatex">\(s_l\)</span> et de sa dérivée en <span class="arithmatex">\(p_{c3}\)</span>, et vérifie <span class="arithmatex">\(s_l(0) = 1\)</span>.</p>
+<h3 id="45-modele-de-tortuosite-et-diffusion-gazeuse">4.5 Modèle de tortuosité et diffusion gazeuse</h3>
+<p>La tortuosité du réseau poreux pour la diffusion gazeuse est modélisée par la loi de puissance de Thiery <em>et al.</em> (2007) :</p>
+<div class="arithmatex">\[\tau(\phi, s_g) = \phi^{\,a}\,s_g^{\,b}, \qquad a = 1.74,\quad b = 3.2\]</div>
+<p>Le coefficient de diffusion effectif de la vapeur d'eau dans le gaz est :</p>
+<div class="arithmatex">\[D_\text{eff} = \phi\,s_g\,\tau\,D_{av} = \phi\,s_g\,\phi^{a}\,s_g^{b}\,D_{av}\]</div>
+<blockquote>
+<p><strong>Comparaison :</strong> Le modèle de Millington–Quirk (1961) utilise <span class="arithmatex">\(a = 1/3\)</span>, <span class="arithmatex">\(b = 7/3\)</span>.</p>
+</blockquote>
+<hr />
+<h2 id="5-conditions-aux-limites-et-initiales">5. Conditions aux limites et initiales</h2>
+<h3 id="conditions-initiales">Conditions initiales</h3>
+<table>
+<thead>
+<tr>
+<th>Zone</th>
+<th><span class="arithmatex">\(p_l\)</span> [Pa]</th>
+<th><span class="arithmatex">\(p_a\)</span> [Pa]</th>
+<th><span class="arithmatex">\(s_l\)</span> [-]</th>
+<th><span class="arithmatex">\(h_r\)</span> [-]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Barrière</td>
+<td><span class="arithmatex">\(-7.611 \times 10^7\)</span></td>
+<td><span class="arithmatex">\(9.226 \times 10^4\)</span></td>
+<td>≈ 0.78</td>
+<td>≈ 0.57</td>
+</tr>
+<tr>
+<td>Sol</td>
+<td><span class="arithmatex">\(4.905 \times 10^6\)</span></td>
+<td><span class="arithmatex">\(4.892 \times 10^6\)</span></td>
+<td>≈ 1.00</td>
+<td>&gt; 1</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>La barrière est initialement très sèche (forte pression capillaire <span class="arithmatex">\(p_c \approx 7.6 \times 10^7\)</span> Pa). Le sol est quasi-saturé (<span class="arithmatex">\(p_l &gt; 0\)</span>, en surpression hydrostatique).</p>
+</blockquote>
+<h3 id="conditions-aux-limites">Conditions aux limites</h3>
+<table>
+<thead>
+<tr>
+<th>Bord</th>
+<th><span class="arithmatex">\(x\)</span> [m]</th>
+<th>Type</th>
+<th>Valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gauche</td>
+<td>0</td>
+<td>Neumann nul</td>
+<td><span class="arithmatex">\(\mathbf{W}_T \cdot \mathbf{n} = 0\)</span>, <span class="arithmatex">\(\mathbf{W}_A \cdot \mathbf{n} = 0\)</span></td>
+</tr>
+<tr>
+<td>Droit</td>
+<td>1.225</td>
+<td>Dirichlet</td>
+<td><span class="arithmatex">\(p_l = 4.905 \times 10^6\)</span> Pa, <span class="arithmatex">\(p_a = 4.892 \times 10^6\)</span> Pa</td>
+</tr>
+</tbody>
+</table>
+<p>Le bord gauche est <strong>imperméable</strong> (paroi ou plan de symétrie). Le bord droit maintient des conditions hydriques constantes représentant le sol naturel humide.</p>
+<hr />
+<h2 id="6-cas-test-barriere-ouvragee-sous-sechage">6. Cas test : barrière ouvragée sous séchage</h2>
+<h3 id="parametres-de-simulation">Paramètres de simulation</h3>
+<table>
+<thead>
+<tr>
+<th>Paramètre</th>
+<th>Valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Durée totale</td>
+<td>100 ans (<span class="arithmatex">\(3.154 \times 10^9\)</span> s)</td>
+</tr>
+<tr>
+<td>Pas de temps initial <span class="arithmatex">\(\Delta t_\text{ini}\)</span></td>
+<td>100 s</td>
+</tr>
+<tr>
+<td>Pas de temps maximal <span class="arithmatex">\(\Delta t_\text{max}\)</span></td>
+<td>1 an</td>
+</tr>
+<tr>
+<td>Variation objective (OBJE)</td>
+<td><span class="arithmatex">\(\Delta p_l = \Delta p_a = 10^4\)</span> Pa</td>
+</tr>
+<tr>
+<td>Tolérance Newton</td>
+<td><span class="arithmatex">\(10^{-6}\)</span></td>
+</tr>
+<tr>
+<td>Maillage</td>
+<td>25 éléments dans la barrière + 75 éléments dans le sol</td>
+</tr>
+</tbody>
+</table>
+<h3 id="physique-attendue">Physique attendue</h3>
+<ul>
+<li>La barrière initialement sèche (<span class="arithmatex">\(h_r \approx 0.57\)</span>) se <strong>réhumidifie</strong> progressivement depuis le bord droit (sol humide). Le front d'humidification progresse de droite à gauche.</li>
+<li>La pression liquide <span class="arithmatex">\(p_l\)</span> dans la barrière <strong>augmente</strong> avec le temps (de <span class="arithmatex">\(-7.6 \times 10^7\)</span> Pa vers une valeur proche des conditions du sol).</li>
+<li>Le flux d'eau liquide est dominant pour les grandes pressions capillaires ; la diffusion gazeuse contribue significativement lorsque <span class="arithmatex">\(p_c\)</span> est modéré.</li>
+<li>Les deux matériaux ayant des perméabilités très différentes (<span class="arithmatex">\(k_\text{int}\)</span> diffère d'un facteur 10), l'évolution est beaucoup plus lente dans la barrière.</li>
+</ul>
+<hr />
+<h2 id="7-discretisation-numerique">7. Discrétisation numérique</h2>
+<p>Le modèle est discrétisé par la méthode des <strong>volumes finis centrés sur les cellules (cell-centered FVM)</strong>, telle qu'implémentée dans Bil via <code>FVM.h</code>. La discrétisation spatiale utilise un schéma de différences centrées pour les flux (valeurs des conductances évaluées au pas de temps précédent — schéma semi-implicite).</p>
+<p>Le système non-linéaire est résolu à chaque pas de temps par la <strong>méthode de Newton–Raphson</strong>, avec une matrice Jacobienne assemblée par différentiation numérique des flux et termes de stockage (voir <code>ComputeComponentDerivatives()</code> dans M5.c).</p>
+<p>Le pas de temps est contrôlé par une stratégie adaptative basée sur la variation maximale des inconnues primaires (<strong>OBJE</strong> dans Bil, <code>Δu_opt</code> dans VoronoiFVM).</p>
+<p>Le portage Julia utilise la bibliothèque <strong>VoronoiFVM.jl</strong>, qui implémente la même méthode FVM avec différentiation automatique (ForwardDiff.jl) pour le Jacobien.</p>
+<hr />
+<h2 id="8-references-bibliographiques">8. Références bibliographiques</h2>
+<h3 id="milieux-poreux-non-satures">Milieux poreux non saturés</h3>
+<ul>
+<li>
+<p><strong>Bear, J.</strong> (1972). <em>Dynamics of Fluids in Porous Media</em>. Elsevier, New York. — Référence fondamentale pour les transferts en milieu poreux, lois de Darcy généralisées.</p>
+</li>
+<li>
+<p><strong>Coussy, O.</strong> (2004). <em>Poromechanics</em>. John Wiley &amp; Sons, Chichester. — Cadre thermodynamique pour les milieux poreux multi-phasiques, définition rigoureuse des pressions capillaires et des énergies de surface.</p>
+</li>
+<li>
+<p><strong>Whitaker, S.</strong> (1977). Simultaneous heat, mass and momentum transfer in porous media: a theory of drying. <em>Advances in Heat Transfer</em>, 13, 119–203. — Fondements des équations de transfert couplé par prise de moyenne volumique.</p>
+</li>
+</ul>
+<h3 id="courbes-de-retention-et-permeabilites-relatives">Courbes de rétention et perméabilités relatives</h3>
+<ul>
+<li>
+<p><strong>Van Genuchten, M. Th.</strong> (1980). A closed-form equation for predicting the hydraulic conductivity of unsaturated soils. <em>Soil Science Society of America Journal</em>, 44(5), 892–898. — Expression analytique de <span class="arithmatex">\(s_l(p_c)\)</span> utilisée dans M5.</p>
+</li>
+<li>
+<p><strong>Mualem, Y.</strong> (1976). A new model for predicting the hydraulic conductivity of unsaturated porous media. <em>Water Resources Research</em>, 12(3), 513–522. — Modèle de perméabilité relative à partir de la courbe de rétention, base de <span class="arithmatex">\(k_{rg}(s_l)\)</span>.</p>
+</li>
+</ul>
+<h3 id="equilibre-vapeurliquide">Équilibre vapeur–liquide</h3>
+<ul>
+<li>
+<p><strong>Kelvin, Lord (W. Thomson)</strong> (1871). On the equilibrium of vapour at a curved surface of liquid. <em>Philosophical Magazine</em>, 42, 448–452. — Loi de Kelvin reliant la pression de vapeur à la courbure de l'interface liquide–gaz (et donc à <span class="arithmatex">\(p_c\)</span>).</p>
+</li>
+<li>
+<p><strong>Defay, R., Prigogine, I., Bellemans, A. &amp; Everett, D. H.</strong> (1966). <em>Surface Tension and Adsorption</em>. Longmans, London. — Développement thermodynamique de la loi de Kelvin pour les milieux poreux.</p>
+</li>
+</ul>
+<h3 id="diffusion-gazeuse-et-tortuosite">Diffusion gazeuse et tortuosité</h3>
+<ul>
+<li>
+<p><strong>Millington, R. J. &amp; Quirk, J. P.</strong> (1961). Permeability of porous solids. <em>Transactions of the Faraday Society</em>, 57, 1200–1207. — Modèle de tortuosité classique (<span class="arithmatex">\(a=1/3\)</span>, <span class="arithmatex">\(b=7/3\)</span>).</p>
+</li>
+<li>
+<p><strong>Thiery, M., Villain, G., Dangla, P. &amp; Platret, G.</strong> (2007). Investigation of the carbonation front shape on cementitious materials: Effects of the chemical kinetics. <em>Cement and Concrete Research</em>, 37(7), 1047–1058. — Paramètres de tortuosité recalibrés sur matériaux cimentaires (<span class="arithmatex">\(a=1.74\)</span>, <span class="arithmatex">\(b=3.2\)</span>) utilisés dans M5.</p>
+</li>
+<li>
+<p><strong>Reid, R. C., Prausnitz, J. M. &amp; Poling, B. E.</strong> (1987). <em>The Properties of Gases and Liquids</em> (4e éd.). McGraw-Hill, New York. — Propriétés physico-chimiques des gaz (diffusivité binaire H₂O–air, viscosités).</p>
+</li>
+</ul>
+<h3 id="stockage-de-dechets-et-barrieres-de-confinement">Stockage de déchets et barrières de confinement</h3>
+<ul>
+<li>
+<p><strong>ANDRA</strong> (2005). <em>Dossier 2005 Argile — Tome Architecture et gestion du stockage géologique</em>. Agence nationale pour la gestion des déchets radioactifs, Châtenay-Malabry. — Contexte applicatif des barrières ouvragées en argile compactée.</p>
+</li>
+<li>
+<p><strong>Cui, Y. J., Yahia-Aïssa, M. &amp; Delage, P.</strong> (2002). A model for the volume change behavior of heavily compacted swelling clays. <em>Engineering Geology</em>, 64(2–3), 233–250. — Comportement hydromécanique des argiles compactées utilisées comme barrières.</p>
+</li>
+</ul>
+<h3 id="implementation-numerique">Implémentation numérique</h3>
+<ul>
+<li>
+<p><strong>Dangla, P.</strong> — <em>Bil : a FEM/FVM platform for multiphysics simulations</em>. Université Gustave Eiffel. Code source : <a href="https://github.com/Universite-Gustave-Eiffel/bil">https://github.com/Universite-Gustave-Eiffel/bil</a></p>
+</li>
+<li>
+<p><strong>Fuhrmann, J.</strong> (2021–). <em>VoronoiFVM.jl: Solver for coupled nonlinear PDEs based on Voronoi finite volume discretization</em>. Zenodo. <a href="https://github.com/j-fu/VoronoiFVM.jl">https://github.com/j-fu/VoronoiFVM.jl</a> — Bibliothèque Julia utilisée pour le portage numérique.</p>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "navigation.footer", "search.highlight", "search.suggest", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

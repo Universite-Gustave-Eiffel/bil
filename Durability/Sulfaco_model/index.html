@@ -1,0 +1,3558 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A modeling platform based on finite element/volume methods">
+      
+      
+        <meta name="author" content="P. Dangla (Université Gustave Eiffel)">
+      
+      
+      
+        <link rel="prev" href="../Chloricem_model/">
+      
+      
+        <link rel="next" href="../Sulfuricem_model/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Sulfaco - Bil - documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#sulfaco-model-internalexternal-sulfate-attack-of-concrete" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Bil - documentation" class="md-header__button md-logo" aria-label="Bil - documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Bil - documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Sulfaco
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Universite-Gustave-Eiffel/bil" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Universite-Gustave-Eiffel/bil
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Introduction
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../running_bil/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Running Bil
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../examples/" class="md-tabs__link">
+          
+  
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code_architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../adding_a_model/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  How to Add a New Model
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Bil - documentation" class="md-nav__button md-logo" aria-label="Bil - documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Bil - documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Universite-Gustave-Eiffel/bil" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Universite-Gustave-Eiffel/bil
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../running_bil/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Running Bil
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flow
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Flow
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/flow_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/M1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/M2_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/Fick_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fick
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/Richards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Richards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mechanics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mechanics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/mechanics_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/Elast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/Elasd_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elasd
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/Plast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/BBM_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BBM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poromechanics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Poromechanics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Poromechanics/poromechanics_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Poromechanics/M7_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Poromechanics/Poroplast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poroplast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Phase change
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase change
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PhaseChange/phasechange_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PhaseChange/Frostaco_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frostaco
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PhaseChange/Frostaco3d_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frostaco3d
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durability & Chemistry
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Durability & Chemistry
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../durability_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Duracem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Duracem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chloricem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chloricem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfaco
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfaco
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-context-and-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Context and Objective
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-assumptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Assumptions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-variables-and-notation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Variables and Notation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Variables and Notation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#primary-unknowns-6-equations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Primary Unknowns (6 equations)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#main-computed-secondary-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Main Computed Secondary Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-mathematical-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Mathematical Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Mathematical Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-conservation-equations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Conservation Equations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-pore-solution-chemistry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Pore Solution Chemistry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-reactions-with-solid-phases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Reactions with Solid Phases
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3 Reactions with Solid Phases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#portlandite-textch-textcaoh_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Portlandite — \(\text{CH} = \text{Ca(OH)}_2\)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gypsum-textcsh_2-textcaso_4-cdot-2texth_2texto-kinetic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gypsum — \(\text{CSH}_2 = \text{CaSO}_4 \cdot 2\text{H}_2\text{O}\) (Kinetic)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ettringite-textaft-textc_6textas_3texth_32-kinetic-with-confinement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ettringite — \(\text{AFt} = \text{C}_6\text{AS}_3\text{H}_{32}\) (Kinetic with Confinement)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monosulfoaluminate-textafm-textc_4textash_12-and-hydrogarnet-textc_3textah_6-kinetic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monosulfoaluminate — \(\text{AFm} = \text{C}_4\text{ASH}_{12}\) and Hydrogarnet — \(\text{C}_3\text{AH}_6\) (Kinetic)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-crystallization-pressure-and-damage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Crystallization Pressure and Damage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-transport-law-ionic-diffusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Transport Law (Ionic Diffusion)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-boundary-and-initial-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Boundary and Initial Conditions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Boundary and Initial Conditions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#initial-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Initial Conditions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#boundary-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Boundary Conditions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-test-case-sulfate-attack-on-a-concrete-sample-sulfaco" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Test Case: Sulfate Attack on a Concrete Sample (Sulfaco/)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Test Case: Sulfate Attack on a Concrete Sample (Sulfaco/)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#geometry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Geometry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#simulated-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Simulated Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expected-results-gp-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Results (.gp outputs)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-model-material-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Model Material Parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-step-by-step-description-of-input-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Step-by-Step Description of Input Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Step-by-Step Description of Input Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-unit-system-units" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Unit System (Units)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-geometry-and-mesh-geometry-mesh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Geometry and Mesh (Geometry, Mesh)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-material-material" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 Material (Material)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84-fields-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 Fields (Fields)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#85-initialization-initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.5 Initialization (Initialization)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#86-time-functions-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.6 Time Functions (Functions)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#87-boundary-conditions-boundary-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.7 Boundary Conditions (Boundary Conditions)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#88-observation-points-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.8 Observation Points (Points)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#89-time-window-and-convergence-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.9 Time Window and Convergence Criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Sulfuricem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfuricem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Sulfaconew_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfaconew
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Coupled Transfers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Coupled Transfers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/coupledtransfers_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/DWS1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DWS1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/Yuan1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Yuan1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/Shen_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/usoil_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    usoil
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8" id="__nav_3_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specialized
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Specialized
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Specialized/specialized_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Specialized/MechaMic_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MechaMic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code_architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adding_a_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to Add a New Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-context-and-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Context and Objective
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-assumptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Assumptions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-variables-and-notation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Variables and Notation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Variables and Notation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#primary-unknowns-6-equations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Primary Unknowns (6 equations)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#main-computed-secondary-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Main Computed Secondary Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-mathematical-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Mathematical Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Mathematical Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-conservation-equations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Conservation Equations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-pore-solution-chemistry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Pore Solution Chemistry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-reactions-with-solid-phases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Reactions with Solid Phases
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3 Reactions with Solid Phases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#portlandite-textch-textcaoh_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Portlandite — \(\text{CH} = \text{Ca(OH)}_2\)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gypsum-textcsh_2-textcaso_4-cdot-2texth_2texto-kinetic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gypsum — \(\text{CSH}_2 = \text{CaSO}_4 \cdot 2\text{H}_2\text{O}\) (Kinetic)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ettringite-textaft-textc_6textas_3texth_32-kinetic-with-confinement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ettringite — \(\text{AFt} = \text{C}_6\text{AS}_3\text{H}_{32}\) (Kinetic with Confinement)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monosulfoaluminate-textafm-textc_4textash_12-and-hydrogarnet-textc_3textah_6-kinetic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monosulfoaluminate — \(\text{AFm} = \text{C}_4\text{ASH}_{12}\) and Hydrogarnet — \(\text{C}_3\text{AH}_6\) (Kinetic)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-crystallization-pressure-and-damage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Crystallization Pressure and Damage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-transport-law-ionic-diffusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Transport Law (Ionic Diffusion)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-boundary-and-initial-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Boundary and Initial Conditions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Boundary and Initial Conditions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#initial-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Initial Conditions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#boundary-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Boundary Conditions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-test-case-sulfate-attack-on-a-concrete-sample-sulfaco" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Test Case: Sulfate Attack on a Concrete Sample (Sulfaco/)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Test Case: Sulfate Attack on a Concrete Sample (Sulfaco/)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#geometry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Geometry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#simulated-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Simulated Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expected-results-gp-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Results (.gp outputs)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-model-material-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Model Material Parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-step-by-step-description-of-input-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Step-by-Step Description of Input Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Step-by-Step Description of Input Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-unit-system-units" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Unit System (Units)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-geometry-and-mesh-geometry-mesh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Geometry and Mesh (Geometry, Mesh)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-material-material" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 Material (Material)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84-fields-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 Fields (Fields)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#85-initialization-initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.5 Initialization (Initialization)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#86-time-functions-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.6 Time Functions (Functions)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#87-boundary-conditions-boundary-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.7 Boundary Conditions (Boundary Conditions)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#88-observation-points-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.8 Observation Points (Points)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#89-time-window-and-convergence-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.9 Time Window and Convergence Criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="sulfaco-model-internalexternal-sulfate-attack-of-concrete">Sulfaco Model — Internal/External Sulfate Attack of Concrete</h1>
+<blockquote>
+<p><strong>Bil model:</strong> <code>src/Models/ModelFiles/Sulfaco.c</code></p>
+<p><strong>Input file:</strong> <code>doc/mkdocs/Durability/Sulfaco/Sulfaco</code></p>
+<p><strong>Model authors:</strong> Gu, Dangla (Université Gustave Eiffel)
+<strong>Internal title:</strong> <em>"Internal/External sulfate attack of concrete (2017)"</em></p>
+</blockquote>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#1-context-and-objective">Context and Objective</a></li>
+<li><a href="#2-assumptions">Assumptions</a></li>
+<li><a href="#3-variables-and-notation">Variables and Notation</a></li>
+<li><a href="#4-mathematical-model">Mathematical Model</a></li>
+<li>4.1 <a href="#41-conservation-equations">Conservation Equations</a></li>
+<li>4.2 <a href="#42-pore-solution-chemistry">Pore Solution Chemistry</a></li>
+<li>4.3 <a href="#43-reactions-with-solid-phases">Reactions with Solid Phases</a></li>
+<li>4.4 <a href="#44-crystallization-pressure-and-damage">Crystallization Pressure and Damage</a></li>
+<li>4.5 <a href="#45-transport-law-ionic-diffusion">Transport Law (Ionic Diffusion)</a></li>
+<li><a href="#5-boundary-and-initial-conditions">Boundary and Initial Conditions</a></li>
+<li><a href="#6-test-case-sulfate-attack-on-a-concrete-sample-basesulfaco">Test Case: Sulfate Attack on a Concrete Sample (<code>base/Sulfaco/</code>)</a></li>
+<li><a href="#7-model-material-parameters">Model Material Parameters</a></li>
+<li><a href="#8-step-by-step-description-of-input-files">Step-by-Step Description of Input Files</a></li>
+<li><a href="#9-references">References</a></li>
+</ol>
+<hr />
+<h2 id="1-context-and-objective">1. Context and Objective</h2>
+<p>The <strong>Sulfaco</strong> model simulates the <strong>chemical degradation of reinforced concrete by sulfate attack</strong> (internal or external). This durability phenomenon is one of the main causes of long-term deterioration in concrete infrastructure (bridges, foundations, tunnels in gypsiferous ground).</p>
+<p>Sulfate attack occurs when sulfate ions (<span class="arithmatex">\(\text{SO}_4^{2-}\)</span>) penetrate the hardened cement paste (external attack) or are released by sulfate-bearing aggregates (internal attack). These ions react with the aluminous solid phases of hydrated cement to form <strong>secondary ettringite</strong> (<span class="arithmatex">\(\text{AFt} = \text{C}_6\text{AS}_3\text{H}_{32}\)</span>). The formation of ettringite in a confined environment generates a <strong>crystallization pressure</strong> that exceeds the tensile strength of the concrete, causing cracking and spalling.</p>
+<hr />
+<h2 id="2-assumptions">2. Assumptions</h2>
+<ol>
+<li><strong>Isothermal</strong>: Temperature is fixed at <span class="arithmatex">\(T = 293\,\text{K}\)</span> (<span class="arithmatex">\(20°\text{C}\)</span>). Thermodynamic equilibrium constants are evaluated at this temperature.</li>
+<li><strong>Saturated porous medium</strong>: The pore solution occupies the entire porosity (no gas phase). Saturation <span class="arithmatex">\(S_r\)</span> is described by a tabulated curve as a function of pore radius <span class="arithmatex">\(r\)</span>.</li>
+<li><strong>Dissolution/precipitation kinetics</strong>: Reactions of solid phases (CSH₂, AFt, AFm, C₃AH₆) are governed by first-order kinetic laws in terms of departure from supersaturation, with rates <span class="arithmatex">\(R_x\)</span> (mol/L/s). Portlandite (CH) and ettringite (AFt at equilibrium) follow a direct mass balance.</li>
+<li><strong>Electroneutrality</strong>: The total electric charge of the solution is zero. This constraint closes the system: it defines the <span class="arithmatex">\(\text{OH}^-\)</span> concentration from the other ions.</li>
+<li><strong>Crystallization pressure</strong>: The pressure exerted by a growing AFt crystal in a pore of radius <span class="arithmatex">\(r\)</span> is given by Laplace thermodynamics (Kelvin-Thomson equation).</li>
+<li><strong>Uniaxial damage</strong>: A swelling strain <span class="arithmatex">\(\varepsilon\)</span> is computed from porosity changes. When <span class="arithmatex">\(\varepsilon\)</span> exceeds the threshold <span class="arithmatex">\(\varepsilon_0\)</span>, an exponential damage law reduces the effective stiffness.</li>
+<li><strong>Nernst-Planck diffusion</strong>: Ionic transport follows the electrochemical coupled diffusion law, including migration under the internal electric field (Donnan/diffusion potential <span class="arithmatex">\(\psi\)</span>).</li>
+</ol>
+<hr />
+<h2 id="3-variables-and-notation">3. Variables and Notation</h2>
+<h3 id="primary-unknowns-6-equations">Primary Unknowns (6 equations)</h3>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+<th>BIL Internal</th>
+<th>BIL Unknown</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(\log c_{\text{SO}_4}\)</span></td>
+<td>Log₁₀ of sulfate concentration</td>
+<td><code>E_Sulfur</code></td>
+<td><code>logc_so4</code></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\psi\)</span></td>
+<td>Diffuse electric potential (V)</td>
+<td><code>E_charge</code></td>
+<td><code>psi</code></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(z_\text{Ca}\)</span></td>
+<td>Normalized quantity of solid calcium (CH)</td>
+<td><code>E_Calcium</code></td>
+<td><code>z_ca</code></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\log c_\text{K}\)</span></td>
+<td>Log₁₀ of potassium concentration</td>
+<td><code>E_Potassium</code></td>
+<td><code>logc_k</code></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(z_\text{Al}\)</span></td>
+<td>Normalized quantity of solid aluminum (AH₃)</td>
+<td><code>E_Aluminium</code></td>
+<td><code>z_al</code></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\log c_\text{OH}\)</span></td>
+<td>Log₁₀ of hydroxyl concentration</td>
+<td><code>E_eneutral</code></td>
+<td><code>logc_oh</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="main-computed-secondary-variables">Main Computed Secondary Variables</h3>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(n_\text{CH}\)</span></td>
+<td>Molar content of portlandite per liter of concrete</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(n_\text{CSH2}\)</span></td>
+<td>Molar content of gypsum (CaSO₄·2H₂O)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(n_\text{AFt}\)</span></td>
+<td>Molar content of ettringite (<span class="arithmatex">\(\text{C}_6\text{AS}_3\text{H}_{32}\)</span>)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(n_\text{AFm}\)</span></td>
+<td>Molar content of monosulfoaluminate (<span class="arithmatex">\(\text{C}_4\text{ASH}_{12}\)</span>)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(n_\text{C3AH6}\)</span></td>
+<td>Molar content of hydrogarnet (<span class="arithmatex">\(\text{C}_3\text{AH}_6\)</span>)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\phi\)</span></td>
+<td>Instantaneous porosity (modified by solid reactions)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(P_c\)</span></td>
+<td>Crystallization pressure of AFt under confinement (Pa)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\varepsilon\)</span></td>
+<td>Free swelling strain</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(D\)</span></td>
+<td>Damage variable (<span class="arithmatex">\(0\)</span> = intact, <span class="arithmatex">\(1\)</span> = fully damaged)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-mathematical-model">4. Mathematical Model</h2>
+<h3 id="41-conservation-equations">4.1 Conservation Equations</h3>
+<p>The model solves six coupled conservation balances (Finite Volumes, <code>FVM.h</code>):</p>
+<ol>
+<li>
+<p><strong>Sulfur conservation</strong> (S, as <span class="arithmatex">\(\text{SO}_4^{2-}\)</span> and complexes):
+<span class="arithmatex">\(\frac{\partial N_S}{\partial t} + \nabla \cdot \mathbf{W}_S = 0\)</span></p>
+</li>
+<li>
+<p><strong>Electric charge conservation</strong> (global electroneutrality):
+<span class="arithmatex">\(\frac{\partial N_q}{\partial t} + \nabla \cdot \mathbf{W}_q = 0\)</span></p>
+</li>
+<li>
+<p><strong>Calcium conservation</strong> (dissolved + solid CH + CSH + CSH₂ + AFt + AFm + C₃AH₆):
+<span class="arithmatex">\(\frac{\partial N_\text{Ca}}{\partial t} + \nabla \cdot \mathbf{W}_\text{Ca} = 0\)</span></p>
+</li>
+<li>
+<p><strong>Potassium conservation</strong>:
+<span class="arithmatex">\(\frac{\partial N_K}{\partial t} + \nabla \cdot \mathbf{W}_K = 0\)</span></p>
+</li>
+<li>
+<p><strong>Aluminum conservation</strong> (dissolved + solid AH₃ + AFm + AFt + C₃AH₆):
+<span class="arithmatex">\(\frac{\partial N_\text{Al}}{\partial t} + \nabla \cdot \mathbf{W}_\text{Al} = 0\)</span></p>
+</li>
+<li>
+<p><strong>Local electroneutrality</strong> (system closure):
+<span class="arithmatex">\(\sum_i z_i c_i = 0\)</span></p>
+</li>
+</ol>
+<p>where <span class="arithmatex">\(N_x = \phi \, c_x^{\text{total}} + n_x^{\text{solid}}\)</span> is the total content (liquid + solid) per unit volume of concrete.</p>
+<h3 id="42-pore-solution-chemistry">4.2 Pore Solution Chemistry</h3>
+<p>The <code>HardenedCementChemistry.h</code> module solves the complete chemical equilibrium of the concrete pore solution. The species considered are:</p>
+<table>
+<thead>
+<tr>
+<th>Species</th>
+<th>Symbol</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hydroxyl</td>
+<td><span class="arithmatex">\(\text{OH}^-\)</span></td>
+</tr>
+<tr>
+<td>Proton</td>
+<td><span class="arithmatex">\(\text{H}^+\)</span></td>
+</tr>
+<tr>
+<td>Free calcium</td>
+<td><span class="arithmatex">\(\text{Ca}^{2+}\)</span></td>
+</tr>
+<tr>
+<td>Calcium complexes</td>
+<td><span class="arithmatex">\(\text{CaOH}^+\)</span></td>
+</tr>
+<tr>
+<td>Dissolved silicates</td>
+<td><span class="arithmatex">\(\text{H}_2\text{SiO}_4^{2-}\)</span>, <span class="arithmatex">\(\text{H}_3\text{SiO}_4^-\)</span>, <span class="arithmatex">\(\text{H}_4\text{SiO}_4\)</span></td>
+</tr>
+<tr>
+<td>Ca-Si complexes</td>
+<td><span class="arithmatex">\(\text{CaH}_2\text{SiO}_4\)</span>, <span class="arithmatex">\(\text{CaH}_3\text{SiO}_4^+\)</span></td>
+</tr>
+<tr>
+<td>Sulfates</td>
+<td><span class="arithmatex">\(\text{SO}_4^{2-}\)</span>, <span class="arithmatex">\(\text{HSO}_4^-\)</span>, <span class="arithmatex">\(\text{H}_2\text{SO}_4\)</span></td>
+</tr>
+<tr>
+<td>Ca-sulfate complexes</td>
+<td><span class="arithmatex">\(\text{CaSO}_4^\text{aq}\)</span>, <span class="arithmatex">\(\text{CaHSO}_4^+\)</span></td>
+</tr>
+<tr>
+<td>Potassium</td>
+<td><span class="arithmatex">\(\text{K}^+\)</span>, <span class="arithmatex">\(\text{KOH}^\text{aq}\)</span></td>
+</tr>
+<tr>
+<td>Aluminates</td>
+<td><span class="arithmatex">\(\text{Al}(\text{OH})_4^-\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>All these concentrations are derived from the 6 primary unknowns via thermodynamic equilibrium constants at <span class="arithmatex">\(T = 293\,\text{K}\)</span>.</p>
+<h3 id="43-reactions-with-solid-phases">4.3 Reactions with Solid Phases</h3>
+<p>Solid phases dissolve or precipitate according to their saturation state:</p>
+<h4 id="portlandite-textch-textcaoh_2">Portlandite — <span class="arithmatex">\(\text{CH} = \text{Ca(OH)}_2\)</span></h4>
+<p>Dissolution controlled by the solid calcium mass balance:
+<span class="arithmatex">\(n_\text{CH} = N_\text{CH}^{\text{ref}} \cdot \max(z_\text{Ca}, 0)\)</span></p>
+<p>The variable <span class="arithmatex">\(z_\text{Ca}\)</span> decreases as solid calcium is consumed by sulfates or leached out.</p>
+<h4 id="gypsum-textcsh_2-textcaso_4-cdot-2texth_2texto-kinetic">Gypsum — <span class="arithmatex">\(\text{CSH}_2 = \text{CaSO}_4 \cdot 2\text{H}_2\text{O}\)</span> (Kinetic)</h4>
+<div class="arithmatex">\[n_\text{CSH2}(t+\Delta t) = \max\!\left(n_\text{CSH2}(t) + \Delta t \cdot R_\text{CSH2} \cdot (S_\text{CSH2} - 1),\, 0\right)\]</div>
+<p>where <span class="arithmatex">\(S_\text{CSH2}\)</span> is the saturation index (activity-to-solubility product ratio) and <span class="arithmatex">\(R_\text{CSH2}\)</span> is the kinetic rate.</p>
+<h4 id="ettringite-textaft-textc_6textas_3texth_32-kinetic-with-confinement">Ettringite — <span class="arithmatex">\(\text{AFt} = \text{C}_6\text{AS}_3\text{H}_{32}\)</span> (Kinetic with Confinement)</h4>
+<p>The AFt precipitation kinetics are more elaborate: they distinguish <strong>growth at a free interface</strong> (pore wall) from <strong>growth under confinement</strong> (filled pore), the latter generating pressure:</p>
+<div class="arithmatex">\[n_\text{AFt}(t+\Delta t) = \max\!\left(n_\text{AFt}(t) + \Delta t \cdot R_\text{AFt} \cdot f(\beta, \beta_p),\, 0\right)\]</div>
+<p>where <span class="arithmatex">\(\beta = S_\text{AFt}\)</span> (global supersaturation index) and <span class="arithmatex">\(\beta_p\)</span> is the equilibrium index at the confined crystal-liquid interface.</p>
+<h4 id="monosulfoaluminate-textafm-textc_4textash_12-and-hydrogarnet-textc_3textah_6-kinetic">Monosulfoaluminate — <span class="arithmatex">\(\text{AFm} = \text{C}_4\text{ASH}_{12}\)</span> and Hydrogarnet — <span class="arithmatex">\(\text{C}_3\text{AH}_6\)</span> (Kinetic)</h4>
+<div class="arithmatex">\[n_x(t+\Delta t) = \max\!\left(n_x(t) + \Delta t \cdot R_x \cdot (S_x - 1),\, 0\right)\]</div>
+<h3 id="44-crystallization-pressure-and-damage">4.4 Crystallization Pressure and Damage</h3>
+<p>When AFt precipitates in a pore of radius <span class="arithmatex">\(r\)</span>, it generates an overpressure given by the <strong>Kelvin-Thomson</strong> relation:</p>
+<div class="arithmatex">\[P_c = \frac{RT}{V_\text{AFt}} \ln(\beta)\]</div>
+<p>where <span class="arithmatex">\(\beta\)</span> is the supersaturation index of AFt relative to the confined equilibrium and <span class="arithmatex">\(V_\text{AFt} = 710.32\,\text{cm}^3/\text{mol}\)</span> is the molar volume of ettringite.</p>
+<p>The thermodynamic equilibrium at the crystal-liquid interface in a pore of radius <span class="arithmatex">\(r\)</span> is:
+<span class="arithmatex">\(\beta_\text{eq}(r) = \exp\!\left(\frac{2\,\Gamma_\text{AFt}\,V_\text{AFt}}{RT \cdot r}\right)\)</span></p>
+<p>with <span class="arithmatex">\(\Gamma_\text{AFt} = 0.1\,\text{N/m}\)</span> the surface tension.</p>
+<p>The volumetrically integrated crystallization pressure produces a <strong>free swelling strain</strong> <span class="arithmatex">\(\varepsilon\)</span>. When <span class="arithmatex">\(\varepsilon\)</span> exceeds the threshold <span class="arithmatex">\(\varepsilon_0\)</span>, the concrete undergoes damage according to an exponential law:</p>
+<div class="arithmatex">\[D(\varepsilon) = 1 - \frac{\varepsilon_0}{\varepsilon} \exp\!\left(-\frac{\varepsilon - \varepsilon_0}{\varepsilon_f}\right)\]</div>
+<p>where <span class="arithmatex">\(\varepsilon_0\)</span> is the threshold strain and <span class="arithmatex">\(\varepsilon_f\)</span> is the characteristic failure strain. The damage <span class="arithmatex">\(D\)</span> reduces the effective stress and increases ionic permeability.</p>
+<h3 id="45-transport-law-ionic-diffusion">4.5 Transport Law (Ionic Diffusion)</h3>
+<p>The flux of each ion <span class="arithmatex">\(i\)</span> (with charge <span class="arithmatex">\(z_i\)</span> and diffusion coefficient <span class="arithmatex">\(D_i\)</span>) in the pore solution is given by the <strong>Nernst-Planck</strong> equation:</p>
+<div class="arithmatex">\[\mathbf{W}_i = -\phi \, \tau(\phi) \left( D_i \nabla c_i + z_i \frac{F D_i}{RT} c_i \nabla \psi \right)\]</div>
+<p>where <span class="arithmatex">\(\tau(\phi)\)</span> is the effective tortuosity according to the Bazant-Najjar law:</p>
+<div class="arithmatex">\[\tau(\phi) = 0.001 + 0.07\phi^2 + H(\phi - 0.18) \cdot 1.8(\phi - 0.18)^2\]</div>
+<p>The <code>CementSolutionDiffusion.h</code> module handles the coefficients <span class="arithmatex">\(D_i\)</span> for each ion.</p>
+<hr />
+<h2 id="5-boundary-and-initial-conditions">5. Boundary and Initial Conditions</h2>
+<h3 id="initial-conditions">Initial Conditions</h3>
+<p>The concrete is initially in a chemically "intact" equilibrium state defined by the initial contents of solid phases (<span class="arithmatex">\(N_\text{CH}\)</span>, <span class="arithmatex">\(N_\text{CSH}\)</span>, <span class="arithmatex">\(N_\text{C3AH6}\)</span>...) and a very low sulfate concentration (<span class="arithmatex">\(\log c_{\text{SO}_4} = -6\)</span>, i.e., <span class="arithmatex">\(c_{\text{SO}_4} = 10^{-6}\,\text{mol/L}\)</span>).</p>
+<h3 id="boundary-conditions">Boundary Conditions</h3>
+<p>The system is <strong>exposed on one side</strong> (region 1, <span class="arithmatex">\(x=0\)</span>) to a sulfate solution whose <span class="arithmatex">\(\text{SO}_4^{2-}\)</span> concentration increases over time according to the functions defined in the input file. The other face (region 3, <span class="arithmatex">\(x=L\)</span>) is left with no flux (implicit zero Neumann condition).</p>
+<hr />
+<h2 id="6-test-case-sulfate-attack-on-a-concrete-sample-sulfaco">6. Test Case: Sulfate Attack on a Concrete Sample (<code>Sulfaco/</code>)</h2>
+<h3 id="geometry">Geometry</h3>
+<p>The sample is a <strong>1D domain of length <span class="arithmatex">\(L = 1\,\text{dm}\)</span></strong>, discretized into a single finite volume element with two nodes (representing a homogeneous "material point" with no internal spatial gradient).</p>
+<h3 id="simulated-scenario">Simulated Scenario</h3>
+<p>This is a simulation of a <strong>single material point</strong> (no spatial gradient) exposed to an increasing sulfate supply. The concentrations imposed at <span class="arithmatex">\(x=0\)</span> vary according to time functions defined in the input file:</p>
+<table>
+<thead>
+<tr>
+<th>Imposed variable</th>
+<th><span class="arithmatex">\(t=0\)</span></th>
+<th><span class="arithmatex">\(t=8640\,\text{s}\)</span></th>
+<th><span class="arithmatex">\(t=864000\,\text{s}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(\log c_{\text{SO}_4}\)</span></td>
+<td><span class="arithmatex">\(-6\)</span></td>
+<td><span class="arithmatex">\(-2.556\)</span></td>
+<td><span class="arithmatex">\(-0.456\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\log c_K\)</span></td>
+<td><span class="arithmatex">\(-5.7\)</span></td>
+<td><span class="arithmatex">\(-2.256\)</span></td>
+<td><span class="arithmatex">\(-0.156\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\log c_\text{OH}\)</span></td>
+<td><span class="arithmatex">\(-2\)</span> (pH 12)</td>
+<td><span class="arithmatex">\(-2\)</span></td>
+<td><span class="arithmatex">\(-2\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>The total simulated duration is <span class="arithmatex">\(3.5 \times 10^6\,\text{s} \approx 40\,\text{days}\)</span>.</p>
+<h3 id="expected-results-gp-outputs">Expected Results (<code>.gp</code> outputs)</h3>
+<p>The Gnuplot file <code>Sulfaco.gp</code> plots nine post-processing figures:</p>
+<table>
+<thead>
+<tr>
+<th>Figure</th>
+<th>File</th>
+<th>Physical content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>Strain.eps</code></td>
+<td>Swelling strain <span class="arithmatex">\(\varepsilon(t)\)</span></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>EttringiteSaturationIndex.eps</code></td>
+<td>Saturation index <span class="arithmatex">\(S_\text{AFt}(t)\)</span> (log-log)</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>EttringiteContent.eps</code></td>
+<td>Ettringite content <span class="arithmatex">\(n_\text{AFt}(t)\)</span> (mol/L of concrete)</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>CrystallizationPressure.eps</code></td>
+<td>Crystallization pressure <span class="arithmatex">\(P_c(t)\)</span> (Pa)</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>pH.eps</code></td>
+<td>Evolution of pore solution pH</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>SaturationIndexes.eps</code></td>
+<td>Saturation indices: AFt and gypsum (CSH₂)</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>SolidContents.eps</code></td>
+<td>Evolution of solid phases: CH, AFt, C₃AH₆</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>IonConcentrations.eps</code></td>
+<td><span class="arithmatex">\(\text{SO}_4^{2-}\)</span> concentration (mol/L)</td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>StressStrain.eps</code></td>
+<td>Effective stress <span class="arithmatex">\(S_c \cdot P_c\)</span> vs. strain</td>
+</tr>
+</tbody>
+</table>
+<p>The expected physical sequence is:
+1. Incoming sulfates first react with <strong>C₃AH₆</strong> (hydrogarnet) and <strong>AFm</strong> (monosulfoaluminate), which convert to <strong>AFt</strong> (ettringite).
+2. The AFt saturation index grows, and the <strong>crystallization pressure</strong> increases.
+3. When <span class="arithmatex">\(P_c\)</span> exceeds the tensile strength (strain <span class="arithmatex">\(\varepsilon &gt; \varepsilon_0\)</span>), <strong>damage</strong> <span class="arithmatex">\(D\)</span> activates and the free strain <span class="arithmatex">\(\varepsilon\)</span> rises sharply.
+4. <strong>Portlandite</strong> (CH) dissolves progressively, buffering the pH.</p>
+<hr />
+<h2 id="7-model-material-parameters">7. Model Material Parameters</h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value in <code>Sulfaco</code></th>
+<th>Physical role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>porosity</code></td>
+<td><span class="arithmatex">\(0.23\)</span></td>
+<td>Initial porosity of sound concrete</td>
+</tr>
+<tr>
+<td><code>N_CH</code></td>
+<td><span class="arithmatex">\(1.53\,\text{mol/L}\)</span></td>
+<td>Initial portlandite content</td>
+</tr>
+<tr>
+<td><code>N_CSH</code></td>
+<td><span class="arithmatex">\(1.393\,\text{mol/L}\)</span></td>
+<td>Initial C-S-H content (Si source)</td>
+</tr>
+<tr>
+<td><code>N_AH3</code></td>
+<td><span class="arithmatex">\(10^{-6}\,\text{mol/L}\)</span></td>
+<td>Gibbsite (near-zero, trace amount)</td>
+</tr>
+<tr>
+<td><code>N_C3AH6</code></td>
+<td><span class="arithmatex">\(0.2\,\text{mol/L}\)</span></td>
+<td>Initial hydrogarnet (aluminum precursor)</td>
+</tr>
+<tr>
+<td><code>N_CSH2</code>, <code>N_AFm</code>, <code>N_AFt</code></td>
+<td><span class="arithmatex">\(0\)</span></td>
+<td>No initial gypsum or ettringite</td>
+</tr>
+<tr>
+<td><code>R_CSH2</code></td>
+<td><span class="arithmatex">\(10^{-12}\,\text{mol/L/s}\)</span></td>
+<td>Gypsum precipitation rate (very slow)</td>
+</tr>
+<tr>
+<td><code>R_AFm</code></td>
+<td><span class="arithmatex">\(10^{-6}\,\text{mol/L/s}\)</span></td>
+<td>Monosulfoaluminate precipitation rate</td>
+</tr>
+<tr>
+<td><code>R_C3AH6</code></td>
+<td><span class="arithmatex">\(10^{-6}\,\text{mol/L/s}\)</span></td>
+<td>Hydrogarnet dissolution rate</td>
+</tr>
+<tr>
+<td><code>A_i</code></td>
+<td><span class="arithmatex">\(8.4 \times 10^{-8}\)</span></td>
+<td>AFt growth rate at free interface (<span class="arithmatex">\(a_r\)</span>)</td>
+</tr>
+<tr>
+<td><code>A_p</code></td>
+<td><span class="arithmatex">\(4.4 \times 10^{-9}\)</span></td>
+<td>AFt growth rate in confined pore (<span class="arithmatex">\(a_p\)</span>)</td>
+</tr>
+<tr>
+<td><code>K_bulk</code></td>
+<td><span class="arithmatex">\(30.1\,\text{GPa}\)</span></td>
+<td>Bulk modulus of sound concrete</td>
+</tr>
+<tr>
+<td><code>Biot</code></td>
+<td><span class="arithmatex">\(0.54\)</span></td>
+<td>Biot coefficient (pressure-strain coupling)</td>
+</tr>
+<tr>
+<td><code>Strain0</code></td>
+<td><span class="arithmatex">\(4 \times 10^{-4}\)</span></td>
+<td>Damage threshold strain <span class="arithmatex">\(\varepsilon_0\)</span></td>
+</tr>
+<tr>
+<td><code>Strainf</code></td>
+<td><span class="arithmatex">\(6.4 \times 10^{-3}\)</span></td>
+<td>Characteristic failure strain <span class="arithmatex">\(\varepsilon_f\)</span></td>
+</tr>
+<tr>
+<td><code>AlphaCoef</code></td>
+<td><span class="arithmatex">\(0\)</span></td>
+<td>Sulfate adsorption coefficient on C-S-H (disabled)</td>
+</tr>
+<tr>
+<td><code>BetaCoef</code></td>
+<td><span class="arithmatex">\(0.87\)</span></td>
+<td>Saturation coefficient in the adsorption isotherm</td>
+</tr>
+<tr>
+<td><code>Curves_log = Sat</code></td>
+<td>Van Genuchten (<span class="arithmatex">\(m=0.2516\)</span>, <span class="arithmatex">\(r_0=155.82\,\text{nm}\)</span>)</td>
+<td>Liquid saturation curve <span class="arithmatex">\(S_r(r)\)</span> in pores</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="8-step-by-step-description-of-input-files">8. Step-by-Step Description of Input Files</h2>
+<h3 id="81-unit-system-units">8.1 Unit System (<code>Units</code>)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Units
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Length = decimeter     # 1 length unit = 1 dm
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Time   = second        # 1 time unit = 1 s
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>Mass   = hectogram     # 1 mass unit = 100 g
+</code></pre></div>
+<p>Choosing the decimeter as the length unit is consistent with typical concrete specimen sizes (a few centimeters to decimeters). Concentrations are therefore in <strong>mol/dm³ = mol/L</strong> and diffusivities in <strong>dm²/s</strong>.</p>
+<h3 id="82-geometry-and-mesh-geometry-mesh">8.2 Geometry and Mesh (<code>Geometry</code>, <code>Mesh</code>)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Geometry
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Dimension = 1  plan     # 1D problem in planar (Cartesian) coordinates
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Mesh
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>2                        # 2 nodes
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>0. 1                     # Node 1: x=0 (exposed surface)
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>1.                       # Node 2: x=1 dm (core)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>1                        # 1 element
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>1                        # Linear element connecting nodes 1-2 (region 1)
+</code></pre></div>
+<p>The mesh file <code>Sulfaco.msh</code> (Gmsh format) explicitly defines 4 nodes including 2 boundary nodes (type 15 = points) and 1 segment (type 1) between <span class="arithmatex">\(x=0\)</span> and <span class="arithmatex">\(x=1\,\text{dm}\)</span>.</p>
+<h3 id="83-material-material">8.3 Material (<code>Material</code>)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Model = Sulfaco
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>porosity = 0.23
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>N_CH     = 1.53
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>N_CSH    = 1.393
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>N_AH3    = 1.e-6
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>N_C3AH6  = 0.2
+</code></pre></div>
+<p>These lines define the <strong>initial microstructure</strong> of the concrete: portlandite and C-S-H are the calcium reservoirs that control the pH buffer and the calcium source for sulfate reactions.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>R_CSH2   = 1.e-12
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>R_AFm    = 1.e-6
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>R_C3AH6  = 1.e-6
+</code></pre></div>
+<p>These kinetic constants (<code>R_x</code>, in mol/L/s) control the rate of solid transformations. A very small <code>R_CSH2</code> means gypsum precipitates very slowly; a moderate <code>R_C3AH6</code> allows rapid dissolution of hydrogarnet into ettringite.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>A_i = 8.4e-8
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>A_p = 4.4e-9
+</code></pre></div>
+<p>AFt crystal growth kinetic coefficients: <code>A_i</code> (free interface, fast) and <code>A_p</code> (confined pore, 20 times slower).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>K_bulk = 30.1e9
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Biot = 0.54
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Strain0 = 4.e-4
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Strainf = 6.4e-3
+</code></pre></div>
+<p>Mechanical parameters: the bulk modulus <span class="arithmatex">\(K_\text{bulk}\)</span> and the Biot coefficient are used to compute the effective stress. <code>Strain0</code> and <code>Strainf</code> define the damage curve: concrete starts cracking at a strain of <span class="arithmatex">\(4 \times 10^{-4}\)</span> and is fully damaged at <span class="arithmatex">\(\sim 7 \times 10^{-3}\)</span>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Curves_log = Sat  r = Range{r1 = 1.e-8 , r2 = 1.e-3 , n = 1000}
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>             S_r = Expressions(1){r0=155.82e-8; m = 0.2516 ; S_r = (1 + (r0/r)**(1/(1-m)))**(-m)}
+</code></pre></div>
+<p>Van Genuchten saturation curve: for a pore radius <span class="arithmatex">\(r\)</span> (in m), <span class="arithmatex">\(S_r(r)\)</span> gives the fraction of pores smaller than <span class="arithmatex">\(r\)</span> that are saturated with solution. It is tabulated over 1000 points between <span class="arithmatex">\(r=10\,\text{nm}\)</span> and <span class="arithmatex">\(r=1\,\text{mm}\)</span>.</p>
+<h3 id="84-fields-fields">8.4 Fields (<code>Fields</code>)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Fields
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>1
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Value = 1   Gradient = 0 0 0   Point = 0 0 0
+</code></pre></div>
+<p>A single uniform scalar field (value 1, zero gradient) is defined. It serves as a <strong>multiplier</strong> in the initialization and boundary condition functions.</p>
+<h3 id="85-initialization-initialization">8.5 Initialization (<code>Initialization</code>)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Initialization
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>6
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Region = 1 Unknown = logc_so4   Field = 1 Function = 1
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Region = 1 Unknown = psi        Field = 0 Function = 0
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Region = 1 Unknown = z_ca       Field = 1 Function = 4
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>Region = 1 Unknown = z_al       Field = 1 Function = 3
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>Region = 1 Unknown = logc_k     Field = 1 Function = 2
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>Region = 1 Unknown = logc_oh    Field = 1 Function = 5
+</code></pre></div>
+<p>Each line initializes an unknown in region 1 (the entire domain) to the value <code>Field × Function(t=0)</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Unknown</th>
+<th>Initial value</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>logc_so4</code></td>
+<td><span class="arithmatex">\(1 \times (-6) = -6\)</span></td>
+<td><span class="arithmatex">\(c_{\text{SO}_4} = 10^{-6}\,\text{mol/L}\)</span> (sound concrete, low sulfate)</td>
+</tr>
+<tr>
+<td><code>psi</code></td>
+<td><span class="arithmatex">\(0 \times 0 = 0\)</span></td>
+<td>Zero electric potential at initial state</td>
+</tr>
+<tr>
+<td><code>z_ca</code></td>
+<td><span class="arithmatex">\(1 \times 1 = 1\)</span></td>
+<td>Intact portlandite: <span class="arithmatex">\(n_\text{CH} = N_\text{CH} \times 1\)</span></td>
+</tr>
+<tr>
+<td><code>z_al</code></td>
+<td><span class="arithmatex">\(1 \times 1 = 1\)</span></td>
+<td>Intact solid AH₃: <span class="arithmatex">\(n_\text{AH3} = N_\text{AH3} \times 1\)</span></td>
+</tr>
+<tr>
+<td><code>logc_k</code></td>
+<td><span class="arithmatex">\(1 \times (-5.7) = -5.7\)</span></td>
+<td><span class="arithmatex">\(c_K \approx 2 \times 10^{-6}\,\text{mol/L}\)</span></td>
+</tr>
+<tr>
+<td><code>logc_oh</code></td>
+<td><span class="arithmatex">\(1 \times (-2) = -2\)</span></td>
+<td>pH <span class="arithmatex">\(= 12\)</span> (<span class="arithmatex">\(c_{\text{OH}^-} = 10^{-2}\,\text{mol/L}\)</span>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="86-time-functions-functions">8.6 Time Functions (<code>Functions</code>)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Functions
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>5
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>N = 5 F(0) = -6     F(8640) = -2.556  F(86400) = -1.556  F(345600) = -0.954  F(864000) = -0.456
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>N = 5 F(0) = -5.7   F(8640) = -2.256  F(86400) = -1.256  F(345600) = -0.654  F(864000) = -0.156
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>N = 2 F(0) = -7.32  F(86400) = -6.32
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>N = 2 F(0) = 1      F(86400) = 1
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>N = 2 F(0) = -2     F(86400) = -2
+</code></pre></div>
+<p>Five piecewise linear time interpolation functions (with <code>N</code> points each):</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Usage</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>logc_so4</code> in BC</td>
+<td><span class="arithmatex">\(\log c_{\text{SO}_4}\)</span>: increases from <span class="arithmatex">\(-6\)</span> to <span class="arithmatex">\(-0.456\)</span> (from <span class="arithmatex">\(10^{-6}\)</span> to <span class="arithmatex">\(0.35\,\text{mol/L}\)</span>) over <span class="arithmatex">\(10\,\text{days}\)</span></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>logc_k</code> in BC</td>
+<td><span class="arithmatex">\(\log c_K\)</span>: increases from <span class="arithmatex">\(-5.7\)</span> to <span class="arithmatex">\(-0.156\)</span> (from <span class="arithmatex">\(2\times10^{-6}\)</span> to <span class="arithmatex">\(0.7\,\text{mol/L}\)</span>) over <span class="arithmatex">\(10\,\text{days}\)</span></td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>z_al</code> initial</td>
+<td>Constant <span class="arithmatex">\(= 1\)</span> (stable solid aluminum)</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>z_ca</code> initial</td>
+<td>Slight slope (slow CH dissolution over the first day)</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>logc_oh</code> in BC</td>
+<td>pH held constant at 12 (<span class="arithmatex">\(c_{\text{OH}^-} = 10^{-2}\,\text{mol/L}\)</span>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="87-boundary-conditions-boundary-conditions">8.7 Boundary Conditions (<code>Boundary Conditions</code>)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Boundary Conditions
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>4
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Region = 1 Unknown = logc_so4   Field = 1 Function = 1
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Region = 1 Unknown = psi        Field = 0 Function = 0
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>Region = 1 Unknown = logc_k     Field = 1 Function = 2
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>Region = 1 Unknown = logc_oh    Field = 1 Function = 5
+</code></pre></div>
+<p>Boundary conditions are applied to <strong>region 1</strong> (exposed surface at <span class="arithmatex">\(x=0\)</span>):
+- Sulfate and potassium concentrations are <strong>prescribed</strong> and increase over time (functions 1 and 2).
+- The electric potential is held at <strong>zero</strong> (reference).
+- The pH is <strong>held at 12</strong> throughout the simulation (function 5, constant).
+- <span class="arithmatex">\(z_\text{Ca}\)</span> and <span class="arithmatex">\(z_\text{Al}\)</span> are <strong>not prescribed</strong> as BCs (commented-out lines): the solid calcium evolves freely through dissolution/precipitation.</p>
+<h3 id="88-observation-points-points">8.8 Observation Points (<code>Points</code>)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Points
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>1
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>0.5
+</code></pre></div>
+<p>A single observation point is defined at <span class="arithmatex">\(x = 0.5\,\text{dm}\)</span> (center of the sample). This is the point at which secondary variables (columns of the <code>.p1</code> file) are recorded over time.</p>
+<h3 id="89-time-window-and-convergence-criteria">8.9 Time Window and Convergence Criteria</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Dates
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>2
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>0.  3.5e6       # t=0 s to t=3.5×10⁶ s ≈ 40 days
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>Objective Variations
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>logc_so4  = 1.e-3   # Allowable relative variation for the sulfate unknown
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>z_ca      = 1.e-3
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>psi       = 1.e-1
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>logc_k    = 1.e-1
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>z_al      = 1.e-1
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>logc_oh   = 1.e-1
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>Iterative Process
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>Iter = 20       # Max number of Newton-Raphson iterations per time step
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>Tol  = 1.e-4    # Tolerance on the global residual
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>Time Steps
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>Dtini = 1.e3    # Initial time step: 1000 s ≈ 17 min
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>Dtmax = 1.e3    # Maximum time step: 1000 s (fixed)
+</code></pre></div>
+<p>The fixed time step of <span class="arithmatex">\(1000\,\text{s}\)</span> is suited to the fastest chemical kinetics (AFm, C₃AH₆ with <span class="arithmatex">\(R_x = 10^{-6}\,\text{mol/L/s}\)</span>). The <code>Objective Variations</code> tolerance controls the adaptive time stepping in BIL: if the variation of an unknown exceeds its threshold, the step is subdivided.</p>
+<hr />
+<h2 id="9-references">9. References</h2>
+<ul>
+<li>
+<p><strong>Biot, M. A.</strong> (1941). General theory of three-dimensional consolidation. <em>Journal of applied physics</em>, 12(2), 155–164. — Establishes the pore pressure / deformation coupling (Biot coefficient <span class="arithmatex">\(b = 0.54\)</span> used in the model).</p>
+</li>
+<li>
+<p><strong>Coussy, O.</strong> (2004). <em>Poromechanics</em>. John Wiley &amp; Sons. — Rigorous treatment of crystallization pressure in porous media (Kelvin-Thomson equation applied to crystals growing in pores).</p>
+</li>
+<li>
+<p><strong>Flatt, R. J. &amp; Scherer, G. W.</strong> (2008). Thermodynamics of crystallization stresses in DEF. <em>Cement and Concrete Research</em>, 38(3), 325–336. — Thermodynamic basis for computing the delayed ettringite crystallization pressure <span class="arithmatex">\(P_c = \frac{RT}{V_\text{AFt}}\ln\beta\)</span>.</p>
+</li>
+<li>
+<p><strong>Montoya, A. G., et al.</strong> (2016). A chemo-mechanical model for sulfate attack in concrete — Provides the chemistry-mechanics coupling framework used in Sulfaco (damage, swelling, porosity alteration).</p>
+</li>
+<li>
+<p><strong>Nernst, W. &amp; Planck, M.</strong> (1890). Theory of ionic diffusion coupled to electric potential. — Nernst-Planck equation for ion transport in porous solution (<span class="arithmatex">\(\mathbf{W}_i = -\phi\tau(D_i \nabla c_i + z_i \frac{FD_i}{RT} c_i \nabla\psi)\)</span>).</p>
+</li>
+<li>
+<p><strong>Bazant, Z. P. &amp; Najjar, L. J.</strong> (1972). Nonlinear water diffusion in nonsaturated concrete. <em>Matériaux et Construction</em>, 5(25), 3–20. — Tortuosity law <span class="arithmatex">\(\tau(\phi)\)</span> used in the computation of diffusive fluxes.</p>
+</li>
+<li>
+<p><strong>Van Genuchten, M. Th.</strong> (1980). A closed-form equation for predicting the hydraulic conductivity of unsaturated soils. <em>Soil Science Society of America Journal</em>, 44(5), 892–898. — Saturation curve model <span class="arithmatex">\(S_r(r)\)</span> used for the pore size distribution (parameters <span class="arithmatex">\(m=0.2516\)</span>, <span class="arithmatex">\(r_0 = 155.82\,\text{nm}\)</span>).</p>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../Chloricem_model/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Chloricem">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Chloricem
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../Sulfuricem_model/" class="md-footer__link md-footer__link--next" aria-label="Next: Sulfuricem">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Sulfuricem
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "navigation.footer", "search.highlight", "search.suggest", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

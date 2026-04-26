@@ -1,0 +1,3946 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A modeling platform based on finite element/volume methods">
+      
+      
+        <meta name="author" content="P. Dangla (Université Gustave Eiffel)">
+      
+      
+      
+        <link rel="prev" href="../Plast_model/">
+      
+      
+        <link rel="next" href="../../Poromechanics/poromechanics_examples/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>BBM - Bil - documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bbm-model-barcelona-basic-model-for-unsaturated-soils-2d-axisymmetric" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Bil - documentation" class="md-header__button md-logo" aria-label="Bil - documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Bil - documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              BBM
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Universite-Gustave-Eiffel/bil" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Universite-Gustave-Eiffel/bil
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Introduction
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../running_bil/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Running Bil
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../examples/" class="md-tabs__link">
+          
+  
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code_architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../adding_a_model/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  How to Add a New Model
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Bil - documentation" class="md-nav__button md-logo" aria-label="Bil - documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Bil - documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Universite-Gustave-Eiffel/bil" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Universite-Gustave-Eiffel/bil
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../running_bil/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Running Bil
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flow
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Flow
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/flow_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/M1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/M2_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/Fick_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fick
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/Richards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Richards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mechanics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mechanics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mechanics_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Elast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Elasd_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elasd
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Plast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BBM
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BBM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-context-and-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Context and Objective
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-assumptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Assumptions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-variables-and-notation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Variables and Notation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Variables and Notation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#primary-unknowns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Primary Unknowns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#internal-variables-stored-at-integration-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Internal Variables (Stored at Integration Points)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#material-parameters-test-case-bbm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Material Parameters (test case BBM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-mathematical-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Mathematical Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Mathematical Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-conservation-equations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Conservation Equations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.1 Conservation Equations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#liquid-water-mass-balance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Liquid Water Mass Balance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mechanical-equilibrium-without-gravity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mechanical Equilibrium (without gravity)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-nonlinear-elastic-constitutive-law" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Nonlinear Elastic Constitutive Law
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-yield-surface-and-lc-curve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Yield Surface and LC Curve
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-flow-rule-and-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Flow Rule and Hardening
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-hydromechanical-coupling-darcy-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Hydromechanical Coupling — Darcy Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-capillary-retention-curves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Capillary Retention Curves
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-boundary-and-initial-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Boundary and Initial Conditions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Boundary and Initial Conditions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#initial-state-common-to-all-three-test-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Initial State (Common to All Three Test Cases)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#geometric-boundary-conditions-common" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Geometric Boundary Conditions (Common)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-detailed-description-of-input-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Detailed Description of Input Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Detailed Description of Input Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-main-file-bbm-isotropic-compression-with-suction-cycles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Main File BBM — Isotropic Compression with Suction Cycles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-file-bbm2-p-q-stress-path-with-variable-suction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 File BBM2 — p-q Stress Path with Variable Suction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-file-bbm_pcst-constant-suction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 File BBM_pcst — Constant Suction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-material-curves-wrc2-krc2-lc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Material Curves: wrc2, krc2, lc
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65-mesh-carremsh-and-geometry-carregeo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 Mesh carre.msh and Geometry carre.geo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#output-file-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output File Format
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evolution-at-key-time-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evolution at Key Time Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#physical-interpretation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physical Interpretation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-numerical-discretization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Numerical Discretization
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. References
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. References">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#barcelona-basic-model-bbm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Barcelona Basic Model — BBM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unsaturated-soil-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unsaturated Soil Mechanics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lc-curve-and-suction-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LC Curve and Suction Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plasticity-and-return-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plasticity and Return Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coupled-numerical-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coupled Numerical Implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poromechanics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Poromechanics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Poromechanics/poromechanics_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Poromechanics/M7_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Poromechanics/Poroplast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poroplast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Phase change
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase change
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PhaseChange/phasechange_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PhaseChange/Frostaco_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frostaco
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PhaseChange/Frostaco3d_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frostaco3d
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durability & Chemistry
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Durability & Chemistry
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/durability_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Duracem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Duracem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Chloricem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chloricem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Sulfaco_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfaco
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Sulfuricem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfuricem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Sulfaconew_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfaconew
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Coupled Transfers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Coupled Transfers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/coupledtransfers_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/DWS1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DWS1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/Yuan1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Yuan1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/Shen_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/usoil_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    usoil
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8" id="__nav_3_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specialized
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Specialized
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Specialized/specialized_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Specialized/MechaMic_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MechaMic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code_architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adding_a_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to Add a New Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-context-and-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Context and Objective
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-assumptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Assumptions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-variables-and-notation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Variables and Notation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Variables and Notation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#primary-unknowns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Primary Unknowns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#internal-variables-stored-at-integration-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Internal Variables (Stored at Integration Points)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#material-parameters-test-case-bbm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Material Parameters (test case BBM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-mathematical-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Mathematical Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Mathematical Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-conservation-equations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Conservation Equations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.1 Conservation Equations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#liquid-water-mass-balance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Liquid Water Mass Balance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mechanical-equilibrium-without-gravity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mechanical Equilibrium (without gravity)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-nonlinear-elastic-constitutive-law" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Nonlinear Elastic Constitutive Law
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-yield-surface-and-lc-curve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Yield Surface and LC Curve
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-flow-rule-and-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Flow Rule and Hardening
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-hydromechanical-coupling-darcy-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Hydromechanical Coupling — Darcy Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-capillary-retention-curves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Capillary Retention Curves
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-boundary-and-initial-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Boundary and Initial Conditions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Boundary and Initial Conditions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#initial-state-common-to-all-three-test-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Initial State (Common to All Three Test Cases)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#geometric-boundary-conditions-common" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Geometric Boundary Conditions (Common)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-detailed-description-of-input-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Detailed Description of Input Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Detailed Description of Input Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-main-file-bbm-isotropic-compression-with-suction-cycles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Main File BBM — Isotropic Compression with Suction Cycles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-file-bbm2-p-q-stress-path-with-variable-suction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 File BBM2 — p-q Stress Path with Variable Suction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-file-bbm_pcst-constant-suction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 File BBM_pcst — Constant Suction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-material-curves-wrc2-krc2-lc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Material Curves: wrc2, krc2, lc
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65-mesh-carremsh-and-geometry-carregeo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 Mesh carre.msh and Geometry carre.geo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#output-file-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output File Format
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evolution-at-key-time-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evolution at Key Time Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#physical-interpretation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physical Interpretation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-numerical-discretization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Numerical Discretization
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. References
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. References">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#barcelona-basic-model-bbm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Barcelona Basic Model — BBM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unsaturated-soil-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unsaturated Soil Mechanics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lc-curve-and-suction-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LC Curve and Suction Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plasticity-and-return-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plasticity and Return Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coupled-numerical-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coupled Numerical Implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="bbm-model-barcelona-basic-model-for-unsaturated-soils-2d-axisymmetric">BBM Model — Barcelona Basic Model for Unsaturated Soils (2D Axisymmetric)</h1>
+<blockquote>
+<p><strong>Bil model:</strong> <code>src/Models/ModelFiles/BBM.c</code> · <code>src/Models/ConstitutiveLaws/PlasticityModels/PlasticityBBM.c</code></p>
+<p><strong>Input file:</strong> <code>doc/mkdocs/Mechanics/BBM/BBM</code> · <code>doc/mkdocs/Mechanics/BBM/BBM2</code> · <code>doc/mkdocs/Mechanics/BBM/BBM_pcst</code></p>
+<p><strong>Bil model authors:</strong> Eizaguirre, Dangla (Université Gustave Eiffel)</p>
+</blockquote>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#1-context-and-objective">Context and Objective</a></li>
+<li><a href="#2-assumptions">Assumptions</a></li>
+<li><a href="#3-variables-and-notation">Variables and Notation</a></li>
+<li><a href="#4-mathematical-model">Mathematical Model</a></li>
+<li>4.1 <a href="#41-conservation-equations">Conservation Equations</a></li>
+<li>4.2 <a href="#42-nonlinear-elastic-constitutive-law">Nonlinear Elastic Constitutive Law</a></li>
+<li>4.3 <a href="#43-yield-surface-and-lc-curve">Yield Surface and LC Curve</a></li>
+<li>4.4 <a href="#44-flow-rule-and-hardening">Flow Rule and Hardening</a></li>
+<li>4.5 <a href="#45-hydromechanical-coupling--darcy-flow">Hydromechanical Coupling — Darcy Flow</a></li>
+<li>4.6 <a href="#46-capillary-retention-curves">Capillary Retention Curves</a></li>
+<li><a href="#5-boundary-and-initial-conditions">Boundary and Initial Conditions</a></li>
+<li><a href="#6-detailed-description-of-input-files">Detailed Description of Input Files</a></li>
+<li>6.1 <a href="#61-main-file-bbm--isotropic-compression-with-suction-cycles">Main File <code>BBM</code> — Isotropic Compression with Suction Cycles</a></li>
+<li>6.2 <a href="#62-file-bbm2--p-q-stress-path-with-variable-suction">File <code>BBM2</code> — p-q Stress Path with Variable Suction</a></li>
+<li>6.3 <a href="#63-file-bbm_pcst--constant-suction">File <code>BBM_pcst</code> — Constant Suction</a></li>
+<li>6.4 <a href="#64-material-curves-wrc2-krc2-lc">Material Curves: <code>wrc2</code>, <code>krc2</code>, <code>lc</code></a></li>
+<li>6.5 <a href="#65-mesh-carremsh-and-geometry-carregeo">Mesh <code>carre.msh</code> and Geometry <code>carre.geo</code></a></li>
+<li><a href="#7-results">Results</a></li>
+<li><a href="#8-numerical-discretization">Numerical Discretization</a></li>
+<li><a href="#9-references">References</a></li>
+</ol>
+<hr />
+<h2 id="1-context-and-objective">1. Context and Objective</h2>
+<p>The BBM model implements the <strong>Barcelona Basic Model</strong> (BBM), proposed by Alonso, Gens, and Josa (1990), which is the reference model for unsaturated soil mechanics. It extends the Modified Cam-Clay model to unsaturated states by introducing <strong>suction</strong> <span class="arithmatex">\(s = p_g - p_l\)</span> as an additional state variable, which modulates the plastic envelope through the Loading Collapse (LC) curve.</p>
+<p>The model is <strong>hydromechanically coupled</strong>: deformations of the solid skeleton modify the porosity and thus the water storage, while suction affects stiffness and strength. Water flow follows the generalized Darcy's law.</p>
+<p>The three test cases illustrate <strong>drained condition tests</strong> (suction is imposed directly) on an axisymmetric cubic representative volume element (RVE):</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Test</th>
+<th>Objective</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BBM</code></td>
+<td>Isotropic compression with loading/unloading cycles, step-wise increasing suction</td>
+<td>Verification of the LC curve and hardening</td>
+</tr>
+<tr>
+<td><code>BBM2</code></td>
+<td>p-q stress path (triaxial compression) with increasing suction</td>
+<td>Verification of the yield surface in p-q space</td>
+</tr>
+<tr>
+<td><code>BBM_pcst</code></td>
+<td>Compression with shear, constant zero suction</td>
+<td>Saturated behavior, comparison with Cam-Clay</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-assumptions">2. Assumptions</h2>
+<ol>
+<li><strong>Deformable porous medium</strong>: elastoplastic solid skeleton, variable porosity.</li>
+<li><strong>Two fluid phases</strong>: liquid phase (water) and gas phase (at constant pressure <span class="arithmatex">\(p_g = 0\)</span>, taken as reference).</li>
+<li><strong>Small strains</strong>: continuum mechanics framework with small strains (linearized strain tensor).</li>
+<li><strong>Net stresses</strong>: the mechanical behavior is formulated in terms of <strong>net stresses</strong> <span class="arithmatex">\(\bar{\boldsymbol{\sigma}} = \boldsymbol{\sigma} + p_g\,\mathbf{I}\)</span> and suction <span class="arithmatex">\(s = p_g - p_l \geq 0\)</span>.</li>
+<li><strong>Transverse isotropy</strong> (axisymmetry): 2D problem with rotational symmetry.</li>
+<li><strong>Drained conditions</strong>: suction is imposed throughout the domain; intrinsic permeability is very low (<span class="arithmatex">\(k_\text{int} = 10^{-20}\)</span> m²) but the drained state is achieved through the boundary conditions.</li>
+<li><strong>No gravity</strong>: <span class="arithmatex">\(g = 0\)</span> in all three test cases.</li>
+</ol>
+<hr />
+<h2 id="3-variables-and-notation">3. Variables and Notation</h2>
+<h3 id="primary-unknowns">Primary Unknowns</h3>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+<th>Unit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(p_l\)</span></td>
+<td>Liquid phase pressure</td>
+<td>Pa</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\mathbf{u} = (u_1,\,u_2)\)</span></td>
+<td>Displacement vector</td>
+<td>m</td>
+</tr>
+</tbody>
+</table>
+<p>Suction <span class="arithmatex">\(s\)</span> and net stress <span class="arithmatex">\(\bar{\boldsymbol{\sigma}}\)</span> follow from these:</p>
+<div class="arithmatex">\[s = p_g - p_l = -p_l \quad (\text{since } p_g = 0), \qquad \bar{\boldsymbol{\sigma}} = \boldsymbol{\sigma} + p_g\,\mathbf{I} = \boldsymbol{\sigma}\]</div>
+<h3 id="internal-variables-stored-at-integration-points">Internal Variables (Stored at Integration Points)</h3>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(\boldsymbol{\sigma}\)</span></td>
+<td>Total stress tensor (9 components)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\boldsymbol{\varepsilon}^p\)</span></td>
+<td>Plastic strain tensor (9 components)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(m_l\)</span></td>
+<td>Liquid mass content</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\mathbf{W}_l\)</span></td>
+<td>Liquid mass flux</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(p_{c0}\)</span></td>
+<td>Pre-consolidation pressure at zero suction (hardening variable)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\phi\)</span></td>
+<td>Porosity</td>
+</tr>
+</tbody>
+</table>
+<h3 id="material-parameters-test-case-bbm">Material Parameters (test case <code>BBM</code>)</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Symbol</th>
+<th>Value</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>slope_of_swelling_line</code></td>
+<td><span class="arithmatex">\(\kappa\)</span></td>
+<td>0.011</td>
+<td>Slope of the swelling line (<span class="arithmatex">\(\ln p\)</span>-<span class="arithmatex">\(e\)</span> space)</td>
+</tr>
+<tr>
+<td><code>slope_of_virgin_consolidation_line</code></td>
+<td><span class="arithmatex">\(\lambda_0\)</span></td>
+<td>0.065</td>
+<td>Slope of the NCL at zero suction</td>
+</tr>
+<tr>
+<td><code>slope_of_critical_state_line</code></td>
+<td><span class="arithmatex">\(M\)</span></td>
+<td>1.2</td>
+<td>Slope of the CSL in <span class="arithmatex">\(p\)</span>-<span class="arithmatex">\(q\)</span> space</td>
+</tr>
+<tr>
+<td><code>initial_pre-consolidation_pressure</code></td>
+<td><span class="arithmatex">\(p_{c0}\)</span></td>
+<td>40 kPa</td>
+<td>Initial pre-consolidation pressure</td>
+</tr>
+<tr>
+<td><code>reference_consolidation_pressure</code></td>
+<td><span class="arithmatex">\(p_r\)</span></td>
+<td>10 kPa</td>
+<td>Reference pressure for the LC curve</td>
+</tr>
+<tr>
+<td><code>kappa_s</code></td>
+<td><span class="arithmatex">\(\kappa_s\)</span></td>
+<td>0.005</td>
+<td>Elastic swelling index with respect to suction</td>
+</tr>
+<tr>
+<td><code>suction_cohesion_coefficient</code></td>
+<td><span class="arithmatex">\(k\)</span></td>
+<td>0.8</td>
+<td>Suction-induced cohesion increase coefficient</td>
+</tr>
+<tr>
+<td><code>poisson</code></td>
+<td><span class="arithmatex">\(\nu\)</span></td>
+<td>0.15</td>
+<td>Poisson's ratio</td>
+</tr>
+<tr>
+<td><code>initial_porosity</code></td>
+<td><span class="arithmatex">\(\phi_0\)</span></td>
+<td>0.25</td>
+<td>Initial porosity</td>
+</tr>
+<tr>
+<td><code>initial_stress</code></td>
+<td><span class="arithmatex">\(\boldsymbol{\sigma}_0\)</span></td>
+<td><span class="arithmatex">\(-1000\)</span> Pa (isotropic)</td>
+<td>Initial stress state</td>
+</tr>
+<tr>
+<td><code>k_int</code></td>
+<td><span class="arithmatex">\(k_\text{int}\)</span></td>
+<td><span class="arithmatex">\(10^{-20}\)</span> m²</td>
+<td>Intrinsic permeability</td>
+</tr>
+<tr>
+<td><code>mu_l</code></td>
+<td><span class="arithmatex">\(\mu_l\)</span></td>
+<td><span class="arithmatex">\(10^{-3}\)</span> Pa·s</td>
+<td>Liquid viscosity</td>
+</tr>
+<tr>
+<td><code>rho_l</code></td>
+<td><span class="arithmatex">\(\rho_l\)</span></td>
+<td>1000 kg/m³</td>
+<td>Liquid density</td>
+</tr>
+<tr>
+<td><code>rho_s</code></td>
+<td><span class="arithmatex">\(\rho_s\)</span></td>
+<td>2000 kg/m³</td>
+<td>Solid particle density</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-mathematical-model">4. Mathematical Model</h2>
+<p>The BBM model solves a system of <span class="arithmatex">\(1 + \dim\)</span> coupled equations: 1 water mass conservation equation and <span class="arithmatex">\(\dim\)</span> mechanical equilibrium equations.</p>
+<h3 id="41-conservation-equations">4.1 Conservation Equations</h3>
+<h4 id="liquid-water-mass-balance">Liquid Water Mass Balance</h4>
+<div class="arithmatex">\[\frac{\partial m_l}{\partial t} + \nabla \cdot \mathbf{W}_l = 0, \qquad m_l = \rho_l\,\phi\,s_l(s)\]</div>
+<p>where <span class="arithmatex">\(\phi = \phi_0 + \text{tr}\,\boldsymbol{\varepsilon}\)</span> is the current porosity (Biot), <span class="arithmatex">\(s_l(s)\)</span> is the degree of saturation as a function of suction, and <span class="arithmatex">\(\mathbf{W}_l\)</span> is the Darcy flux (§4.5).</p>
+<h4 id="mechanical-equilibrium-without-gravity">Mechanical Equilibrium (without gravity)</h4>
+<div class="arithmatex">\[\nabla \cdot \boldsymbol{\sigma} = \mathbf{0}\]</div>
+<p>i.e., in 2D axisymmetry:</p>
+<div class="arithmatex">\[\frac{\partial \sigma_{rr}}{\partial r} + \frac{\partial \sigma_{rz}}{\partial z} + \frac{\sigma_{rr} - \sigma_{\theta\theta}}{r} = 0\]</div>
+<div class="arithmatex">\[\frac{\partial \sigma_{rz}}{\partial r} + \frac{\partial \sigma_{zz}}{\partial z} + \frac{\sigma_{rz}}{r} = 0\]</div>
+<h3 id="42-nonlinear-elastic-constitutive-law">4.2 Nonlinear Elastic Constitutive Law</h3>
+<p>The BBM elasticity is <strong>nonlinear</strong>: the bulk modulus depends on the stress state and suction.</p>
+<p><strong>Bulk modulus:</strong></p>
+<div class="arithmatex">\[K = -\frac{(1 + e_0)\,\bar{p}}{\kappa + \kappa_s\,\Delta\ln(s + p_\text{atm})}\]</div>
+<p>In the Bil implementation (in practice, for the current time steps), the simplified formulation is used:</p>
+<div class="arithmatex">\[K = -\frac{(1 + e_0)\,\bar{p}_n}{\kappa}, \qquad E = 3K(1 - 2\nu)\]</div>
+<p>where <span class="arithmatex">\(\bar{p}_n = (\sigma_{11}^n + \sigma_{22}^n + \sigma_{33}^n)/3 + p_g\)</span> is the mean net pressure at the previous time step. Young's modulus <span class="arithmatex">\(E\)</span> and the shear modulus <span class="arithmatex">\(\mu = E/[2(1+\nu)]\)</span> are updated at each time step.</p>
+<p><strong>Elastoplastic strain decomposition:</strong></p>
+<div class="arithmatex">\[\boldsymbol{\varepsilon} = \boldsymbol{\varepsilon}^e + \boldsymbol{\varepsilon}^p\]</div>
+<p><strong>Elastic trial net stresses:</strong></p>
+<div class="arithmatex">\[\bar{\boldsymbol{\sigma}}^* = \bar{\boldsymbol{\sigma}}_n + \mathbb{C}^e : \Delta\boldsymbol{\varepsilon}\]</div>
+<p>with the additional suction contribution:</p>
+<div class="arithmatex">\[\Delta\bar{\sigma}_m^s = -\bar{p}_n\,\frac{\kappa_s}{\kappa}\,\Delta\ln\!\left(\frac{s + p_\text{atm}}{s_n + p_\text{atm}}\right)\]</div>
+<h3 id="43-yield-surface-and-lc-curve">4.3 Yield Surface and LC Curve</h3>
+<p>The <strong>BBM yield surface</strong> (plasticity criterion) in net stress space is:</p>
+<div class="arithmatex">\[\boxed{f(\bar{p},\,q,\,s) = \frac{q^2}{M^2} + (\bar{p} - p_s)(\bar{p} + p_c(s)) = 0}\]</div>
+<p>where:</p>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Expression</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(\bar{p}\)</span></td>
+<td><span class="arithmatex">\((\bar{\sigma}_{11} + \bar{\sigma}_{22} + \bar{\sigma}_{33})/3\)</span></td>
+<td>Mean net pressure (negative in compression)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(q\)</span></td>
+<td><span class="arithmatex">\(\sqrt{3J_2}\)</span></td>
+<td>Deviatoric stress</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(M\)</span></td>
+<td>1.2</td>
+<td>Slope of the CSL</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(p_s(s)\)</span></td>
+<td><span class="arithmatex">\(k \cdot s\)</span></td>
+<td>Suction-induced cohesion increase</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(p_c(s)\)</span></td>
+<td>LC curve</td>
+<td>Pre-consolidation pressure at suction <span class="arithmatex">\(s\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Loading Collapse (LC) Curve:</strong></p>
+<p>The LC curve relates the pre-consolidation pressure at suction <span class="arithmatex">\(s\)</span> to that at zero suction <span class="arithmatex">\(p_{c0}\)</span> via:</p>
+<div class="arithmatex">\[\ln\frac{p_c(s)}{p_r} = \text{lc}(s)\,\ln\frac{p_{c0}}{p_r}\]</div>
+<p>where the LC factor <span class="arithmatex">\(\text{lc}(s)\)</span> is:</p>
+<div class="arithmatex">\[\text{lc}(s) = \frac{\lambda_0 - \kappa}{\lambda(s) - \kappa}, \qquad \lambda(s) = \lambda_0\left[(1-r)\,e^{-\beta s} + r\right]\]</div>
+<p>With the test case parameters: <span class="arithmatex">\(\lambda_0 = 0.065\)</span>, <span class="arithmatex">\(\kappa = 0.011\)</span>, <span class="arithmatex">\(r = 0.75\)</span>, <span class="arithmatex">\(\beta = 20 \times 10^{-6}\)</span> Pa<span class="arithmatex">\(^{-1}\)</span>.</p>
+<p>This formula shows that:
+- At <span class="arithmatex">\(s = 0\)</span>: <span class="arithmatex">\(\lambda(0) = \lambda_0\)</span>, <span class="arithmatex">\(\text{lc}(0) = 1\)</span>, <span class="arithmatex">\(p_c(0) = p_{c0}\)</span> (saturated soil, standard Cam-Clay).
+- At <span class="arithmatex">\(s &gt; 0\)</span>: <span class="arithmatex">\(\lambda(s) &lt; \lambda_0\)</span>, <span class="arithmatex">\(\text{lc}(s) &gt; 1\)</span>, <span class="arithmatex">\(p_c(s) &gt; p_{c0}\)</span> — <strong>suction strengthens the soil</strong>, the plastic envelope expands.
+- As <span class="arithmatex">\(s \to \infty\)</span>: <span class="arithmatex">\(\lambda(\infty) = \lambda_0 r = 0.049\)</span>, <span class="arithmatex">\(\text{lc}(\infty) = (\lambda_0 - \kappa)/(\lambda_0 r - \kappa) \approx 1.43\)</span> — asymptotic limit.</p>
+<p>The <strong>hardening variable</strong> stored is <span class="arithmatex">\(a = \ln(p_{c0})\)</span>, such that:</p>
+<div class="arithmatex">\[p_{c0} = e^a, \qquad a_0 = \ln(p_{c0,\text{init}}) = \ln(40000) \approx 10.597 \quad \text{(initial value observed in results)}\]</div>
+<h3 id="44-flow-rule-and-hardening">4.4 Flow Rule and Hardening</h3>
+<p><strong>Associated flow rule</strong> (the plastic potential is identical to the yield surface):</p>
+<div class="arithmatex">\[\dot{\boldsymbol{\varepsilon}}^p = \dot{\lambda}\,\frac{\partial f}{\partial \bar{\boldsymbol{\sigma}}} = \dot{\lambda}\left[\frac{2\bar{p} + p_c - p_s}{3}\,\mathbf{I} + \frac{3}{M^2}\,\mathbf{s}\right]\]</div>
+<p><strong>Isotropic hardening law</strong> (isotropic consolidation):</p>
+<p>The volumetric plastic strain <span class="arithmatex">\(\dot{\varepsilon}^p_v = \text{tr}\,\dot{\boldsymbol{\varepsilon}}^p\)</span> drives the evolution of pre-consolidation:</p>
+<div class="arithmatex">\[\dot{a} = \frac{\mathrm{d}\ln p_{c0}}{\mathrm{d}t} = h(\bar{p}, a)\,\dot{\lambda}, \qquad h = -\frac{1 + e_0}{\lambda_0 - \kappa}\,(2\bar{p} + p_c - p_s)\]</div>
+<p><strong>Hardening modulus</strong> (defined by <span class="arithmatex">\(\mathrm{d}f = \frac{\partial f}{\partial \bar{\boldsymbol{\sigma}}}:\mathrm{d}\bar{\boldsymbol{\sigma}} - H\,\mathrm{d}\lambda = 0\)</span>):</p>
+<div class="arithmatex">\[H = \frac{1 + e_0}{\lambda_0 - \kappa}\,(\bar{p} - p_s)\,(2\bar{p} + p_c - p_s)\,p_c\,\text{lc}(s)\]</div>
+<p>A positive modulus (<span class="arithmatex">\(H &gt; 0\)</span>) indicates <strong>hardening</strong> behavior (consolidation), typical of normally consolidated compression states.</p>
+<h3 id="45-hydromechanical-coupling-darcy-flow">4.5 Hydromechanical Coupling — Darcy Flow</h3>
+<p>The liquid mass flux is given by Darcy's law (without gravity in these test cases):</p>
+<div class="arithmatex">\[\mathbf{W}_l = -K_l\,\nabla p_l, \qquad K_l = \frac{\rho_l\,k_\text{int}\,k_{rl}(s)}{\mu_l}\]</div>
+<p>The current porosity follows the volumetric strain evolution:</p>
+<div class="arithmatex">\[\phi = \phi_0 + \text{tr}\,\boldsymbol{\varepsilon}\]</div>
+<h3 id="46-capillary-retention-curves">4.6 Capillary Retention Curves</h3>
+<p>Two curves are used (defined analytically and tabulated in <code>wrc2</code>):</p>
+<p><strong>Degree of saturation</strong> (van Genuchten model):</p>
+<div class="arithmatex">\[s_l(s) = \left(1 + \left(\frac{s}{p_0}\right)^{\frac{1}{1-m}}\right)^{-m}, \qquad p_0 = 10^6 \text{ Pa},\quad m = 0.6\]</div>
+<p><strong>Relative permeability</strong> (constant in this test case):</p>
+<div class="arithmatex">\[k_{rl}(s) = 1 \quad \forall s\]</div>
+<p>This simplification (<span class="arithmatex">\(k_{rl} = 1\)</span> and <span class="arithmatex">\(k_g = 1\)</span> in <code>krc2</code>) reflects the fact that the test cases are <strong>suction-controlled</strong> (drained conditions): flow plays no dynamic role; only the mechanical stresses and imposed suction govern the response.</p>
+<hr />
+<h2 id="5-boundary-and-initial-conditions">5. Boundary and Initial Conditions</h2>
+<h3 id="initial-state-common-to-all-three-test-cases">Initial State (Common to All Three Test Cases)</h3>
+<p>The RVE is initially in a light isotropic state (<span class="arithmatex">\(\sigma_0 = -1000\)</span> Pa, well below the pre-consolidation pressure <span class="arithmatex">\(p_{c0} = 40000\)</span> Pa) and saturated (<span class="arithmatex">\(s = 0\)</span>, <span class="arithmatex">\(s_l = 1\)</span>, <span class="arithmatex">\(p_l = 0\)</span>):</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Initial Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(\boldsymbol{\sigma}\)</span></td>
+<td><span class="arithmatex">\(-1000\)</span> Pa (isotropic)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\mathbf{u}\)</span></td>
+<td><span class="arithmatex">\(\mathbf{0}\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(p_l\)</span></td>
+<td>0 Pa</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(s = -p_l\)</span></td>
+<td>0 Pa</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(s_l\)</span></td>
+<td>1.0</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\phi\)</span></td>
+<td>0.25</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(p_{c0}\)</span></td>
+<td>40 kPa</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(a = \ln(p_{c0})\)</span></td>
+<td><span class="arithmatex">\(\ln(40000) \approx 10.597\)</span></td>
+</tr>
+</tbody>
+</table>
+<h3 id="geometric-boundary-conditions-common">Geometric Boundary Conditions (Common)</h3>
+<table>
+<thead>
+<tr>
+<th>Region</th>
+<th>Line</th>
+<th>Condition</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>14</td>
+<td>left (<span class="arithmatex">\(r = 0\)</span>)</td>
+<td><span class="arithmatex">\(u_1 = 0\)</span></td>
+<td>Axis of symmetry (zero radial displacement)</td>
+</tr>
+<tr>
+<td>11</td>
+<td>bottom (<span class="arithmatex">\(z = 0\)</span>)</td>
+<td><span class="arithmatex">\(u_2 = 0\)</span></td>
+<td>Fixed base (zero vertical displacement)</td>
+</tr>
+<tr>
+<td>100</td>
+<td>entire domain</td>
+<td><span class="arithmatex">\(p_l\)</span> imposed</td>
+<td>Suction controlled via <span class="arithmatex">\(p_l = -s\)</span></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-detailed-description-of-input-files">6. Detailed Description of Input Files</h2>
+<h3 id="61-main-file-bbm-isotropic-compression-with-suction-cycles">6.1 Main File <code>BBM</code> — Isotropic Compression with Suction Cycles</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Geometry
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>2 axis
+</code></pre></div>
+<p><strong>2D axisymmetric</strong> problem (<code>axis</code>): <span class="arithmatex">\(x\)</span> is the radius <span class="arithmatex">\(r\)</span>, <span class="arithmatex">\(y\)</span> is the height <span class="arithmatex">\(z\)</span>. The geometry is rotationally symmetric about the <span class="arithmatex">\(r = 0\)</span> axis.</p>
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Mesh
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>carre.msh
+</code></pre></div>
+<p>Reference to the external mesh file <code>carre.msh</code> (1 m × 1 m square, single quadrilateral element). See §6.5.</p>
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Material
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Model = BBM
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>gravity = 0
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>rho_s = 2000
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>slope_of_swelling_line = 0.011
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>slope_of_virgin_consolidation_line = 0.065
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>poisson = 0.15
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>slope_of_critical_state_line = 1.2
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>initial_pre-consolidation_pressure = 0.04e6
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>reference_consolidation_pressure = 0.01e6
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>kappa_s = 0.005
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>initial_stress_11 = -1000
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>initial_stress_22 = -1000
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>initial_stress_33 = -1000
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>initial_porosity = 0.25
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>rho_l = 1000
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>k_int = 1e-20
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>mu_l = 0.001
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>suction_cohesion_coefficient = 0.8
+</code></pre></div>
+<p>The BBM plasticity parameters are:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>slope_of_swelling_line = 0.011</code></td>
+<td><span class="arithmatex">\(\kappa = 0.011\)</span></td>
+<td>Elastic compressibility (swelling slope)</td>
+</tr>
+<tr>
+<td><code>slope_of_virgin_consolidation_line = 0.065</code></td>
+<td><span class="arithmatex">\(\lambda_0 = 0.065\)</span></td>
+<td>Plastic compressibility at saturation</td>
+</tr>
+<tr>
+<td><code>slope_of_critical_state_line = 1.2</code></td>
+<td><span class="arithmatex">\(M = 1.2\)</span></td>
+<td>Friction angle: <span class="arithmatex">\(\sin\phi' = 3M/(6+M)\)</span></td>
+</tr>
+<tr>
+<td><code>initial_pre-consolidation_pressure = 0.04e6</code></td>
+<td><span class="arithmatex">\(p_{c0} = 40\)</span> kPa</td>
+<td>Initial pre-consolidation</td>
+</tr>
+<tr>
+<td><code>reference_consolidation_pressure = 0.01e6</code></td>
+<td><span class="arithmatex">\(p_r = 10\)</span> kPa</td>
+<td>Reference for the LC curve</td>
+</tr>
+<tr>
+<td><code>kappa_s = 0.005</code></td>
+<td><span class="arithmatex">\(\kappa_s\)</span></td>
+<td>Elastic compressibility with respect to suction</td>
+</tr>
+<tr>
+<td><code>suction_cohesion_coefficient = 0.8</code></td>
+<td><span class="arithmatex">\(k\)</span></td>
+<td>Cohesion: <span class="arithmatex">\(p_s = k \cdot s\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>The curves are defined using <strong>analytical command-line syntax</strong> (Bil curve generation syntax):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Curves = wrc2   pc = Range{x1 = 0, x2 = 30.e6, n = 171}
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>                sl = Expressions(1){p0 = 1.e6 ; m = 0.6 ;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>                                    sl = (1 + (pc/p0)**(1/(1-m)))**(-m)}
+</code></pre></div>
+<p><strong><code>Range{...}</code> syntax</strong>: generates a table of 171 uniformly spaced values of <span class="arithmatex">\(p_c\)</span> between 0 and <span class="arithmatex">\(30 \times 10^6\)</span> Pa.</p>
+<p><strong><code>Expressions(1){...}</code> syntax</strong>: defines the <code>sl</code> column by the van Genuchten formula:
+$<span class="arithmatex">\(s_l = \left(1 + \left(\frac{p_c}{10^6}\right)^{1/(1-0.6)}\right)^{-0.6} = \left(1 + \left(\frac{p_c}{10^6}\right)^{2.5}\right)^{-0.6}\)</span>$</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Curves = krc2   pc = Range{x1 = 0, x2 = 30.e6, n = 171}
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>                kl = Expressions(1){kl = 1}
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>                kg = Expressions(1){kg = 1}
+</code></pre></div>
+<p>Relative permeabilities constant at 1 (perfectly drained condition).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Curves = lc     pc = Range{x1 = 0, x2 = 1.e6, n = 200}
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>                lc = Expressions(1){l0 = 0.065 ; k = 0.011 ; beta = 20.e-6 ;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>                                    r = 0.75 ;
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>                                    lc = (l0 - k)/(l0*((1-r)*exp(-beta*pc) + r) - k)}
+</code></pre></div>
+<p>The <code>lc</code> curve tabulates the LC factor:
+$<span class="arithmatex">\(\text{lc}(p_c) = \frac{\lambda_0 - \kappa}{\lambda_0\left[(1-r)e^{-\beta p_c} + r\right] - \kappa}\)</span>$</p>
+<table>
+<thead>
+<tr>
+<th><span class="arithmatex">\(p_c\)</span> [Pa]</th>
+<th><span class="arithmatex">\(\lambda(p_c)\)</span></th>
+<th><span class="arithmatex">\(\text{lc}(p_c)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0.065</td>
+<td>1.000</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(10^5\)</span></td>
+<td>0.057</td>
+<td>1.150</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(10^6\)</span></td>
+<td>0.049</td>
+<td>1.430 (asymptote)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Fields
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>2
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Value = -1.e3 Gradient = 0 0 0 Point = 0 0 0
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Value =  1.e3 Gradient = 0 0 0 Point = 0 0 0
+</code></pre></div>
+<p>Two uniform spatial fields:
+- <strong>Field 1</strong> = <span class="arithmatex">\(-1000\)</span> Pa: used to impose <span class="arithmatex">\(p_l = -s\)</span> (suction in Pa). Since <span class="arithmatex">\(p_l = \text{Field 1} \times \text{Function 2}\)</span>, one obtains <span class="arithmatex">\(p_l = -1000 \times F_2(t) = -s(t)\)</span> in Pa.
+- <strong>Field 2</strong> = <span class="arithmatex">\(+1000\)</span> Pa: used as the amplitude of the applied mechanical pressure (<span class="arithmatex">\(1\,\text{kPa}\)</span> per unit of function).</p>
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Functions
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>2
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>N = 7 F(0) = 1   F(1) = 40  F(2) = 1   F(3) = 80   F(4) = 1   F(5) = 160  F(6) = 1
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>N = 7 F(0) = 0   F(1.999) = 0  F(2) = 40  F(3.999) = 40  F(4) = 80  F(5.999) = 80  F(6) = 160
+</code></pre></div>
+<p><strong>Bil function syntax:</strong> <code>N = n</code> gives the number of <span class="arithmatex">\((t_i,\,F_i)\)</span> pairs; intermediate values are linearly interpolated.</p>
+<ul>
+<li><strong>Function 1</strong> — mechanical pressure (kPa):</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>  Value (×1000 Pa)
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>   160│                           ╮ ╮
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    80│             ╮ ╮            │  │
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    40│   ╮ ╮        │  │            │  │
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>     1│───╯   ╰───╯    ╰───╯    ╰───
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>       0   1   2   3   4   5   6  t
+</code></pre></div>
+<p>Three loading-unloading cycles: 1→40→1 kPa, 1→80→1 kPa, 1→160→1 kPa.</p>
+<ul>
+<li><strong>Function 2</strong> — suction (kPa), step-wise:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>  Suction (kPa)
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>   160│                                     ╭───
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    80│                   ╭─────────────╯
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    40│       ╭───────────╯
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>     0│───────╯
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>       0   1   2   3   4   5   6  t
+</code></pre></div>
+<p>Suction is zero during the first cycle, then increases in steps (40 kPa at <span class="arithmatex">\(t = 2\)</span>, 80 kPa at <span class="arithmatex">\(t = 4\)</span>, 160 kPa at <span class="arithmatex">\(t = 6\)</span>).</p>
+<blockquote>
+<p><strong>Reading note:</strong> <code>F(1.999) = 0</code> followed by <code>F(2) = 40</code> creates a near-instantaneous suction ramp at <span class="arithmatex">\(t = 2\)</span> (over <span class="arithmatex">\(\Delta t = 10^{-3}\)</span> time units). This simulates an <strong>instantaneous suction imposition</strong> (drying is considered infinitely fast compared to mechanical loading).</p>
+</blockquote>
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Boundary Conditions
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>3
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Region = 14 Unknown = u_1 Field = 0 Function = 0
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Region = 11 Unknown = u_2 Field = 0 Function = 0
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>Region = 100 Unknown = p_l Field = 1 Function = 2
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Region = 14 Unknown = u_1 Field = 0</code></td>
+<td><span class="arithmatex">\(u_1 = 0\)</span> on the axis (<span class="arithmatex">\(r = 0\)</span>) — axial symmetry</td>
+</tr>
+<tr>
+<td><code>Region = 11 Unknown = u_2 Field = 0</code></td>
+<td><span class="arithmatex">\(u_2 = 0\)</span> at the bottom (<span class="arithmatex">\(z = 0\)</span>) — fixed base</td>
+</tr>
+<tr>
+<td><code>Region = 100 Unknown = p_l Field = 1 Function = 2</code></td>
+<td><span class="arithmatex">\(p_l = (-1000) \times F_2(t) = -s(t)\)</span> over the entire domain</td>
+</tr>
+</tbody>
+</table>
+<p><strong><code>Field = 0</code></strong> means the value is directly zero.</p>
+<p>The condition on <code>Region = 100</code> (entire surface of the square) imposes <span class="arithmatex">\(p_l\)</span> at <strong>all nodes</strong> simultaneously. Combined with <code>Field = 1</code> (<span class="arithmatex">\(= -1000\)</span> Pa) and <code>Function = 2</code> (step-wise ramp), it creates the imposed suction <span class="arithmatex">\(s(t) = 1000 \times F_2(t)\)</span> Pa.</p>
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Loads
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>2
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Region = 13 Equation = meca_1 Type = pressure Field = 2 Function = 1
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Region = 12 Equation = meca_1 Type = pressure Field = 2 Function = 1
+</code></pre></div>
+<p>The <code>Loads</code> impose Neumann conditions (prescribed traction flux on faces):</p>
+<table>
+<thead>
+<tr>
+<th>Load</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Region = 13</code> (top boundary)</td>
+<td>Vertical pressure <span class="arithmatex">\(= 1000 \times F_1(t)\)</span> Pa</td>
+</tr>
+<tr>
+<td><code>Region = 12</code> (right boundary)</td>
+<td>Radial pressure <span class="arithmatex">\(= 1000 \times F_1(t)\)</span> Pa</td>
+</tr>
+</tbody>
+</table>
+<p>Since both faces undergo the <strong>same pressure</strong>, the loading is <strong>isotropic</strong>: <span class="arithmatex">\(\sigma_{rr} = \sigma_{zz} = -1000 \times F_1(t)\)</span> Pa. The negative sign follows the Bil convention (a pressure is a negative traction).</p>
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Points
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>1
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>0.5 0.5
+</code></pre></div>
+<p>Output at point <span class="arithmatex">\((r, z) = (0.5, 0.5)\)</span> m (center of the square), recorded at every time step in <code>BBM.p1</code>.</p>
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Dates
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>7
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>0 1 2 3 4 5 6
+</code></pre></div>
+<p>Full-field snapshots saved in <code>BBM.t0</code> through <code>BBM.t6</code>.</p>
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Objective Variations
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>u_1 = 1.e-4
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>u_2 = 1.e-4
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>p_l = 1000
+</code></pre></div>
+<p>Target variations per time step:
+- Displacements: <span class="arithmatex">\(\Delta u \leq 10^{-4}\)</span> m (very small to capture plastic transitions)
+- Pressure: <span class="arithmatex">\(\Delta p_l \leq 1000\)</span> Pa (fine control of suction during steps)</p>
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Iterative Process
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Iteration = 100
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Tolerance = 1e-06
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>Repetition = 0
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>Time Steps
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>Dtini = 1.e-4
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>Dtmax = 1e-3
+</code></pre></div>
+<p>Very small time steps (<span class="arithmatex">\(\Delta t_\text{ini} = 10^{-4}\)</span>, <span class="arithmatex">\(\Delta t_\text{max} = 10^{-3}\)</span>) to track the near-instantaneous suction jumps (rising over <span class="arithmatex">\(10^{-3}\)</span> time units). Newton–Raphson with up to 100 iterations and a tolerance of <span class="arithmatex">\(10^{-6}\)</span>.</p>
+<hr />
+<h3 id="62-file-bbm2-p-q-stress-path-with-variable-suction">6.2 File <code>BBM2</code> — p-q Stress Path with Variable Suction</h3>
+<p>This test case follows a stress path in <span class="arithmatex">\((p, q)\)</span> space by separately applying an isotropic stress (p) and a deviatoric stress (q). It requires <strong>4 fields</strong> and <strong>3 functions</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Fields
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>4
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>Type = affine  Value =  1.e3    Point = 0 0 0   ← Field 1: isotropic amplitude
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>Type = affine  Value = -0.33e3  Point = 0 0 0   ← Field 2: radial correction (-1/3)
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>Type = affine  Value =  0.66e3  Point = 0 0 0   ← Field 3: axial correction (+2/3)
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>Type = affine  Value =  -1.e3   Point = 0 0 0   ← Field 4: suction (negative)
+</code></pre></div>
+<p><strong>Construction of the p-q path:</strong></p>
+<p>For an axisymmetric stress state <span class="arithmatex">\((\sigma_r, \sigma_z)\)</span>:
+$<span class="arithmatex">\(p = \frac{2\sigma_r + \sigma_z}{3}, \qquad q = |\sigma_z - \sigma_r|\)</span>$</p>
+<p>By applying a stress <span class="arithmatex">\(\sigma_r = \text{F1} \times F_1 + \text{F2} \times F_2\)</span> and <span class="arithmatex">\(\sigma_z = \text{F1} \times F_1 + \text{F3} \times F_2\)</span>:</p>
+<div class="arithmatex">\[\sigma_r = 1000\,F_1 - 330\,F_2, \qquad \sigma_z = 1000\,F_1 + 660\,F_2\]</div>
+<div class="arithmatex">\[\Rightarrow \quad p \approx 1000\,F_1, \qquad q \approx 990\,F_2 \approx F_2 \text{ kPa}\]</div>
+<p>The functions:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>N = 6  F(0) = 1   F(1) = 40   F(2) = 1   F(3) = 80   F(4) = 1   F(5) = 160  ← p in kPa
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>N = 6  F(0) = 1   F(1) = 20   F(2) = 1   F(3) = 40   F(4) = 1   F(5) = 80   ← q in kPa
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>N = 6  F(0) = 0   F(1.999) = 0  F(2) = 40  F(3.999) = 40  F(4) = 80  F(5) = 80  ← suction
+</code></pre></div></p>
+<p>The stress path traces cycles in <span class="arithmatex">\(p\)</span>-<span class="arithmatex">\(q\)</span> space: isotropic compression (<span class="arithmatex">\(F_1\)</span>) and superimposed deviatoric stress (<span class="arithmatex">\(F_2\)</span>) combine to approach or exceed the BBM yield surface.</p>
+<hr />
+<h3 id="63-file-bbm_pcst-constant-suction">6.3 File <code>BBM_pcst</code> — Constant Suction</h3>
+<p>Identical to <code>BBM2</code> but with constant zero suction:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>N = 6  F(0) = 0  F(1) = 0  F(2) = 0  F(3) = 0  F(4) = 0  F(5) = 0  ← suction = 0
+</code></pre></div>
+<p>This case reproduces <strong>Modified Cam-Clay behavior at full saturation</strong>, serving as a reference to validate the saturated limit of the BBM.</p>
+<hr />
+<h3 id="64-material-curves-wrc2-krc2-lc">6.4 Material Curves: <code>wrc2</code>, <code>krc2</code>, <code>lc</code></h3>
+<p>These files are <strong>automatically generated by Bil</strong> from the analytical expressions in the <code>Curves</code> section. They are in ASCII format:</p>
+<p><strong><code>wrc2</code></strong> (3 columns: <span class="arithmatex">\(p_c\)</span>, <span class="arithmatex">\(s_l\)</span>, <span class="arithmatex">\(k_l\)</span>, <span class="arithmatex">\(k_g\)</span>) — van Genuchten retention curve:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a># Models: X-axis(1) Expressions(2) Expressions(3) Expressions(4)
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a># Labels: pc(1) sl(2) kl(3) kg(4)
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>0.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>1.764706e+05   9.922319e-01   1.000000e+00   1.000000e+00
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>...
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>3.000000e+07   6.085066e-03   1.000000e+00   1.000000e+00
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th><span class="arithmatex">\(p_c\)</span> [Pa]</th>
+<th><span class="arithmatex">\(s_l\)</span> [-]</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>1.000</td>
+<td>Saturated soil</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(10^5\)</span></td>
+<td>0.979</td>
+<td>Slightly unsaturated</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(10^6\)</span></td>
+<td>0.758</td>
+<td>Notable desaturation</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(10^7\)</span></td>
+<td>0.302</td>
+<td>Strongly desaturated</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(3 \times 10^7\)</span></td>
+<td>0.006</td>
+<td>Near-residual</td>
+</tr>
+</tbody>
+</table>
+<p><strong><code>lc</code></strong> (2 columns: <span class="arithmatex">\(p_c\)</span>, lc) — LC factor:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a># Labels: pc(1) lc(2)
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>0.000000e+00   1.000000e+00    ← saturated soil: p_c(s) = p_c(0)
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>5.025126e+03   1.029626e+00    ← suction 5 kPa: +3% pre-consolidation
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>1.005025e+04   1.057973e+00    ← suction 10 kPa: +6%
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>1.000000e+06   1.430464e+00    ← suction 1 MPa: +43% (asymptote)
+</code></pre></div>
+<hr />
+<h3 id="65-mesh-carremsh-and-geometry-carregeo">6.5 Mesh <code>carre.msh</code> and Geometry <code>carre.geo</code></h3>
+<p>The geometry is a <strong>unit square</strong> <span class="arithmatex">\([0,1] \times [0,1]\)</span> m generated with Gmsh.</p>
+<p><strong><code>carre.geo</code></strong> — Gmsh source file:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>cl1 = 1;                          // characteristic size = 1 m (single element)
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>Point(1) = {0, 0, 0, cl1};        // (r=0, z=0) — bottom-left corner (axis + base)
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>Point(2) = {1, 0, 0, cl1};        // (r=1, z=0) — bottom-right corner
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>Point(3) = {1, 1, 0, cl1};        // (r=1, z=1) — top-right corner
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>Point(4) = {0, 1, 0, cl1};        // (r=0, z=1) — top-left corner (axis + top)
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>Line(11) = {1, 2};                 // bottom edge (z=0)  → Region 11
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>Line(12) = {2, 3};                 // right edge (r=1)   → Region 12
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>Line(13) = {3, 4};                 // top edge (z=1)     → Region 13
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>Line(14) = {4, 1};                 // axis (r=0)         → Region 14
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>Plane Surface(100) = {99};         // interior surface → Region 100
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>Recombine Surface {100};           // force quadrilaterals
+</code></pre></div>
+<p><strong><code>carre.msh</code></strong> — compiled mesh (Gmsh v1 format):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>$NOD
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>4                           ← 4 nodes
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>1  0  0  0                  ← node 1: (r=0, z=0)
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>2  1  0  0                  ← node 2: (r=1, z=0)
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>3  1  1  0                  ← node 3: (r=1, z=1)
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>4  0  1  0                  ← node 4: (r=0, z=1)
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>$ELM
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>5
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>1  1  1  11  2  1  2        ← linear element, Region 11 (bottom), nodes 1-2
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>2  1  1  12  2  2  3        ← linear element, Region 12 (right), nodes 2-3
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>3  1  1  13  2  3  4        ← linear element, Region 13 (top), nodes 3-4
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>4  1  1  14  2  4  1        ← linear element, Region 14 (axis), nodes 4-1
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a>5  3  1  100  4  1  2  3  4 ← quadrilateral, Region 100, nodes 1-2-3-4
+</code></pre></div>
+<p>The mesh is intentionally <strong>minimal</strong> (a single 4-node quadrilateral element): these test cases represent the behavior of a <strong>Gauss point</strong> (RVE), and spatial convergence is not the objective.</p>
+<hr />
+<h2 id="7-results">7. Results</h2>
+<p>The results of the <code>BBM</code> test case are stored in <code>BBM.t0</code>–<code>BBM.t6</code> (spatial fields) and <code>BBM.p1</code> (time evolution at the central point <span class="arithmatex">\((0.5,\,0.5)\)</span>).</p>
+<h3 id="output-file-format">Output File Format</h3>
+<p>Each line of <code>BBM.p1</code> contains 29 columns:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a># Time(1) Liquid_pore_pressure(2) Displacements(3) Fluid_mass_flow(6) 
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a># Stresses(9) Saturation_degree(18) Void_ratio_variation(19) 
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a># Plastic_strains(20) Hardening_variable(29)
+</code></pre></div>
+<p>Key columns:</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Quantity</th>
+<th>Unit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Time <span class="arithmatex">\(t\)</span></td>
+<td>— (dimensionless, <span class="arithmatex">\(t_\text{max} = 6\)</span>)</td>
+</tr>
+<tr>
+<td>2</td>
+<td><span class="arithmatex">\(p_l\)</span></td>
+<td>Pa</td>
+</tr>
+<tr>
+<td>9, 13, 17</td>
+<td><span class="arithmatex">\(\sigma_{11}\)</span>, <span class="arithmatex">\(\sigma_{22}\)</span>, <span class="arithmatex">\(\sigma_{33}\)</span></td>
+<td>Pa</td>
+</tr>
+<tr>
+<td>18</td>
+<td><span class="arithmatex">\(s_l\)</span></td>
+<td>—</td>
+</tr>
+<tr>
+<td>19</td>
+<td><span class="arithmatex">\(\Delta e = (1+e_0)\,\text{tr}\,\boldsymbol{\varepsilon}\)</span></td>
+<td>—</td>
+</tr>
+<tr>
+<td>29</td>
+<td><span class="arithmatex">\(a = \ln(p_{c0})\)</span></td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3 id="evolution-at-key-time-steps">Evolution at Key Time Steps</h3>
+<table>
+<thead>
+<tr>
+<th>Time step</th>
+<th><span class="arithmatex">\(t\)</span></th>
+<th><span class="arithmatex">\(p_l\)</span> [Pa]</th>
+<th><span class="arithmatex">\(\sigma\)</span> [Pa]</th>
+<th><span class="arithmatex">\(s\)</span> [kPa]</th>
+<th><span class="arithmatex">\(s_l\)</span> [-]</th>
+<th><span class="arithmatex">\(\Delta e\)</span></th>
+<th><span class="arithmatex">\(a = \ln p_{c0}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Initial</td>
+<td>0</td>
+<td>0</td>
+<td>−1000</td>
+<td>0</td>
+<td>1.000</td>
+<td>0</td>
+<td><strong>10.597</strong></td>
+</tr>
+<tr>
+<td>After 1st loading (40 kPa)</td>
+<td>1</td>
+<td>0</td>
+<td>−40000</td>
+<td>0</td>
+<td>1.000</td>
+<td>−0.0408</td>
+<td>10.597</td>
+</tr>
+<tr>
+<td>After 1st unloading</td>
+<td>2</td>
+<td>0</td>
+<td>−1000</td>
+<td>0</td>
+<td>1.000</td>
+<td>−0.0054</td>
+<td>10.597</td>
+</tr>
+<tr>
+<td>After 2nd loading (80 kPa, s=40 kPa)</td>
+<td>3</td>
+<td>−40000</td>
+<td>−80000</td>
+<td>40</td>
+<td>0.998</td>
+<td>−0.0694</td>
+<td><strong>10.906</strong></td>
+</tr>
+<tr>
+<td>After 2nd unloading</td>
+<td>4</td>
+<td>−40000</td>
+<td>−5000</td>
+<td>40</td>
+<td>0.998</td>
+<td>−0.0394</td>
+<td>10.945</td>
+</tr>
+<tr>
+<td>After 3rd loading (160 kPa, s=80 kPa)</td>
+<td>5</td>
+<td>−80000</td>
+<td>−143000</td>
+<td>80</td>
+<td>0.996</td>
+<td>−0.0935</td>
+<td><strong>11.234</strong></td>
+</tr>
+<tr>
+<td>Final state (s=80 kPa, unloaded)</td>
+<td>6</td>
+<td>−160000</td>
+<td>−1000</td>
+<td>160</td>
+<td>0.993</td>
+<td>−0.0457</td>
+<td><strong>11.317</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note:</strong> the variable <span class="arithmatex">\(a = \ln(p_{c0})\)</span> remains constant during elastic phases (cycle 1) and increases during <strong>plastic</strong> phases (cycles 2 and 3), reflecting hardening of the pre-consolidation pressure.</p>
+</blockquote>
+<h3 id="physical-interpretation">Physical Interpretation</h3>
+<p><strong>1st cycle (t = 0 → 2) — saturated compression to 40 kPa:</strong>
+- The material is loaded up to its initial pre-consolidation <span class="arithmatex">\(p_{c0} = 40\)</span> kPa: the deformation is <strong>purely elastic</strong> (hardv constant = 10.597).
+- Elastic volumetric strain during loading: <span class="arithmatex">\(\Delta e \approx -0.041\)</span>, computed as <span class="arithmatex">\(\Delta e = -(1+e_0)\kappa\,\Delta\ln p \approx -(1+0.333) \times 0.011 \times \ln(40000/1000) = -0.039\)</span> ✓
+- Upon unloading, a fraction of the deformation is recovered.</p>
+<p><strong>2nd cycle (t = 2 → 4) — application of suction (40 kPa) then compression to 80 kPa:</strong>
+- Suction increases pre-consolidation via the LC curve: <span class="arithmatex">\(p_c(40\,\text{kPa}) = p_{c0} \times \text{lc}(40000) \approx 40000 \times 1.15 = 46\)</span> kPa.
+- By compressing to 80 kPa &gt; 46 kPa, the material <strong>yields</strong> → hardv increases from 10.597 to 10.906 (<span class="arithmatex">\(p_{c0}\)</span> goes from 40 to 54 kPa).
+- The degree of saturation drops slightly to <span class="arithmatex">\(s_l = 0.998\)</span> (suction = 40 kPa &lt; 100 kPa — mild desaturation).</p>
+<p><strong>3rd cycle (t = 4 → 6) — suction 80 kPa then compression to 160 kPa:</strong>
+- New increase in pre-consolidation. The LC at <span class="arithmatex">\(s = 80\)</span> kPa gives <span class="arithmatex">\(p_c(80\,\text{kPa}) \approx 40000 \times 1.22 = 49\)</span> kPa.
+- Loading to 160 kPa &gt;&gt; 49 kPa → <strong>strong yielding</strong>, hardv rises to 11.317 (<span class="arithmatex">\(p_{c0} \approx 82\)</span> kPa).</p>
+<p><strong><span class="arithmatex">\(\Delta e\)</span> — <span class="arithmatex">\(\ln p\)</span> diagram (generated by <code>BBM.gp</code> → <code>E-P.eps</code>):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a> Δe
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>  0 │───╮
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>     │    ╰─────╮
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>−0.04│           ╰──╮ ← elastic cycle (saturation)
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>     │               ╰────╮
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>−0.07│    ← yielding       ╰╮ ← slope λ(40kPa)
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>     │                       ╰────╮
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>−0.09│         ← slope λ(80kPa)   ╰──
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>     └─────────────────────────────────── ln p
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>      1kPa      40kPa   80kPa    160kPa
+</code></pre></div>
+<p>The slope of the compression curves changes with suction, reflecting the variation of <span class="arithmatex">\(\lambda(s)\)</span>.</p>
+<p><img alt="BBM - Simulation Results" src="BBM_results.png" /></p>
+<hr />
+<h2 id="8-numerical-discretization">8. Numerical Discretization</h2>
+<p>The BBM model uses the <strong>Finite Element Method (FEM)</strong> via <code>FEM.h</code>. The coupled hydromechanical system with <span class="arithmatex">\(1 + \dim\)</span> equations per node is solved simultaneously (monolithic formulation).</p>
+<p><strong>Element tangent stiffness matrix (block decomposition):</strong></p>
+<div class="arithmatex">\[\mathbf{K} = \begin{pmatrix}
+K_{pp} &amp; K_{pu} \\
+K_{up} &amp; K_{uu}
+\end{pmatrix}\]</div>
+<table>
+<thead>
+<tr>
+<th>Block</th>
+<th>Expression</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(K_{uu}\)</span></td>
+<td><span class="arithmatex">\(\int \mathbf{B}^T \mathbb{C}^{ep} \mathbf{B}\,dV\)</span></td>
+<td>Tangent elastoplastic stiffness</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(K_{up}\)</span></td>
+<td><span class="arithmatex">\(\int \mathbf{B}^T \frac{\partial\bar{\boldsymbol{\sigma}}}{\partial p_l}\,\mathbf{N}\,dV\)</span></td>
+<td>Mechanical-hydraulic coupling</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(K_{pu}\)</span></td>
+<td><span class="arithmatex">\(\int \mathbf{N}^T \rho_l\,s_l\,\text{div}\,\mathbf{N}_u\,dV\)</span></td>
+<td>Biot coupling (strain → storage)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(K_{pp}\)</span></td>
+<td><span class="arithmatex">\(\int \mathbf{N}^T C(p_l)\,\mathbf{N}\,dV + \Delta t\,\int \mathbf{B}^T K_l\,\mathbf{B}\,dV\)</span></td>
+<td>Capillary capacity + diffusion</td>
+</tr>
+</tbody>
+</table>
+<p>The elastoplastic stiffness matrix <span class="arithmatex">\(\mathbb{C}^{ep}\)</span> is computed by the <code>PlasticityBBM.c</code> plasticity module via <strong>return mapping</strong>. The algorithm uses <strong>AutoDiff</strong> (automatic differentiation) to compute the yield criterion gradient and hardening modulus exactly.</p>
+<hr />
+<h2 id="9-references">9. References</h2>
+<h3 id="barcelona-basic-model-bbm">Barcelona Basic Model — BBM</h3>
+<ul>
+<li>
+<p><strong>Alonso, E. E., Gens, A. &amp; Josa, A.</strong> (1990). A constitutive model for partially saturated soils. <em>Géotechnique</em>, 40(3), 405–430. — Founding paper of the BBM: LC yield surface, retention curve, suction-mechanics coupling.</p>
+</li>
+<li>
+<p><strong>Gens, A. &amp; Alonso, E. E.</strong> (1992). A framework for the behaviour of unsaturated expansive clays. <em>Canadian Geotechnical Journal</em>, 29(6), 1013–1032. — Extension to expansive clays (BExM).</p>
+</li>
+<li>
+<p><strong>Gens, A.</strong> (1996). Constitutive modelling: Application to compacted soils. In <em>Unsaturated Soils</em>, E. Alonso &amp; P. Delage (Eds.), Vol. 3, pp. 1179–1200. — Overview of models for unsaturated soils.</p>
+</li>
+</ul>
+<h3 id="unsaturated-soil-mechanics">Unsaturated Soil Mechanics</h3>
+<ul>
+<li>
+<p><strong>Fredlund, D. G. &amp; Morgenstern, N. R.</strong> (1977). Stress state variables for unsaturated soils. <em>Journal of Geotechnical Engineering</em>, 103(GT5), 447–466. — Definition of net stresses and suction as independent state variables.</p>
+</li>
+<li>
+<p><strong>Coussy, O.</strong> (2004). <em>Poromechanics</em>. John Wiley &amp; Sons, Chichester. — Rigorous thermodynamic framework for multiphase porous media (generalized effective stresses, Helmholtz potential).</p>
+</li>
+<li>
+<p><strong>Wheeler, S. J. &amp; Sivakumar, V.</strong> (1995). An elasto-plastic critical state framework for unsaturated soil. <em>Géotechnique</em>, 45(1), 35–53. — Experimental validation of the BBM on compacted soils.</p>
+</li>
+</ul>
+<h3 id="lc-curve-and-suction-behavior">LC Curve and Suction Behavior</h3>
+<ul>
+<li>
+<p><strong>Cui, Y. J. &amp; Delage, P.</strong> (1996). Yielding and plastic behaviour of an unsaturated compacted silt. <em>Géotechnique</em>, 46(2), 291–311. — Experimental determination of the LC curve for compacted silt.</p>
+</li>
+<li>
+<p><strong>Romero, E., Gens, A. &amp; Lloret, A.</strong> (1999). Water permeability, water retention and microstructure of unsaturated compacted Boom clay. <em>Engineering Geology</em>, 54(1–2), 117–127. — Retention curves and hydromechanical behavior of unsaturated clays.</p>
+</li>
+</ul>
+<h3 id="plasticity-and-return-mapping">Plasticity and Return Mapping</h3>
+<ul>
+<li>
+<p><strong>Simo, J. C. &amp; Hughes, T. J. R.</strong> (1998). <em>Computational Inelasticity</em>. Springer, New York. — Return mapping algorithms and computation of the consistent tangent matrix.</p>
+</li>
+<li>
+<p><strong>Borja, R. I.</strong> (1991). Cam-Clay plasticity, Part II: Implicit integration of constitutive equation based on a nonlinear elastic stress predictor. <em>Computer Methods in Applied Mechanics and Engineering</em>, 88(2), 225–240. — Implicit integration of Modified Cam-Clay, basis of the BBM algorithm.</p>
+</li>
+</ul>
+<h3 id="coupled-numerical-implementation">Coupled Numerical Implementation</h3>
+<ul>
+<li>
+<p><strong>Lewis, R. W. &amp; Schrefler, B. A.</strong> (1998). <em>The Finite Element Method in the Deformation and Consolidation of Porous Media</em> (2nd ed.). John Wiley &amp; Sons, Chichester. — Coupled FEM formulation for consolidation of porous media.</p>
+</li>
+<li>
+<p><strong>Dangla, P.</strong> — <em>Bil: a FEM/FVM platform for multiphysics simulations</em>. Université Gustave Eiffel. Source code: <a href="https://github.com/Universite-Gustave-Eiffel/bil">https://github.com/Universite-Gustave-Eiffel/bil</a></p>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../Plast_model/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Plast">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Plast
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../Poromechanics/poromechanics_examples/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Overview
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "navigation.footer", "search.highlight", "search.suggest", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

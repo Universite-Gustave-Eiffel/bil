@@ -1,0 +1,2716 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A modeling platform based on finite element/volume methods">
+      
+      
+        <meta name="author" content="P. Dangla (Université Gustave Eiffel)">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>M10 Model — Richards Equation: gravity drainage of a bead column (1D) - Bil - documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#m10-model-richards-equation-gravity-drainage-of-a-bead-column-1d" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Bil - documentation" class="md-header__button md-logo" aria-label="Bil - documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Bil - documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              M10 Model — Richards Equation: gravity drainage of a bead column (1D)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Universite-Gustave-Eiffel/bil" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Universite-Gustave-Eiffel/bil
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Introduction
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../running_bil/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Running Bil
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../examples/" class="md-tabs__link">
+          
+  
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code_architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../adding_a_model/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  How to Add a New Model
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Bil - documentation" class="md-nav__button md-logo" aria-label="Bil - documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Bil - documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Universite-Gustave-Eiffel/bil" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Universite-Gustave-Eiffel/bil
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../running_bil/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Running Bil
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flow
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Flow
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../flow_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../M1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../M2_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Fick_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fick
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Richards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Richards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mechanics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mechanics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/mechanics_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/Elast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/Elasd_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elasd
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/Plast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/BBM_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BBM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poromechanics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Poromechanics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Poromechanics/poromechanics_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Poromechanics/M7_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Poromechanics/Poroplast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poroplast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Phase change
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase change
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PhaseChange/phasechange_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PhaseChange/Frostaco_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frostaco
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PhaseChange/Frostaco3d_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frostaco3d
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durability & Chemistry
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Durability & Chemistry
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/durability_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Duracem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Duracem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Chloricem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chloricem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Sulfaco_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfaco
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Sulfuricem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfuricem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Sulfaconew_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfaconew
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Coupled Transfers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Coupled Transfers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/coupledtransfers_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/DWS1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DWS1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/Yuan1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Yuan1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/Shen_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/usoil_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    usoil
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8" id="__nav_3_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specialized
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Specialized
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Specialized/specialized_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Specialized/MechaMic_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MechaMic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code_architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adding_a_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to Add a New Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-context-and-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Context and objective
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-assumptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Assumptions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-variables-and-notation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Variables and notation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Variables and notation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#primary-unknown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Primary unknown
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secondary-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secondary variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#physicochemical-constants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physicochemical constants
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-mathematical-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Mathematical model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Mathematical model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-conservation-equation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Conservation equation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-darcy-flux-law" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Darcy flux law
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-retention-curve-and-relative-permeability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Retention curve and relative permeability
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-condensed-form-richards-equation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Condensed form — Richards equation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-boundary-and-initial-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Boundary and initial conditions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Boundary and initial conditions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#initial-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Initial conditions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#boundary-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Boundary conditions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-test-case-bead-column-under-gravity-drainage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Test case: bead column under gravity drainage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Test case: bead column under gravity drainage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#simulation-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Simulation parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expected-physics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected physics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#initial-state-t-0-s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Initial state (\(t = 0\) s)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-at-t-120-s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State at \(t = 120\) s
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-at-t-300-s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State at \(t = 300\) s
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-numerical-discretization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Numerical discretization
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-bibliographic-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Bibliographic references
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Bibliographic references">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#richards-equation-and-unsaturated-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Richards equation and unsaturated flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capillary-retention-curves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capillary retention curves
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#numerical-methods-for-richards-equation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numerical methods for Richards equation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="m10-model-richards-equation-gravity-drainage-of-a-bead-column-1d">M10 Model — Richards Equation: gravity drainage of a bead column (1D)</h1>
+<blockquote>
+<p><strong>Source files:</strong>
+<code>src/Models/ModelFiles/M10.c</code> · <code>test_examples/m10-1/m10-1</code> · <code>test_examples/m10-1/billes</code></p>
+<p><strong>Bil model author:</strong> P. Dangla (Université Gustave Eiffel)</p>
+</blockquote>
+<hr />
+<h2 id="table-of-contents">Table of contents</h2>
+<ol>
+<li><a href="#1-context-and-objective">Context and objective</a></li>
+<li><a href="#2-assumptions">Assumptions</a></li>
+<li><a href="#3-variables-and-notation">Variables and notation</a></li>
+<li><a href="#4-mathematical-model">Mathematical model</a></li>
+<li>4.1 <a href="#41-conservation-equation">Conservation equation</a></li>
+<li>4.2 <a href="#42-darcy-flux-law">Darcy flux law</a></li>
+<li>4.3 <a href="#43-retention-curve-and-relative-permeability">Retention curve and relative permeability</a></li>
+<li>4.4 <a href="#44-condensed-form--richards-equation">Condensed form — Richards equation</a></li>
+<li><a href="#5-boundary-and-initial-conditions">Boundary and initial conditions</a></li>
+<li><a href="#6-test-case-bead-column-under-gravity-drainage">Test case: bead column under gravity drainage (<code>test_examples/m10-1</code>)</a></li>
+<li><a href="#7-results">Results</a></li>
+<li><a href="#8-numerical-discretization">Numerical discretization</a></li>
+<li><a href="#9-bibliographic-references">Bibliographic references</a></li>
+</ol>
+<hr />
+<h2 id="1-context-and-objective">1. Context and objective</h2>
+<p>The M10 model solves the <strong>Richards equation</strong> for single-phase liquid water flow in a partially saturated porous medium. The gas phase pressure is assumed uniform and constant; only the <strong>liquid pressure</strong> <span class="arithmatex">\(p_l\)</span> is an unknown of the problem.</p>
+<p>The test case <code>test_examples/m10-1</code> simulates the <strong>gravitational drainage of a vertical glass bead column</strong>. This is a classic validation case for the Richards equation implementation: the medium (glass beads) has a well-characterized retention curve with a low air-entry pressure (~500 Pa) and rapid desaturation beyond this threshold. This type of experiment is used to calibrate unsaturated porous medium transfer codes.</p>
+<p>The domain is a vertical one-dimensional column of length <span class="arithmatex">\(L = 0.2\)</span> m, composed of a single homogeneous material:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Porosity <span class="arithmatex">\(\phi\)</span></td>
+<td>0.38</td>
+</tr>
+<tr>
+<td>Intrinsic permeability <span class="arithmatex">\(k_\text{int}\)</span></td>
+<td><span class="arithmatex">\(8.9 \times 10^{-12}\)</span> m²</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-assumptions">2. Assumptions</h2>
+<ol>
+<li><strong>Single-phase liquid</strong>: only the liquid phase (water) is mobile. The gas phase is assumed at constant pressure <span class="arithmatex">\(p_g = 10^5\)</span> Pa (connection to atmosphere).</li>
+<li><strong>Isothermal</strong>: temperature is uniform and constant; viscosity and density are constants.</li>
+<li><strong>Rigid porosity</strong>: the solid skeleton is non-deformable; <span class="arithmatex">\(\phi = \text{const}\)</span>.</li>
+<li><strong>Generalized Darcy's law</strong> with gravity for liquid phase transport.</li>
+<li><strong>Local capillary equilibrium</strong>: saturation <span class="arithmatex">\(s_l\)</span> is a single-valued function of capillary pressure <span class="arithmatex">\(p_c = p_g - p_l\)</span>.</li>
+<li><strong>Gravity</strong>: <span class="arithmatex">\(g = -9.81\)</span> m/s² oriented in the decreasing <span class="arithmatex">\(x\)</span> direction (<span class="arithmatex">\(x\)</span> axis vertical upward).</li>
+</ol>
+<hr />
+<h2 id="3-variables-and-notation">3. Variables and notation</h2>
+<h3 id="primary-unknown">Primary unknown</h3>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+<th>Unit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(p_l\)</span></td>
+<td>Liquid phase pressure</td>
+<td>Pa</td>
+</tr>
+</tbody>
+</table>
+<p>Capillary pressure derives directly:</p>
+<div class="arithmatex">\[p_c = p_g - p_l\]</div>
+<h3 id="secondary-variables">Secondary variables</h3>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(s_l(p_c)\)</span></td>
+<td>Liquid water saturation degree</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(k_{rl}(p_c)\)</span></td>
+<td>Water relative permeability</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(K_l\)</span></td>
+<td>Effective hydraulic conductivity</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(m_l\)</span></td>
+<td>Mass water content</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(W_l\)</span></td>
+<td>Liquid mass flux</td>
+</tr>
+</tbody>
+</table>
+<h3 id="physicochemical-constants">Physicochemical constants</h3>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Value</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(\rho_l\)</span></td>
+<td>1000 kg/m³</td>
+<td>Liquid water density</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\mu_l\)</span></td>
+<td><span class="arithmatex">\(10^{-3}\)</span> Pa·s</td>
+<td>Dynamic water viscosity</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(k_\text{int}\)</span></td>
+<td><span class="arithmatex">\(8.9 \times 10^{-12}\)</span> m²</td>
+<td>Intrinsic permeability</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\phi\)</span></td>
+<td>0.38</td>
+<td>Porosity</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(p_g\)</span></td>
+<td><span class="arithmatex">\(10^5\)</span> Pa</td>
+<td>Gas pressure (constant, atmospheric)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(g\)</span></td>
+<td><span class="arithmatex">\(-9.81\)</span> m/s²</td>
+<td>Gravitational acceleration</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-mathematical-model">4. Mathematical model</h2>
+<h3 id="41-conservation-equation">4.1 Conservation equation</h3>
+<p>The system consists of a <strong>single liquid water mass balance equation</strong>, integrated over the representative elementary volume (REV):</p>
+<div class="arithmatex">\[\frac{\partial m_l}{\partial t} + \nabla \cdot \mathbf{W}_l = 0\]</div>
+<p>with the mass water content:</p>
+<div class="arithmatex">\[m_l = \rho_l\,\phi\,s_l(p_c)\]</div>
+<h3 id="42-darcy-flux-law">4.2 Darcy flux law</h3>
+<p>The liquid mass flux <span class="arithmatex">\(\mathbf{W}_l\)</span> is given by the generalized Darcy's law with gravity:</p>
+<div class="arithmatex">\[\mathbf{W}_l = -K_l\,\left(\nabla p_l - \rho_l\,\mathbf{g}\right)\]</div>
+<p>where the effective hydraulic conductivity is:</p>
+<div class="arithmatex">\[K_l = \frac{\rho_l\,k_\text{int}\,k_{rl}(p_c)}{\mu_l}\]</div>
+<p>In 1D with <span class="arithmatex">\(g\)</span> along the <span class="arithmatex">\(x\)</span> axis (positive upward):</p>
+<div class="arithmatex">\[W_l = -K_l\,\left(\frac{\partial p_l}{\partial x} - \rho_l\,g\right) = -K_l\,\left(\frac{\partial p_l}{\partial x} + \rho_l\,|g|\right)\]</div>
+<blockquote>
+<p><strong>Hydrostatic equilibrium:</strong> at equilibrium (<span class="arithmatex">\(W_l = 0\)</span>): <span class="arithmatex">\(\partial p_l/\partial x = -\rho_l\,|g| \approx -9810\)</span> Pa/m. Pressure decreases linearly with height.</p>
+</blockquote>
+<h3 id="43-retention-curve-and-relative-permeability">4.3 Retention curve and relative permeability</h3>
+<p>The functions <span class="arithmatex">\(s_l(p_c)\)</span> and <span class="arithmatex">\(k_{rl}(p_c)\)</span> are provided in <strong>tabular form</strong> in the <code>billes</code> file. This file contains 2000 points covering the range <span class="arithmatex">\(p_c \in [500,\ 1000]\)</span> Pa, with columns:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>p_c [Pa]    s_l [-]    k_rl [-]
+</code></pre></div>
+<p>The key characteristics of glass beads are:</p>
+<table>
+<thead>
+<tr>
+<th>Quantity</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(p_{c,\text{entry}}\)</span></td>
+<td>≈ 500 Pa</td>
+<td>Air-entry pressure</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(s_{l,\text{max}}\)</span></td>
+<td>1.0</td>
+<td>Maximum saturation (<span class="arithmatex">\(p_c &lt; 500\)</span> Pa)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(s_{l,\text{residual}}\)</span></td>
+<td>≈ 0.09</td>
+<td>Residual saturation (<span class="arithmatex">\(p_c = 1000\)</span> Pa)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(k_{rl}(s_l = 1)\)</span></td>
+<td>1.0</td>
+<td>Saturated relative permeability</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(k_{rl}(s_l = 0.09)\)</span></td>
+<td>≈ <span class="arithmatex">\(2.6 \times 10^{-8}\)</span></td>
+<td>Residual relative permeability</td>
+</tr>
+</tbody>
+</table>
+<p>The curve is <strong>very steep</strong> (near-total desaturation over a 500 Pa interval), characteristic of a medium with uniform pore size.</p>
+<h3 id="44-condensed-form-richards-equation">4.4 Condensed form — Richards equation</h3>
+<p>Substituting the previous expressions and using <span class="arithmatex">\(\partial m_l/\partial t = -\rho_l\,\phi\,(\partial s_l/\partial p_c)\,(\partial p_l/\partial t)\)</span>, the standard form of the <strong>Richards equation</strong> is obtained:</p>
+<div class="arithmatex">\[\boxed{-\rho_l\,\phi\,\frac{\partial s_l}{\partial p_c}\,\frac{\partial p_l}{\partial t} - \nabla \cdot \left[\frac{\rho_l\,k_\text{int}\,k_{rl}(p_c)}{\mu_l}\left(\nabla p_l - \rho_l\,\mathbf{g}\right)\right] = 0}\]</div>
+<p>The coefficient <span class="arithmatex">\(C(p_c) = -\rho_l\,\phi\,\partial s_l/\partial p_c \geq 0\)</span> is the <strong>capillary capacity</strong>; it appears in the mass matrix of the discrete problem.</p>
+<hr />
+<h2 id="5-boundary-and-initial-conditions">5. Boundary and initial conditions</h2>
+<h3 id="initial-conditions">Initial conditions</h3>
+<p>The initial pressure is given by a linear field (sub-hydrostatic, column initially near full saturation):</p>
+<div class="arithmatex">\[p_l(x,\,t=0) = p_{l0} + G\,x, \qquad p_{l0} = 10^5 \text{ Pa},\quad G = -3400 \text{ Pa/m}\]</div>
+<table>
+<thead>
+<tr>
+<th>Boundary</th>
+<th><span class="arithmatex">\(x\)</span> [m]</th>
+<th><span class="arithmatex">\(p_l(t=0)\)</span> [Pa]</th>
+<th><span class="arithmatex">\(p_c(t=0)\)</span> [Pa]</th>
+<th><span class="arithmatex">\(s_l(t=0)\)</span> [-]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bottom</td>
+<td>0</td>
+<td><span class="arithmatex">\(10^5\)</span></td>
+<td>0</td>
+<td>1.000</td>
+</tr>
+<tr>
+<td>Top</td>
+<td>0.2</td>
+<td><span class="arithmatex">\(9.932 \times 10^4\)</span></td>
+<td>680</td>
+<td>≈ 0.9998</td>
+</tr>
+</tbody>
+</table>
+<p>Initial capillary pressure is everywhere below the critical value (≈ 680 Pa at the top), and saturation is near-total (<span class="arithmatex">\(s_l \approx 1\)</span>) throughout the column.</p>
+<blockquote>
+<p><strong>Note:</strong> the initial gradient <span class="arithmatex">\(G = -3400\)</span> Pa/m is <strong>smaller in absolute value</strong> than the hydrostatic gradient <span class="arithmatex">\(-9810\)</span> Pa/m. The column is not in equilibrium; the initial flux is non-zero and directed downward.</p>
+</blockquote>
+<h3 id="boundary-conditions">Boundary conditions</h3>
+<table>
+<thead>
+<tr>
+<th>Boundary</th>
+<th><span class="arithmatex">\(x\)</span> [m]</th>
+<th>Type</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bottom</td>
+<td>0</td>
+<td>Dirichlet</td>
+<td><span class="arithmatex">\(p_l = 10^5\)</span> Pa (atmospheric pressure, saturated base)</td>
+</tr>
+<tr>
+<td>Top</td>
+<td>0.2</td>
+<td>Natural Neumann</td>
+<td><span class="arithmatex">\(\mathbf{W}_l \cdot \mathbf{n} = 0\)</span> (free drainage, no imposed flux)</td>
+</tr>
+</tbody>
+</table>
+<p>The bottom boundary is maintained at atmospheric pressure (submerged base or pressure-controlled drainage). The top boundary is free: this is the natural Neumann condition of the variational problem, which physically corresponds to an open top without incoming flux (water can only drain downward by gravity).</p>
+<hr />
+<h2 id="6-test-case-bead-column-under-gravity-drainage">6. Test case: bead column under gravity drainage</h2>
+<h3 id="simulation-parameters">Simulation parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Column length <span class="arithmatex">\(L\)</span></td>
+<td>0.2 m</td>
+</tr>
+<tr>
+<td>Number of elements</td>
+<td>100 (non-uniform mesh, refined at <span class="arithmatex">\(x=0\)</span>)</td>
+</tr>
+<tr>
+<td>Total duration</td>
+<td>300 s</td>
+</tr>
+<tr>
+<td>Output times</td>
+<td><span class="arithmatex">\(t = 0\)</span> s, <span class="arithmatex">\(t = 120\)</span> s, <span class="arithmatex">\(t = 300\)</span> s</td>
+</tr>
+<tr>
+<td>Initial time step <span class="arithmatex">\(\Delta t_\text{ini}\)</span></td>
+<td>0.01 s</td>
+</tr>
+<tr>
+<td>Maximum time step <span class="arithmatex">\(\Delta t_\text{max}\)</span></td>
+<td>1000 s</td>
+</tr>
+<tr>
+<td>Objective variation (OBJE)</td>
+<td><span class="arithmatex">\(\Delta p_l = 10\)</span> Pa</td>
+</tr>
+<tr>
+<td>Newton tolerance</td>
+<td><span class="arithmatex">\(10^{-10}\)</span></td>
+</tr>
+<tr>
+<td>Max iterations</td>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+<h3 id="expected-physics">Expected physics</h3>
+<p>The initial state (sub-hydrostatic gradient) creates a <strong>disequilibrium</strong>: gravitational force dominates the pressure gradient, and water flows downward. The system evolves toward <strong>hydrostatic equilibrium</strong> (<span class="arithmatex">\(\nabla p_l = \rho_l\,\mathbf{g}\)</span>, i.e., <span class="arithmatex">\(-9810\)</span> Pa/m), which implies significant desaturation at the top of the column.</p>
+<p>The physical sequence is:</p>
+<ol>
+<li><strong>Immediate drainage</strong>: from <span class="arithmatex">\(t=0\)</span>, a downward flux is established (<span class="arithmatex">\(W_l \approx -5.7 \times 10^{-2}\)</span> kg/(m²·s) at the base).</li>
+<li><strong>Desaturation front</strong>: capillary pressure at the top increases beyond the entry pressure (<span class="arithmatex">\(p_c &gt; 500\)</span> Pa); saturation rapidly drops from 1 to a residual value (~0.09).</li>
+<li><strong>Front progression</strong>: the desaturation front descends from <span class="arithmatex">\(x = 0.2\)</span> m toward <span class="arithmatex">\(x = 0\)</span> as pressure redistributes.</li>
+<li><strong>Flux reduction</strong>: the relative permeability <span class="arithmatex">\(k_{rl}\)</span> decreases strongly in the desaturated zone, slowing drainage.</li>
+</ol>
+<p><img alt="Pressure and saturation profiles during gravity drainage (M10-1)" src="../M10-1_results.png" /></p>
+<hr />
+<h2 id="7-results">7. Results</h2>
+<p>The three output times illustrate the different stages of drainage.</p>
+<h3 id="initial-state-t-0-s">Initial state (<span class="arithmatex">\(t = 0\)</span> s)</h3>
+<table>
+<thead>
+<tr>
+<th><span class="arithmatex">\(x\)</span> [m]</th>
+<th><span class="arithmatex">\(p_l\)</span> [Pa]</th>
+<th><span class="arithmatex">\(W_l\)</span> [kg/(m²·s)]</th>
+<th><span class="arithmatex">\(s_l\)</span> [-]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td><span class="arithmatex">\(1.000 \times 10^5\)</span></td>
+<td><span class="arithmatex">\(-5.705 \times 10^{-2}\)</span></td>
+<td>1.000</td>
+</tr>
+<tr>
+<td>0.1</td>
+<td><span class="arithmatex">\(\approx 9.966 \times 10^4\)</span></td>
+<td><span class="arithmatex">\(-5.704 \times 10^{-2}\)</span></td>
+<td>1.000</td>
+</tr>
+<tr>
+<td>0.2</td>
+<td><span class="arithmatex">\(9.932 \times 10^4\)</span></td>
+<td><span class="arithmatex">\(-5.702 \times 10^{-2}\)</span></td>
+<td>0.9998</td>
+</tr>
+</tbody>
+</table>
+<p>The flux is <strong>nearly uniform</strong> throughout the column: saturation is total and hydraulic conductivity is maximum.</p>
+<h3 id="state-at-t-120-s">State at <span class="arithmatex">\(t = 120\)</span> s</h3>
+<table>
+<thead>
+<tr>
+<th><span class="arithmatex">\(x\)</span> [m]</th>
+<th><span class="arithmatex">\(p_l\)</span> [Pa]</th>
+<th><span class="arithmatex">\(W_l\)</span> [kg/(m²·s)]</th>
+<th><span class="arithmatex">\(s_l\)</span> [-]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td><span class="arithmatex">\(1.000 \times 10^5\)</span></td>
+<td><span class="arithmatex">\(-4.782 \times 10^{-2}\)</span></td>
+<td>1.000</td>
+</tr>
+<tr>
+<td>0.19</td>
+<td><span class="arithmatex">\(\approx 9.919 \times 10^4\)</span></td>
+<td><span class="arithmatex">\(-2.86 \times 10^{-4}\)</span></td>
+<td>0.220</td>
+</tr>
+<tr>
+<td>0.2</td>
+<td><span class="arithmatex">\(9.918 \times 10^4\)</span></td>
+<td><span class="arithmatex">\(-2.86 \times 10^{-4}\)</span></td>
+<td>0.154</td>
+</tr>
+</tbody>
+</table>
+<p>The <strong>desaturation front</strong> has reached <span class="arithmatex">\(x \approx 0.15\)</span>–<span class="arithmatex">\(0.19\)</span> m. Flux is strongly reduced in the desaturated zone (ratio ~200 between bottom and top column flux).</p>
+<h3 id="state-at-t-300-s">State at <span class="arithmatex">\(t = 300\)</span> s</h3>
+<table>
+<thead>
+<tr>
+<th><span class="arithmatex">\(x\)</span> [m]</th>
+<th><span class="arithmatex">\(p_l\)</span> [Pa]</th>
+<th><span class="arithmatex">\(W_l\)</span> [kg/(m²·s)]</th>
+<th><span class="arithmatex">\(s_l\)</span> [-]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td><span class="arithmatex">\(1.000 \times 10^5\)</span></td>
+<td><span class="arithmatex">\(-3.955 \times 10^{-2}\)</span></td>
+<td>1.000</td>
+</tr>
+<tr>
+<td>0.19</td>
+<td><span class="arithmatex">\(\approx 9.918 \times 10^4\)</span></td>
+<td><span class="arithmatex">\(-5.48 \times 10^{-5}\)</span></td>
+<td>0.147</td>
+</tr>
+<tr>
+<td>0.2</td>
+<td><span class="arithmatex">\(9.916 \times 10^4\)</span></td>
+<td><span class="arithmatex">\(-5.48 \times 10^{-5}\)</span></td>
+<td>0.115</td>
+</tr>
+</tbody>
+</table>
+<p>The front continues to move downward. The column top is strongly desaturated (<span class="arithmatex">\(s_l \approx 0.11\)</span>–0.15) with near-zero flux. The pressure profile tends toward hydrostatic equilibrium (<span class="arithmatex">\(dp_l/dx \to -9810\)</span> Pa/m).</p>
+<hr />
+<h2 id="8-numerical-discretization">8. Numerical discretization</h2>
+<p>The model is discretized by the <strong>finite element method (FEM)</strong> as implemented in Bil via <code>FEM.h</code>. The linearized system matrix consists of:</p>
+<ul>
+<li>a <strong>mass matrix</strong> (accumulation terms), with coefficient <span class="arithmatex">\(C(p_c) = -\rho_l\,\phi\,\partial s_l/\partial p_c\)</span> evaluated at the current time step;</li>
+<li>a <strong>conductance matrix</strong> (flux terms), with tensor <span class="arithmatex">\(K_l\,\mathbf{I}\)</span> evaluated explicitly at the previous time step (semi-implicit scheme).</li>
+</ul>
+<p>The nonlinear system is solved at each time step by the <strong>Newton–Raphson method</strong>.</p>
+<p>The time step is adaptive, controlled by the maximum variation of the unknown <span class="arithmatex">\(p_l\)</span> (parameter <strong>OBJE</strong> = 10 Pa in Bil). The capillary capacity <span class="arithmatex">\(C(p_c)\)</span> can be zero in the saturated zone (<span class="arithmatex">\(\partial s_l/\partial p_c = 0\)</span> for <span class="arithmatex">\(p_c &lt; p_{c,\text{entry}}\)</span>): in this regime, the equation is <strong>elliptic</strong> (local steady state), which can cause numerical oscillations if <span class="arithmatex">\(\Delta t\)</span> is too large or the mesh too coarse.</p>
+<blockquote>
+<p><strong>Note on regularization:</strong> unlike M5, M10 does not implement explicit saturation regularization at <span class="arithmatex">\(p_c = 0\)</span>. The <code>billes</code> file directly provides <span class="arithmatex">\(s_l = 1\)</span> for <span class="arithmatex">\(p_c \leq 500\)</span> Pa (constant extension), which is sufficient to avoid degeneracy in this case.</p>
+</blockquote>
+<hr />
+<h2 id="9-bibliographic-references">9. Bibliographic references</h2>
+<h3 id="richards-equation-and-unsaturated-flow">Richards equation and unsaturated flow</h3>
+<ul>
+<li><strong>Richards, L. A.</strong> (1931). Capillary conduction of liquids through porous mediums. <em>Physics</em>, 1(5), 318–333. — Founding article of the equation bearing his name, describing capillary flow in soils.</li>
+<li><strong>Bear, J.</strong> (1972). <em>Dynamics of Fluids in Porous Media</em>. Elsevier, New York.</li>
+<li><strong>Coussy, O.</strong> (2004). <em>Poromechanics</em>. John Wiley &amp; Sons, Chichester.</li>
+</ul>
+<h3 id="capillary-retention-curves">Capillary retention curves</h3>
+<ul>
+<li><strong>Van Genuchten, M. Th.</strong> (1980). A closed-form equation for predicting the hydraulic conductivity of unsaturated soils. <em>Soil Science Society of America Journal</em>, 44(5), 892–898.</li>
+<li><strong>Brooks, R. H. &amp; Corey, A. T.</strong> (1964). <em>Hydraulic Properties of Porous Media</em>. Hydrology Paper 3, Colorado State University.</li>
+</ul>
+<h3 id="numerical-methods-for-richards-equation">Numerical methods for Richards equation</h3>
+<ul>
+<li><strong>Celia, M. A., Bouloutas, E. T. &amp; Zarba, R. L.</strong> (1990). A general mass-conservative numerical solution for the unsaturated flow equation. <em>Water Resources Research</em>, 26(7), 1483–1496.</li>
+<li><strong>Dangla, P.</strong> — <em>Bil: a FEM/FVM platform for multiphysics simulations</em>. Université Gustave Eiffel. Source code: <a href="https://github.com/Universite-Gustave-Eiffel/bil">https://github.com/Universite-Gustave-Eiffel/bil</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "navigation.footer", "search.highlight", "search.suggest", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,3459 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A modeling platform based on finite element/volume methods">
+      
+      
+        <meta name="author" content="P. Dangla (Université Gustave Eiffel)">
+      
+      
+      
+        <link rel="prev" href="../Elasd_model/">
+      
+      
+        <link rel="next" href="../BBM_model/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Plast - Bil - documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#plast-model-elasto-plasticity-with-drucker-prager-or-cam-clay-criterion" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Bil - documentation" class="md-header__button md-logo" aria-label="Bil - documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Bil - documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Plast
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Universite-Gustave-Eiffel/bil" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Universite-Gustave-Eiffel/bil
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Introduction
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../running_bil/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Running Bil
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../examples/" class="md-tabs__link">
+          
+  
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code_architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../adding_a_model/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  How to Add a New Model
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Bil - documentation" class="md-nav__button md-logo" aria-label="Bil - documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Bil - documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Universite-Gustave-Eiffel/bil" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Universite-Gustave-Eiffel/bil
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../running_bil/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Running Bil
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flow
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Flow
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/flow_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/M1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/M2_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/Fick_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fick
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/Richards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Richards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mechanics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mechanics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mechanics_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Elast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Elasd_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elasd
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plast
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-context-and-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Context and Objective
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-assumptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Assumptions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-variables-and-notation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Variables and Notation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Variables and Notation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#primary-unknowns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Primary Unknowns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#internal-variables-gauss-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Internal Variables (Gauss Points)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stress-invariants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stress Invariants
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-mathematical-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Mathematical Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Mathematical Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-mechanical-equilibrium-equation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Mechanical Equilibrium Equation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-elastic-behavior-isotropic-hooke" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Elastic Behavior (Isotropic Hooke)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-drucker-prager-plasticity-criterion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Drucker-Prager Plasticity Criterion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-plastic-flow-rule-non-associated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Plastic Flow Rule (Non-Associated)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-return-mapping-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Return Mapping Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-numerical-homogenization-and-macro-gradient" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Numerical Homogenization and Macro Gradient
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-test-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Test Cases
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Test Cases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-plast-2d-periodic-composite-cell-shear" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Plast — 2D Periodic Composite Cell (Shear)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-plast0-1d-periodic-composite-cell-tension" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Plast0 — 1D Periodic Composite Cell (Tension)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-plast1-axisymmetric-cylindrical-layer-under-internal-pressure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Plast1 — Axisymmetric Cylindrical Layer Under Internal Pressure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-material-parameters-of-the-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Material Parameters of the Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Material Parameters of the Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#drucker-prager-specific-parameters-model-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drucker-Prager Specific Parameters (Model 1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cam-clay-parameters-model-2-alternative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cam-Clay Parameters (Model 2, Alternative)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#periodic-homogenization-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Periodic Homogenization Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-step-by-step-description-of-input-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Step-by-Step Description of Input Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Step-by-Step Description of Input Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-file-plast-2d-composite-cell-periodic-shear" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 File Plast — 2D Composite Cell, Periodic Shear
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-file-plast0-1d-composite-cell-periodic-tension" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 File Plast0 — 1D Composite Cell, Periodic Tension
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-file-plast1-axisymmetric-cylindrical-layer-under-internal-pressure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 File Plast1 — Axisymmetric Cylindrical Layer Under Internal Pressure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-numerical-implementation-plastcpp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Numerical Implementation (Plast.cpp)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Numerical Implementation (Plast.cpp)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91-code-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 Code Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-stored-internal-variables-struct-implicitvalues_t" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 Stored Internal Variables (struct ImplicitValues_t)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93-plastic-model-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 Plastic Model Selection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#94-macro-gradient-and-kinematic-decomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.4 Macro Gradient and Kinematic Decomposition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#95-mechanical-residual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.5 Mechanical Residual
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BBM_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BBM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poromechanics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Poromechanics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Poromechanics/poromechanics_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Poromechanics/M7_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Poromechanics/Poroplast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poroplast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Phase change
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase change
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PhaseChange/phasechange_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PhaseChange/Frostaco_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frostaco
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PhaseChange/Frostaco3d_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frostaco3d
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durability & Chemistry
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Durability & Chemistry
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/durability_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Duracem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Duracem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Chloricem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chloricem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Sulfaco_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfaco
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Sulfuricem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfuricem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Sulfaconew_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfaconew
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Coupled Transfers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Coupled Transfers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/coupledtransfers_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/DWS1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DWS1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/Yuan1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Yuan1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/Shen_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/usoil_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    usoil
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8" id="__nav_3_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specialized
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Specialized
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Specialized/specialized_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Specialized/MechaMic_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MechaMic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code_architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adding_a_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to Add a New Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-context-and-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Context and Objective
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-assumptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Assumptions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-variables-and-notation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Variables and Notation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Variables and Notation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#primary-unknowns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Primary Unknowns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#internal-variables-gauss-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Internal Variables (Gauss Points)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stress-invariants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stress Invariants
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-mathematical-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Mathematical Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Mathematical Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-mechanical-equilibrium-equation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Mechanical Equilibrium Equation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-elastic-behavior-isotropic-hooke" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Elastic Behavior (Isotropic Hooke)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-drucker-prager-plasticity-criterion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Drucker-Prager Plasticity Criterion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-plastic-flow-rule-non-associated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Plastic Flow Rule (Non-Associated)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-return-mapping-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Return Mapping Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-numerical-homogenization-and-macro-gradient" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Numerical Homogenization and Macro Gradient
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-test-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Test Cases
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Test Cases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-plast-2d-periodic-composite-cell-shear" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Plast — 2D Periodic Composite Cell (Shear)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-plast0-1d-periodic-composite-cell-tension" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Plast0 — 1D Periodic Composite Cell (Tension)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-plast1-axisymmetric-cylindrical-layer-under-internal-pressure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Plast1 — Axisymmetric Cylindrical Layer Under Internal Pressure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-material-parameters-of-the-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Material Parameters of the Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Material Parameters of the Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#drucker-prager-specific-parameters-model-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drucker-Prager Specific Parameters (Model 1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cam-clay-parameters-model-2-alternative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cam-Clay Parameters (Model 2, Alternative)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#periodic-homogenization-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Periodic Homogenization Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-step-by-step-description-of-input-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Step-by-Step Description of Input Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Step-by-Step Description of Input Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-file-plast-2d-composite-cell-periodic-shear" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 File Plast — 2D Composite Cell, Periodic Shear
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-file-plast0-1d-composite-cell-periodic-tension" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 File Plast0 — 1D Composite Cell, Periodic Tension
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-file-plast1-axisymmetric-cylindrical-layer-under-internal-pressure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 File Plast1 — Axisymmetric Cylindrical Layer Under Internal Pressure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-numerical-implementation-plastcpp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Numerical Implementation (Plast.cpp)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Numerical Implementation (Plast.cpp)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91-code-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 Code Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-stored-internal-variables-struct-implicitvalues_t" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 Stored Internal Variables (struct ImplicitValues_t)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93-plastic-model-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 Plastic Model Selection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#94-macro-gradient-and-kinematic-decomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.4 Macro Gradient and Kinematic Decomposition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#95-mechanical-residual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.5 Mechanical Residual
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="plast-model-elasto-plasticity-with-drucker-prager-or-cam-clay-criterion">Plast Model — Elasto-plasticity with Drucker-Prager (or Cam-Clay) Criterion</h1>
+<blockquote>
+<p><strong>Bil model:</strong> <code>src/Models/ModelFiles/Plast.cpp</code></p>
+<p><strong>Input file:</strong> <code>doc/mkdocs/Mechanics/Plast/Plast</code> · <code>doc/mkdocs/Mechanics/Plast/Plast0</code> · <code>doc/mkdocs/Mechanics/Plast/Plast1</code></p>
+<p><strong>Model authors:</strong> P. Dangla (Université Gustave Eiffel)</p>
+</blockquote>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#1-context-and-objective">Context and Objective</a></li>
+<li><a href="#2-assumptions">Assumptions</a></li>
+<li><a href="#3-variables-and-notation">Variables and Notation</a></li>
+<li><a href="#4-mathematical-model">Mathematical Model</a></li>
+<li>4.1 <a href="#41-mechanical-equilibrium-equation">Mechanical Equilibrium Equation</a></li>
+<li>4.2 <a href="#42-elastic-behavior-isotropic-hooke">Elastic Behavior (Isotropic Hooke)</a></li>
+<li>4.3 <a href="#43-drucker-prager-plasticity-criterion">Drucker-Prager Plasticity Criterion</a></li>
+<li>4.4 <a href="#44-plastic-flow-rule-non-associated">Plastic Flow Rule (Non-Associated)</a></li>
+<li>4.5 <a href="#45-return-mapping-integration">Return Mapping Integration</a></li>
+<li><a href="#5-numerical-homogenization-and-macro-gradient">Numerical Homogenization and Macro Gradient</a></li>
+<li><a href="#6-test-cases">Test Cases</a></li>
+<li>6.1 <a href="#61-plast--2d-periodic-composite-cell-shear">Plast — 2D Periodic Composite Cell (Shear)</a></li>
+<li>6.2 <a href="#62-plast0--1d-periodic-composite-cell-tension">Plast0 — 1D Periodic Composite Cell (Tension)</a></li>
+<li>6.3 <a href="#63-plast1--cylindrical-layer-under-pressure-axisymmetry">Plast1 — Cylindrical Layer Under Pressure (Axisymmetry)</a></li>
+<li><a href="#7-material-parameters-of-the-model">Material Parameters of the Model</a></li>
+<li><a href="#8-step-by-step-description-of-input-files">Step-by-Step Description of Input Files</a></li>
+<li>8.1 <a href="#81-file-plast--2d-composite-cell-periodic-shear">File <code>Plast</code> — 2D Composite Cell, Periodic Shear</a></li>
+<li>8.2 <a href="#82-file-plast0--1d-composite-cell-periodic-tension">File <code>Plast0</code> — 1D Composite Cell, Periodic Tension</a></li>
+<li>8.3 <a href="#83-file-plast1--axisymmetric-cylindrical-layer-under-internal-pressure">File <code>Plast1</code> — Axisymmetric Cylindrical Layer Under Internal Pressure</a></li>
+<li><a href="#9-numerical-implementation-plastcpp">Numerical Implementation (<code>Plast.cpp</code>)</a></li>
+<li><a href="#10-references">References</a></li>
+</ol>
+<hr />
+<h2 id="1-context-and-objective">1. Context and Objective</h2>
+<p>The <strong>Plast</strong> model solves the <strong>quasi-static mechanical equilibrium</strong> equations in a solid material exhibiting <strong>elasto-plastic</strong> behavior. It relies on the additive decomposition of strains into a reversible elastic part and an irreversible plastic part, coupled with a <strong>Drucker-Prager</strong> (or <strong>Cam-Clay</strong>) yield criterion with optional hardening.</p>
+<p>This model is particularly well-suited to three major classes of problems:</p>
+<ol>
+<li><strong>Periodic homogenization</strong>: computation of the effective macroscopic response of a heterogeneous material (composite, geomaterial with inclusions) subjected to a prescribed macroscopic loading via a mean displacement gradient.</li>
+<li><strong>Local plasticity</strong>: simulations of geomaterials (rocks, cements, clays) exhibiting cracking or plastic flow under stress.</li>
+<li><strong>Axisymmetric structures under pressure</strong>: example of a cylindrical ring under internal/external pressure.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>graph TD
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    A[&quot;Imposed macroscopic gradient&lt;br&gt;E_ij (or boundary loading)&quot;] --&gt; B(&quot;Total strain&lt;br&gt;ε = ε_e + ε_p&quot;)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    B --&gt; C[&quot;Elastic predictor&lt;br&gt;σ_trial = C : ε_e_trial&quot;]
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    C --&gt; D{&quot;Criterion f(σ_trial) &gt; 0 ?&quot;}
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    D -- No --&gt; E[&quot;Elastic behavior&lt;br&gt;σ = σ_trial&quot;]
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    D -- Yes --&gt; F[&quot;Return Mapping&lt;br&gt;(Drucker-Prager or Cam-Clay)&quot;]
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    F --&gt; G[&quot;Corrected σ + plastic strains Δε_p&quot;]
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    G --&gt; H[&quot;Mechanical residual&lt;br&gt;∫ σ : δε dΩ = ∫ f·δu dΩ&quot;]
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    E --&gt; H
+</code></pre></div>
+<hr />
+<h2 id="2-assumptions">2. Assumptions</h2>
+<ol>
+<li><strong>Small strains</strong>: the additive decomposition <span class="arithmatex">\(\boldsymbol{\varepsilon} = \boldsymbol{\varepsilon}^e + \boldsymbol{\varepsilon}^p\)</span> is valid within the small displacement framework.</li>
+<li><strong>Linear isotropic elasticity</strong>: the elastic behavior is fully described by Young's modulus <span class="arithmatex">\(E\)</span> and Poisson's ratio <span class="arithmatex">\(\nu\)</span>.</li>
+<li><strong>Perfect plasticity or isotropic hardening</strong>: the Drucker-Prager criterion can be associated with hardening via the cumulated plastic shear strain <span class="arithmatex">\(\gamma_p\)</span>.</li>
+<li><strong>Quasi-static</strong>: inertial terms are neglected; equilibrium is solved at each time step.</li>
+<li><strong>Heterogeneous materials</strong>: the cell may contain multiple materials (the <code>Plast</code> model for the matrix, the <code>Elast</code> model for rigid inclusions).</li>
+</ol>
+<hr />
+<h2 id="3-variables-and-notation">3. Variables and Notation</h2>
+<h3 id="primary-unknowns">Primary Unknowns</h3>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+<th>BIL Internal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(\mathbf{u}\)</span></td>
+<td>Displacement vector</td>
+<td><code>u_1, u_2, u_3</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="internal-variables-gauss-points">Internal Variables (Gauss Points)</h3>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(\boldsymbol{\varepsilon}\)</span></td>
+<td>Total strain tensor</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\boldsymbol{\sigma}\)</span></td>
+<td>Cauchy stress tensor</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\boldsymbol{\varepsilon}^p\)</span></td>
+<td>Cumulated plastic strain tensor</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\gamma_p\)</span></td>
+<td>Cumulated plastic shear strain (hardening variable)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(f\)</span></td>
+<td>Yield criterion value</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\Delta\lambda\)</span></td>
+<td>Plastic multiplier</td>
+</tr>
+</tbody>
+</table>
+<h3 id="stress-invariants">Stress Invariants</h3>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(p\)</span></td>
+<td>Mean pressure: <span class="arithmatex">\(p = \frac{1}{3}\text{Tr}(\boldsymbol{\sigma})\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(q\)</span></td>
+<td>Deviatoric stress: <span class="arithmatex">\(q = \sqrt{3 J_2}\)</span> with <span class="arithmatex">\(J_2 = \frac{1}{2} s_{ij} s_{ij}\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\mathbf{s}\)</span></td>
+<td>Deviatoric part: <span class="arithmatex">\(\mathbf{s} = \boldsymbol{\sigma} - p \mathbf{I}\)</span></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-mathematical-model">4. Mathematical Model</h2>
+<h3 id="41-mechanical-equilibrium-equation">4.1 Mechanical Equilibrium Equation</h3>
+<p>Under quasi-static conditions and in the absence of gravity (<span class="arithmatex">\(\rho_s = 0\)</span> in the test cases):</p>
+<div class="arithmatex">\[\nabla \cdot \boldsymbol{\sigma} = \mathbf{0}\]</div>
+<p>The weak variational form is:</p>
+<div class="arithmatex">\[\int_\Omega \boldsymbol{\sigma} : \nabla^s \delta\mathbf{u} \, d\Omega = \int_{\partial\Omega_N} \mathbf{t} \cdot \delta\mathbf{u} \, d\Gamma\]</div>
+<p>where <span class="arithmatex">\(\mathbf{t}\)</span> is the prescribed surface traction vector and <span class="arithmatex">\(\delta\mathbf{u}\)</span> is an admissible virtual displacement field.</p>
+<h3 id="42-elastic-behavior-isotropic-hooke">4.2 Elastic Behavior (Isotropic Hooke)</h3>
+<p>The isotropic elastic law relates stresses to elastic strains via the Lamé coefficients <span class="arithmatex">\(\lambda\)</span> and <span class="arithmatex">\(\mu\)</span>:</p>
+<div class="arithmatex">\[\boldsymbol{\sigma} = \lambda \, \text{Tr}(\boldsymbol{\varepsilon}^e)\mathbf{I} + 2\mu \boldsymbol{\varepsilon}^e\]</div>
+<p>with:</p>
+<div class="arithmatex">\[\lambda = \frac{E\nu}{(1+\nu)(1-2\nu)}, \qquad \mu = \frac{E}{2(1+\nu)}\]</div>
+<p>The bulk modulus and shear modulus are:</p>
+<div class="arithmatex">\[K = \frac{E}{3(1-2\nu)}, \qquad G = \mu = \frac{E}{2(1+\nu)}\]</div>
+<h3 id="43-drucker-prager-plasticity-criterion">4.3 Drucker-Prager Plasticity Criterion</h3>
+<p>The <strong>Drucker-Prager</strong> criterion is a smoothed (conical) version of the Mohr-Coulomb criterion in the invariant space <span class="arithmatex">\((p, q)\)</span>:</p>
+<div class="arithmatex">\[f(\boldsymbol{\sigma}, \gamma_p) = q + F \cdot p - C(\gamma_p) \leq 0\]</div>
+<p>with parameters depending on the friction angle <span class="arithmatex">\(\phi\)</span>:</p>
+<div class="arithmatex">\[F = \frac{6\sin\phi}{3 - \sin\phi}, \qquad C_0 = \frac{6\cos\phi}{3 - \sin\phi} \cdot c\]</div>
+<p>where <span class="arithmatex">\(c\)</span> is the material cohesion (in Pa) and <span class="arithmatex">\(C(\gamma_p) = C_0 \cdot \text{fac}(\gamma_p)\)</span> is the cohesion modified by hardening.</p>
+<blockquote>
+<p><strong>Link to Mohr-Coulomb</strong>: The Drucker-Prager criterion corresponds to the external circumscription of the Mohr-Coulomb cone in principal stress space. For <span class="arithmatex">\(\phi = 25°\)</span> and <span class="arithmatex">\(c = 1.5\)</span> MPa, one obtains <span class="arithmatex">\(F \approx 0.755\)</span> and <span class="arithmatex">\(C_0 \approx 1.94\)</span> MPa.</p>
+</blockquote>
+<h3 id="44-plastic-flow-rule-non-associated">4.4 Plastic Flow Rule (Non-Associated)</h3>
+<p>The plastic strain increments follow the non-associated flow rule:</p>
+<div class="arithmatex">\[\dot{\boldsymbol{\varepsilon}}^p = \dot{\lambda} \frac{\partial g}{\partial \boldsymbol{\sigma}}\]</div>
+<p>where the <strong>potential function</strong> <span class="arithmatex">\(g\)</span> is defined with the <strong>dilatancy angle</strong> <span class="arithmatex">\(\psi\)</span> (distinct from the friction angle <span class="arithmatex">\(\phi\)</span>):</p>
+<div class="arithmatex">\[g(\boldsymbol{\sigma}) = q + D \cdot p, \qquad D = \frac{6\sin\psi}{3 - \sin\psi}\]</div>
+<p>The gradient of the yield function (normal direction) is:</p>
+<div class="arithmatex">\[\frac{\partial f}{\partial \sigma_{ij}} = \underbrace{\frac{3}{2} \frac{s_{ij}}{q}}_{\text{deviatoric}} + \underbrace{\frac{F}{3} \delta_{ij}}_{\text{volumetric}}\]</div>
+<p>The gradient of the potential (flow direction) is:</p>
+<div class="arithmatex">\[\frac{\partial g}{\partial \sigma_{ij}} = \frac{3}{2} \frac{s_{ij}}{q} + \frac{D}{3} \delta_{ij}\]</div>
+<p>The plastic multiplier <span class="arithmatex">\(\dot{\lambda} \geq 0\)</span> satisfies the Kuhn-Tucker conditions:</p>
+<div class="arithmatex">\[f \leq 0, \quad \dot{\lambda} \geq 0, \quad \dot{\lambda} \cdot f = 0\]</div>
+<h3 id="45-return-mapping-integration">4.5 Return Mapping Integration</h3>
+<p>The <strong>return mapping</strong> algorithm solves the plasticity problem incrementally and implicitly at each Gauss point.</p>
+<p><strong>Step 1 — Elastic predictor (trial state):</strong>
+$<span class="arithmatex">\(\boldsymbol{\sigma}^\text{trial} = \boldsymbol{\sigma}_n + \mathbb{C} : \Delta\boldsymbol{\varepsilon}\)</span>$</p>
+<p><strong>Step 2 — Criterion check:</strong>
+$<span class="arithmatex">\(f^\text{trial} = q^\text{trial} + F \cdot p^\text{trial} - C(\gamma_p^n)\)</span>$</p>
+<ul>
+<li>If <span class="arithmatex">\(f^\text{trial} \leq 0\)</span>: elastic behavior, <span class="arithmatex">\(\boldsymbol{\sigma} = \boldsymbol{\sigma}^\text{trial}\)</span></li>
+<li>If <span class="arithmatex">\(f^\text{trial} &gt; 0\)</span>: plastic return required</li>
+</ul>
+<p><strong>Step 3 — Plastic correction (smooth regime):</strong></p>
+<p>We seek <span class="arithmatex">\(\Delta\lambda &gt; 0\)</span> such that <span class="arithmatex">\(f(\boldsymbol{\sigma}^{n+1}, \gamma_p^{n+1}) = 0\)</span>. The correction reads:</p>
+<div class="arithmatex">\[\boldsymbol{\sigma}^{n+1} = \boldsymbol{\sigma}^\text{trial} - \Delta\lambda \, \mathbb{C} : \frac{\partial g}{\partial \boldsymbol{\sigma}}\]</div>
+<p>The pressure is corrected by the volumetric part:
+$<span class="arithmatex">\(p^{n+1} = p^\text{trial} - K \cdot D \cdot \Delta\lambda\)</span>$</p>
+<p>The deviatoric stress is reduced by the deviatoric part:
+$<span class="arithmatex">\(q^{n+1} = \frac{q^\text{trial}}{1 + 3G\Delta\lambda/q^\text{trial}}\)</span>$</p>
+<p>The hardening variable is updated:
+$<span class="arithmatex">\(\gamma_p^{n+1} = \gamma_p^n + \sqrt{3/2} \cdot \Delta\lambda\)</span>$</p>
+<p><strong>Consistent tangent matrix:</strong> During plastic flow (<span class="arithmatex">\(q &gt; 0\)</span> and <span class="arithmatex">\(\Delta\lambda &gt; 0\)</span>), the effective shear modulus is reduced:</p>
+<div class="arithmatex">\[G_1 = G \cdot \frac{q^\text{trial}}{q^\text{trial} + 3G\Delta\lambda}, \qquad K_1 = K\]</div>
+<hr />
+<h2 id="5-numerical-homogenization-and-macro-gradient">5. Numerical Homogenization and Macro Gradient</h2>
+<p>The <strong>Plast</strong> model incorporates a <strong>periodic homogenization</strong> mechanism that allows imposing a <strong>macroscopic displacement gradient</strong> <span class="arithmatex">\(\mathbf{E}\)</span> on a representative volume element (RVE). The local displacement is decomposed as:</p>
+<div class="arithmatex">\[\mathbf{u}(\mathbf{x}) = \mathbf{E} \cdot \mathbf{x} + \tilde{\mathbf{u}}(\mathbf{x})\]</div>
+<p>where <span class="arithmatex">\(\tilde{\mathbf{u}}\)</span> is the periodic fluctuation. The local strain is then:</p>
+<div class="arithmatex">\[\boldsymbol{\varepsilon}(\mathbf{u}) = \mathbf{E}^\text{sym} + \tilde{\boldsymbol{\varepsilon}}(\tilde{\mathbf{u}})\]</div>
+<p><strong>Corresponding parameters in the input file:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>macro-gradient_ij</code></td>
+<td>Component <span class="arithmatex">\(E_{ij}\)</span> of the macroscopic gradient</td>
+</tr>
+<tr>
+<td><code>macro-fctindex_ij</code></td>
+<td>Index of the time function modulating <span class="arithmatex">\(E_{ij}(t)\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>The macroscopic gradient is thus <span class="arithmatex">\(E_{ij}(t) = \texttt{macro-gradient\_ij} \times f_{\texttt{macro-fctindex\_ij}}(t)\)</span>.</p>
+<p>The <strong>periodicity conditions</strong> (section <code>Periodicities</code>) enforce that the fluctuations <span class="arithmatex">\(\tilde{\mathbf{u}}\)</span> are identical on opposite cell boundaries, with the corresponding period vector.</p>
+<hr />
+<h2 id="6-test-cases">6. Test Cases</h2>
+<h3 id="61-plast-2d-periodic-composite-cell-shear">6.1 <code>Plast</code> — 2D Periodic Composite Cell (Shear)</h3>
+<p><strong>Geometry:</strong> Square cell <span class="arithmatex">\(2 \times 2\)</span> (dimensionless units) in plane strain (<code>2 plan</code>), containing 4 circular inclusions of radius <span class="arithmatex">\(R = 0.5\)</span> at the four corners, assembled by successive <span class="arithmatex">\(90°\)</span> rotations. The mesh is defined in <code>composite1.msh</code> (generated from <code>composite1.geo</code> and <code>inclusion.geo</code>).</p>
+<p><strong>Physics:</strong> Pure macroscopic shear imposed by the off-diagonal components of the gradient:
+$<span class="arithmatex">\(E_{12} = E_{21} = 10^{-3} \times f(t)\)</span>$</p>
+<p>The function <span class="arithmatex">\(f(t)\)</span> is linear from <span class="arithmatex">\(0\)</span> to <span class="arithmatex">\(t=5\)</span>. The loading is therefore an increasing shear up to <span class="arithmatex">\(\gamma = 5 \times 10^{-3}\)</span>.</p>
+<ul>
+<li><strong>Matrix</strong> (Physical surface 1): <code>Plast</code> model (Drucker-Prager), <span class="arithmatex">\(E = 2.713\)</span> GPa, <span class="arithmatex">\(\nu = 0.339\)</span>, <span class="arithmatex">\(c = 1.5\)</span> MPa, <span class="arithmatex">\(\phi = \psi = 25°\)</span></li>
+<li><strong>Inclusions</strong> (Physical surface 2): <code>Elast</code> model (pure linear elasticity), <span class="arithmatex">\(E = 2.713 \times 10^{10}\)</span> GPa (quasi-rigid), <span class="arithmatex">\(\nu = 0.49\)</span></li>
+</ul>
+<p><strong>Expected results:</strong> Under increasing shear, the matrix yields first at stress concentration points (inclusion corners), then progressively. The quasi-rigid inclusions remain elastic and redistribute stresses. The formation of plastic shear bands is observed.</p>
+<h3 id="62-plast0-1d-periodic-composite-cell-tension">6.2 <code>Plast0</code> — 1D Periodic Composite Cell (Tension)</h3>
+<p><strong>Geometry:</strong> 1D cell (<code>1 plan</code>) defined by 5 regularly spaced nodes on <span class="arithmatex">\([0, 1]\)</span> with a 10-element mesh, containing a soft layer (matrix) and a stiff layer (inclusion). Periodicity links the left boundary (Region 1) and right boundary (Region 4) along the <span class="arithmatex">\(x_1\)</span> direction.</p>
+<p><strong>Physics:</strong> Imposed axial macroscopic tension:
+$<span class="arithmatex">\(E_{11} = 10^{-3} \times f(t)\)</span>$</p>
+<p><strong>Materials:</strong> Identical to the <code>Plast</code> case but in 1D, with only the <code>macro-gradient_11</code> component active.</p>
+<p><strong>Expected results:</strong> Progressive yielding of the matrix under uniaxial tension. The effective macroscopic stress-strain law shows a yield knee followed by a plateau (perfect plasticity without hardening in this case).</p>
+<h3 id="63-plast1-axisymmetric-cylindrical-layer-under-internal-pressure">6.3 <code>Plast1</code> — Axisymmetric Cylindrical Layer Under Internal Pressure</h3>
+<p><strong>Geometry:</strong> Axisymmetric hollow cylinder (<code>1 axis</code>), inner radius <span class="arithmatex">\(r_i = 0.1\)</span> m, outer radius <span class="arithmatex">\(r_e = 0.2\)</span> m. Radial discretization with 10 elements.</p>
+<p><strong>Physics:</strong> Initial isotropic stresses <span class="arithmatex">\(\sigma_0 = -1\)</span> MPa (confinement). Loading by an internal pressure <span class="arithmatex">\(p(t)\)</span> applied at <span class="arithmatex">\(r = r_i\)</span> (Region 1) and an external pressure at <span class="arithmatex">\(r = r_e\)</span> (Region 3), modulated by the function <span class="arithmatex">\(f(t)\)</span> (linear from <span class="arithmatex">\(-1\)</span> at <span class="arithmatex">\(t=0\)</span> up to <span class="arithmatex">\(5\)</span> at <span class="arithmatex">\(t=10\)</span>). The base is free in the <span class="arithmatex">\(r\)</span> direction.</p>
+<p><strong>Material:</strong> <code>Plast</code> model (Drucker-Prager), <span class="arithmatex">\(E = 10\)</span> GPa, <span class="arithmatex">\(\nu = 0.26\)</span>, <span class="arithmatex">\(c = 1\)</span> MPa, <span class="arithmatex">\(\phi = \psi = 25°\)</span>.</p>
+<p><strong>Expected results:</strong> Known analytical solution for plasticity of a thick-walled cylinder (Lamé + Drucker-Prager). The plastic front propagates from the inner radius outward as the internal pressure increases. The radial stress profiles <span class="arithmatex">\(\sigma_r(r)\)</span> and <span class="arithmatex">\(\sigma_\theta(r)\)</span> can be compared to the analytical solution.</p>
+<p><img alt="Plast - Simulation Results" src="Plast_results.png" /></p>
+<hr />
+<h2 id="7-material-parameters-of-the-model">7. Material Parameters of the Model</h2>
+<h3 id="common-parameters">Common Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Physical Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>young</code></td>
+<td>Young's modulus <span class="arithmatex">\(E\)</span> (Pa) — skeleton stiffness</td>
+</tr>
+<tr>
+<td><code>poisson</code></td>
+<td>Poisson's ratio <span class="arithmatex">\(\nu\)</span> — lateral compressibility</td>
+</tr>
+<tr>
+<td><code>rho_s</code></td>
+<td>Dry mass density (kg/m³) — self-weight</td>
+</tr>
+<tr>
+<td><code>gravity</code></td>
+<td>Gravitational acceleration (m/s²)</td>
+</tr>
+<tr>
+<td><code>sig0_ij</code></td>
+<td>In-situ initial stress <span class="arithmatex">\(\sigma_0^{ij}\)</span> (Pa)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="drucker-prager-specific-parameters-model-1">Drucker-Prager Specific Parameters (Model 1)</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Physical Role</th>
+<th>Typical Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cohesion</code></td>
+<td>Cohesion <span class="arithmatex">\(c\)</span> (Pa)</td>
+<td>1.5 MPa</td>
+</tr>
+<tr>
+<td><code>friction</code></td>
+<td>Friction angle <span class="arithmatex">\(\phi\)</span> (degrees)</td>
+<td>25°</td>
+</tr>
+<tr>
+<td><code>dilatancy</code></td>
+<td>Dilatancy angle <span class="arithmatex">\(\psi\)</span> (degrees)</td>
+<td>25° (associated)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="cam-clay-parameters-model-2-alternative">Cam-Clay Parameters (Model 2, Alternative)</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>initial_pre-consolidation_pressure</code></td>
+<td>Initial pre-consolidation pressure <span class="arithmatex">\(p_{c0}\)</span></td>
+</tr>
+<tr>
+<td><code>slope_of_swelling_line</code></td>
+<td>Slope of the swelling line <span class="arithmatex">\(\kappa\)</span></td>
+</tr>
+<tr>
+<td><code>slope_of_virgin_consolidation_line</code></td>
+<td>Slope of the normal consolidation line <span class="arithmatex">\(\lambda\)</span></td>
+</tr>
+<tr>
+<td><code>slope_of_critical_state_line</code></td>
+<td>Slope of the critical state line <span class="arithmatex">\(M\)</span></td>
+</tr>
+<tr>
+<td><code>initial_void_ratio</code></td>
+<td>Initial void ratio <span class="arithmatex">\(e_0\)</span></td>
+</tr>
+</tbody>
+</table>
+<h3 id="periodic-homogenization-parameters">Periodic Homogenization Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>macro-gradient_ij</code></td>
+<td>Amplitude of the macroscopic gradient <span class="arithmatex">\(E_{ij}\)</span></td>
+</tr>
+<tr>
+<td><code>macro-fctindex_ij</code></td>
+<td>Index of the time function (defined in <code>Functions</code>)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="8-step-by-step-description-of-input-files">8. Step-by-Step Description of Input Files</h2>
+<h3 id="81-file-plast-2d-composite-cell-periodic-shear">8.1 File <code>Plast</code> — 2D Composite Cell, Periodic Shear</h3>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Geometry
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>2 plan
+</code></pre></div>
+<strong>Dimension:</strong> 2D plane stress problem (<code>plan</code>). BIL solves the vector equations in <span class="arithmatex">\(x_1\)</span> and <span class="arithmatex">\(x_2\)</span>.</p>
+<hr />
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Mesh
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>composite1.msh
+</code></pre></div>
+<strong>External mesh:</strong> GMSH file generated from <code>composite1.geo</code> (which includes <code>inclusion.geo</code>). The geometry comprises:
+- A square <span class="arithmatex">\([0,2] \times [0,2]\)</span> divided into 4 quadrants
+- In each quadrant, a quarter-disk of radius <span class="arithmatex">\(R=0.5\)</span> centered at the corresponding corner
+- Physical surface 1 = matrix (regions outside the inclusions)
+- Physical surface 2 = inclusions (circular regions)
+- Physical lines (regions 13, 14, 104, 105, 114, 115, 124, 125) correspond to the cell boundaries</p>
+<hr />
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Periodicities
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>4
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>MasterRegion = 105 SlaveRegion = 13  PeriodVector = 2 0 0
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>MasterRegion = 114 SlaveRegion = 125 PeriodVector = 2 0 0
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>MasterRegion = 115 SlaveRegion = 104 PeriodVector = 0 2 0
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>MasterRegion = 124 SlaveRegion = 14  PeriodVector = 0 2 0
+</code></pre></div>
+<strong>Periodicity conditions:</strong> 4 master/slave region pairs define the cell periodicity in both directions. The period vector <span class="arithmatex">\(\mathbf{T}\)</span> links the degrees of freedom of image nodes:
+$<span class="arithmatex">\(\tilde{\mathbf{u}}(\mathbf{x} + \mathbf{T}) = \tilde{\mathbf{u}}(\mathbf{x})\)</span>$
+That is, the <strong>fluctuation</strong> <span class="arithmatex">\(\tilde{\mathbf{u}}\)</span> is identical on opposite boundaries (the first two pairs handle the <span class="arithmatex">\(x_1\)</span> direction, the last two handle the <span class="arithmatex">\(x_2\)</span> direction).</p>
+<hr />
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Material #1            # matrix
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Model = Plast
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>young = 2713e6         # E = 2.713 GPa
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>poisson = 0.339        # ν = 0.339
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>cohesion = 1.5e+06     # c = 1.5 MPa
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>friction = 25          # φ = 25°
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>dilatancy = 25         # ψ = 25° (associated)
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>macro-gradient_12 = 1.e-3
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>macro-gradient_21 = 1.e-3
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>macro-fctindex_12 = 1
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>macro-fctindex_21 = 1
+</code></pre></div>
+<strong>Material 1 (matrix):</strong> The matrix obeys the Drucker-Prager criterion. The presence of <code>cohesion</code>, <code>friction</code>, <code>dilatancy</code> automatically triggers the selection of plastic model 1 (<code>SetPlasticModel(1)</code> in <code>pm()</code>). The macroscopic shear gradient is imposed: <span class="arithmatex">\(E_{12}(t) = E_{21}(t) = 10^{-3} \times f_1(t)\)</span>, where <span class="arithmatex">\(f_1\)</span> is function 1 defined in <code>Functions</code>.</p>
+<hr />
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Material #2            # inclusion
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Model = Elast
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>young = 2713e16        # E = 2.713e19 Pa (quasi-rigid)
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>poisson = 0.49
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>macro-gradient_12 = 1.e-3
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>macro-gradient_21 = 1.e-3
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>macro-fctindex_12 = 1
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>macro-fctindex_21 = 1
+</code></pre></div>
+<strong>Material 2 (inclusion):</strong> The inclusions are modeled as rigid bodies (<span class="arithmatex">\(E\)</span> multiplied by <span class="arithmatex">\(10^{10}\)</span> relative to the matrix). They use the <code>Elast</code> model (pure elasticity, no plasticity). The same macro gradient is prescribed to ensure loading compatibility.</p>
+<hr />
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Functions
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>1
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>N = 2  F(0) = 0  F(5) = 5
+</code></pre></div>
+<strong>Loading function:</strong> A single function (index 1), piecewise linear with 2 points: <span class="arithmatex">\(f(0) = 0\)</span>, <span class="arithmatex">\(f(5) = 5\)</span>. The macroscopic gradient is therefore <span class="arithmatex">\(E_{12}(t) = 10^{-3} \times t\)</span> for <span class="arithmatex">\(0 \leq t \leq 5\)</span>.</p>
+<hr />
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Boundary Conditions
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>2
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Region = 1 Unknown = u_1 Field = 0 Function = 0
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Region = 1 Unknown = u_2 Field = 0 Function = 0
+</code></pre></div>
+<strong>Boundary conditions:</strong> One point of the cell (Region 1 = origin point in the mesh) is fixed in both displacement directions to suppress rigid body modes. Without this, with periodic conditions and no fixed support, the system would be singular.</p>
+<hr />
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Dates
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>6
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>0 1 2 3 4 5
+</code></pre></div>
+<strong>Output times:</strong> Results saved at <span class="arithmatex">\(t = 0, 1, 2, 3, 4, 5\)</span> (corresponding to files <code>.t0</code> through <code>.t5</code>).</p>
+<hr />
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Objective Variations
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>u_1 = 1.e-4
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>u_2 = 1.e-4
+</code></pre></div>
+<strong>Adaptive time step control:</strong> The time increment <span class="arithmatex">\(\Delta t\)</span> is adjusted so that the relative variations of the unknowns remain around <span class="arithmatex">\(10^{-4}\)</span> per step.</p>
+<hr />
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Iterative Process
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Iterations = 10
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Tolerance = 1.e-4
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Repetition = 0
+</code></pre></div>
+<strong>Nonlinear solver:</strong> Newton-Raphson with a maximum of 10 iterations per time step, and a tolerance on the normalized residual of <span class="arithmatex">\(10^{-4}\)</span>.</p>
+<hr />
+<h3 id="82-file-plast0-1d-composite-cell-periodic-tension">8.2 File <code>Plast0</code> — 1D Composite Cell, Periodic Tension</h3>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>DIME
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>1 plan
+</code></pre></div>
+<strong>Dimension:</strong> 1D plane stress problem. Only the displacement <span class="arithmatex">\(u_1\)</span> is solved.</p>
+<hr />
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>MESH
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>5
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>0 0 0.5 1 1
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>0.05
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>1 10 10 1
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>2 2 1 1
+</code></pre></div>
+<strong>Internal BIL mesh (simplified format):</strong> 5 nodes at positions <span class="arithmatex">\(x = 0, 0, 0.5, 1, 1\)</span> (duplicates indicate zone boundaries). Target mesh size: <span class="arithmatex">\(h = 0.05\)</span>. The line <code>1 10 10 1</code> defines the physical regions of the segments, <code>2 2 1 1</code> the material types. The cell thus consists of two segments: a central layer (matrix, material 1, <span class="arithmatex">\(x \in [0, 0.5]\)</span>) and an outer layer (inclusion, material 2, <span class="arithmatex">\(x \in [0.5, 1]\)</span>).</p>
+<hr />
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Periodicities
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>1
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>MasterRegion = 1 SlaveRegion = 4  PeriodVector = 1 0 0
+</code></pre></div>
+<strong>1D Periodicity:</strong> The left boundary (Region 1, <span class="arithmatex">\(x=0\)</span>) is linked to the right boundary (Region 4, <span class="arithmatex">\(x=1\)</span>) with period <span class="arithmatex">\(T_1 = 1\)</span>.</p>
+<hr />
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>macro-gradient_11 = 1.e-3
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>macro-fctindex_11 = 1
+</code></pre></div>
+<strong>Macroscopic tension:</strong> Only the component <span class="arithmatex">\(E_{11}\)</span> is active, imposing an axial tension/compression strain.</p>
+<hr />
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Boundary Conditions
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>1
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Region = 1 Unknown = u_1 Field = 0 Function = 0
+</code></pre></div>
+<strong>Rigid body mode suppression:</strong> The displacement at <span class="arithmatex">\(x=0\)</span> is zero to remove the translational indeterminacy.</p>
+<hr />
+<h3 id="83-file-plast1-axisymmetric-cylindrical-layer-under-internal-pressure">8.3 File <code>Plast1</code> — Axisymmetric Cylindrical Layer Under Internal Pressure</h3>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>DIME
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>1 axis
+</code></pre></div>
+<strong>Axisymmetry:</strong> 1D problem with rotational symmetry. BIL automatically computes the curvature terms in the equilibrium equation.</p>
+<hr />
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>MESH
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>4
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>0.1 0.1 0.2 0.2
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>1.e-2
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>1 10 1
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>1 1 1
+</code></pre></div>
+<strong>Geometry:</strong> 4 nodes at <span class="arithmatex">\(r = 0.1, 0.1, 0.2, 0.2\)</span> m (inner and outer radii of the ring). Mesh with 10 elements of size <span class="arithmatex">\(10^{-2}\)</span> m. A single material (material 1) over the single segment.</p>
+<hr />
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>sig0_11 = -1e6
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>sig0_22 = -1e6
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>sig0_33 = -1e6
+</code></pre></div>
+<strong>Initial state:</strong> Isotropic initial stresses <span class="arithmatex">\(\sigma_0 = -1\)</span> MPa simulating confinement (lithostatic or hydrostatic pressure).</p>
+<hr />
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>FLDS
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>1
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>Value = -1e6   Gradient = 0 0 0 Point = 0 0 0
+</code></pre></div>
+<strong>Initial pressure field:</strong> Uniform scalar field of value <span class="arithmatex">\(-1\)</span> MPa used to initialize conditions (here used as the reference value for loading).</p>
+<hr />
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>INIT
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>1
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>Region = 2  Unknown = u_1  Field = 0
+</code></pre></div>
+<strong>Initialization:</strong> The displacement <span class="arithmatex">\(u_1\)</span> in Region 2 (inner boundary, <span class="arithmatex">\(r = r_i\)</span>) is initialized to zero (Field 0 = zero value).</p>
+<hr />
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>FUNC
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>1
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>N = 2  F(0) = -1  F(10) = 5
+</code></pre></div>
+<strong>Loading function:</strong> Ramp from <span class="arithmatex">\(f(0) = -1\)</span> to <span class="arithmatex">\(f(10) = 5\)</span>, i.e., <span class="arithmatex">\(f(t) = -1 + 0.6t\)</span>. This allows starting from the initial compressive stress and progressively increasing the internal pressure.</p>
+<hr />
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>LOAD
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>2
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>Region = 1 Equation = meca_1 Type = force Field = 1 Function = 1
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>Region = 3 Equation = meca_1 Type = force Field = 1 Function = 0
+</code></pre></div>
+<strong>Loading:</strong>
+- <strong>Region 1</strong> (<span class="arithmatex">\(r = r_i\)</span>): internal pressure <span class="arithmatex">\(p_i = -10^6 \times f(t)\)</span> Pa (nodal force at <span class="arithmatex">\(r_i\)</span>, modulated by function 1).
+- <strong>Region 3</strong> (<span class="arithmatex">\(r = r_e\)</span>): fixed zero external pressure ($f_0 = $ zero constant, Function = 0).</p>
+<hr />
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>DATE
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>5
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>0 1 2 3 4
+</code></pre></div>
+<strong>Output times:</strong> 5 time steps at <span class="arithmatex">\(t = 0, 1, 2, 3, 4\)</span>.</p>
+<hr />
+<h2 id="9-numerical-implementation-plastcpp">9. Numerical Implementation (<code>Plast.cpp</code>)</h2>
+<h3 id="91-code-architecture">9.1 Code Architecture</h3>
+<p>The <code>Plast.cpp</code> file is built on the <strong>MaterialPointMethod (MPM)</strong> design pattern of BIL, which breaks the computation into four distinct operations executed at each Gauss point:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SetInputs</code></td>
+<td>Computation of the total strain <span class="arithmatex">\(\boldsymbol{\varepsilon}\)</span> from nodal displacements and the macro gradient</td>
+</tr>
+<tr>
+<td><code>Integrate</code></td>
+<td>Constitutive integration: return mapping and update of <span class="arithmatex">\(\boldsymbol{\sigma}\)</span>, <span class="arithmatex">\(\boldsymbol{\varepsilon}^p\)</span>, <span class="arithmatex">\(\gamma_p\)</span></td>
+</tr>
+<tr>
+<td><code>SetTangentMatrix</code></td>
+<td>Assembly of the consistent tangent matrix <span class="arithmatex">\(\mathbb{C}^\text{ep}\)</span></td>
+</tr>
+<tr>
+<td><code>Initialize</code></td>
+<td>State initialization (initial stresses, internal variables)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="92-stored-internal-variables-struct-implicitvalues_t">9.2 Stored Internal Variables (struct <code>ImplicitValues_t</code>)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="k">struct</span><span class="w"> </span><span class="nc">ImplicitValues_t</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">Displacement</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span><span class="w">       </span><span class="c1">// u_i</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">Strain</span><span class="p">[</span><span class="mi">9</span><span class="p">];</span><span class="w">             </span><span class="c1">// ε_ij</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">Stress</span><span class="p">[</span><span class="mi">9</span><span class="p">];</span><span class="w">             </span><span class="c1">// σ_ij</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">BodyForce</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span><span class="w">          </span><span class="c1">// ρ g_i</span>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">PlasticStrain</span><span class="p">[</span><span class="mi">9</span><span class="p">];</span><span class="w">      </span><span class="c1">// ε^p_ij</span>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">HardeningVariable</span><span class="p">;</span><span class="w">     </span><span class="c1">// γ_p (cumulated plastic strain)</span>
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">CriterionValue</span><span class="p">;</span><span class="w">        </span><span class="c1">// f(σ, γ_p)</span>
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">PlasticMultiplier</span><span class="p">;</span><span class="w">     </span><span class="c1">// Δλ</span>
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="p">};</span>
+</code></pre></div>
+<h3 id="93-plastic-model-selection">9.3 Plastic Model Selection</h3>
+<p>The <code>pm()</code> function (property manager) identifies the plastic model from the keywords in the input file:
+- <code>cohesion</code>, <code>friction</code>, <code>dilatancy</code> → Drucker-Prager (<code>plasticmodel = 1</code>)
+- <code>slope_of_swelling_line</code>, etc. → Cam-Clay (<code>plasticmodel = 2</code>)</p>
+<p>This mechanism allows the same <code>Plast.cpp</code> file to be used for different plastic criteria without modifying the code.</p>
+<h3 id="94-macro-gradient-and-kinematic-decomposition">9.4 Macro Gradient and Kinematic Decomposition</h3>
+<p>The local strain at each Gauss point is:
+$<span class="arithmatex">\(\boldsymbol{\varepsilon} = \mathbf{E}^\text{sym}(t) + \boldsymbol{\varepsilon}(\tilde{\mathbf{u}})\)</span>$</p>
+<p>The <code>MacroStrain()</code> function computes the symmetric part of the macro gradient:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="n">strain</span><span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">grd</span><span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">grd</span><span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="n">j</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">]);</span>
+</code></pre></div></p>
+<p>The <code>MacroGradient()</code> function evaluates the time amplitude by interpolating the loading function <span class="arithmatex">\(f_k(t)\)</span> for each component <span class="arithmatex">\(E_{ij}\)</span>.</p>
+<h3 id="95-mechanical-residual">9.5 Mechanical Residual</h3>
+<p>The residual is computed via <code>FEM_ComputeStrainWorkResidu</code>, which integrates by Gauss quadrature:
+$<span class="arithmatex">\(r_i^\alpha = \int_\Omega \sigma_{ij} \frac{\partial N^\alpha}{\partial x_j} d\Omega\)</span>$
+where <span class="arithmatex">\(N^\alpha\)</span> are the shape functions associated with node <span class="arithmatex">\(\alpha\)</span>.</p>
+<hr />
+<h2 id="10-references">10. References</h2>
+<ul>
+<li>
+<p><strong>Drucker, D. C. &amp; Prager, W.</strong> (1952). Soil mechanics and plastic analysis or limit design. <em>Quarterly of Applied Mathematics</em>, 10(2), 157–165. — Original Drucker-Prager criterion, conical extension of the Mohr-Coulomb criterion in principal stress space.</p>
+</li>
+<li>
+<p><strong>Simo, J. C. &amp; Hughes, T. J. R.</strong> (1998). <em>Computational Inelasticity</em>. Springer, New York. — Fundamental reference for the return mapping algorithm and consistent tangent matrix used in <code>PlasticityDruckerPrager.c</code>.</p>
+</li>
+<li>
+<p><strong>de Souza Neto, E. A., Perić, D. &amp; Owen, D. R. J.</strong> (2008). <em>Computational Methods for Plasticity: Theory and Applications</em>. Wiley. — Details implicit integration algorithms for Drucker-Prager plasticity, including treatment of the cone apex.</p>
+</li>
+<li>
+<p><strong>Roscoe, K. H. &amp; Burland, J. B.</strong> (1968). On the generalised stress-strain behaviour of wet clay. In <em>Engineering Plasticity</em>, Cambridge University Press, 535–609. — Theoretical foundation of the modified Cam-Clay model, implemented as an alternative model in <code>Plast.cpp</code>.</p>
+</li>
+<li>
+<p><strong>Suquet, P.</strong> (1987). Elements of Homogenization for Inelastic Solid Mechanics. In <em>Homogenization Techniques for Composite Media</em>, Springer, 193–278. — Theoretical basis for periodicity conditions and the macro/micro decomposition used in the <code>Plast</code> and <code>Plast0</code> cases.</p>
+</li>
+<li>
+<p><strong>Hill, R.</strong> (1963). Elastic properties of reinforced solids: some theoretical principles. <em>Journal of the Mechanics and Physics of Solids</em>, 11(5), 357–372. — Hill's lemma (relationship between stress/strain averages and macroscopic work), foundation of periodic numerical homogenization.</p>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../Elasd_model/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Elasd">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Elasd
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../BBM_model/" class="md-footer__link md-footer__link--next" aria-label="Next: BBM">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                BBM
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "navigation.footer", "search.highlight", "search.suggest", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

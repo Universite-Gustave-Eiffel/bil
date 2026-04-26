@@ -1,0 +1,3464 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A modeling platform based on finite element/volume methods">
+      
+      
+        <meta name="author" content="P. Dangla (Université Gustave Eiffel)">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Modèle M10 — Équation de Richards : drainage d'une colonne de billes sous gravité (1D) - Bil - documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#modele-m10-equation-de-richards-drainage-dune-colonne-de-billes-sous-gravite-1d" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Bil - documentation" class="md-header__button md-logo" aria-label="Bil - documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Bil - documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Modèle M10 — Équation de Richards : drainage d'une colonne de billes sous gravité (1D)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Universite-Gustave-Eiffel/bil" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Universite-Gustave-Eiffel/bil
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Introduction
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../running_bil/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Running Bil
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../examples/" class="md-tabs__link">
+          
+  
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code_architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../adding_a_model/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  How to Add a New Model
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Bil - documentation" class="md-nav__button md-logo" aria-label="Bil - documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Bil - documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Universite-Gustave-Eiffel/bil" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Universite-Gustave-Eiffel/bil
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../running_bil/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Running Bil
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flow
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Flow
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/flow_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/M1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/M2_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/Fick_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fick
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/Richards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Richards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mechanics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mechanics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/mechanics_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/Elast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/Elasd_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elasd
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/Plast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/BBM_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BBM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poromechanics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Poromechanics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Poromechanics/poromechanics_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Poromechanics/M7_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Poromechanics/Poroplast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poroplast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Phase change
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase change
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PhaseChange/phasechange_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PhaseChange/Frostaco_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frostaco
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PhaseChange/Frostaco3d_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frostaco3d
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durability & Chemistry
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Durability & Chemistry
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/durability_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Duracem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Duracem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Chloricem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chloricem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Sulfaco_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfaco
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Sulfuricem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfuricem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Sulfaconew_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfaconew
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Coupled Transfers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Coupled Transfers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/coupledtransfers_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/DWS1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DWS1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/Yuan1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Yuan1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/Shen_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/usoil_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    usoil
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8" id="__nav_3_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specialized
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Specialized
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Specialized/specialized_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Specialized/MechaMic_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MechaMic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code_architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adding_a_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to Add a New Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-des-matieres" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table des matières
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-contexte-et-objectif" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Contexte et objectif
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-hypotheses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Hypothèses
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-variables-et-notation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Variables et notation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Variables et notation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inconnue-primaire" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inconnue primaire
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variables-secondaires-calculees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variables secondaires calculées
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parametres-du-cas-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paramètres du cas test
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-modele-mathematique" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Modèle mathématique
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Modèle mathématique">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-equation-de-conservation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Équation de conservation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-loi-de-flux-de-darcy-avec-gravite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Loi de flux de Darcy avec gravité
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-courbe-de-retention-et-permeabilite-relative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Courbe de rétention et perméabilité relative
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-equation-de-richards-forme-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Équation de Richards — forme complète
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-conditions-aux-limites-et-initiales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Conditions aux limites et initiales
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Conditions aux limites et initiales">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#conditions-initiales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditions initiales
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conditions-aux-limites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditions aux limites
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-explication-detaillee-des-fichiers-dentree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Explication détaillée des fichiers d'entrée
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Explication détaillée des fichiers d&#39;entrée">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-fichier-principal-m10-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Fichier principal M10-1
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.1 Fichier principal M10-1">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#section-geometry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section Geometry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#section-mesh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section Mesh
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#section-material" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section Material
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#section-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#section-initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section Initialization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#section-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#section-boundary-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section Boundary Conditions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#section-loads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section Loads
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#section-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section Points
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#section-dates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section Dates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#section-objective-variations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section Objective Variations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#section-iterative-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section Iterative Process
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#section-time-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section Time Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-fichier-de-courbes-billes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Fichier de courbes billes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-fichier-de-maillage-m10-1msh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Fichier de maillage M10-1.msh
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-fichier-de-stockage-m10-1sto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Fichier de stockage M10-1.sto
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-resultats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Résultats
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Résultats">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#etat-initial-t-0-s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        État initial — \(t = 0\) s
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etat-a-t-120-s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        État à \(t = 120\) s
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etat-a-t-300-s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        État à \(t = 300\) s
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#synthese-de-levolution-temporelle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synthèse de l'évolution temporelle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-discretisation-numerique" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Discrétisation numérique
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-references-bibliographiques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Références bibliographiques
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Références bibliographiques">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#equation-de-richards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Équation de Richards
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proprietes-hydrauliques-des-billes-de-verre" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Propriétés hydrauliques des billes de verre
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#courbes-de-retention-capillaire" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Courbes de rétention capillaire
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#methodes-numeriques-pour-lequation-de-richards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Méthodes numériques pour l'équation de Richards
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-numerique" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implémentation numérique
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="modele-m10-equation-de-richards-drainage-dune-colonne-de-billes-sous-gravite-1d">Modèle M10 — Équation de Richards : drainage d'une colonne de billes sous gravité (1D)</h1>
+<blockquote>
+<p><strong>Fichiers sources :</strong>
+<code>src/Models/ModelFiles/M10.c</code></p>
+<p><strong>Exemple :</strong>
+<code>test_examples/M10-1/M10-1</code> · <code>test_examples/M10-1/billes</code> · <code>test_examples/M10-1/M10-1.msh</code></p>
+<p><strong>Auteur du modèle Bil :</strong> P. Dangla (Université Gustave Eiffel)</p>
+</blockquote>
+<hr />
+<h2 id="table-des-matieres">Table des matières</h2>
+<ol>
+<li><a href="#1-contexte-et-objectif">Contexte et objectif</a></li>
+<li><a href="#2-hypothèses">Hypothèses</a></li>
+<li><a href="#3-variables-et-notation">Variables et notation</a></li>
+<li><a href="#4-modèle-mathématique">Modèle mathématique</a></li>
+<li>4.1 <a href="#41-équation-de-conservation">Équation de conservation</a></li>
+<li>4.2 <a href="#42-loi-de-flux-de-darcy-avec-gravité">Loi de flux de Darcy avec gravité</a></li>
+<li>4.3 <a href="#43-courbe-de-rétention-et-perméabilité-relative">Courbe de rétention et perméabilité relative</a></li>
+<li>4.4 <a href="#44-équation-de-richards--forme-complète">Équation de Richards — forme complète</a></li>
+<li><a href="#5-conditions-aux-limites-et-initiales">Conditions aux limites et initiales</a></li>
+<li><a href="#6-explication-détaillée-des-fichiers-dentrée">Explication détaillée des fichiers d'entrée</a></li>
+<li>6.1 <a href="#61-fichier-principal-m10-1">Fichier principal <code>M10-1</code></a></li>
+<li>6.2 <a href="#62-fichier-de-courbes-billes">Fichier de courbes <code>billes</code></a></li>
+<li>6.3 <a href="#63-fichier-de-maillage-m10-1msh">Fichier de maillage <code>M10-1.msh</code></a></li>
+<li>6.4 <a href="#64-fichier-de-stockage-m10-1sto">Fichier de stockage <code>M10-1.sto</code></a></li>
+<li><a href="#7-résultats">Résultats</a></li>
+<li><a href="#8-discrétisation-numérique">Discrétisation numérique</a></li>
+<li><a href="#9-références-bibliographiques">Références bibliographiques</a></li>
+</ol>
+<hr />
+<h2 id="1-contexte-et-objectif">1. Contexte et objectif</h2>
+<p>Le modèle M10 résout l'<strong>équation de Richards</strong> pour l'écoulement monophasique de l'eau liquide dans un milieu poreux partiellement saturé. La pression gazeuse est supposée uniforme et constante ; seule la <strong>pression de la phase liquide</strong> <span class="arithmatex">\(p_l\)</span> est inconnue.</p>
+<p>Le cas test <code>M10-1</code> simule le <strong>drainage gravitaire d'une colonne verticale de billes de verre</strong> (hauteur 20 cm). Ce scénario est un classique de la mécanique des fluides en milieu poreux, utilisé depuis les expériences fondatrices de Richards (1931) pour valider les codes d'écoulement non saturé. Les billes de verre constituent un matériau modèle : leur courbe de rétention est bien caractérisée, leur porosité est élevée (<span class="arithmatex">\(\phi = 0.38\)</span>) et leur perméabilité intrinsèque est grande (<span class="arithmatex">\(k_\text{int} = 8.9 \times 10^{-12}\)</span> m²), ce qui rend les temps de drainage accessibles à l'expérience.</p>
+<p><strong>Physique simulée :</strong> la colonne, initialement quasi-saturée mais hors équilibre hydrostatique, se draine sous l'effet de la gravité. L'eau s'écoule vers le fond (maintenu à pression atmosphérique), la pression capillaire augmente en sommet de colonne, et dès qu'elle dépasse la pression d'entrée d'air des billes (~680 Pa), une désaturation rapide se produit. Un front de désaturation progresse de haut en bas sur une échelle de temps de quelques centaines de secondes.</p>
+<hr />
+<h2 id="2-hypotheses">2. Hypothèses</h2>
+<ol>
+<li><strong>Monophasique liquide</strong> : seule la phase liquide (eau) est mobile. La phase gazeuse est supposée à pression constante <span class="arithmatex">\(p_g = 10^5\)</span> Pa (atmosphère ouverte).</li>
+<li><strong>Isotherme</strong> : la température est uniforme ; viscosité et masse volumique sont des constantes.</li>
+<li><strong>Porosité rigide</strong> : le squelette solide est indéformable, <span class="arithmatex">\(\phi = \text{const}\)</span>.</li>
+<li><strong>Loi de Darcy généralisée</strong> avec gravité pour le transport de la phase liquide.</li>
+<li><strong>Équilibre capillaire local</strong> : la saturation <span class="arithmatex">\(s_l\)</span> est une fonction univoque de la pression capillaire <span class="arithmatex">\(p_c = p_g - p_l\)</span>.</li>
+<li><strong>Gravité</strong> : <span class="arithmatex">\(g = -9.81\)</span> m/s², orientée dans la direction décroissante de <span class="arithmatex">\(x\)</span> (axe <span class="arithmatex">\(x\)</span> vertical vers le haut).</li>
+<li><strong>Pas de source/puits</strong> internes.</li>
+</ol>
+<hr />
+<h2 id="3-variables-et-notation">3. Variables et notation</h2>
+<h3 id="inconnue-primaire">Inconnue primaire</h3>
+<table>
+<thead>
+<tr>
+<th>Symbole</th>
+<th>Signification</th>
+<th>Unité</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(p_l\)</span></td>
+<td>Pression de la phase liquide</td>
+<td>Pa</td>
+</tr>
+</tbody>
+</table>
+<p>La pression capillaire en découle directement (pression gazeuse constante) :</p>
+<div class="arithmatex">\[p_c = p_g - p_l = 10^5 - p_l\]</div>
+<h3 id="variables-secondaires-calculees">Variables secondaires calculées</h3>
+<table>
+<thead>
+<tr>
+<th>Symbole</th>
+<th>Définition</th>
+<th>Signification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(s_l(p_c)\)</span></td>
+<td>tabulée dans <code>billes</code></td>
+<td>Degré de saturation en eau</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(k_{rl}(p_c)\)</span></td>
+<td>tabulée dans <code>billes</code></td>
+<td>Perméabilité relative liquide</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(K_l\)</span></td>
+<td><span class="arithmatex">\(\rho_l k_\text{int} k_{rl} / \mu_l\)</span></td>
+<td>Conductivité hydraulique effective</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(m_l\)</span></td>
+<td><span class="arithmatex">\(\rho_l \phi s_l\)</span></td>
+<td>Teneur en eau massique par unité de volume total</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(W_l\)</span></td>
+<td>cf. §4.2</td>
+<td>Flux massique de liquide</td>
+</tr>
+</tbody>
+</table>
+<h3 id="parametres-du-cas-test">Paramètres du cas test</h3>
+<table>
+<thead>
+<tr>
+<th>Symbole</th>
+<th>Valeur</th>
+<th>Signification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(\rho_l\)</span></td>
+<td>1000 kg/m³</td>
+<td>Masse volumique de l'eau liquide</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\mu_l\)</span></td>
+<td><span class="arithmatex">\(10^{-3}\)</span> Pa·s</td>
+<td>Viscosité dynamique de l'eau</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(k_\text{int}\)</span></td>
+<td><span class="arithmatex">\(8.9 \times 10^{-12}\)</span> m²</td>
+<td>Perméabilité intrinsèque des billes de verre</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\phi\)</span></td>
+<td>0.38</td>
+<td>Porosité</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(p_g\)</span></td>
+<td><span class="arithmatex">\(10^5\)</span> Pa</td>
+<td>Pression gazeuse (constante, atmosphérique)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(g\)</span></td>
+<td><span class="arithmatex">\(-9.81\)</span> m/s²</td>
+<td>Accélération de la pesanteur</td>
+</tr>
+</tbody>
+</table>
+<p>La conductivité hydraulique à saturation complète vaut :</p>
+<div class="arithmatex">\[K_{l,\text{sat}} = \frac{\rho_l\,k_\text{int}}{\mu_l} = \frac{1000 \times 8.9 \times 10^{-12}}{10^{-3}} = 8.9 \times 10^{-6} \text{ kg/(m²·Pa·s)}\]</div>
+<hr />
+<h2 id="4-modele-mathematique">4. Modèle mathématique</h2>
+<h3 id="41-equation-de-conservation">4.1 Équation de conservation</h3>
+<p>Le système est composé d'une <strong>unique équation de bilan de masse de l'eau liquide</strong> intégrée sur le volume élémentaire représentatif (VER) :</p>
+<div class="arithmatex">\[\frac{\partial m_l}{\partial t} + \nabla \cdot \mathbf{W}_l = 0\]</div>
+<p>avec la teneur en eau massique volumique :</p>
+<div class="arithmatex">\[m_l = \rho_l\,\phi\,s_l(p_c)\]</div>
+<h3 id="42-loi-de-flux-de-darcy-avec-gravite">4.2 Loi de flux de Darcy avec gravité</h3>
+<p>Le flux massique de liquide est donné par la loi de Darcy généralisée :</p>
+<div class="arithmatex">\[\mathbf{W}_l = -K_l\,\left(\nabla p_l - \rho_l\,\mathbf{g}\right), \qquad K_l = \frac{\rho_l\,k_\text{int}\,k_{rl}(p_c)}{\mu_l}\]</div>
+<p>Dans l'implémentation M10.c (1D, axe <span class="arithmatex">\(x\)</span> vertical vers le haut, <span class="arithmatex">\(g_x = g = -9.81\)</span> m/s²) :</p>
+<div class="arithmatex">\[W_l = \underbrace{-K_l\,\frac{\partial p_l}{\partial x}}_{\text{terme de pression}} + \underbrace{K_l\,\rho_l\,g}_{\text{terme gravitaire}}\]</div>
+<p>La condition d'équilibre hydrostatique (<span class="arithmatex">\(W_l = 0\)</span>) impose :</p>
+<div class="arithmatex">\[\frac{\partial p_l}{\partial x}\bigg|_\text{hydro} = \rho_l\,g = 1000 \times (-9.81) = -9810 \text{ Pa/m}\]</div>
+<p>La pression liquide décroît de 9810 Pa par mètre de hauteur à l'équilibre.</p>
+<blockquote>
+<p><strong>Interprétation physique :</strong> si le gradient de pression mesuré <span class="arithmatex">\(\partial p_l/\partial x &gt; \rho_l g\)</span> (moins négatif que <span class="arithmatex">\(-9810\)</span> Pa/m), la force gravitaire domine et <span class="arithmatex">\(W_l &lt; 0\)</span> : l'eau s'écoule vers le bas. C'est le cas initial du problème (<span class="arithmatex">\(\partial p_l/\partial x = -3400\)</span> Pa/m au lieu de <span class="arithmatex">\(-9810\)</span> Pa/m).</p>
+</blockquote>
+<h3 id="43-courbe-de-retention-et-permeabilite-relative">4.3 Courbe de rétention et perméabilité relative</h3>
+<p>Les fonctions <span class="arithmatex">\(s_l(p_c)\)</span> et <span class="arithmatex">\(k_{rl}(p_c)\)</span> sont fournies <strong>tabulées</strong> dans le fichier <code>billes</code>. Les caractéristiques clés des billes de verre sont :</p>
+<table>
+<thead>
+<tr>
+<th>Grandeur</th>
+<th>Valeur</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Plage de <span class="arithmatex">\(p_c\)</span></td>
+<td><span class="arithmatex">\([500,\ 1000]\)</span> Pa</td>
+<td>Domaine de la courbe tabulée</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(s_l(p_c &lt; 500\ \text{Pa})\)</span></td>
+<td>1.0 (extrapolé)</td>
+<td>Saturation totale en dessous de la pression d'entrée</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(p_{c,\text{entrée}}\)</span></td>
+<td>≈ 680 Pa</td>
+<td>Pression d'entrée d'air (décrochage de <span class="arithmatex">\(s_l\)</span>)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(s_l(680\ \text{Pa})\)</span></td>
+<td>≈ 0.9998</td>
+<td>Saturation à la pression d'entrée — quasiment 1</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(s_l(750\ \text{Pa})\)</span></td>
+<td>≈ 0.94</td>
+<td>Désaturation rapide juste au-dessus de l'entrée</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(s_l(1000\ \text{Pa})\)</span></td>
+<td>≈ 0.09</td>
+<td>Saturation résiduelle</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(k_{rl}(s_l = 1)\)</span></td>
+<td>1.0</td>
+<td>Perméabilité relative à saturation</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(k_{rl}(s_l = 0.09)\)</span></td>
+<td>≈ <span class="arithmatex">\(2.6 \times 10^{-8}\)</span></td>
+<td>Perméabilité résiduelle (chute de 8 décades)</td>
+</tr>
+</tbody>
+</table>
+<p>La courbe montre deux régimes :
+- <strong><span class="arithmatex">\(p_c &lt; 680\)</span> Pa</strong> : milieu quasi-saturé, <span class="arithmatex">\(s_l \approx 1\)</span>, conductivité maximale.
+- <strong><span class="arithmatex">\(680 &lt; p_c &lt; 750\)</span> Pa</strong> : transition abrupte (genou de la courbe), <span class="arithmatex">\(s_l\)</span> passe de 0.9998 à 0.94 sur seulement 70 Pa.
+- <strong><span class="arithmatex">\(p_c &gt; 750\)</span> Pa</strong> : désaturation progressive jusqu'à la saturation résiduelle à 1000 Pa.</p>
+<h3 id="44-equation-de-richards-forme-complete">4.4 Équation de Richards — forme complète</h3>
+<p>En substituant les expressions précédentes et en développant <span class="arithmatex">\(\partial m_l/\partial t\)</span> :</p>
+<div class="arithmatex">\[\frac{\partial m_l}{\partial t} = \rho_l\,\phi\,\frac{\partial s_l}{\partial p_c}\,\frac{\partial p_c}{\partial t} = -\rho_l\,\phi\,\frac{\partial s_l}{\partial p_c}\,\frac{\partial p_l}{\partial t}\]</div>
+<p>On définit la <strong>capacité capillaire</strong> :</p>
+<div class="arithmatex">\[C(p_c) = -\rho_l\,\phi\,\frac{\partial s_l}{\partial p_c} \geq 0\]</div>
+<p>L'équation de Richards s'écrit alors :</p>
+<div class="arithmatex">\[\boxed{C(p_c)\,\frac{\partial p_l}{\partial t} - \nabla \cdot \left[\frac{\rho_l\,k_\text{int}\,k_{rl}(p_c)}{\mu_l}\left(\nabla p_l - \rho_l\,\mathbf{g}\right)\right] = 0}\]</div>
+<p>Cette équation est <strong>parabolique non-linéaire</strong> (le coefficient de diffusion <span class="arithmatex">\(K_l\)</span> dépend de <span class="arithmatex">\(p_l\)</span> via <span class="arithmatex">\(p_c\)</span> et <span class="arithmatex">\(k_{rl}\)</span>). Elle dégénère vers une équation <strong>elliptique</strong> dans les zones entièrement saturées où <span class="arithmatex">\(C(p_c) = 0\)</span>.</p>
+<hr />
+<h2 id="5-conditions-aux-limites-et-initiales">5. Conditions aux limites et initiales</h2>
+<h3 id="conditions-initiales">Conditions initiales</h3>
+<p>La pression initiale est un champ linéaire en <span class="arithmatex">\(x\)</span> (sous-hydrostatique) :</p>
+<div class="arithmatex">\[p_l(x,\,t=0) = p_{l0} + G\,x = 10^5 - 3400\,x \quad \text{[Pa]}\]</div>
+<table>
+<thead>
+<tr>
+<th>Bord</th>
+<th><span class="arithmatex">\(x\)</span> [m]</th>
+<th><span class="arithmatex">\(p_l(t=0)\)</span> [Pa]</th>
+<th><span class="arithmatex">\(p_c(t=0)\)</span> [Pa]</th>
+<th><span class="arithmatex">\(s_l(t=0)\)</span> [-]</th>
+<th>Remarque</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bas</td>
+<td>0</td>
+<td><span class="arithmatex">\(10^5\)</span></td>
+<td>0</td>
+<td>1.000</td>
+<td>Saturé</td>
+</tr>
+<tr>
+<td>Haut</td>
+<td>0.2</td>
+<td><span class="arithmatex">\(9.932 \times 10^4\)</span></td>
+<td>680</td>
+<td>≈ 0.9998</td>
+<td>Au seuil d'entrée d'air</td>
+</tr>
+</tbody>
+</table>
+<p>Le gradient initial <span class="arithmatex">\(-3400\)</span> Pa/m est <strong>moins négatif</strong> que le gradient hydrostatique <span class="arithmatex">\(-9810\)</span> Pa/m : la colonne est hors équilibre, ce qui génère un flux vers le bas dès <span class="arithmatex">\(t = 0\)</span>.</p>
+<h3 id="conditions-aux-limites">Conditions aux limites</h3>
+<table>
+<thead>
+<tr>
+<th>Bord</th>
+<th><span class="arithmatex">\(x\)</span> [m]</th>
+<th>Type</th>
+<th>Valeur</th>
+<th>Physique</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bas</td>
+<td>0</td>
+<td>Dirichlet</td>
+<td><span class="arithmatex">\(p_l = 10^5\)</span> Pa</td>
+<td>Fond ouvert à l'atmosphère (saturé en permanence)</td>
+</tr>
+<tr>
+<td>Haut</td>
+<td>0.2</td>
+<td>Neumann naturel</td>
+<td><span class="arithmatex">\(W_l \cdot \mathbf{n} = 0\)</span></td>
+<td>Sommet libre (drainage purement par gravité)</td>
+</tr>
+</tbody>
+</table>
+<p>Aucune condition de flux n'est imposée en sommet : c'est la <strong>condition de Neumann naturelle</strong> de la formulation variationnelle. L'eau peut s'évacuer uniquement par le fond. Le sommet s'assèche progressivement sous l'effet de la gravité qui entraîne l'eau vers le bas.</p>
+<hr />
+<h2 id="6-explication-detaillee-des-fichiers-dentree">6. Explication détaillée des fichiers d'entrée</h2>
+<h3 id="61-fichier-principal-m10-1">6.1 Fichier principal <code>M10-1</code></h3>
+<p>Le fichier d'entrée utilise la <strong>syntaxe Bil moderne</strong> (mots-clés complets, introduite dans Bil v2.x), par opposition à la syntaxe abrégée des anciens exemples (<code>DIME</code>, <code>MAIL</code>, <code>MATE</code>, etc.). Chaque section commence par un mot-clé de section et est suivie de ses paramètres.</p>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a># Drainage d&#39;une colonne de billes
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a># 
+</code></pre></div>
+<strong>Commentaires</strong> : toute ligne commençant par <code>#</code> est ignorée.</p>
+<hr />
+<h4 id="section-geometry">Section <code>Geometry</code></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Geometry
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>1 plan
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Champ</th>
+<th>Valeur</th>
+<th>Signification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nombre de dimensions</td>
+<td><code>1</code></td>
+<td>Problème 1D</td>
+</tr>
+<tr>
+<td>Type de symétrie</td>
+<td><code>plan</code></td>
+<td>Géométrie plane (pas de symétrie cylindrique ou sphérique)</td>
+</tr>
+</tbody>
+</table>
+<p>Les types de symétrie disponibles sont <code>plan</code>, <code>cylindrique</code> (axisymétrique) et <code>spherique</code>.</p>
+<hr />
+<h4 id="section-mesh">Section <code>Mesh</code></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Mesh
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>3 0. 0. 0.2
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>0.001
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>1 100
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>1 1
+</code></pre></div>
+<p>La section <code>Mesh</code> peut recevoir soit un nom de fichier <code>.msh</code> (maillage externe), soit une description inline de maillage 1D. Ici, c'est une description inline :</p>
+<table>
+<thead>
+<tr>
+<th>Ligne</th>
+<th>Valeur</th>
+<th>Signification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>3 0. 0. 0.2</code></td>
+<td>3 points de contrôle, abscisses : <span class="arithmatex">\(x_1 = 0\)</span>, <span class="arithmatex">\(x_2 = 0\)</span>, <span class="arithmatex">\(x_3 = 0.2\)</span> m</td>
+<td>Définit l'intervalle <span class="arithmatex">\([0,\ 0.2]\)</span> m. Le premier point (abscisse <span class="arithmatex">\(x_2 = 0\)</span>) définit l'origine du nœud de bord gauche, <span class="arithmatex">\(x_3 = 0.2\)</span> m est le bord droit</td>
+</tr>
+<tr>
+<td><code>0.001</code></td>
+<td>Taille de maille de départ</td>
+<td>Premier élément de longueur <span class="arithmatex">\(h_1 = 10^{-3}\)</span> m</td>
+</tr>
+<tr>
+<td><code>1 100</code></td>
+<td>1 groupe d'éléments, 100 éléments au total</td>
+<td>100 éléments dans la colonne</td>
+</tr>
+<tr>
+<td><code>1 1</code></td>
+<td>1 groupe de nœuds, 1 nœud de bord</td>
+<td>Définit le nœud de bord (utilisé pour les conditions aux limites)</td>
+</tr>
+</tbody>
+</table>
+<p>Le maillage est <strong>non uniforme</strong> : les éléments sont plus petits en <span class="arithmatex">\(x = 0\)</span> (fond, là où le gradient est le plus fort au début) et s'élargissent progressivement. Ce raffinement est calculé automatiquement par Bil à partir de la taille initiale <code>0.001</code> m et du nombre total d'éléments.</p>
+<blockquote>
+<p><strong>Résultat :</strong> 102 nœuds (100 éléments = 102 nœuds pour les éléments linéaires à 2 nœuds, dont 2 nœuds de bord confondus), coordonnées stockées dans <code>M10-1.msh</code>.</p>
+</blockquote>
+<hr />
+<h4 id="section-material">Section <code>Material</code></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Material
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Model = M10
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>gravite = -9.81
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>phi = 0.38
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>rho_l = 1000
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>k_int = 8.9e-12
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>mu_l = 0.001
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>p_g = 100000 
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Curves = billes
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Paramètre</th>
+<th>Valeur</th>
+<th>Rôle dans M10.c</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Model = M10</code></td>
+<td>—</td>
+<td>Désigne le fichier physique <code>M10.c</code> à utiliser</td>
+</tr>
+<tr>
+<td><code>gravite</code></td>
+<td><span class="arithmatex">\(-9.81\)</span> m/s²</td>
+<td>Composante de la gravité selon <span class="arithmatex">\(x\)</span> (signe négatif : <span class="arithmatex">\(x\)</span> vers le haut)</td>
+</tr>
+<tr>
+<td><code>phi</code></td>
+<td>0.38</td>
+<td>Porosité <span class="arithmatex">\(\phi\)</span></td>
+</tr>
+<tr>
+<td><code>rho_l</code></td>
+<td>1000 kg/m³</td>
+<td>Masse volumique de l'eau</td>
+</tr>
+<tr>
+<td><code>k_int</code></td>
+<td><span class="arithmatex">\(8.9 \times 10^{-12}\)</span> m²</td>
+<td>Perméabilité intrinsèque</td>
+</tr>
+<tr>
+<td><code>mu_l</code></td>
+<td><span class="arithmatex">\(10^{-3}\)</span> Pa·s</td>
+<td>Viscosité dynamique de l'eau</td>
+</tr>
+<tr>
+<td><code>p_g</code></td>
+<td><span class="arithmatex">\(10^5\)</span> Pa</td>
+<td>Pression gazeuse constante</td>
+</tr>
+<tr>
+<td><code>Curves = billes</code></td>
+<td>—</td>
+<td>Nom du fichier contenant les courbes tabulées <span class="arithmatex">\(s_l(p_c)\)</span> et <span class="arithmatex">\(k_{rl}(p_c)\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Le fichier <code>billes</code> doit être présent dans le même répertoire que le fichier d'entrée principal.</p>
+<hr />
+<h4 id="section-fields">Section <code>Fields</code></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Fields
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>1
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Value = 1.e5 Gradient = -3400 Point = 0
+</code></pre></div>
+<p>Les champs (<em>fields</em>) sont des fonctions spatiales prédéfinies utilisées pour les conditions initiales et les conditions aux limites. Bil évalue leur valeur en tout point <span class="arithmatex">\(x\)</span> du domaine.</p>
+<table>
+<thead>
+<tr>
+<th>Ligne</th>
+<th>Signification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>1</code></td>
+<td>Nombre de champs définis : ici, 1 seul champ</td>
+</tr>
+<tr>
+<td><code>Value = 1.e5</code></td>
+<td>Valeur de référence à l'origine : <span class="arithmatex">\(p_{l,\text{ref}} = 10^5\)</span> Pa</td>
+</tr>
+<tr>
+<td><code>Gradient = -3400</code></td>
+<td>Gradient spatial : <span class="arithmatex">\(G = -3400\)</span> Pa/m</td>
+</tr>
+<tr>
+<td><code>Point = 0</code></td>
+<td>Point de référence : <span class="arithmatex">\(x_0 = 0\)</span> m</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Formule d'évaluation :</strong></p>
+<div class="arithmatex">\[\text{Champ 1}(x) = p_{l,\text{ref}} + G\,(x - x_0) = 10^5 - 3400\,x \quad \text{[Pa]}\]</div>
+<p>Ainsi, pour un point <span class="arithmatex">\(x\)</span> quelconque du maillage, <code>Champ 1</code> donne la pression initiale linéaire sous-hydrostatique.</p>
+<blockquote>
+<p><strong>Remarque :</strong> le même champ sert à la fois pour la <strong>condition initiale</strong> (§<code>Initialization</code>) et pour la <strong>condition aux limites</strong> Dirichlet en <span class="arithmatex">\(x = 0\)</span> (§<code>Boundary Conditions</code>). En <span class="arithmatex">\(x = 0\)</span>, le champ vaut <span class="arithmatex">\(10^5\)</span> Pa.</p>
+</blockquote>
+<hr />
+<h4 id="section-initialization">Section <code>Initialization</code></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Initialization
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>1
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Region = 2 Unknown = p_l Field = 1
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Champ</th>
+<th>Valeur</th>
+<th>Signification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>1</code></td>
+<td>Nombre de conditions initiales</td>
+<td>1 condition initiale</td>
+</tr>
+<tr>
+<td><code>Region = 2</code></td>
+<td>Région 2</td>
+<td>S'applique aux éléments intérieurs (région 2 = tout le domaine sauf les nœuds de bord)</td>
+</tr>
+<tr>
+<td><code>Unknown = p_l</code></td>
+<td>Inconnue <code>p_l</code></td>
+<td>Initialise la pression liquide</td>
+</tr>
+<tr>
+<td><code>Field = 1</code></td>
+<td>Champ 1</td>
+<td>Utilise le champ défini ci-dessus : <span class="arithmatex">\(p_l(x,0) = 10^5 - 3400\,x\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Dans la numérotation Bil, <strong>Region 1</strong> désigne les nœuds de bord (points aux extrémités du maillage), et <strong>Region 2</strong> désigne les nœuds intérieurs et leurs éléments adjacents.</p>
+<hr />
+<h4 id="section-functions">Section <code>Functions</code></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Functions
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>0
+</code></pre></div>
+<p>Aucune fonction temporelle n'est définie (0 fonctions). Les fonctions Bil permettent de modéliser des sollicitations variant dans le temps (chargement cyclique, rampe, créneau, etc.). Dans ce cas test, toutes les conditions sont stationnaires.</p>
+<p>Lorsque <code>Function = 0</code> est référencé dans une condition aux limites, Bil interprète cela comme une <strong>fonction unité constante</strong> (valeur 1), ce qui multiplie le champ par 1 — c'est une convention Bil.</p>
+<hr />
+<h4 id="section-boundary-conditions">Section <code>Boundary Conditions</code></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Boundary Conditions
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>1
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Region = 1 Unknown = p_l Field = 1 Function = 0
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Champ</th>
+<th>Valeur</th>
+<th>Signification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>1</code></td>
+<td>Nombre de conditions</td>
+<td>1 condition aux limites Dirichlet</td>
+</tr>
+<tr>
+<td><code>Region = 1</code></td>
+<td>Région 1</td>
+<td>S'applique aux nœuds de bord (ici, <span class="arithmatex">\(x = 0\)</span>, le fond de la colonne)</td>
+</tr>
+<tr>
+<td><code>Unknown = p_l</code></td>
+<td>Inconnue</td>
+<td>Condition portant sur la pression liquide</td>
+</tr>
+<tr>
+<td><code>Field = 1</code></td>
+<td>Champ 1</td>
+<td>Valeur cible : <span class="arithmatex">\(\text{Champ 1}(x=0) = 10^5\)</span> Pa</td>
+</tr>
+<tr>
+<td><code>Function = 0</code></td>
+<td>Fonction constante</td>
+<td>Multiplicateur temporel = 1 (condition stationnaire)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Condition imposée :</strong> <span class="arithmatex">\(p_l(x=0,\,t) = 10^5\)</span> Pa pour tout <span class="arithmatex">\(t &gt; 0\)</span>.</p>
+<p>En <span class="arithmatex">\(x = 0.2\)</span> m (sommet), aucune condition n'est spécifiée : c'est la <strong>condition de Neumann homogène naturelle</strong>, qui correspond à un flux nul au travers du bord supérieur. L'eau peut s'écouler librement vers le bas mais rien n'entre ni ne sort par le haut.</p>
+<hr />
+<h4 id="section-loads">Section <code>Loads</code></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Loads
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>0
+</code></pre></div>
+<p>Aucun chargement surfacique n'est appliqué. Les <code>Loads</code> en Bil permettent d'imposer des flux ou des forces réparties sur des surfaces. Non utilisé ici.</p>
+<hr />
+<h4 id="section-points">Section <code>Points</code></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Points
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>0
+</code></pre></div>
+<p>Aucun point de sortie particulier n'est défini. Les points permettraient d'extraire les résultats en des localisations précises du maillage en plus des sorties volumiques. Non utilisé ici.</p>
+<hr />
+<h4 id="section-dates">Section <code>Dates</code></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Dates
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>3
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>0 120 300
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Ligne</th>
+<th>Valeur</th>
+<th>Signification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>3</code></td>
+<td>Nombre d'instants de sortie</td>
+<td>3 instantanés</td>
+</tr>
+<tr>
+<td><code>0 120 300</code></td>
+<td>Instants [s]</td>
+<td>Sauvegarde à <span class="arithmatex">\(t = 0\)</span> s, <span class="arithmatex">\(t = 120\)</span> s et <span class="arithmatex">\(t = 300\)</span> s</td>
+</tr>
+</tbody>
+</table>
+<p>Ces instants correspondent aux fichiers de résultats <code>M10-1.t0</code>, <code>M10-1.t1</code> et <code>M10-1.t2</code>.</p>
+<hr />
+<h4 id="section-objective-variations">Section <code>Objective Variations</code></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Objective Variations
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>p_l = 10
+</code></pre></div>
+<p>Ce paramètre contrôle le <strong>pas de temps adaptatif</strong>. Bil ajuste <span class="arithmatex">\(\Delta t\)</span> à chaque itération temporelle pour que la variation maximale de l'inconnue <span class="arithmatex">\(p_l\)</span> entre deux pas de temps reste proche de la valeur cible :</p>
+<div class="arithmatex">\[\Delta p_l^\text{max} \approx 10 \text{ Pa}\]</div>
+<ul>
+<li>Si <span class="arithmatex">\(\Delta p_l^\text{max} &gt; 10\)</span> Pa lors d'un pas : Bil réduit <span class="arithmatex">\(\Delta t\)</span> et recommence.</li>
+<li>Si <span class="arithmatex">\(\Delta p_l^\text{max} \ll 10\)</span> Pa : Bil augmente <span class="arithmatex">\(\Delta t\)</span> pour accélérer la simulation.</li>
+</ul>
+<p>Ce contrôle garantit la précision temporelle tout en maximisant l'efficacité.</p>
+<hr />
+<h4 id="section-iterative-process">Section <code>Iterative Process</code></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Iterative Process
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Iter = 10 
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>Tol = 1e-10 
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>Repetition = 0
+</code></pre></div>
+<p>Paramètres de la <strong>méthode de Newton–Raphson</strong> utilisée pour résoudre le système non-linéaire à chaque pas de temps :</p>
+<table>
+<thead>
+<tr>
+<th>Paramètre</th>
+<th>Valeur</th>
+<th>Signification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Iter = 10</code></td>
+<td>10</td>
+<td>Nombre maximal d'itérations Newton par pas de temps</td>
+</tr>
+<tr>
+<td><code>Tol = 1e-10</code></td>
+<td><span class="arithmatex">\(10^{-10}\)</span></td>
+<td>Tolérance de convergence (norme relative du résidu)</td>
+</tr>
+<tr>
+<td><code>Repetition = 0</code></td>
+<td>0</td>
+<td>Nombre de répétitions en cas de non-convergence (0 = arrêt immédiat si non-convergé)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="section-time-steps">Section <code>Time Steps</code></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Time Steps
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Dtini = 0.01 
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Dtmax = 1000
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Paramètre</th>
+<th>Valeur</th>
+<th>Signification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Dtini = 0.01</code></td>
+<td>0.01 s</td>
+<td>Pas de temps initial</td>
+</tr>
+<tr>
+<td><code>Dtmax = 1000</code></td>
+<td>1000 s</td>
+<td>Pas de temps maximal autorisé</td>
+</tr>
+</tbody>
+</table>
+<p>Le pas de temps démarre à 0.01 s (suffisamment petit pour capturer la physique initiale rapide) et peut croître jusqu'à 1000 s selon la stratégie adaptative pilotée par <code>Objective Variations</code>.</p>
+<hr />
+<h3 id="62-fichier-de-courbes-billes">6.2 Fichier de courbes <code>billes</code></h3>
+<p>Le fichier <code>billes</code> est un tableau ASCII à <strong>3 colonnes</strong> et <strong>2000 lignes</strong>, sans en-tête :</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>p_c [Pa]        s_l [-]         k_rl [-]
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>5.000000e+02    1.000000e+00    1.000000e+00
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>5.002501e+02    1.000000e+00    1.000000e+00
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>...
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>6.798399e+02    9.997772e-01    9.993311e-01
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>...
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>7.498749e+02    9.413010e-01    8.339165e-01
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>...
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>1.000000e+03    9.000106e-02    2.579971e-08
+</code></pre></div>
+<p><strong>Structure :</strong></p>
+<table>
+<thead>
+<tr>
+<th>Colonne</th>
+<th>Signification</th>
+<th>Plage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Pression capillaire <span class="arithmatex">\(p_c\)</span> [Pa]</td>
+<td><span class="arithmatex">\([500,\ 1000]\)</span> Pa</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Saturation <span class="arithmatex">\(s_l\)</span> [-]</td>
+<td><span class="arithmatex">\([0.09,\ 1.0]\)</span></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Perméabilité relative <span class="arithmatex">\(k_{rl}\)</span> [-]</td>
+<td><span class="arithmatex">\([2.6 \times 10^{-8},\ 1.0]\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Pas de discrétisation :</strong> <span class="arithmatex">\(\Delta p_c = (1000 - 500) / (2000 - 1) \approx 0.25\)</span> Pa — résolution très fine.</p>
+<p><strong>Physique de la courbe des billes de verre :</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>s_l
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>1.0 │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓─╮
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    │                         ╰───╮
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    │                              ╰────────╮
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>0.5 │                                        ╰────────╮
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    │                                                   ╰────╮
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>0.1 │                                                         ╰──────────
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>    └──────────────────────────────────────────────────────────────────── p_c
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>   500             600            700            800             1000 [Pa]
+</code></pre></div>
+<ul>
+<li><strong><span class="arithmatex">\(p_c &lt; 500\)</span> Pa</strong> : la courbe n'est pas tabulée ; Bil extrapole en conservant <span class="arithmatex">\(s_l = 1\)</span> et <span class="arithmatex">\(k_{rl} = 1\)</span> (saturation totale).</li>
+<li><strong><span class="arithmatex">\(500 &lt; p_c &lt; 680\)</span> Pa</strong> : plateau de saturation totale (<span class="arithmatex">\(s_l \approx 1\)</span>) — l'air n'a pas encore pénétré.</li>
+<li><strong><span class="arithmatex">\(p_c \approx 680\)</span> Pa</strong> : <strong>pression d'entrée d'air</strong> — début de la désaturation.</li>
+<li><strong><span class="arithmatex">\(680 &lt; p_c &lt; 750\)</span> Pa</strong> : chute abrupte de <span class="arithmatex">\(s_l\)</span> (genou de la courbe, caractéristique d'un matériau bien trié comme les billes).</li>
+<li><strong><span class="arithmatex">\(750 &lt; p_c &lt; 1000\)</span> Pa</strong> : désaturation progressive vers la saturation résiduelle <span class="arithmatex">\(s_{l,r} \approx 0.09\)</span>.</li>
+<li><strong><span class="arithmatex">\(k_{rl}\)</span> chute de 8 décades</strong> entre saturation totale et résiduelle, rendant l'écoulement résiduel pratiquement nul.</li>
+</ul>
+<p><strong>Utilisation par M10.c :</strong> Bil interpole linéairement dans ce tableau pour obtenir <span class="arithmatex">\(s_l(p_c)\)</span>, <span class="arithmatex">\(\partial s_l/\partial p_c\)</span> (pour la capacité capillaire) et <span class="arithmatex">\(k_{rl}(p_c)\)</span> en tout point d'intégration.</p>
+<hr />
+<h3 id="63-fichier-de-maillage-m10-1msh">6.3 Fichier de maillage <code>M10-1.msh</code></h3>
+<p>Le fichier <code>M10-1.msh</code> est généré automatiquement par Bil à partir de la description inline dans la section <code>Mesh</code>. Il est au <strong>format Gmsh</strong> (version 1) :</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>$NOD
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>102
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>1  0.000000e+00  0  0    ← nœud 1 : x = 0 (fond, bord)
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>2  0.000000e+00  0  0    ← nœud 2 : x = 0 (fond, nœud intérieur adjacent)
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>3  1.000000e-03  0  0    ← nœud 3 : x = 1 mm (premier élément)
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>4  2.219931e-03  0  0    ← nœud 4 : x ≈ 2.2 mm
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>...
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>102 2.000000e-01  0  0   ← nœud 102 : x = 0.2 m (sommet)
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>$ENDNOD
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>$ELM
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>101
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>1  15 1 1 1  1           ← élément ponctuel (nœud de bord) : nœud 1
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>2   1 1 2 2  1  2        ← élément linéaire : nœuds 1–2 (longueur nulle, bord)
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>3   1 1 2 2  2  3        ← élément linéaire : nœuds 2–3 (longueur 1 mm)
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>...
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>101 1 1 2 2  101 102     ← dernier élément : nœuds 101–102
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>$ENDELM
+</code></pre></div>
+<p><strong>Structure des nœuds :</strong>
+- 102 nœuds au total : 2 nœuds superposés en <span class="arithmatex">\(x = 0\)</span> (nœud de bord + premier nœud intérieur), puis 100 nœuds régulièrement croissants jusqu'à <span class="arithmatex">\(x = 0.2\)</span> m.
+- Le maillage est <strong>non uniforme</strong> : les éléments sont plus petits près du fond (<span class="arithmatex">\(h \approx 1\)</span> mm) et s'élargissent progressivement vers le sommet.</p>
+<p><strong>Structure des éléments :</strong>
+- 1 élément ponctuel (type 15) en <span class="arithmatex">\(x = 0\)</span> : correspond à la <strong>région de bord 1</strong> (où la condition de Dirichlet est appliquée).
+- 100 éléments linéaires à 2 nœuds (type 1) : constituent le domaine de calcul (<strong>région 2</strong>).</p>
+<hr />
+<h3 id="64-fichier-de-stockage-m10-1sto">6.4 Fichier de stockage <code>M10-1.sto</code></h3>
+<p>Le fichier <code>M10-1.sto</code> est un <strong>fichier de redémarrage</strong> (<em>restart file</em>) généré par Bil à la fin de la simulation. Il contient :</p>
+<ol>
+<li><strong>Le dernier état de l'inconnue <span class="arithmatex">\(p_l\)</span></strong> pour chaque nœud du maillage (101 valeurs numériques après le temps final <span class="arithmatex">\(t = 300\)</span> s).</li>
+<li><strong>Les termes implicites</strong> (flux <span class="arithmatex">\(W_l\)</span> par élément et par point d'intégration).</li>
+<li><strong>Les termes explicites</strong> (conductivités <span class="arithmatex">\(K_l\)</span> par élément).</li>
+</ol>
+<p>Ce fichier permet de <strong>reprendre la simulation</strong> depuis l'état final sans recalculer depuis <span class="arithmatex">\(t = 0\)</span>. Il est chargé automatiquement si Bil détecte sa présence lors d'un nouveau lancement.</p>
+<hr />
+<h2 id="7-resultats">7. Résultats</h2>
+<p>Les sorties sont stockées dans les fichiers <code>M10-1.t0</code> (t=0 s), <code>M10-1.t1</code> (t=120 s), <code>M10-1.t2</code> (t=300 s). Chaque fichier contient, pour chaque point d'intégration du maillage, 5 quantités :</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a># Coordinates(1)  pressure(4)  flow(5)  saturation(8)
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>x [m]   y   z   p_l [Pa]   W_l [kg/m²/s]   0   0   s_l [-]
+</code></pre></div>
+<h3 id="etat-initial-t-0-s">État initial — <span class="arithmatex">\(t = 0\)</span> s</h3>
+<p>La pression suit exactement le champ linéaire initial. La saturation est quasi-totale dans toute la colonne.</p>
+<table>
+<thead>
+<tr>
+<th><span class="arithmatex">\(x\)</span> [m]</th>
+<th><span class="arithmatex">\(p_l\)</span> [Pa]</th>
+<th><span class="arithmatex">\(W_l\)</span> [kg/(m²·s)]</th>
+<th><span class="arithmatex">\(s_l\)</span> [-]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td><span class="arithmatex">\(1.000 \times 10^5\)</span></td>
+<td><span class="arithmatex">\(-5.705 \times 10^{-2}\)</span></td>
+<td>1.0000</td>
+</tr>
+<tr>
+<td>0.05</td>
+<td><span class="arithmatex">\(9.983 \times 10^4\)</span></td>
+<td><span class="arithmatex">\(-5.705 \times 10^{-2}\)</span></td>
+<td>1.0000</td>
+</tr>
+<tr>
+<td>0.10</td>
+<td><span class="arithmatex">\(9.966 \times 10^4\)</span></td>
+<td><span class="arithmatex">\(-5.705 \times 10^{-2}\)</span></td>
+<td>1.0000</td>
+</tr>
+<tr>
+<td>0.15</td>
+<td><span class="arithmatex">\(9.949 \times 10^4\)</span></td>
+<td><span class="arithmatex">\(-5.705 \times 10^{-2}\)</span></td>
+<td>1.0000</td>
+</tr>
+<tr>
+<td>0.20</td>
+<td><span class="arithmatex">\(9.932 \times 10^4\)</span></td>
+<td><span class="arithmatex">\(-5.702 \times 10^{-2}\)</span></td>
+<td>0.9998</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Vérification analytique du flux :</strong></p>
+<p>Le flux initial est uniforme, calculable analytiquement depuis le gradient de pression et la force gravitaire :</p>
+<div class="arithmatex">\[W_l = -K_{l,\text{sat}}\,\left(\frac{\partial p_l}{\partial x} - \rho_l g\right) = -8.9 \times 10^{-6} \times (-3400 - (-9810)) = -8.9 \times 10^{-6} \times 6410 \approx -5.70 \times 10^{-2} \text{ kg/(m²·s)}\]</div>
+<p>Ce résultat est en accord parfait avec les valeurs du fichier <code>M10-1.t0</code>.</p>
+<h3 id="etat-a-t-120-s">État à <span class="arithmatex">\(t = 120\)</span> s</h3>
+<p>Un <strong>front de désaturation</strong> a progressé de haut en bas, atteignant <span class="arithmatex">\(x \approx 0.15\)</span>–<span class="arithmatex">\(0.19\)</span> m. Le flux est réduit d'un facteur ~200 dans la zone désaturée.</p>
+<table>
+<thead>
+<tr>
+<th><span class="arithmatex">\(x\)</span> [m]</th>
+<th><span class="arithmatex">\(p_l\)</span> [Pa]</th>
+<th><span class="arithmatex">\(W_l\)</span> [kg/(m²·s)]</th>
+<th><span class="arithmatex">\(s_l\)</span> [-]</th>
+<th>Remarque</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td><span class="arithmatex">\(1.000 \times 10^5\)</span></td>
+<td><span class="arithmatex">\(-4.78 \times 10^{-2}\)</span></td>
+<td>1.000</td>
+<td>Fond saturé</td>
+</tr>
+<tr>
+<td>0.10</td>
+<td><span class="arithmatex">\(\approx 9.96 \times 10^4\)</span></td>
+<td><span class="arithmatex">\(-4.78 \times 10^{-2}\)</span></td>
+<td>1.000</td>
+<td>Zone saturée</td>
+</tr>
+<tr>
+<td>0.185</td>
+<td><span class="arithmatex">\(\approx 9.920 \times 10^4\)</span></td>
+<td><span class="arithmatex">\(-5.97 \times 10^{-3}\)</span></td>
+<td>0.418</td>
+<td>Zone de transition</td>
+</tr>
+<tr>
+<td>0.193</td>
+<td><span class="arithmatex">\(\approx 9.920 \times 10^4\)</span></td>
+<td><span class="arithmatex">\(-3.31 \times 10^{-3}\)</span></td>
+<td>0.318</td>
+<td></td>
+</tr>
+<tr>
+<td>0.200</td>
+<td><span class="arithmatex">\(9.918 \times 10^4\)</span></td>
+<td><span class="arithmatex">\(-2.86 \times 10^{-4}\)</span></td>
+<td>0.154</td>
+<td>Sommet fortement désaturé</td>
+</tr>
+</tbody>
+</table>
+<h3 id="etat-a-t-300-s">État à <span class="arithmatex">\(t = 300\)</span> s</h3>
+<p>Le front de désaturation a progressé plus loin vers le bas. La perméabilité résiduelle quasi-nulle gèle progressivement l'écoulement dans la zone désaturée.</p>
+<table>
+<thead>
+<tr>
+<th><span class="arithmatex">\(x\)</span> [m]</th>
+<th><span class="arithmatex">\(p_l\)</span> [Pa]</th>
+<th><span class="arithmatex">\(W_l\)</span> [kg/(m²·s)]</th>
+<th><span class="arithmatex">\(s_l\)</span> [-]</th>
+<th>Remarque</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td><span class="arithmatex">\(1.000 \times 10^5\)</span></td>
+<td><span class="arithmatex">\(-3.96 \times 10^{-2}\)</span></td>
+<td>1.000</td>
+<td>Fond saturé</td>
+</tr>
+<tr>
+<td>0.10</td>
+<td><span class="arithmatex">\(\approx 9.96 \times 10^4\)</span></td>
+<td><span class="arithmatex">\(-3.96 \times 10^{-2}\)</span></td>
+<td>1.000</td>
+<td>Zone saturée</td>
+</tr>
+<tr>
+<td>0.186</td>
+<td><span class="arithmatex">\(\approx 9.919 \times 10^4\)</span></td>
+<td><span class="arithmatex">\(-1.37 \times 10^{-3}\)</span></td>
+<td>0.272</td>
+<td>Front de désaturation</td>
+</tr>
+<tr>
+<td>0.200</td>
+<td><span class="arithmatex">\(9.916 \times 10^4\)</span></td>
+<td><span class="arithmatex">\(-5.48 \times 10^{-5}\)</span></td>
+<td>0.115</td>
+<td>Sommet encore plus sec</td>
+</tr>
+</tbody>
+</table>
+<h3 id="synthese-de-levolution-temporelle">Synthèse de l'évolution temporelle</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>Profil de saturation s_l(x)  [schématique]
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>s_l
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>1.0 │████████████████████████████╮  ← t = 0  (quasi-uniforme)
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>    │                             ╰─╮
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>    │████████████████████████╮       ╰──╮  ← t = 120 s
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>    │                         ╰──────╮   ╰╮
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>    │████████████████████╮            ╰──╮ ╰╮  ← t = 300 s
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>    │                     ╰─────────────╯  ╰─╯
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>0.1 │
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>    └──────────────────────────────────────────── x [m]
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>    0                   0.15              0.20
+</code></pre></div>
+<p><strong>Physique observée :</strong></p>
+<ol>
+<li><strong>Flux décroissant au fond</strong> : le flux en <span class="arithmatex">\(x = 0\)</span> passe de <span class="arithmatex">\(-5.7 \times 10^{-2}\)</span> à <span class="arithmatex">\(-3.96 \times 10^{-2}\)</span> kg/(m²·s) entre <span class="arithmatex">\(t=0\)</span> et <span class="arithmatex">\(t=300\)</span> s, signe que le profil de pression s'approche progressivement de l'équilibre hydrostatique.</li>
+<li><strong>Désaturation asymétrique</strong> : la désaturation se concentre en sommet de colonne et le front descend ; le fond reste saturé grâce à la condition de Dirichlet.</li>
+<li><strong>Chute dramatique de la perméabilité</strong> dans la zone désaturée (<span class="arithmatex">\(k_{rl}\)</span> chute de 8 décades) : le flux devient négligeable au-dessus du front.</li>
+<li><strong>Convergence lente vers l'état d'équilibre</strong> : à l'équilibre (<span class="arithmatex">\(dp_l/dx = -9810\)</span> Pa/m), la pression capillaire en sommet atteindrait <span class="arithmatex">\(p_c(0.2) = 1962\)</span> Pa, bien au-delà de la saturation résiduelle. La simulation à 300 s est donc encore loin de l'état final.</li>
+</ol>
+<hr />
+<h2 id="8-discretisation-numerique">8. Discrétisation numérique</h2>
+<p>Le modèle est discrétisé par la méthode des <strong>éléments finis (FEM)</strong> via <code>FEM.h</code>. La matrice élémentaire globale est composée de deux contributions :</p>
+<p><strong>Matrice de masse</strong> (termes d'accumulation) :</p>
+<div class="arithmatex">\[K^\text{masse}_{ij} = \int_\Omega C(p_c)\,N_i\,N_j\,\mathrm{d}V, \qquad C(p_c) = -\rho_l\,\phi\,\frac{\partial s_l}{\partial p_c}\]</div>
+<p>Évaluée au pas de temps courant (implicite), avec dérivée de la courbe tabulée interpolée.</p>
+<p><strong>Matrice de conduction</strong> (termes de flux, schéma semi-implicite) :</p>
+<div class="arithmatex">\[K^\text{cond}_{ij} = \int_\Omega K_l\,\nabla N_i \cdot \nabla N_j\,\mathrm{d}V\]</div>
+<p>Évaluée <strong>explicitement</strong> au pas de temps précédent (conductivité <span class="arithmatex">\(K_l\)</span> stockée dans les termes explicites <code>vex</code>).</p>
+<p><strong>Système à résoudre à chaque pas de temps <span class="arithmatex">\(\Delta t\)</span> :</strong></p>
+<div class="arithmatex">\[\left(K^\text{masse} + \Delta t\,K^\text{cond}\right)\,\Delta\mathbf{p}_l = -\mathbf{R}\]</div>
+<p>résolu par Newton–Raphson jusqu'à convergence (<span class="arithmatex">\(\|\mathbf{R}\| &lt; 10^{-10}\)</span>).</p>
+<p><strong>Cas particuliers :</strong></p>
+<ul>
+<li><strong>Zone saturée</strong> : <span class="arithmatex">\(C(p_c) = 0\)</span> (courbe plate) → la matrice de masse est nulle localement → équation <strong>elliptique</strong> (état stationnaire instantané). Aucune instabilité n'est observée ici grâce au pas de temps adaptatif.</li>
+<li><strong>Front de désaturation</strong> : <span class="arithmatex">\(C(p_c)\)</span> est grand (forte pente de la courbe <span class="arithmatex">\(s_l\)</span>) → l'équation est parabolique et le front est bien résolu.</li>
+</ul>
+<hr />
+<h2 id="9-references-bibliographiques">9. Références bibliographiques</h2>
+<h3 id="equation-de-richards">Équation de Richards</h3>
+<ul>
+<li>
+<p><strong>Richards, L. A.</strong> (1931). Capillary conduction of liquids through porous mediums. <em>Physics</em>, 1(5), 318–333. — Article fondateur décrivant l'écoulement capillaire dans les sols partiellement saturés.</p>
+</li>
+<li>
+<p><strong>Bear, J.</strong> (1972). <em>Dynamics of Fluids in Porous Media</em>. Elsevier, New York. — Traitement rigoureux des équations de Darcy et Richards en milieu poreux.</p>
+</li>
+<li>
+<p><strong>Celia, M. A., Bouloutas, E. T. &amp; Zarba, R. L.</strong> (1990). A general mass-conservative numerical solution for the unsaturated flow equation. <em>Water Resources Research</em>, 26(7), 1483–1496. — Formulation en pression de l'équation de Richards permettant la conservation exacte de la masse.</p>
+</li>
+</ul>
+<h3 id="proprietes-hydrauliques-des-billes-de-verre">Propriétés hydrauliques des billes de verre</h3>
+<ul>
+<li>
+<p><strong>Touma, J. &amp; Vauclin, M.</strong> (1986). Experimental and numerical analysis of two-phase infiltration in a partially saturated soil. <em>Transport in Porous Media</em>, 1(1), 27–55. — Expériences de référence sur les colonnes de billes de verre.</p>
+</li>
+<li>
+<p><strong>Haverkamp, R., Vauclin, M., Touma, J., Wierenga, P. J. &amp; Vachaud, G.</strong> (1977). A comparison of numerical simulation models for one-dimensional infiltration. <em>Soil Science Society of America Journal</em>, 41(2), 285–294. — Comparaison de codes sur colonnes de billes et sables.</p>
+</li>
+</ul>
+<h3 id="courbes-de-retention-capillaire">Courbes de rétention capillaire</h3>
+<ul>
+<li>
+<p><strong>Van Genuchten, M. Th.</strong> (1980). A closed-form equation for predicting the hydraulic conductivity of unsaturated soils. <em>Soil Science Society of America Journal</em>, 44(5), 892–898. — Modèle analytique de référence pour <span class="arithmatex">\(s_l(p_c)\)</span> et <span class="arithmatex">\(k_{rl}(p_c)\)</span>.</p>
+</li>
+<li>
+<p><strong>Brooks, R. H. &amp; Corey, A. T.</strong> (1964). <em>Hydraulic Properties of Porous Media</em>. Hydrology Paper 3, Colorado State University. — Modèle alternatif adapté aux matériaux à courbe abrupte (type billes de verre).</p>
+</li>
+</ul>
+<h3 id="methodes-numeriques-pour-lequation-de-richards">Méthodes numériques pour l'équation de Richards</h3>
+<ul>
+<li>
+<p><strong>Haverkamp, R. &amp; Vauclin, M.</strong> (1979). A note on estimating finite difference interblock hydraulic conductivity values for transient unsaturated flow problems. <em>Water Resources Research</em>, 15(1), 181–187. — Stratégies d'évaluation des conductivités aux interfaces.</p>
+</li>
+<li>
+<p><strong>Paniconi, C. &amp; Putti, M.</strong> (1994). A comparison of Picard and Newton iteration in the numerical solution of multidimensional variably saturated flow problems. <em>Water Resources Research</em>, 30(12), 3357–3374. — Analyse de la convergence Newton vs Picard pour l'équation de Richards.</p>
+</li>
+</ul>
+<h3 id="implementation-numerique">Implémentation numérique</h3>
+<ul>
+<li><strong>Dangla, P.</strong> — <em>Bil : a FEM/FVM platform for multiphysics simulations</em>. Université Gustave Eiffel. Code source : <a href="https://github.com/Universite-Gustave-Eiffel/bil">https://github.com/Universite-Gustave-Eiffel/bil</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "navigation.footer", "search.highlight", "search.suggest", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

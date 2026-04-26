@@ -1,0 +1,4025 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A modeling platform based on finite element/volume methods">
+      
+      
+        <meta name="author" content="P. Dangla (Université Gustave Eiffel)">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Modèle Chloricem — Durabilité des matériaux cimentaires : pénétration des chlorures (1D) - Bil - documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#modele-chloricem-durabilite-des-materiaux-cimentaires-penetration-des-chlorures-1d" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Bil - documentation" class="md-header__button md-logo" aria-label="Bil - documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Bil - documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Modèle Chloricem — Durabilité des matériaux cimentaires : pénétration des chlorures (1D)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Universite-Gustave-Eiffel/bil" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Universite-Gustave-Eiffel/bil
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Introduction
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../running_bil/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Running Bil
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../examples/" class="md-tabs__link">
+          
+  
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code_architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../adding_a_model/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  How to Add a New Model
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Bil - documentation" class="md-nav__button md-logo" aria-label="Bil - documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Bil - documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Universite-Gustave-Eiffel/bil" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Universite-Gustave-Eiffel/bil
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../running_bil/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Running Bil
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flow
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Flow
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/flow_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/M1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/M2_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/Fick_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fick
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/Richards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Richards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mechanics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mechanics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/mechanics_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/Elast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/Elasd_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elasd
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/Plast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/BBM_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BBM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poromechanics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Poromechanics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Poromechanics/poromechanics_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Poromechanics/M7_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Poromechanics/Poroplast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poroplast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Phase change
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase change
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PhaseChange/phasechange_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PhaseChange/Frostaco_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frostaco
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PhaseChange/Frostaco3d_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frostaco3d
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durability & Chemistry
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Durability & Chemistry
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/durability_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Duracem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Duracem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Chloricem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chloricem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Sulfaco_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfaco
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Sulfuricem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfuricem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Sulfaconew_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfaconew
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Coupled Transfers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Coupled Transfers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/coupledtransfers_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/DWS1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DWS1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/Yuan1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Yuan1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/Shen_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/usoil_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    usoil
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8" id="__nav_3_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specialized
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Specialized
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Specialized/specialized_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Specialized/MechaMic_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MechaMic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code_architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adding_a_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to Add a New Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-des-matieres" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table des matières
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-contexte-et-objectif" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Contexte et objectif
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-hypotheses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Hypothèses
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-variables-et-notation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Variables et notation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Variables et notation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inconnues-primaires-8-dans-le-cas-test-chloricem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inconnues primaires (8 dans le cas test Chloricem)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variables-secondaires-calculees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variables secondaires calculées
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#constantes-thermodynamiques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constantes thermodynamiques
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-modele-mathematique" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Modèle mathématique
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Modèle mathématique">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-equations-de-conservation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Équations de conservation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-lois-de-flux-ionique" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Lois de flux ionique
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-chimie-de-la-solution-interstitielle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Chimie de la solution interstitielle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-phases-solides-dissolution-precipitation-decalcification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Phases solides : dissolution, précipitation, décalcification
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.4 Phases solides : dissolution, précipitation, décalcification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#portlandite-caoh2-ch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Portlandite Ca(OH)₂ — CH
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-s-h-silicates-de-calcium-hydrates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C-S-H (Silicates de Calcium Hydratés)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calcite-caco3-cc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Calcite CaCO₃ — CC
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sel-de-friedel-ca4al2o6cl210h2o" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sel de Friedel Ca₄Al₂O₆Cl₂·10H₂O
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#porosite-actuelle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Porosité actuelle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-adsorption-des-chlorures-par-les-c-s-h" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Adsorption des chlorures par les C-S-H
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-transport-hydraulique-loi-de-darcy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Transport hydraulique — loi de Darcy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#47-permeabilite-et-tortuosite-evolutives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.7 Perméabilité et tortuosité évolutives
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.7 Perméabilité et tortuosité évolutives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tortuosite-modele-oh-jang-2004" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tortuosité — modèle Oh &amp; Jang (2004)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#permeabilite-modele-verma-pruess-1988" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Perméabilité — modèle Verma &amp; Pruess (1988)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-conditions-aux-limites-et-initiales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Conditions aux limites et initiales
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Conditions aux limites et initiales">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#conditions-initiales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditions initiales
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conditions-aux-limites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditions aux limites
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-explication-detaillee-des-fichiers-dentree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Explication détaillée des fichiers d'entrée
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Explication détaillée des fichiers d&#39;entrée">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-fichier-principal-chloricem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Fichier principal Chloricem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-courbe-de-saturation-sat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Courbe de saturation sat
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-courbe-de-permeabilite-relative-relpermcn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Courbe de perméabilité relative relpermCN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-courbe-de-volume-molaire-des-c-s-h-v_csh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Courbe de volume molaire des C-S-H V_CSH
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65-courbes-dadsorption-des-chlorures-adscl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 Courbes d'adsorption des chlorures Adscl
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#66-courbes-dadsorption-nak-adsna-adsk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6 Courbes d'adsorption Na/K — Adsna, Adsk
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#67-fichier-de-maillage-chloricemmsh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.7 Fichier de maillage Chloricem.msh
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#68-fichier-alternatif-m42-modele-simplifie-de-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.8 Fichier alternatif m42 (modèle simplifié de référence)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-resultats-attendus-et-interpretation-physique" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Résultats attendus et interprétation physique
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Résultats attendus et interprétation physique">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-structure-des-fichiers-de-sortie-tn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Structure des fichiers de sortie .tN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evolution-initiale-etat-t0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Évolution initiale (état \(t=0\))
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evolution-sur-1-an-t-31536-times-107-s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Évolution sur 1 an (\(t = 3.1536 \times 10^7\) s)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#physique-du-front-de-penetration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physique du front de pénétration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-discretisation-numerique" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Discrétisation numérique
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-references-bibliographiques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Références bibliographiques
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Références bibliographiques">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modeles-de-transport-ionique-en-milieu-poreux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modèles de transport ionique en milieu poreux
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#durabilite-des-betons-penetration-des-chlorures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Durabilité des bétons — Pénétration des chlorures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chimie-du-ciment-hydrate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chimie du ciment hydraté
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adsorption-des-chlorures-par-les-c-s-h" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adsorption des chlorures par les C-S-H
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sel-de-friedel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sel de Friedel
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tortuosite-et-diffusivite-effectives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tortuosité et diffusivité effectives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#permeabilite-et-colmatage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Perméabilité et colmatage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dissolution-de-la-portlandite-et-cinetiques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dissolution de la portlandite et cinétiques
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-numerique" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implémentation numérique
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="modele-chloricem-durabilite-des-materiaux-cimentaires-penetration-des-chlorures-1d">Modèle Chloricem — Durabilité des matériaux cimentaires : pénétration des chlorures (1D)</h1>
+<blockquote>
+<p><strong>Fichiers sources :</strong>
+<code>src/Models/ModelFiles/Chloricem.cpp</code></p>
+<p><strong>Exemple :</strong>
+<code>test_examples/Chloricem/Chloricem</code> · <code>test_examples/Chloricem/Chloricem.msh</code></p>
+<p><strong>Modèles dérivés :</strong> Carbocem · Carbochloricem</p>
+<p><strong>Auteurs du modèle Bil :</strong> P. Dangla et al. (Université Gustave Eiffel)</p>
+</blockquote>
+<hr />
+<h2 id="table-des-matieres">Table des matières</h2>
+<ol>
+<li><a href="#1-contexte-et-objectif">Contexte et objectif</a></li>
+<li><a href="#2-hypothèses">Hypothèses</a></li>
+<li><a href="#3-variables-et-notation">Variables et notation</a></li>
+<li><a href="#4-modèle-mathématique">Modèle mathématique</a></li>
+<li>4.1 <a href="#41-équations-de-conservation">Équations de conservation</a></li>
+<li>4.2 <a href="#42-lois-de-flux-ionique">Lois de flux ionique</a></li>
+<li>4.3 <a href="#43-chimie-de-la-solution-interstitielle">Chimie de la solution interstitielle</a></li>
+<li>4.4 <a href="#44-phases-solides--dissolution-précipitation-décalcification">Phases solides : dissolution, précipitation, décalcification</a></li>
+<li>4.5 <a href="#45-adsorption-des-chlorures-par-les-c-s-h">Adsorption des chlorures par les C-S-H</a></li>
+<li>4.6 <a href="#46-transport-hydraulique--loi-de-darcy">Transport hydraulique — loi de Darcy</a></li>
+<li>4.7 <a href="#47-perméabilité-et-tortuosité-évolutives">Perméabilité et tortuosité évolutives</a></li>
+<li><a href="#5-conditions-aux-limites-et-initiales">Conditions aux limites et initiales</a></li>
+<li><a href="#6-explication-détaillée-des-fichiers-dentrée">Explication détaillée des fichiers d'entrée</a></li>
+<li>6.1 <a href="#61-fichier-principal-chloricem">Fichier principal <code>Chloricem</code></a></li>
+<li>6.2 <a href="#62-courbe-de-saturation-sat">Courbe de saturation <code>sat</code></a></li>
+<li>6.3 <a href="#63-courbe-de-perméabilité-relative-relpermmcn">Courbe de perméabilité relative <code>relpermCN</code></a></li>
+<li>6.4 <a href="#64-courbe-de-volume-molaire-des-c-s-h-v_csh">Courbe de volume molaire des C-S-H <code>V_CSH</code></a></li>
+<li>6.5 <a href="#65-courbes-dadsorption-des-chlorures-adscl">Courbes d'adsorption des chlorures <code>Adscl</code></a></li>
+<li>6.6 <a href="#66-courbes-dadsorption-nak--adsna-adsk">Courbes d'adsorption Na/K — <code>Adsna</code>, <code>Adsk</code></a></li>
+<li>6.7 <a href="#67-fichier-de-maillage-chloricemmsh">Fichier de maillage <code>Chloricem.msh</code></a></li>
+<li>6.8 <a href="#68-fichier-alternatif-m42-modèle-simplifié-de-référence">Fichier alternatif <code>m42</code> (modèle simplifié de référence)</a></li>
+<li><a href="#7-résultats-attendus-et-interprétation-physique">Résultats attendus et interprétation physique</a></li>
+<li>7.1 <a href="#71-structure-des-fichiers-de-sortie-tn">Structure des fichiers de sortie <code>.tN</code></a></li>
+<li><a href="#8-discrétisation-numérique">Discrétisation numérique</a></li>
+<li><a href="#9-références-bibliographiques">Références bibliographiques</a></li>
+</ol>
+<hr />
+<h2 id="1-contexte-et-objectif">1. Contexte et objectif</h2>
+<p>Le modèle Chloricem est un modèle de <strong>durabilité des bétons et matériaux cimentaires</strong> (CBM — <em>Cementitious-Based Materials</em>). Il couple le <strong>transport multi-ionique en phase liquide</strong> avec la <strong>chimie des phases solides du ciment hydraté</strong> (portlandite, C-S-H, calcite, sel de Friedel). C'est le modèle dit « mère » dont dérivent les modèles Carbocem (carbonatation seule) et Carbochloricem (carbonatation + chlorures).</p>
+<p>Le scénario du cas test représente la <strong>pénétration des ions chlorure</strong> dans un béton ou une pâte de ciment saturée, exposée à une solution saline (eau de mer, saumure, sels de déverglaçage). Ce phénomène est l'une des principales causes de la corrosion des armatures dans les structures en béton armé : les chlorures dépassent un seuil critique à la surface des aciers et amorcent leur dépassivation.</p>
+<p><strong>Domaine :</strong> 1D planaire, <span class="arithmatex">\(L = 0.5\)</span> dm = 5 cm.</p>
+<table>
+<thead>
+<tr>
+<th>Paramètre</th>
+<th>Valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Porosité initiale <span class="arithmatex">\(\phi_0\)</span></td>
+<td>12.1 %</td>
+</tr>
+<tr>
+<td>Perméabilité intrinsèque <span class="arithmatex">\(k_l^\text{int}\)</span></td>
+<td><span class="arithmatex">\(1.4 \times 10^{-17}\)</span> dm²</td>
+</tr>
+<tr>
+<td>Teneur initiale en portlandite <span class="arithmatex">\(n_\text{CH}^0\)</span></td>
+<td>1.64 mol/dm³</td>
+</tr>
+<tr>
+<td>Teneur initiale en C-S-H <span class="arithmatex">\(n_\text{CSH}^0\)</span></td>
+<td>0.635 mol/dm³</td>
+</tr>
+<tr>
+<td>Durée de simulation</td>
+<td>1 an (<span class="arithmatex">\(3.1536 \times 10^7\)</span> s)</td>
+</tr>
+</tbody>
+</table>
+<p>Le matériau est initialement <strong>sain</strong> (portlandite et C-S-H intacts, solution interstitielle alcaline, pas de chlorures). Le bord gauche (<span class="arithmatex">\(x = 0\)</span>) est soumis à des conditions salines évoluant dans le temps (concentration en Cl⁻ croissante interpolée sur 24 h). Le bord droit (<span class="arithmatex">\(x = 0.5\)</span> dm) est imperméable (Neumann nul sur toutes les espèces sauf <span class="arithmatex">\(p_l\)</span> et <span class="arithmatex">\(z_\text{si}\)</span> qui sont maintenus en Dirichlet).</p>
+<hr />
+<h2 id="2-hypotheses">2. Hypothèses</h2>
+<ol>
+<li><strong>Isotherme</strong> : <span class="arithmatex">\(T = 298\)</span> K (25 °C). Les constantes d'équilibre, viscosités et diffusivités sont fixées à cette température.</li>
+<li><strong>Milieu saturé</strong> (<span class="arithmatex">\(s_l = 1\)</span>, sans phase gazeuse active) : la courbe de saturation est constante égale à 1 pour la plage de pressions considérée. L'équation <code>E_AIR</code> (air) est désactivée dans cette configuration.</li>
+<li><strong>Porosité évolutive</strong> : la dissolution de la portlandite et la précipitation du sel de Friedel modifient le volume solide, donc la porosité.</li>
+<li><strong>Électroneutralité locale</strong> : une équation supplémentaire contraint la charge nette de la solution (via l'inconnue <span class="arithmatex">\(\log c_\text{OH}\)</span>).</li>
+<li><strong>Gaz parfaits</strong> pour le calcul des pressions partielles de vapeur et de CO₂ gazeux (utiles dans les modèles couplés dérivés).</li>
+<li><strong>Loi de Darcy</strong> pour le transport advectif de masse totale (pression <span class="arithmatex">\(p_l\)</span>).</li>
+<li><strong>Loi de Nernst-Planck</strong> pour le transport ionique (diffusion + migration électrique).</li>
+<li><strong>Équilibres thermodynamiques locaux</strong> pour la chimie de la solution, résolus par la bibliothèque <code>HardenedCementChemistry</code>.</li>
+<li><strong>Cinétiques de précipitation</strong> pour la calcite et le sel de Friedel ; <strong>dissolution cinétique</strong> de la portlandite couverte d'une couche de calcite (modèle de Thiery).</li>
+</ol>
+<hr />
+<h2 id="3-variables-et-notation">3. Variables et notation</h2>
+<h3 id="inconnues-primaires-8-dans-le-cas-test-chloricem">Inconnues primaires (8 dans le cas test Chloricem)</h3>
+<table>
+<thead>
+<tr>
+<th>Symbole Bil</th>
+<th>Signification physique</th>
+<th>Unité</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>p_l</code></td>
+<td>Pression de la phase liquide</td>
+<td>Pa</td>
+</tr>
+<tr>
+<td><code>z_ca</code></td>
+<td>Inconnue zêta calcique : <span class="arithmatex">\(z_\text{ca} = n_\text{CcH}/n_\text{ch}^0 + \log_{10} S_\text{CcH}\)</span></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>z_si</code></td>
+<td>Inconnue zêta silicique : <span class="arithmatex">\(z_\text{si} = n_\text{Si,CSH}/n_\text{csh}^0 + \log_{10} S_\text{CSH}\)</span></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>logc_na</code></td>
+<td><span class="arithmatex">\(\log_{10}(c_\text{Na})\)</span>, Na total dissous</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td><code>logc_k</code></td>
+<td><span class="arithmatex">\(\log_{10}(c_\text{K})\)</span>, K total dissous</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td><code>psi</code></td>
+<td>Potentiel électrique adimensionné <span class="arithmatex">\(\psi = F\varphi/(RT)\)</span></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>logc_oh</code></td>
+<td><span class="arithmatex">\(\log_{10}(c_\text{OH})\)</span> (électroneutralité)</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td><code>logc_cl</code></td>
+<td><span class="arithmatex">\(\log_{10}(c_\text{Cl})\)</span>, Cl⁻ total dissous</td>
+<td>mol/dm³</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Remarque sur les inconnues zêta :</strong> La variable <span class="arithmatex">\(z_\text{ca}\)</span> encode simultanément la quantité de solide (CH + CC) et son état de saturation. Quand <span class="arithmatex">\(z_\text{ca} &gt; 0\)</span>, le solide est présent et <span class="arithmatex">\(S_\text{CcH} = 1\)</span> (équilibre) ; quand <span class="arithmatex">\(z_\text{ca} &lt; 0\)</span>, le solide est épuisé et <span class="arithmatex">\(S_\text{CcH} = 10^{z_\text{ca}} &lt; 1\)</span> (sous-saturation). Le même principe s'applique à <span class="arithmatex">\(z_\text{si}\)</span> pour les C-S-H.</p>
+</blockquote>
+<h3 id="variables-secondaires-calculees">Variables secondaires calculées</h3>
+<table>
+<thead>
+<tr>
+<th>Symbole</th>
+<th>Signification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(s_l\)</span></td>
+<td>Degré de saturation en liquide</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\phi\)</span></td>
+<td>Porosité actuelle</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(n_\text{CH}\)</span></td>
+<td>Teneur molaire en portlandite (mol/dm³)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(n_\text{CSH}\)</span></td>
+<td>Teneur molaire en C-S-H (mol/dm³)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(n_\text{CC}\)</span></td>
+<td>Teneur molaire en calcite (mol/dm³)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(n_\text{FS}\)</span></td>
+<td>Teneur molaire en sel de Friedel (mol/dm³)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(x_\text{csh}\)</span></td>
+<td>Rapport Ca/Si dans les C-S-H</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(c_\text{Cl}^\text{ads}\)</span></td>
+<td>Chlorures adsorbés sur les C-S-H (mol/dm³)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\tau_l\)</span></td>
+<td>Tortuosité effective pour le transport ionique</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(k_\text{perm}\)</span></td>
+<td>Coefficient de perméabilité relatif à <span class="arithmatex">\(\phi_0\)</span></td>
+</tr>
+</tbody>
+</table>
+<h3 id="constantes-thermodynamiques">Constantes thermodynamiques</h3>
+<table>
+<thead>
+<tr>
+<th>Symbole</th>
+<th>Valeur</th>
+<th>Signification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(T\)</span></td>
+<td>298 K</td>
+<td>Température</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(R\)</span></td>
+<td>8.314 J/(mol·K)</td>
+<td>Constante des gaz parfaits</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(K_w\)</span></td>
+<td><span class="arithmatex">\(10^{-14}\)</span> mol²/dm⁶</td>
+<td>Produit ionique de l'eau</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\rho_l^0\)</span></td>
+<td>1 kg/dm³</td>
+<td>Masse volumique de l'eau</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\mu_l\)</span></td>
+<td><span class="arithmatex">\(\approx 10^{-3}\)</span> Pa·s</td>
+<td>Viscosité dynamique de l'eau à 298 K</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-modele-mathematique">4. Modèle mathématique</h2>
+<h3 id="41-equations-de-conservation">4.1 Équations de conservation</h3>
+<p>Le système résout <strong>8 équations aux dérivées partielles</strong> couplées (dans la configuration Chloricem active) :</p>
+<p><strong>Conservation de la masse totale (eau) :</strong></p>
+<div class="arithmatex">\[\frac{\partial M_\text{tot}}{\partial t} + \nabla \cdot \mathbf{W}_\text{tot} = 0\]</div>
+<p>avec <span class="arithmatex">\(M_\text{tot} = \rho_l\,\phi\,s_l\)</span> (masse d'eau liquide par unité de volume total, la vapeur étant négligeable en milieu saturé).</p>
+<p><strong>Conservation molaire du calcium :</strong></p>
+<div class="arithmatex">\[\frac{\partial N_\text{Ca}}{\partial t} + \nabla \cdot \mathbf{W}_\text{Ca} = 0\]</div>
+<div class="arithmatex">\[N_\text{Ca} = \phi s_l\,c_\text{Ca,l} + n_\text{CH} + x_\text{csh}\,n_\text{CSH} + n_\text{CC} + n_\text{FS,Ca}\]</div>
+<p><strong>Conservation molaire du silicium :</strong></p>
+<div class="arithmatex">\[\frac{\partial N_\text{Si}}{\partial t} + \nabla \cdot \mathbf{W}_\text{Si} = 0\]</div>
+<div class="arithmatex">\[N_\text{Si} = \phi s_l\,c_\text{Si,l} + n_\text{CSH}\]</div>
+<p><strong>Conservation molaire du sodium :</strong></p>
+<div class="arithmatex">\[\frac{\partial N_\text{Na}}{\partial t} + \nabla \cdot \mathbf{W}_\text{Na} = 0\]</div>
+<div class="arithmatex">\[N_\text{Na} = \phi s_l\,c_\text{Na,l} + c_\text{Na,ads}^\text{CSH}\,n_\text{CSH}\]</div>
+<p><strong>Conservation molaire du potassium :</strong></p>
+<div class="arithmatex">\[\frac{\partial N_\text{K}}{\partial t} + \nabla \cdot \mathbf{W}_\text{K} = 0\]</div>
+<div class="arithmatex">\[N_\text{K} = \phi s_l\,c_\text{K,l} + c_\text{K,ads}^\text{CSH}\,n_\text{CSH}\]</div>
+<p><strong>Conservation molaire du chlore :</strong></p>
+<div class="arithmatex">\[\frac{\partial N_\text{Cl}}{\partial t} + \nabla \cdot \mathbf{W}_\text{Cl} = 0\]</div>
+<div class="arithmatex">\[N_\text{Cl} = \phi s_l\,c_\text{Cl,l} + c_\text{Cl,ads}^\text{CSH}\,n_\text{CSH} + 2\,n_\text{FS}\]</div>
+<p><strong>Bilan de charge électrique (divergence du courant nul) :</strong></p>
+<div class="arithmatex">\[\nabla \cdot \mathbf{W}_q = 0\]</div>
+<p><strong>Électroneutralité locale :</strong></p>
+<div class="arithmatex">\[\sum_i z_i\,c_i = 0\]</div>
+<p>c'est-à-dire <span class="arithmatex">\(2c_{\text{Ca}^{2+}} + c_{\text{Na}^+} + c_{\text{K}^+} + c_{\text{H}^+} - c_{\text{OH}^-} - c_{\text{Cl}^-} - 2c_{\text{CO}_3^{2-}} - \ldots = 0\)</span></p>
+<p>Cette relation, résolue dans <code>HardenedCementChemistry</code>, fournit <span class="arithmatex">\(c_\text{OH}\)</span> (inconnue <code>logc_oh</code>).</p>
+<hr />
+<h3 id="42-lois-de-flux-ionique">4.2 Lois de flux ionique</h3>
+<p>Le flux molaire de chaque ion <span class="arithmatex">\(i\)</span> dans la phase liquide est donné par l'équation de <strong>Nernst-Planck</strong> :</p>
+<div class="arithmatex">\[\mathbf{W}_i = -\phi\,s_l\,\tau_l\,D_i^\text{eff}\,\left(\nabla c_i + z_i\,c_i\,\nabla\psi\right) + c_i\,\mathbf{W}_l/\rho_l\]</div>
+<p>où :
+- <span class="arithmatex">\(D_i^\text{eff}\)</span> est le coefficient de diffusion effectif de l'ion <span class="arithmatex">\(i\)</span> dans l'eau (calculé par <code>CementSolutionDiffusion</code>) ;
+- <span class="arithmatex">\(z_i\)</span> est le nombre de charge de l'ion ;
+- <span class="arithmatex">\(\psi = F\varphi/(RT)\)</span> est le potentiel électrique adimensionné ;
+- <span class="arithmatex">\(\tau_l\)</span> est la tortuosité de la phase liquide (voir §4.7) ;
+- <span class="arithmatex">\(\mathbf{W}_l\)</span> est le flux de masse liquide (Darcy, voir §4.6).</p>
+<p>Le <strong>courant électrique</strong> <span class="arithmatex">\(\mathbf{W}_q\)</span> est la somme pondérée par les charges :</p>
+<div class="arithmatex">\[\mathbf{W}_q = \sum_i z_i\,\mathbf{W}_i\]</div>
+<p>La condition <span class="arithmatex">\(\nabla \cdot \mathbf{W}_q = 0\)</span> (conservation de la charge) détermine le gradient de potentiel électrique <span class="arithmatex">\(\nabla\psi\)</span> qui assure la neutralité locale du flux.</p>
+<hr />
+<h3 id="43-chimie-de-la-solution-interstitielle">4.3 Chimie de la solution interstitielle</h3>
+<p>La chimie est résolue à chaque point d'intégration par la bibliothèque <strong><code>HardenedCementChemistry</code></strong>, qui calcule à l'équilibre thermodynamique l'ensemble des concentrations ioniques à partir des variables primaires. Les espèces aqueuses prises en compte comprennent notamment :</p>
+<table>
+<thead>
+<tr>
+<th>Espèce</th>
+<th>Commentaire</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ca²⁺, CaOH⁺, CaOH₂(aq)</td>
+<td>Calcium</td>
+</tr>
+<tr>
+<td>H₂SiO₄²⁻, H₃SiO₄⁻, H₄SiO₄</td>
+<td>Silicate</td>
+</tr>
+<tr>
+<td>Na⁺, NaOH(aq)</td>
+<td>Sodium</td>
+</tr>
+<tr>
+<td>K⁺, KOH(aq)</td>
+<td>Potassium</td>
+</tr>
+<tr>
+<td>H⁺, OH⁻</td>
+<td>Eau</td>
+</tr>
+<tr>
+<td>CO₃²⁻, HCO₃⁻, CO₂(aq)</td>
+<td>Carbone</td>
+</tr>
+<tr>
+<td>Cl⁻</td>
+<td>Chlorure</td>
+</tr>
+</tbody>
+</table>
+<p>La bibliothèque <code>CementSolutionDiffusion</code> fournit les coefficients de diffusion effectifs de chaque espèce en fonction de la composition de la solution et de la temperature.</p>
+<hr />
+<h3 id="44-phases-solides-dissolution-precipitation-decalcification">4.4 Phases solides : dissolution, précipitation, décalcification</h3>
+<h4 id="portlandite-caoh2-ch">Portlandite Ca(OH)₂ — CH</h4>
+<p>La portlandite se dissout selon une cinétique contrôlée par la diffusion du CO₂ à travers une couche de calcite qui se forme en surface du cristal (modèle de Thiery, 2005). En absence de carbonatation (CO₂ = 0), CH est à l'équilibre :</p>
+<div class="arithmatex">\[S_\text{CH} = \frac{[\text{Ca}^{2+}][\text{OH}^-]^2}{K_\text{sp,CH}}\]</div>
+<p>Le contenu en CH est gouverné par l'inconnue <span class="arithmatex">\(z_\text{ca}\)</span> :</p>
+<div class="arithmatex">\[n_\text{CH} = n_\text{ch}^0 \cdot \max(z_\text{ca},\, 0), \qquad \log_{10} S_\text{CH} = \min(z_\text{ca},\, 0)\]</div>
+<h4 id="c-s-h-silicates-de-calcium-hydrates">C-S-H (Silicates de Calcium Hydratés)</h4>
+<p>Les C-S-H forment une solution solide de composition variable, caractérisée par le rapport Ca/Si = <span class="arithmatex">\(x_\text{csh}\)</span>. La décalcification progressive des C-S-H est modélisée par la diminution de <span class="arithmatex">\(x_\text{csh}\)</span> lorsque la solution s'appauvrit en calcium. Le volume molaire des C-S-H varie linéairement avec <span class="arithmatex">\(x_\text{csh}\)</span> (courbe <code>V_CSH</code>) :</p>
+<div class="arithmatex">\[V_\text{CSH}(x) = \frac{x_1 - x}{x_1 - x_0}\,V_0 + \frac{x - x_0}{x_1 - x_0}\,V_1\]</div>
+<p>avec <span class="arithmatex">\(x_0 = 0\)</span>, <span class="arithmatex">\(V_0 = 5.44 \times 10^{-2}\)</span> dm³/mol (tobermorite) et <span class="arithmatex">\(x_1 = 0.85\)</span>, <span class="arithmatex">\(V_1 = 8.14 \times 10^{-2}\)</span> dm³/mol.</p>
+<h4 id="calcite-caco3-cc">Calcite CaCO₃ — CC</h4>
+<p>La précipitation/dissolution de la calcite suit une <strong>cinétique du premier ordre</strong> :</p>
+<div class="arithmatex">\[\frac{d n_\text{CC}}{d t} = r_\text{CC} \cdot (S_\text{CC} - 1), \qquad r_\text{CC} = 10^{-6}\ \text{mol/(dm³·s)}\]</div>
+<p>La calcite ne se forme que si la solution est sursaturée en CaCO₃ (<span class="arithmatex">\(S_\text{CC} &gt; 1\)</span>), ce qui requiert la présence de CO₂ dissous. Dans le cas test pur chlorure (pas de CO₂ externe), la calcite reste absente.</p>
+<h4 id="sel-de-friedel-ca4al2o6cl210h2o">Sel de Friedel Ca₄Al₂O₆Cl₂·10H₂O</h4>
+<p>Le sel de Friedel est la phase solide qui fixe chimiquement les chlorures. Sa précipitation suit une cinétique analogue :</p>
+<div class="arithmatex">\[\frac{d n_\text{FS}}{d t} = r_\text{FS} \cdot (S_\text{FS} - 1), \qquad r_\text{FS} = 10^{-6}\ \text{mol/(dm³·s)}\]</div>
+<p>Le sel de Friedel contient 2 moles de Cl par mole, contribuant significativement à la fixation des chlorures dans le béton.</p>
+<h4 id="porosite-actuelle">Porosité actuelle</h4>
+<p>La porosité évolue en fonction des volumes des phases solides :</p>
+<div class="arithmatex">\[\phi = \phi_0 - \Delta V_s^\text{CSH} - \Delta V_s^\text{CH} - \Delta V_s^\text{CC} - \Delta V_s^\text{FS}\]</div>
+<div class="arithmatex">\[\phi = \phi_0 - V_\text{CSH}(x)\,(n_\text{CSH} - n_\text{csh}^0) - V_\text{CH}\,(n_\text{CH} - n_\text{ch}^0) - V_\text{CC}\,n_\text{CC} - V_\text{FS}\,n_\text{FS}\]</div>
+<hr />
+<h3 id="45-adsorption-des-chlorures-par-les-c-s-h">4.5 Adsorption des chlorures par les C-S-H</h3>
+<p>Les C-S-H adsorbent physiquement les ions Cl⁻ selon une <strong>isotherme de Langmuir</strong> en fonction de la concentration en chlorures libres <span class="arithmatex">\(c_\text{Cl}\)</span> et du rapport Ca/Si courant <span class="arithmatex">\(x_\text{csh}\)</span> :</p>
+<div class="arithmatex">\[c_\text{Cl,ads}^\text{CSH} = \frac{\alpha(x_\text{csh})\,c_\text{Cl}}{1 + \beta(x_\text{csh})\,c_\text{Cl}}\]</div>
+<p>Les coefficients <span class="arithmatex">\(\alpha\)</span> et <span class="arithmatex">\(\beta\)</span> sont tabulés en fonction de <span class="arithmatex">\(x_\text{csh}\)</span> dans la courbe <code>Adscl</code>. Dans le cas test :</p>
+<div class="arithmatex">\[\alpha = 3.192, \qquad \beta = 26.6 \text{ dm³/mol}\]</div>
+<p>Ces valeurs sont <strong>indépendantes de</strong> <span class="arithmatex">\(x_\text{csh}\)</span> dans cet exemple (courbe constante sur <span class="arithmatex">\([0.5,\, 1.5]\)</span>).</p>
+<p>L'adsorption du sodium et du potassium est modélisée par une <strong>isotherme linéaire</strong> tronquée à <span class="arithmatex">\(c = 0.3\)</span> mol/dm³ :</p>
+<div class="arithmatex">\[c_\text{Na,ads}^\text{CSH} = R_\text{Na}(x_\text{csh})\,\min(c_\text{Na},\, 0.3\ \text{mol/dm³})\]</div>
+<p>Dans le cas test, <span class="arithmatex">\(R_\text{Na} = R_\text{K} = 0\)</span> (courbes <code>Adsna</code>, <code>Adsk</code>), donc les alcalins ne sont pas adsorbés.</p>
+<hr />
+<h3 id="46-transport-hydraulique-loi-de-darcy">4.6 Transport hydraulique — loi de Darcy</h3>
+<p>Le flux de masse totale d'eau liquide (en milieu saturé, sans gravité) est :</p>
+<div class="arithmatex">\[\mathbf{W}_\text{tot} = -\frac{\rho_l\,k_l^\text{int}\,k_{rl}(s_l)\,k_\text{perm}(\phi)}{\mu_l}\,\nabla p_l\]</div>
+<p>Le coefficient <span class="arithmatex">\(k_\text{perm}(\phi)\)</span> modélise la réduction de perméabilité due au colmatage par les produits de réaction (voir §4.7). Dans le cas test saturé, <span class="arithmatex">\(k_{rl} = 1\)</span>.</p>
+<hr />
+<h3 id="47-permeabilite-et-tortuosite-evolutives">4.7 Perméabilité et tortuosité évolutives</h3>
+<h4 id="tortuosite-modele-oh-jang-2004">Tortuosité — modèle Oh &amp; Jang (2004)</h4>
+<p>La tortuosité de la phase liquide pour le transport ionique est calculée selon le modèle empirique de Oh &amp; Jang :</p>
+<div class="arithmatex">\[\tau_l(\phi,\, s_l) = f(\phi,\, s_l)\]</div>
+<p>Ce modèle est calibré sur des données expérimentales de diffusivité de bétons et pâtes de ciment, et tient compte de l'effet conjoint de la porosité et de la saturation.</p>
+<h4 id="permeabilite-modele-verma-pruess-1988">Perméabilité — modèle Verma &amp; Pruess (1988)</h4>
+<p>La réduction de perméabilité liée au colmatage est modélisée par le modèle de Verma &amp; Pruess :</p>
+<div class="arithmatex">\[k_\text{perm}(\phi) = \left(\frac{\phi - \phi_r}{\phi_0 - \phi_r}\right)^n \cdot f_\text{pore}\]</div>
+<p>où <span class="arithmatex">\(\phi_r = 0.70\,\phi_0\)</span> est la porosité seuil en-dessous de laquelle la perméabilité s'annule, et le facteur de forme <span class="arithmatex">\(f_\text{pore}\)</span> dépend de la fraction de longueur des corps de pores <code>frac</code> = 0.8.</p>
+<hr />
+<h2 id="5-conditions-aux-limites-et-initiales">5. Conditions aux limites et initiales</h2>
+<h3 id="conditions-initiales">Conditions initiales</h3>
+<p>Le béton est <strong>initialement sain</strong>, en équilibre avec la solution interstitielle alcaline :</p>
+<table>
+<thead>
+<tr>
+<th>Inconnue</th>
+<th>Valeur initiale</th>
+<th>Commentaire</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>p_l</code></td>
+<td>0 Pa</td>
+<td>Pression de référence</td>
+</tr>
+<tr>
+<td><code>logc_cl</code></td>
+<td><span class="arithmatex">\(-4\)</span> (soit <span class="arithmatex">\(10^{-4}\)</span> mol/dm³)</td>
+<td>Traces de chlorures</td>
+</tr>
+<tr>
+<td><code>z_ca</code></td>
+<td>1</td>
+<td>Portlandite présente (<span class="arithmatex">\(n_\text{CH} = n_\text{ch}^0\)</span>)</td>
+</tr>
+<tr>
+<td><code>z_si</code></td>
+<td><span class="arithmatex">\(-0.92\)</span></td>
+<td>C-S-H présents à composition initiale</td>
+</tr>
+<tr>
+<td><code>logc_na</code></td>
+<td><span class="arithmatex">\(-0.64\)</span> (soit ≈ 0.23 mol/dm³)</td>
+<td>Sodium initial</td>
+</tr>
+<tr>
+<td><code>logc_k</code></td>
+<td><span class="arithmatex">\(-4\)</span> (soit <span class="arithmatex">\(10^{-4}\)</span> mol/dm³)</td>
+<td>Potassium initial faible</td>
+</tr>
+<tr>
+<td><code>psi</code></td>
+<td>0</td>
+<td>Potentiel nul de référence</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Ces valeurs correspondent à une solution interstitielle fortement alcaline (pH ≈ 13.5, portlandite à l'équilibre) caractéristique d'un béton OPC hydraté.</p>
+</blockquote>
+<h3 id="conditions-aux-limites">Conditions aux limites</h3>
+<table>
+<thead>
+<tr>
+<th>Bord</th>
+<th><span class="arithmatex">\(x\)</span> [dm]</th>
+<th>Variable</th>
+<th>Type</th>
+<th>Valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gauche (exposition)</td>
+<td>0</td>
+<td><code>logc_cl</code></td>
+<td>Dirichlet</td>
+<td><span class="arithmatex">\(-4\)</span> à <span class="arithmatex">\(t=0\)</span> → <span class="arithmatex">\(-0.28\)</span> à <span class="arithmatex">\(t=86400\)</span> s</td>
+</tr>
+<tr>
+<td>Gauche</td>
+<td>0</td>
+<td><code>z_ca</code></td>
+<td>Dirichlet</td>
+<td><span class="arithmatex">\(1 \to -0.208\)</span> (décalcification progressive)</td>
+</tr>
+<tr>
+<td>Gauche</td>
+<td>0</td>
+<td><code>logc_na</code></td>
+<td>Dirichlet</td>
+<td><span class="arithmatex">\(-0.64 \to -2.49\)</span></td>
+</tr>
+<tr>
+<td>Gauche</td>
+<td>0</td>
+<td><code>logc_k</code></td>
+<td>Dirichlet</td>
+<td><span class="arithmatex">\(-4\)</span> (constant)</td>
+</tr>
+<tr>
+<td>Gauche</td>
+<td>0</td>
+<td><code>psi</code></td>
+<td>Dirichlet</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Droit (symétrie)</td>
+<td>0.5</td>
+<td><code>p_l</code></td>
+<td>Dirichlet</td>
+<td>0 Pa</td>
+</tr>
+<tr>
+<td>Droit</td>
+<td>0.5</td>
+<td><code>z_si</code></td>
+<td>Dirichlet</td>
+<td><span class="arithmatex">\(-0.92\)</span> (C-S-H imposés)</td>
+</tr>
+</tbody>
+</table>
+<p>Les conditions de bord gauche évoluent <strong>linéairement en temps</strong> entre <span class="arithmatex">\(t = 0\)</span> et <span class="arithmatex">\(t = 86400\)</span> s (1 jour), simulant l'établissement progressif d'un contact avec la solution saline. Au-delà d'un jour, les valeurs restent constantes (la fonction est interpolée avec les 2 points fournis, ce qui implique une extrapolation constante au-delà).</p>
+<blockquote>
+<p><strong>Interprétation physique :</strong> Le front de chlorures pénètre depuis le bord gauche (surface exposée à la mer ou à une solution saline) vers le bord droit (cœur du matériau, imperméable ou plan de symétrie). Sur 1 an, le front atteint quelques millimètres à quelques centimètres selon la diffusivité effective.</p>
+</blockquote>
+<hr />
+<h2 id="6-explication-detaillee-des-fichiers-dentree">6. Explication détaillée des fichiers d'entrée</h2>
+<h3 id="61-fichier-principal-chloricem">6.1 Fichier principal <code>Chloricem</code></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Units
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Length = decimeter
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Mass   = hectogram
+</code></pre></div>
+<p><strong>Système d'unités :</strong> Le modèle travaille en <strong>décimètres</strong> (longueur) et <strong>hectogrammes</strong> (masse). Toutes les entrées doivent être cohérentes avec ce système :
+- Les longueurs sont en dm (1 dm = 10 cm)
+- Les concentrations sont en mol/dm³ (= mol/L)
+- Les pressions en Pa
+- Le temps en secondes</p>
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Geometry
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>1 plan
+</code></pre></div>
+<p><strong>Géométrie :</strong> Problème 1D planaire (axe <span class="arithmatex">\(x\)</span>, pas de symétrie cylindrique ni sphérique).</p>
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Mesh
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>4 0. 0. 0.5 0.5
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>5.e-3
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>1 100 1
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>1 1 1
+</code></pre></div>
+<p><strong>Maillage :</strong> Définit un domaine 1D de 0 à 0.5 dm avec 100 éléments de taille <span class="arithmatex">\(5 \times 10^{-3}\)</span> dm = 0.5 mm. Le maillage génère 103 nœuds (incluant les nœuds de bord). Les 4 premières valeurs <code>4 0. 0. 0.5 0.5</code> définissent les coordonnées des coins du domaine ; le format est lu par Bil pour construire le maillage structuré.</p>
+<blockquote>
+<p><strong>Astuce :</strong> Le fichier <code>Chloricem.msh</code> (format Gmsh v2.0) est la version exportée de ce maillage, utilisée si Bil est lancé avec un fichier <code>.msh</code> externe plutôt que la génération interne.</p>
+</blockquote>
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Material
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Model = Chloricem
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>InitialPorosity = 0.121
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>IntrinsicPermeability = 1.4e-17
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>InitialContent_portlandite = 1.64
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>InitialContent_csh = 0.635
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>InitialConcentration_sodium = -1
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>InitialConcentration_potassium = -1
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>FractionalLengthOfPoreBodies = 0.8
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>PorosityFractionAtVanishingPermeability = 0.70
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>MinimumPorosity = 0.01
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>PrecipitationRate_calcite = 1.e-6
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>PrecipitationRate_friedelsalt = 1.e-6
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Curves = sat       p_c = ...   s_l = ...
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>Curves = relpermCN s_l = ...   kl_r = ...
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>Curves = V_CSH     x = ...     v_csh = ...
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Curves = Adscl     x = ...     alpha = ...  beta = ...
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>Curves = Adsna     x = ...     adsna = ...
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>Curves = Adsk      x = ...     adsk = ...
+</code></pre></div>
+<p>Paramètres matériaux lus par la fonction <code>ReadMatProp</code> :</p>
+<table>
+<thead>
+<tr>
+<th>Paramètre</th>
+<th>Valeur</th>
+<th>Signification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>InitialPorosity</code></td>
+<td>0.121</td>
+<td><span class="arithmatex">\(\phi_0\)</span> = 12.1 %</td>
+</tr>
+<tr>
+<td><code>IntrinsicPermeability</code></td>
+<td><span class="arithmatex">\(1.4 \times 10^{-17}\)</span> dm²</td>
+<td><span class="arithmatex">\(k_l^\text{int}\)</span> (en dm², pas m²)</td>
+</tr>
+<tr>
+<td><code>InitialContent_portlandite</code></td>
+<td>1.64 mol/dm³</td>
+<td><span class="arithmatex">\(n_\text{CH}^0\)</span></td>
+</tr>
+<tr>
+<td><code>InitialContent_csh</code></td>
+<td>0.635 mol/dm³</td>
+<td><span class="arithmatex">\(n_\text{CSH}^0\)</span></td>
+</tr>
+<tr>
+<td><code>InitialConcentration_sodium</code></td>
+<td><span class="arithmatex">\(-1\)</span></td>
+<td>Valeur négative = calcul automatique via <code>HardenedCementChemistry</code></td>
+</tr>
+<tr>
+<td><code>InitialConcentration_potassium</code></td>
+<td><span class="arithmatex">\(-1\)</span></td>
+<td>Idem</td>
+</tr>
+<tr>
+<td><code>FractionalLengthOfPoreBodies</code></td>
+<td>0.8</td>
+<td>Paramètre <code>frac</code> du modèle Verma-Pruess</td>
+</tr>
+<tr>
+<td><code>PorosityFractionAtVanishingPermeability</code></td>
+<td>0.70</td>
+<td><span class="arithmatex">\(\phi_r/\phi_0\)</span> : seuil de colmatage</td>
+</tr>
+<tr>
+<td><code>MinimumPorosity</code></td>
+<td>0.01</td>
+<td><span class="arithmatex">\(\phi_\text{min}\)</span> : plancher numérique de porosité</td>
+</tr>
+<tr>
+<td><code>PrecipitationRate_calcite</code></td>
+<td><span class="arithmatex">\(10^{-6}\)</span> mol/(dm³·s)</td>
+<td>Taux cinétique calcite <span class="arithmatex">\(r_\text{CC}\)</span></td>
+</tr>
+<tr>
+<td><code>PrecipitationRate_friedelsalt</code></td>
+<td><span class="arithmatex">\(10^{-6}\)</span> mol/(dm³·s)</td>
+<td>Taux cinétique sel de Friedel <span class="arithmatex">\(r_\text{FS}\)</span></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Fields
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>1
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Value = 1.      Gradient = 0 0 0      Point = 0 0 0
+</code></pre></div>
+<p><strong>Champs spatiaux :</strong> Un seul champ uniforme de valeur 1, utilisé comme multiplicateur dans les conditions initiales et aux limites (facteur d'échelle neutre ici).</p>
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Initialization
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>7
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Region = 2    Unknown = p_l       Field = 0    Function = 0
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Region = 2    Unknown = logc_cl   Field = 1    Function = 1
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Region = 2    Unknown = z_ca      Field = 1    Function = 2
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Region = 2    Unknown = z_si      Field = 1    Function = 0
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Region = 2    Unknown = logc_na   Field = 1    Function = 3
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Region = 2    Unknown = logc_k    Field = 1    Function = 4
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Region = 2    Unknown = psi       Field = 0    Function = 0
+</code></pre></div>
+<p><strong>Initialisation :</strong> Les 7 inconnues sont initialisées dans la région 2 (tout le domaine volumique). La syntaxe <code>Field = i  Function = j</code> signifie que la valeur initiale est <code>Field[i] × Function[j](t=0)</code> :</p>
+<table>
+<thead>
+<tr>
+<th>Inconnue</th>
+<th>Field</th>
+<th>Function</th>
+<th>Valeur initiale</th>
+<th>Interprétation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>p_l</code></td>
+<td>0 (=0)</td>
+<td>0 (=0)</td>
+<td>0 Pa</td>
+<td>Pression de référence</td>
+</tr>
+<tr>
+<td><code>logc_cl</code></td>
+<td>1 (=1)</td>
+<td>1 : F(0)=−4</td>
+<td>−4</td>
+<td><span class="arithmatex">\(c_\text{Cl} = 10^{-4}\)</span> mol/dm³</td>
+</tr>
+<tr>
+<td><code>z_ca</code></td>
+<td>1 (=1)</td>
+<td>2 : F(0)=1</td>
+<td>1</td>
+<td>Portlandite intacte</td>
+</tr>
+<tr>
+<td><code>z_si</code></td>
+<td>1 (=1)</td>
+<td>0 (=0)</td>
+<td>0</td>
+<td><strong>Attention</strong> : Z_si=0 signifie <span class="arithmatex">\(n_\text{CSH} = n_\text{csh}^0\)</span>, <span class="arithmatex">\(S_\text{CSH}=1\)</span></td>
+</tr>
+<tr>
+<td><code>logc_na</code></td>
+<td>1 (=1)</td>
+<td>3 : F(0)=−0.639</td>
+<td>−0.639</td>
+<td><span class="arithmatex">\(c_\text{Na} \approx 0.23\)</span> mol/dm³</td>
+</tr>
+<tr>
+<td><code>logc_k</code></td>
+<td>1 (=1)</td>
+<td>4 : F(0)=−4</td>
+<td>−4</td>
+<td><span class="arithmatex">\(c_\text{K} = 10^{-4}\)</span> mol/dm³</td>
+</tr>
+<tr>
+<td><code>psi</code></td>
+<td>0 (=0)</td>
+<td>0 (=0)</td>
+<td>0</td>
+<td>Potentiel nul</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Functions
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>5
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>N = 2     F(0) = -4         F(86400) = -0.28133
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>N = 2     F(0) = 1          F(86400) = -2.7766
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>N = 2     F(0) = -0.92082   F(86400) = -0.20761
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>N = 2     F(0) = -0.63927   F(86400) = -2.4948
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>N = 1     F(0) = -4
+</code></pre></div>
+<p><strong>Fonctions temporelles :</strong> 5 fonctions linéaires par morceaux utilisées pour les conditions initiales et aux limites :</p>
+<table>
+<thead>
+<tr>
+<th>Fonction</th>
+<th><span class="arithmatex">\(t=0\)</span></th>
+<th><span class="arithmatex">\(t=86400\)</span> s (1 j)</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><span class="arithmatex">\(-4\)</span></td>
+<td><span class="arithmatex">\(-0.281\)</span></td>
+<td><code>logc_cl</code> : de <span class="arithmatex">\(10^{-4}\)</span> mol/dm³ à <span class="arithmatex">\(0.52\)</span> mol/dm³</td>
+</tr>
+<tr>
+<td>2</td>
+<td><span class="arithmatex">\(1\)</span></td>
+<td><span class="arithmatex">\(-2.777\)</span></td>
+<td><code>z_ca</code> : dissolution progressive de la portlandite (décalcification)</td>
+</tr>
+<tr>
+<td>3</td>
+<td><span class="arithmatex">\(-0.921\)</span></td>
+<td><span class="arithmatex">\(-0.208\)</span></td>
+<td><code>z_si</code> : décalcification des C-S-H</td>
+</tr>
+<tr>
+<td>4</td>
+<td><span class="arithmatex">\(-0.639\)</span></td>
+<td><span class="arithmatex">\(-2.495\)</span></td>
+<td><code>logc_na</code> : dilution du sodium par l'eau de mer</td>
+</tr>
+<tr>
+<td>5</td>
+<td><span class="arithmatex">\(-4\)</span></td>
+<td>(1 point)</td>
+<td><code>logc_k</code> : constant</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Ces valeurs correspondent à des conditions à la frontière gauche représentant le contact avec une eau de mer (environ 0.5 mol/dm³ de NaCl, pH neutre à légèrement basique, calcium dilué).</p>
+</blockquote>
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Boundary Conditions
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>7
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Region = 2    Unknown = p_l       Field = 0    Function = 0
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Region = 1    Unknown = logc_cl   Field = 1    Function = 1
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Region = 1    Unknown = z_ca      Field = 1    Function = 2
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Region = 1    Unknown = logc_na   Field = 1    Function = 3
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Region = 1    Unknown = logc_k    Field = 1    Function = 4
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Region = 1    Unknown = psi       Field = 0    Function = 0
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Region = 2    Unknown = z_si      Field = 1    Function = 0
+</code></pre></div>
+<p><strong>Conditions aux limites :</strong></p>
+<ul>
+<li><strong>Région 1</strong> (bord gauche, <span class="arithmatex">\(x = 0\)</span>) : conditions de Dirichlet sur les espèces ioniques. Ces valeurs évoluent dans le temps via les fonctions 1–4.</li>
+<li><strong>Région 2</strong> (bord droit, <span class="arithmatex">\(x = 0.5\)</span> dm) : Dirichlet sur <code>p_l</code> (pression de référence) et <code>z_si</code> (C-S-H en état initial, cœur du matériau).</li>
+<li><strong><code>logc_oh</code></strong> n'est pas listé car il est déterminé implicitement par l'équation d'électroneutralité.</li>
+</ul>
+<blockquote>
+<p>La condition <code>psi = 0</code> au bord d'exposition fixe la référence du potentiel électrique.</p>
+</blockquote>
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Dates
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>13
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>0.  2.628e6 5.256e6 7.884e6 1.0512e7 1.314e7 1.5768e7 1.8396e7 2.1024e7 2.3652e7 2.628e7 2.8908e7 3.1536e7
+</code></pre></div>
+<p><strong>Pas de sortie :</strong> 13 instants de sortie régulièrement espacés d'environ 1 mois (<span class="arithmatex">\(\approx 2.628 \times 10^6\)</span> s), couvrant 1 an. Chaque instant génère un fichier <code>Chloricem.tN</code>.</p>
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Objective Variations
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>logc_cl    = 1.e-1
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>p_l        = 1.e5
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>z_ca       = 1.
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>z_si       = 1.
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>logc_na    = 1.
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>logc_k     = 1.
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>psi        = 1.e3
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>logc_oh    = 1.e-2
+</code></pre></div>
+<p><strong>Variations objectives (contrôle adaptatif du pas de temps) :</strong> Ces valeurs définissent la variation maximale autorisée de chaque inconnue par pas de temps. Si une inconnue varie plus que sa valeur objective, le pas de temps est réduit. <code>logc_oh = 1e-2</code> est la contrainte la plus stricte car le pH est très sensible.</p>
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Iterative Process
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Iterations = 20
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Tolerance = 1.e-6
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Repetition = 2
+</code></pre></div>
+<p><strong>Processus itératif Newton-Raphson :</strong> Maximum 20 itérations Newton, tolérance <span class="arithmatex">\(10^{-6}\)</span> sur le résidu, 2 tentatives de répétition en cas d'échec de convergence (avec réduction du pas de temps).</p>
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Time Steps
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Dtini = 1.e-1
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Dtmax = 1.e6
+</code></pre></div>
+<p><strong>Pas de temps :</strong> Départ très petit (0.1 s) pour les fortes discontinuités initiales des conditions aux limites, puis croissance adaptative jusqu'à <span class="arithmatex">\(10^6\)</span> s ≈ 11.6 jours.</p>
+<hr />
+<h3 id="62-courbe-de-saturation-sat">6.2 Courbe de saturation <code>sat</code></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Curves = sat  p_c = Range{x1 = 0, x2 = 1, n = 2}  s_l = Expressions(1){s_l = 1}
+</code></pre></div>
+<p>Le milieu est considéré <strong>entièrement saturé</strong> (<span class="arithmatex">\(s_l = 1\)</span>) quelle que soit la pression capillaire. Cette simplification est valide pour un béton immergé ou en contact permanent avec une eau libre. La courbe est définie par 2 points avec <span class="arithmatex">\(s_l = 1\)</span> constant.</p>
+<hr />
+<h3 id="63-courbe-de-permeabilite-relative-relpermcn">6.3 Courbe de perméabilité relative <code>relpermCN</code></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Curves = relpermCN  s_l = Range{x1 = 0, x2 = 1, n = 101}
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>                    kl_r = Mualem_liq(1){m = 0.45}
+</code></pre></div>
+<p>Perméabilité relative liquide calculée par le <strong>modèle de Mualem-van Genuchten</strong> avec le paramètre de forme <span class="arithmatex">\(m = 0.45\)</span> :</p>
+<div class="arithmatex">\[k_{rl}(s_l) = \sqrt{s_l}\,\left[1 - \left(1 - s_l^{1/m}\right)^m\right]^2\]</div>
+<p>En milieu saturé (<span class="arithmatex">\(s_l = 1\)</span>), <span class="arithmatex">\(k_{rl} = 1\)</span>. Cette courbe est définie sur 101 points de <span class="arithmatex">\(s_l = 0\)</span> à <span class="arithmatex">\(s_l = 1\)</span>.</p>
+<hr />
+<h3 id="64-courbe-de-volume-molaire-des-c-s-h-v_csh">6.4 Courbe de volume molaire des C-S-H <code>V_CSH</code></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Curves = V_CSH  x = Range{x1 = 0, x2 = 0.85, n=2}
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>                v_csh = Expressions(1){x0=0 ; v0=5.44e-2 ; x1=0.85 ; v1=8.14e-2 ;
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>                                       v_csh = (x1-x)/(x1-x0)*v0 + (x-x0)/(x1-x0)*v1}
+</code></pre></div>
+<p>Interpolation <strong>linéaire</strong> du volume molaire des C-S-H en fonction du rapport Ca/Si <span class="arithmatex">\(x\)</span> :</p>
+<table>
+<thead>
+<tr>
+<th><span class="arithmatex">\(x\)</span> (Ca/Si)</th>
+<th><span class="arithmatex">\(V_\text{CSH}\)</span> [dm³/mol]</th>
+<th>Phase</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0.0544</td>
+<td>Tobermorite (C-S-H riche Si)</td>
+</tr>
+<tr>
+<td>0.85</td>
+<td>0.0814</td>
+<td>C-S-H typique de l'OPC</td>
+</tr>
+</tbody>
+</table>
+<p>Ce volume entre directement dans le calcul de la porosité actuelle <span class="arithmatex">\(\phi\)</span>.</p>
+<hr />
+<h3 id="65-courbes-dadsorption-des-chlorures-adscl">6.5 Courbes d'adsorption des chlorures <code>Adscl</code></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Curves = Adscl  x = Range{x1 = 0.5, x2 = 1.5, n = 100}
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>                alpha = Expressions(1){alpha = 3.192 ;}
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>                beta  = Expressions(1){beta = 26.6 ;}
+</code></pre></div>
+<p>Isotherme de Langmuir pour l'adsorption des chlorures. Les coefficients sont constants sur <span class="arithmatex">\(x_\text{csh} \in [0.5,\, 1.5]\)</span> :</p>
+<div class="arithmatex">\[c_\text{Cl,ads} = \frac{3.192\,c_\text{Cl}}{1 + 26.6\,c_\text{Cl}} \quad [\text{mol Cl/mol CSH}]\]</div>
+<p>La capacité d'adsorption maximale (plateau de Langmuir) est <span class="arithmatex">\(\alpha/\beta = 3.192/26.6 \approx 0.12\)</span> mol Cl/mol CSH.</p>
+<hr />
+<h3 id="66-courbes-dadsorption-nak-adsna-adsk">6.6 Courbes d'adsorption Na/K — <code>Adsna</code>, <code>Adsk</code></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Curves = Adsna  x = Range{x1 = 0, x2 = 1, n = 2}  adsna = Expressions(1){adsna = 0;}
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Curves = Adsk   x = Range{x1 = 0, x2 = 1, n = 2}  adsk  = Expressions(1){adsk  = 0;}
+</code></pre></div>
+<p>Adsorption nulle pour Na et K dans ce cas test. Ces courbes sont requises par le modèle mais ici inactives.</p>
+<hr />
+<h3 id="67-fichier-de-maillage-chloricemmsh">6.7 Fichier de maillage <code>Chloricem.msh</code></h3>
+<p>Fichier au <strong>format Gmsh v2.0</strong> généré automatiquement. Il contient :
+- 103 nœuds sur le segment <span class="arithmatex">\([0,\, 0.5]\)</span> dm ;
+- 102 éléments linéiques (LINE2) intérieurs ;
+- 2 éléments ponctuels (POINT) aux extrémités (régions 1 et 2, correspondant aux nœuds de bord gauche et droit).</p>
+<p>Les régions physiques <code>1</code> (bord gauche) et <code>2</code> (bord droit / domaine volumique) sont utilisées pour affecter les conditions aux limites.</p>
+<hr />
+<h3 id="68-fichier-alternatif-m42-modele-simplifie-de-reference">6.8 Fichier alternatif <code>m42</code> (modèle simplifié de référence)</h3>
+<p>Le fichier <code>m42</code> utilise le modèle de référence <strong>42</strong> (un modèle de transport de chlorures simplifié, purement diffusif) sur un domaine plus court (<span class="arithmatex">\(L = 0.05\)</span> dm = 5 mm). Il constitue une <strong>solution de référence</strong> pour valider le comportement de Chloricem : les deux modèles doivent produire des profils de chlorures cohérents dans la limite des simplifications.</p>
+<p>Le modèle 42 utilise 8 inconnues algébriquement différentes (<code>c_cl</code>, <code>z_caoh2</code>, <code>z_c3a</code>, <code>z_sf</code>, <code>c_na</code>, <code>c_k</code>, <code>z_aloh3</code>, <code>psi</code>) et des paramètres matériaux directement en unités SI (pas dm/hg) : <code>D_Cl = 2.032e-13 m²/s</code>.</p>
+<hr />
+<h2 id="7-resultats-attendus-et-interpretation-physique">7. Résultats attendus et interprétation physique</h2>
+<h3 id="71-structure-des-fichiers-de-sortie-tn">7.1 Structure des fichiers de sortie <code>.tN</code></h3>
+<p>Chaque instant de sortie génère un fichier texte <code>&lt;nom&gt;.tN</code> (ex. <code>Carbochloricem.t1</code>). Le fichier commence par un en-tête de commentaires (<code>#</code>) suivi d'une ligne de données par nœud du maillage.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a># Version 2.8.3, ...
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a># Time = 8.603352e+04
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a># Model = Carbochloricem
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a># Number of views = 70
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a># Numbers of components per view = 1 1 1 ...
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a># Coordinates(1)  p_l(4)  saturation(5)  ...
+</code></pre></div>
+<blockquote>
+<p>Les colonnes 2 et 3 (coordonnées <span class="arithmatex">\(y\)</span> et <span class="arithmatex">\(z\)</span>) sont présentes dans le fichier mais non nommées dans l'en-tête ; elles valent 0 en géométrie 1D planaire.</p>
+</blockquote>
+<p>Le tableau ci-dessous donne les 73 colonnes nommées du modèle <strong>Carbochloricem</strong> (modèle dérivé de Chloricem incluant la carbonatation). Le système d'unités est celui du fichier d'entrée : longueurs en <strong>dm</strong>, masse en <strong>hg</strong> (hectogramme = 100 g), temps en <strong>s</strong>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Col.</th>
+<th>Nom Bil</th>
+<th>Description</th>
+<th>Unité</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td><code>Coordinates</code></td>
+<td>Coordonnée spatiale <span class="arithmatex">\(x\)</span></td>
+<td>dm</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td><code>p_l</code></td>
+<td>Pression de la phase liquide</td>
+<td>Pa</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td><code>saturation</code></td>
+<td>Degré de saturation <span class="arithmatex">\(s_l\)</span></td>
+<td>—</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td><code>porosity</code></td>
+<td>Porosité <span class="arithmatex">\(\phi\)</span></td>
+<td>—</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td><code>c_co2</code></td>
+<td>Concentration totale en CO₂ dissous</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td><code>c_ca_l</code></td>
+<td>Concentration totale en Ca en phase liquide</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td><code>c_si_l</code></td>
+<td>Concentration totale en Si en phase liquide</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td><code>c_na_l</code></td>
+<td>Concentration totale en Na en phase liquide</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td><code>c_k_l</code></td>
+<td>Concentration totale en K en phase liquide</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td><code>c_c_l</code></td>
+<td>Concentration totale en carbone inorganique dissous</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td><code>c_cl_l</code></td>
+<td>Concentration totale en Cl en phase liquide</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td><code>n_CH</code></td>
+<td>Teneur en portlandite Ca(OH)₂</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">15</td>
+<td><code>s_ch</code></td>
+<td>Indice de saturation de la portlandite</td>
+<td>—</td>
+</tr>
+<tr>
+<td style="text-align: right;">16</td>
+<td><code>n_CSH</code></td>
+<td>Teneur en C-S-H</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">17</td>
+<td><code>x_csh</code></td>
+<td>Rapport Ca/Si dans les C-S-H</td>
+<td>—</td>
+</tr>
+<tr>
+<td style="text-align: right;">18</td>
+<td><code>s_sh</code></td>
+<td>Indice de saturation des C-S-H</td>
+<td>—</td>
+</tr>
+<tr>
+<td style="text-align: right;">19</td>
+<td><code>n_CC</code></td>
+<td>Teneur en calcite CaCO₃</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">20</td>
+<td><code>s_cc</code></td>
+<td>Indice de saturation de la calcite</td>
+<td>—</td>
+</tr>
+<tr>
+<td style="text-align: right;">21</td>
+<td><code>n_Friedel's salt</code></td>
+<td>Teneur en sel de Friedel</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">22</td>
+<td><code>s_friedelsalt</code></td>
+<td>Indice de saturation du sel de Friedel</td>
+<td>—</td>
+</tr>
+<tr>
+<td style="text-align: right;">23</td>
+<td><code>c_h</code></td>
+<td>Concentration en H⁺</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">24</td>
+<td><code>c_oh</code></td>
+<td>Concentration en OH⁻</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">25</td>
+<td><code>ph</code></td>
+<td>pH de la solution</td>
+<td>—</td>
+</tr>
+<tr>
+<td style="text-align: right;">26</td>
+<td><code>c_ca</code></td>
+<td>Concentration en Ca²⁺</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">27</td>
+<td><code>c_caoh</code></td>
+<td>Concentration en CaOH⁺</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">28</td>
+<td><code>c_h2sio4</code></td>
+<td>Concentration en H₂SiO₄²⁻</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">29</td>
+<td><code>c_h3sio4</code></td>
+<td>Concentration en H₃SiO₄⁻</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">30</td>
+<td><code>c_h4sio4</code></td>
+<td>Concentration en H₄SiO₄ (acide silicique neutre)</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">31</td>
+<td><code>c_na</code></td>
+<td>Concentration en Na⁺</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">32</td>
+<td><code>c_naoh</code></td>
+<td>Concentration en NaOH</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">33</td>
+<td><code>c_k</code></td>
+<td>Concentration en K⁺</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">34</td>
+<td><code>c_koh</code></td>
+<td>Concentration en KOH</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">35</td>
+<td><code>c_co3</code></td>
+<td>Concentration en CO₃²⁻</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">36</td>
+<td><code>c_hco3</code></td>
+<td>Concentration en HCO₃⁻</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">37</td>
+<td><code>c_cah2sio4</code></td>
+<td>Concentration en CaH₂SiO₄</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">38</td>
+<td><code>c_cah3sio4</code></td>
+<td>Concentration en CaH₃SiO₄⁺</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">39</td>
+<td><code>c_cahco3</code></td>
+<td>Concentration en CaHCO₃⁺</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">40</td>
+<td><code>c_caco3aq</code></td>
+<td>Concentration en CaCO₃ aqueux</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">41</td>
+<td><code>c_caoh2aq</code></td>
+<td>Concentration en Ca(OH)₂ aqueux</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">42</td>
+<td><code>c_nahco3</code></td>
+<td>Concentration en NaHCO₃</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">43</td>
+<td><code>c_naco3</code></td>
+<td>Concentration en NaCO₃⁻</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">44</td>
+<td><code>c_cl</code></td>
+<td>Concentration en Cl⁻</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">45</td>
+<td><code>n_Ca</code></td>
+<td>Teneur totale en Ca (toutes phases)</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">46</td>
+<td><code>n_Si</code></td>
+<td>Teneur totale en Si (toutes phases)</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">47</td>
+<td><code>n_Na</code></td>
+<td>Teneur totale en Na (toutes phases)</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">48</td>
+<td><code>n_K</code></td>
+<td>Teneur totale en K (toutes phases)</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">49</td>
+<td><code>n_C</code></td>
+<td>Teneur totale en C (toutes phases)</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">50</td>
+<td><code>n_Cl</code></td>
+<td>Teneur totale en Cl (liquide + adsorbé + sel de Friedel)</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">51</td>
+<td><code>total mass</code></td>
+<td>Masse de liquide par unité de volume de matériau</td>
+<td>hg/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">52</td>
+<td><code>total mass flow</code></td>
+<td>Flux de masse totale (Darcy)</td>
+<td>hg/(dm²·s)</td>
+</tr>
+<tr>
+<td style="text-align: right;">53</td>
+<td><code>carbon mass flow</code></td>
+<td>Flux massique de carbone</td>
+<td>hg/(dm²·s)</td>
+</tr>
+<tr>
+<td style="text-align: right;">54</td>
+<td><code>calcium mass flow</code></td>
+<td>Flux massique de calcium</td>
+<td>hg/(dm²·s)</td>
+</tr>
+<tr>
+<td style="text-align: right;">55</td>
+<td><code>silicon mass flow</code></td>
+<td>Flux massique de silicium</td>
+<td>hg/(dm²·s)</td>
+</tr>
+<tr>
+<td style="text-align: right;">56</td>
+<td><code>sodium mass flow</code></td>
+<td>Flux massique de sodium</td>
+<td>hg/(dm²·s)</td>
+</tr>
+<tr>
+<td style="text-align: right;">57</td>
+<td><code>potassium mass flow</code></td>
+<td>Flux massique de potassium</td>
+<td>hg/(dm²·s)</td>
+</tr>
+<tr>
+<td style="text-align: right;">58</td>
+<td><code>chlorine mass flow</code></td>
+<td>Flux massique de chlore</td>
+<td>hg/(dm²·s)</td>
+</tr>
+<tr>
+<td style="text-align: right;">59</td>
+<td><code>Ca/Si ratio</code></td>
+<td>Rapport Ca/Si global (phases solides)</td>
+<td>—</td>
+</tr>
+<tr>
+<td style="text-align: right;">60</td>
+<td><code>Electric potential</code></td>
+<td>Potentiel électrique adimensionné <span class="arithmatex">\(\psi = F\varphi/(RT)\)</span></td>
+<td>—</td>
+</tr>
+<tr>
+<td style="text-align: right;">61</td>
+<td><code>charge</code></td>
+<td>Densité de charge ionique de la solution</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">62</td>
+<td><code>I</code></td>
+<td>Force ionique de la solution</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">63</td>
+<td><code>v_csh</code></td>
+<td>Volume molaire des C-S-H</td>
+<td>dm³/mol</td>
+</tr>
+<tr>
+<td style="text-align: right;">64</td>
+<td><code>v_ch</code></td>
+<td>Volume molaire de la portlandite</td>
+<td>dm³/mol</td>
+</tr>
+<tr>
+<td style="text-align: right;">65</td>
+<td><code>v_cc</code></td>
+<td>Volume molaire de la calcite</td>
+<td>dm³/mol</td>
+</tr>
+<tr>
+<td style="text-align: right;">66</td>
+<td><code>air pressure</code></td>
+<td>Pression partielle de l'air (phase gazeuse)</td>
+<td>Pa</td>
+</tr>
+<tr>
+<td style="text-align: right;">67</td>
+<td><code>humidity</code></td>
+<td>Humidité relative</td>
+<td>—</td>
+</tr>
+<tr>
+<td style="text-align: right;">68</td>
+<td><code>CO2 ppm</code></td>
+<td>Teneur en CO₂ gazeux</td>
+<td>ppm</td>
+</tr>
+<tr>
+<td style="text-align: right;">69</td>
+<td><code>gas pressure</code></td>
+<td>Pression totale de la phase gazeuse</td>
+<td>Pa</td>
+</tr>
+<tr>
+<td style="text-align: right;">70</td>
+<td><code>tortuosity to liquid</code></td>
+<td>Facteur de tortuosité pour le transport en phase liquide</td>
+<td>—</td>
+</tr>
+<tr>
+<td style="text-align: right;">71</td>
+<td><code>permeability coef</code></td>
+<td>Coefficient de perméabilité relatif (<span class="arithmatex">\(k_\text{perm}/k_0\)</span>)</td>
+<td>—</td>
+</tr>
+<tr>
+<td style="text-align: right;">72</td>
+<td><code>adsorbed chloride</code></td>
+<td>Chlorures adsorbés sur les C-S-H</td>
+<td>mol/dm³</td>
+</tr>
+<tr>
+<td style="text-align: right;">73</td>
+<td><code>liquid mass density</code></td>
+<td>Masse volumique de la phase liquide</td>
+<td>hg/dm³</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Rappel des conversions :</strong> 1 hg/dm³ = 100 g/L = 100 kg/m³ ; 1 mol/dm³ = 1 mol/L = 1 M.</p>
+</blockquote>
+<hr />
+<h3 id="evolution-initiale-etat-t0">Évolution initiale (état <span class="arithmatex">\(t=0\)</span>)</h3>
+<p>À <span class="arithmatex">\(t = 0\)</span>, le matériau est uniforme et sain :</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Valeur uniforme</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(p_l\)</span></td>
+<td>0 Pa</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(s_l\)</span></td>
+<td>1.0</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\phi\)</span></td>
+<td>12.1 %</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(c_\text{Cl}\)</span></td>
+<td><span class="arithmatex">\(10^{-4}\)</span> mol/dm³ (traces)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(n_\text{CH}\)</span></td>
+<td>1.64 mol/dm³</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(n_\text{CSH}\)</span></td>
+<td>0.635 mol/dm³</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(x_\text{CSH}\)</span> (Ca/Si)</td>
+<td>1.79</td>
+</tr>
+<tr>
+<td>pH</td>
+<td>≈ 13.5 (très alcalin)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(c_\text{Ca,l}\)</span></td>
+<td>≈ 5.8×10⁻⁴ mol/dm³</td>
+</tr>
+</tbody>
+</table>
+<h3 id="evolution-sur-1-an-t-31536-times-107-s">Évolution sur 1 an (<span class="arithmatex">\(t = 3.1536 \times 10^7\)</span> s)</h3>
+<p>L'analyse des fichiers de sortie <code>Chloricem.t12</code> au nœud <span class="arithmatex">\(x = 0\)</span> (bord exposé) révèle après 1 an :</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th><span class="arithmatex">\(t=0\)</span></th>
+<th><span class="arithmatex">\(t=1\)</span> an (bord)</th>
+<th>Évolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(n_\text{CH}\)</span></td>
+<td>1.64 mol/dm³</td>
+<td>≈ 0 mol/dm³</td>
+<td>Portlandite <strong>totalement dissoute</strong> en surface</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(n_\text{CSH}\)</span></td>
+<td>0.635 mol/dm³</td>
+<td>≈ 0.0017 mol/dm³</td>
+<td>C-S-H <strong>quasi épuisés</strong> en surface</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(n_\text{CC}\)</span></td>
+<td>0</td>
+<td>≈ 0</td>
+<td>Pas de calcite (pas de CO₂)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(c_\text{Cl}\)</span></td>
+<td><span class="arithmatex">\(10^{-4}\)</span></td>
+<td>≈ 0.52 mol/dm³</td>
+<td>Front de chlorures établi en surface</td>
+</tr>
+<tr>
+<td>pH</td>
+<td>13.5</td>
+<td>≈ 9.6</td>
+<td><strong>Dépassivation</strong> (pH &lt; 11.5)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\phi\)</span></td>
+<td>12.1 %</td>
+<td>≈ 17.5 %</td>
+<td>Augmentation (dissolution sans reprécipitation)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="physique-du-front-de-penetration">Physique du front de pénétration</h3>
+<ol>
+<li>
+<p><strong>Front de chlorures</strong> : les ions Cl⁻ pénètrent depuis le bord gauche par diffusion (principale) et migration (secondaire). Le profil est de type erfc (fonction d'erreur complémentaire) pour un coefficient de diffusion constant.</p>
+</li>
+<li>
+<p><strong>Dépassivation des armatures</strong> : le critère usuel de dépassivation est atteint lorsque la teneur en chlorures libres dépasse <span class="arithmatex">\(0.4\ \text{kg/m³}\)</span> de béton, soit environ 0.01 mol/dm³. Sur 1 an dans cette configuration, ce seuil est atteint sur les premiers millimètres.</p>
+</li>
+<li>
+<p><strong>Dissolution de la portlandite</strong> : la baisse de pH induite par la dilution du bord entraîne la dissolution de CH, libérant du Ca²⁺ qui tamponne partiellement la solution.</p>
+</li>
+<li>
+<p><strong>Fixation par adsorption et sel de Friedel</strong> : une fraction des chlorures est piégée sous forme adsorbée sur les C-S-H et précipitée en sel de Friedel. Cette fixation retarde l'avancée du front de chlorures libres.</p>
+</li>
+<li>
+<p><strong>Évolution de la porosité</strong> : la dissolution de CH et des C-S-H sans reprécipitation crée une zone dégradée de porosité accrue en surface, accélérant progressivement le transport.</p>
+</li>
+</ol>
+<p><img alt="Chloricem - Résultats de la simulation" src="Chloricem_results.png" /></p>
+<hr />
+<h2 id="8-discretisation-numerique">8. Discrétisation numérique</h2>
+<p>Le modèle est discrétisé par la méthode des <strong>volumes finis centrés sur les cellules</strong> (FVM), implémentée dans Bil via <code>FVM.h</code>. La discrétisation spatiale utilise un schéma centré pour les flux diffusifs et le flux électrique.</p>
+<p>Le système non-linéaire (8 équations couplées × 103 nœuds = 824 degrés de liberté) est résolu à chaque pas de temps par la <strong>méthode de Newton-Raphson</strong>, avec une matrice Jacobienne assemblée par <code>SetTangentMatrix()</code>.</p>
+<p>Le <strong>pas de temps adaptatif</strong> est contrôlé par la variation maximale des inconnues (OBJE dans Bil) : le pas est réduit si une inconnue varie plus que sa valeur objective, et augmenté sinon, jusqu'au maximum <code>Dtmax = 1e6</code> s.</p>
+<p>La chimie interne (résolution des équilibres thermodynamiques et des saturations des phases solides) est effectuée à chaque point d'intégration par la bibliothèque <strong><code>HardenedCementChemistry</code></strong>, via la méthode <code>Integrate()</code> du <code>MaterialPointMethod</code>.</p>
+<hr />
+<h2 id="9-references-bibliographiques">9. Références bibliographiques</h2>
+<h3 id="modeles-de-transport-ionique-en-milieu-poreux">Modèles de transport ionique en milieu poreux</h3>
+<ul>
+<li>
+<p><strong>Nernst, W.</strong> (1888). Zur Kinetik der in Lösung befindlichen Körper. <em>Zeitschrift für Physikalische Chemie</em>, 2, 613–637. — Équation de Nernst-Planck pour la diffusion ionique couplée à la migration électrique.</p>
+</li>
+<li>
+<p><strong>Planck, M.</strong> (1890). Ueber die Potentialdifferenz zwischen zwei verdünnten Lösungen binärer Elektrolyte. <em>Annalen der Physik</em>, 276(8), 561–576. — Formalisme de Nernst-Planck.</p>
+</li>
+<li>
+<p><strong>Samson, E. &amp; Marchand, J.</strong> (1999). Numerical solution of the extended Nernst-Planck model. <em>Journal of Colloid and Interface Science</em>, 215(1), 1–8. — Implémentation numérique du transport multi-ionique dans les bétons.</p>
+</li>
+</ul>
+<h3 id="durabilite-des-betons-penetration-des-chlorures">Durabilité des bétons — Pénétration des chlorures</h3>
+<ul>
+<li>
+<p><strong>Tuutti, K.</strong> (1982). <em>Corrosion of Steel in Concrete</em>. Swedish Cement and Concrete Research Institute, Stockholm. — Modèle classique de durée de vie en deux phases : initiation + propagation de la corrosion.</p>
+</li>
+<li>
+<p><strong>Andrade, C., Alonso, C. &amp; Molina, F.J.</strong> (1993). Cover cracking as a function of bar corrosion: Part I — Experimental test. <em>Materials and Structures</em>, 26(8), 453–464. — Critères de dépassivation des armatures.</p>
+</li>
+<li>
+<p><strong>Tang, L. &amp; Nilsson, L.O.</strong> (1992). Rapid determination of the chloride diffusivity in concrete by applying an electric field. <em>ACI Materials Journal</em>, 89(1), 49–53. — Méthode RCPT et coefficients de diffusion des chlorures.</p>
+</li>
+</ul>
+<h3 id="chimie-du-ciment-hydrate">Chimie du ciment hydraté</h3>
+<ul>
+<li>
+<p><strong>Taylor, H.F.W.</strong> (1997). <em>Cement Chemistry</em> (2ᵉ éd.). Thomas Telford, London. — Référence fondamentale sur la composition et la chimie des hydrates du ciment.</p>
+</li>
+<li>
+<p><strong>Lothenbach, B. &amp; Winnefeld, F.</strong> (2006). Thermodynamic modelling of the hydration of Portland cement. <em>Cement and Concrete Research</em>, 36(2), 209–226. — Modélisation thermodynamique des phases solides du ciment hydraté.</p>
+</li>
+</ul>
+<h3 id="adsorption-des-chlorures-par-les-c-s-h">Adsorption des chlorures par les C-S-H</h3>
+<ul>
+<li>
+<p><strong>Barbarulo, R., Marchand, J., Snyder, K.A. &amp; Prené, S.</strong> (2000). Dimensional analysis of ionic transport problems in hydrated cement systems. <em>Cement and Concrete Research</em>, 30(12), 1955–1960. — Modélisation de la fixation des chlorures.</p>
+</li>
+<li>
+<p><strong>Zibara, H., Hooton, R.D., Thomas, M.D.A. &amp; Stanish, K.</strong> (2008). Influence of the C/S and C/A ratios of hydration products on the chloride ion binding capacity of lime-SF and lime-MK mixtures. <em>Cement and Concrete Research</em>, 38(3), 422–426. — Dépendance de l'adsorption des chlorures en fonction de la composition des C-S-H.</p>
+</li>
+</ul>
+<h3 id="sel-de-friedel">Sel de Friedel</h3>
+<ul>
+<li><strong>Birnin-Yauri, U.A. &amp; Glasser, F.P.</strong> (1998). Friedel's salt, Ca₂Al(OH)₆(Cl,OH)·2H₂O: its solid solutions and their role in chloride binding. <em>Cement and Concrete Research</em>, 28(12), 1713–1723. — Propriétés thermodynamiques du sel de Friedel.</li>
+</ul>
+<h3 id="tortuosite-et-diffusivite-effectives">Tortuosité et diffusivité effectives</h3>
+<ul>
+<li>
+<p><strong>Oh, B.H. &amp; Jang, S.Y.</strong> (2004). Prediction of diffusivity of concrete based on simple analytic equations. <em>Cement and Concrete Research</em>, 34(3), 463–480. — Modèle de tortuosité Oh-Jang pour les bétons.</p>
+</li>
+<li>
+<p><strong>Millington, R.J. &amp; Quirk, J.P.</strong> (1961). Permeability of porous solids. <em>Transactions of the Faraday Society</em>, 57, 1200–1207. — Modèle de tortuosité classique.</p>
+</li>
+</ul>
+<h3 id="permeabilite-et-colmatage">Perméabilité et colmatage</h3>
+<ul>
+<li><strong>Verma, A. &amp; Pruess, K.</strong> (1988). Thermohydrological conditions and silica redistribution near high-level nuclear wastes emplaced in saturated geological formations. <em>Journal of Geophysical Research</em>, 93(B2), 1159–1173. — Modèle de réduction de perméabilité par précipitation.</li>
+</ul>
+<h3 id="dissolution-de-la-portlandite-et-cinetiques">Dissolution de la portlandite et cinétiques</h3>
+<ul>
+<li>
+<p><strong>Thiery, M.</strong> (2005). <em>Modélisation de la carbonatation atmosphérique des matériaux cimentaires</em>. Thèse de Doctorat, École Nationale des Ponts et Chaussées, Paris. — Cinétique de dissolution de la portlandite couverte de calcite ; paramètres <span class="arithmatex">\(a_2\)</span>, <span class="arithmatex">\(c_2\)</span>, <span class="arithmatex">\(D\)</span>.</p>
+</li>
+<li>
+<p><strong>Dangla, P., Thiery, M. &amp; Villain, G.</strong> (2004). Modélisation couplée des transferts et des réactions chimiques dans les matériaux cimentaires exposés à la carbonatation atmosphérique. <em>Revue Française de Génie Civil</em>, 8(5), 571–589. — Cadre théorique du modèle Carbocem/Chloricem.</p>
+</li>
+</ul>
+<h3 id="implementation-numerique">Implémentation numérique</h3>
+<ul>
+<li><strong>Dangla, P.</strong> — <em>Bil : a FEM/FVM platform for multiphysics simulations</em>. Université Gustave Eiffel. Code source : <a href="https://github.com/Universite-Gustave-Eiffel/bil">https://github.com/Universite-Gustave-Eiffel/bil</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "navigation.footer", "search.highlight", "search.suggest", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

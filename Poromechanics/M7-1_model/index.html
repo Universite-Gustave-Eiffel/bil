@@ -1,0 +1,3812 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A modeling platform based on finite element/volume methods">
+      
+      
+        <meta name="author" content="P. Dangla (Université Gustave Eiffel)">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>M7 Model — Unsaturated Biot Poroelasticity · Test case M7-1: Ternay Dam - Bil - documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#m7-model-unsaturated-biot-poroelasticity-test-case-m7-1-ternay-dam" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Bil - documentation" class="md-header__button md-logo" aria-label="Bil - documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Bil - documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              M7 Model — Unsaturated Biot Poroelasticity · Test case M7-1: Ternay Dam
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Universite-Gustave-Eiffel/bil" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Universite-Gustave-Eiffel/bil
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Introduction
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../running_bil/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Running Bil
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../examples/" class="md-tabs__link">
+          
+  
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code_architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../adding_a_model/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  How to Add a New Model
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Bil - documentation" class="md-nav__button md-logo" aria-label="Bil - documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Bil - documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Universite-Gustave-Eiffel/bil" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Universite-Gustave-Eiffel/bil
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../running_bil/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Running Bil
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flow
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Flow
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/flow_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/M1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/M2_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/Fick_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fick
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/Richards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Richards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mechanics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mechanics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/mechanics_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/Elast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/Elasd_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elasd
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/Plast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/BBM_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BBM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poromechanics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Poromechanics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poromechanics_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../M7_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Poroplast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poroplast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Phase change
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase change
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PhaseChange/phasechange_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PhaseChange/Frostaco_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frostaco
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PhaseChange/Frostaco3d_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frostaco3d
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durability & Chemistry
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Durability & Chemistry
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/durability_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Duracem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Duracem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Chloricem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chloricem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Sulfaco_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfaco
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Sulfuricem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfuricem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Sulfaconew_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfaconew
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Coupled Transfers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Coupled Transfers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/coupledtransfers_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/DWS1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DWS1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/Yuan1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Yuan1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/Shen_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/usoil_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    usoil
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8" id="__nav_3_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specialized
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Specialized
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Specialized/specialized_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Specialized/MechaMic_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MechaMic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code_architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adding_a_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to Add a New Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-context-and-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Context and objective
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-geometry-and-mesh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Geometry and mesh
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Geometry and mesh">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#coordonnees-cles-en-metres-axes-x-horizontal-et-y-altitude" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coordonnées clés (en mètres, axes X horizontal et Y altitude)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#schema-de-principe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Schéma de principe
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-assumptions-du-modele" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Assumptions du modèle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-variables-and-notation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Variables and notation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Variables and notation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#primary-unknowns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Primary unknowns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secondary-variables-calculees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secondary variables (calculées)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters-materiaux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters matériaux
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-mathematical-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Mathematical model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Mathematical model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-poroelastic-constitutive-law-biot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Poroelastic constitutive law (Biot)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-mechanical-equilibrium-equation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Mechanical equilibrium equation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-conservation-equation-de-la-masse-deau" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Conservation equation de la masse d'eau
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-darcys-law" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Darcy's law
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-pression-equivalente-pression-de-bishop-generalisee" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Pression équivalente π (pression de Bishop généralisée)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-parameters-materiaux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Parameters matériaux
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-boundary-conditions-et-chargements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Boundary conditions et chargements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Boundary conditions et chargements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#champ-de-pression-de-reference-field-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Champ de pression de référence (Field 1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conditions-hydrauliques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditions hydrauliques
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conditions-mecaniques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditions mécaniques
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chargements-mecaniques-pression-deau-sur-le-parement-amont" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chargements mécaniques (pression d'eau sur le parement amont)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-parameters-de-simulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Parameters de simulation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-sorties-calculees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Sorties calculées
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-physique-attendue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Physique attendue
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Physique attendue">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mise-en-eau-et-dissipation-des-pressions-interstitielles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mise en eau et dissipation des pressions interstitielles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deformation-et-soulevement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Déformation et soulèvement
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-decryptage-ligne-a-ligne-du-fichier-dentree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Décryptage ligne à ligne du fichier d'entrée
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Décryptage ligne à ligne du fichier d&#39;entrée">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bloc-geometry-dimension-et-type-de-probleme" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bloc Geometry — Dimension et type de problème
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloc-mesh-maillage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bloc Mesh — Maillage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#blocs-material-proprietes-des-materiaux-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Blocs Material — Propriétés des matériaux (×2)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Blocs Material — Propriétés des matériaux (×2)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#materiau-1-beton-surface-physique-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Matériau 1 — Béton (Surface physique 1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#materiau-2-roche-surface-physique-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Matériau 2 — Roche (Surface physique 2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloc-fields-champs-spatiaux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bloc Fields — Champs spatiaux
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloc-initialization-initial-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bloc Initialization — Initial conditions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloc-functions-fonctions-temporelles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bloc Functions — Fonctions temporelles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloc-boundary-conditions-boundary-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bloc Boundary Conditions — Boundary conditions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloc-loads-chargements-mecaniques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bloc Loads — Chargements mécaniques
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloc-points-points-de-sortie" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bloc Points — Points de sortie
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloc-dates-instants-de-sortie" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bloc Dates — Instants de sortie
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloc-objective-variations-controle-adaptatif-du-pas-de-temps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bloc Objective Variations — Contrôle adaptatif du pas de temps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloc-iterative-variations-parameters-de-newton-raphson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bloc Iterative Variations — Parameters de Newton-Raphson
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloc-time-steps-controle-du-pas-de-temps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bloc Time Steps — Contrôle du pas de temps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recapitulatif-structurel-du-fichier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Récapitulatif structurel du fichier
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-bibliographic-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Bibliographic references
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. Bibliographic references">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#poroelasticite-de-biot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Poroélasticité de Biot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poroelasticite-non-saturee-et-pression-de-bishop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Poroélasticité non saturée et pression de Bishop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#consolidation-de-barrages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consolidation de barrages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-numerique" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implémentation numérique
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="m7-model-unsaturated-biot-poroelasticity-test-case-m7-1-ternay-dam">M7 Model — Unsaturated Biot Poroelasticity · Test case M7-1: Ternay Dam</h1>
+<blockquote>
+<p><strong>Source files:</strong>
+<code>src/Models/ModelFiles/M7.c</code> · <code>examples/M7-1/M7-1</code> · <code>examples/M7-1/ternay.geo</code></p>
+<p><strong>Bil model author:</strong> P. Dangla (Université Gustave Eiffel)</p>
+</blockquote>
+<hr />
+<h2 id="table-of-contents">Table of contents</h2>
+<ol>
+<li><a href="#1-contexte-et-objectif">Context and objective</a></li>
+<li><a href="#2-géométrie-et-maillage">Geometry and mesh</a></li>
+<li><a href="#3-hypothèses-du-modèle">Assumptions du modèle</a></li>
+<li><a href="#4-variables-et-notation">Variables and notation</a></li>
+<li><a href="#5-modèle-mathématique">Mathematical model</a></li>
+<li>5.1 <a href="#51-loi-de-comportement-poroélastique-biot">Poroelastic constitutive law (Biot)</a></li>
+<li>5.2 <a href="#52-équation-déquilibre-mécanique">Mechanical equilibrium equation</a></li>
+<li>5.3 <a href="#53-équation-de-conservation-de-la-masse-deau">Conservation equation de la masse d'eau</a></li>
+<li>5.4 <a href="#54-loi-de-darcy">Darcy's law</a></li>
+<li>5.5 <a href="#55-pression-équivalente-π-pression-de-bishop-généralisée">Pression équivalente π (pression de Bishop généralisée)</a></li>
+<li><a href="#6-paramètres-matériaux">Parameters matériaux</a></li>
+<li><a href="#7-conditions-aux-limites-et-chargements">Boundary conditions et chargements</a></li>
+<li><a href="#8-paramètres-de-simulation">Parameters de simulation</a></li>
+<li><a href="#9-sorties-calculées">Sorties calculées</a></li>
+<li><a href="#10-physique-attendue">Physique attendue</a></li>
+<li><a href="#11-décryptage-ligne-à-ligne-du-fichier-dentrée">Décryptage ligne à ligne du fichier d'entrée</a></li>
+<li><a href="#12-références-bibliographiques">Bibliographic references</a></li>
+</ol>
+<hr />
+<h2 id="1-context-and-objective">1. Context and objective</h2>
+<p>The test case M7-1 simule en <strong>2D plan</strong> le comportement hydromécanique couplé d'un <strong>barrage-poids en béton posé sur un massif rocheux</strong>, vraisemblablement inspiré du <strong>barrage de Ternay</strong> (isère, France). Le barrage est soumis à la mise en eau du réservoir.</p>
+<p>The model M7 implémente la <strong>poroélasticité non saturée de Biot</strong>. Dans ce cas test particulier, les courbes de rétention capillaire imposent la saturation complète (<span class="arithmatex">\(S_l = 1\)</span>) pour toute pression capillaire, ce qui ramène le problème à une <strong>poroélasticité saturée de Biot</strong> classique.</p>
+<p>Le couplage hydromécanique est à double sens :</p>
+<ul>
+<li>La <strong>surpression interstitielle</strong> réduit les contraintes effectives dans le béton et le rocher (soulèvement).</li>
+<li>La <strong>déformation volumique</strong> du squelette solide modifie la porosité et donc la capacité de stockage hydraulique.</li>
+</ul>
+<hr />
+<h2 id="2-geometry-and-mesh">2. Geometry and mesh</h2>
+<p>Le domaine est défini dans <code>examples/M7-1/ternay.geo</code> (format GMSH). Il comprend <strong>deux surfaces</strong> :</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Surface 1 (béton)  : contour fermé par les lignes 101–113
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Surface 2 (roche)  : contour fermé par les lignes 121–125 + 113
+</code></pre></div>
+<h3 id="coordonnees-cles-en-metres-axes-x-horizontal-et-y-altitude">Coordonnées clés (en mètres, axes X horizontal et Y altitude)</h3>
+<table>
+<thead>
+<tr>
+<th>Point</th>
+<th>X (m)</th>
+<th>Y (m, NGF)</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>476</td>
+<td>Pied amont gauche</td>
+</tr>
+<tr>
+<td>2–5</td>
+<td>0–4.9</td>
+<td>476–494</td>
+<td>Parement amont</td>
+</tr>
+<tr>
+<td>6</td>
+<td>4.9</td>
+<td>517</td>
+<td>Cote de la retenue (crête)</td>
+</tr>
+<tr>
+<td>7–9</td>
+<td>8.1–8.8</td>
+<td>512–517</td>
+<td>Déversoir / sommet</td>
+</tr>
+<tr>
+<td>9→10</td>
+<td>—</td>
+<td>—</td>
+<td>Arc de cercle (parement aval courbe)</td>
+</tr>
+<tr>
+<td>10–13</td>
+<td>18.6–27</td>
+<td>478–476</td>
+<td>Pied aval</td>
+</tr>
+<tr>
+<td>14–17</td>
+<td>−16 à 43</td>
+<td>455–476</td>
+<td>Emprise du massif rocheux</td>
+</tr>
+</tbody>
+</table>
+<h3 id="schema-de-principe">Schéma de principe</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>              Retenue (réservoir)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>   y=517  ─────────┬──────┐
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>                   │ béton│  parement aval (arc)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>                   │      ╰──────────────────╮
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>   y=476  ─────────┴──────────────────────────┴────────── x
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>          ← roche (fondation, y : 455→476) →
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>   y=455  ─────────────────────────────────────────────── x
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>         x=-16                                        x=43
+</code></pre></div>
+<ul>
+<li><strong>Parement amont</strong> (lignes 101–105) : face en contact avec l'eau du réservoir.</li>
+<li><strong>Crête et parement aval</strong> (lignes 106–112) : surface libre, drainée.</li>
+<li><strong>Base du barrage</strong> (ligne 113, <span class="arithmatex">\(y = 476\)</span> m) : interface béton/rocher.</li>
+<li><strong>Massif rocheux</strong> : rectangle sous le barrage, encastré en pied et sur les côtés.</li>
+</ul>
+<p>Le maillage <code>ternay.msh</code> (format GMSH 2.2) comprend <strong>479 nœuds</strong> avec une taille de maille locale <span class="arithmatex">\(l_{c1} = 1.5\)</span> m dans le béton et <span class="arithmatex">\(l_{c2} = 4\)</span> m dans la roche.</p>
+<hr />
+<h2 id="3-assumptions-du-modele">3. Assumptions du modèle</h2>
+<ol>
+<li><strong>Poroélasticité linéaire de Biot</strong> : le squelette solide se déforme élastiquement ; les paramètres de Biot <span class="arithmatex">\(b\)</span> (coefficient de Biot) et <span class="arithmatex">\(N\)</span> (module de stockage à volume constant) sont constants.</li>
+<li><strong>Milieu saturé</strong> (dans ce cas test) : les courbes de rétention imposent <span class="arithmatex">\(S_l = 1\)</span> et <span class="arithmatex">\(k_{rl} = 1\)</span> pour toute pression capillaire ; la pression de gaz est <span class="arithmatex">\(p_g = 0\)</span>.</li>
+<li><strong>Gravité nulle</strong> (<span class="arithmatex">\(g = 0\)</span>) : le poids propre n'est pas pris en compte (les conditions initiales comprennent une contrainte lithostatique nulle).</li>
+<li><strong>Déformations planes</strong> (2 plan) : problème 2D.</li>
+<li><strong>Darcy's law isotrope</strong> : perméabilité intrinsèque scalaire <span class="arithmatex">\(k_\text{int}\)</span>.</li>
+<li><strong>Linéarité des équations</strong> : pas de non-linéarité géométrique ni matérielle.</li>
+</ol>
+<hr />
+<h2 id="4-variables-and-notation">4. Variables and notation</h2>
+<h3 id="primary-unknowns">Primary unknowns</h3>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+<th>Unité</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(u_1, u_2\)</span></td>
+<td>Composantes du déplacement du squelette</td>
+<td>m</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(p_l\)</span></td>
+<td>Pression de la phase liquide (interstitielle)</td>
+<td>Pa</td>
+</tr>
+</tbody>
+</table>
+<h3 id="secondary-variables-calculees">Secondary variables (calculées)</h3>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Definition</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(\boldsymbol{\varepsilon}\)</span></td>
+<td><span class="arithmatex">\(\frac{1}{2}(\nabla \mathbf{u} + \nabla^T \mathbf{u})\)</span></td>
+<td>Tenseur des déformations</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\varepsilon_v = \text{tr}\,\boldsymbol{\varepsilon}\)</span></td>
+<td><span class="arithmatex">\(\varepsilon_{11} + \varepsilon_{22} + \varepsilon_{33}\)</span></td>
+<td>Déformation volumique</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\boldsymbol{\sigma}\)</span></td>
+<td>—</td>
+<td>Tenseur des contraintes totales</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(m_l\)</span></td>
+<td><span class="arithmatex">\(\rho_l \phi S_l\)</span></td>
+<td>Masse volumique de liquide dans les pores</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\phi\)</span></td>
+<td><span class="arithmatex">\(\phi_0 + \Delta\phi\)</span></td>
+<td>Porosité courante</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\mathbf{w}_l\)</span></td>
+<td>—</td>
+<td>Flux massique de liquide</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(p_c = p_g - p_l\)</span></td>
+<td>—</td>
+<td>Pression capillaire</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(S_l(p_c)\)</span></td>
+<td>courbe de rétention</td>
+<td>Degré de saturation</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\pi(p_l, p_g)\)</span></td>
+<td>—</td>
+<td>Pression équivalente de Bishop généralisée</td>
+</tr>
+</tbody>
+</table>
+<h3 id="parameters-materiaux">Parameters matériaux</h3>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(E\)</span></td>
+<td>Module de Young</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\nu\)</span></td>
+<td>Poisson's ratio</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\mu = E / 2(1+\nu)\)</span></td>
+<td>Module de cisaillement</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\lambda = 2\mu\nu/(1-2\nu)\)</span></td>
+<td>Coefficient de Lamé</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(b\)</span></td>
+<td>Coefficient de Biot</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(N\)</span></td>
+<td>Module de stockage à déformation nulle</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(k_\text{int}\)</span></td>
+<td>Intrinsic permeability</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\mu_l\)</span></td>
+<td>Viscosité dynamique du fluide</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\rho_l\)</span></td>
+<td>Masse volumique du fluide</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\phi_0\)</span></td>
+<td>Initial porosity</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-mathematical-model">5. Mathematical model</h2>
+<h3 id="51-poroelastic-constitutive-law-biot">5.1 Poroelastic constitutive law (Biot)</h3>
+<p>La loi de Biot étendue au cas non saturé est :</p>
+<div class="arithmatex">\[\boxed{\boldsymbol{\sigma} = \boldsymbol{\sigma}_0 + \mathbf{C}:\boldsymbol{\varepsilon} - b\,(\pi - \pi_0)\,\mathbf{1}}\]</div>
+<p>avec <span class="arithmatex">\(\mathbf{C}\)</span> le tenseur élastique isotrope :</p>
+<div class="arithmatex">\[C_{ijkl} = \lambda\,\delta_{ij}\delta_{kl} + \mu\,(\delta_{ik}\delta_{jl} + \delta_{il}\delta_{jk})\]</div>
+<p>La <strong>variation de porosité</strong> est donnée par :</p>
+<div class="arithmatex">\[\Delta\phi = b\,\varepsilon_v + N\,(\pi - \pi_0)\]</div>
+<p>où <span class="arithmatex">\(\pi_0 = \pi(p_{l0}, p_g)\)</span> est la pression de référence et <span class="arithmatex">\(\pi\)</span> la pression équivalente de Bishop généralisée (voir §5.5).</p>
+<p>En milieu saturé (<span class="arithmatex">\(S_l = 1\)</span>), <span class="arithmatex">\(\pi = p_l\)</span> et l'on retrouve la formulation standard de Biot :</p>
+<div class="arithmatex">\[\boldsymbol{\sigma} = \boldsymbol{\sigma}_0 + \lambda\,\varepsilon_v\,\mathbf{1} + 2\mu\,\boldsymbol{\varepsilon} - b\,(p_l - p_{l0})\,\mathbf{1}\]</div>
+<h3 id="52-mechanical-equilibrium-equation">5.2 Mechanical equilibrium equation</h3>
+<div class="arithmatex">\[\nabla \cdot \boldsymbol{\sigma} + \rho_\text{tot}\,\mathbf{g} = \mathbf{0}\]</div>
+<p>Avec <span class="arithmatex">\(g = 0\)</span> dans ce cas test :</p>
+<div class="arithmatex">\[\nabla \cdot \left[\lambda\,\varepsilon_v\,\mathbf{1} + 2\mu\,\boldsymbol{\varepsilon} - b\,(\pi - \pi_0)\,\mathbf{1}\right] = \mathbf{0}\]</div>
+<p>En décomposant :</p>
+<div class="arithmatex">\[(\lambda + \mu)\,\nabla(\nabla\cdot\mathbf{u}) + \mu\,\Delta\mathbf{u} = b\,\nabla\pi\]</div>
+<p>Le terme de droite est la <strong>force volumique due à la surpression interstitielle</strong> (force de soulèvement hydrostatique).</p>
+<h3 id="53-conservation-equation-de-la-masse-deau">5.3 Conservation equation de la masse d'eau</h3>
+<div class="arithmatex">\[\frac{\partial m_l}{\partial t} + \nabla \cdot \mathbf{w}_l = 0\]</div>
+<p>avec la masse de liquide par unité de volume :</p>
+<div class="arithmatex">\[m_l = \rho_l\,\phi\,S_l\]</div>
+<p>En développant <span class="arithmatex">\(\dot{m}_l\)</span> :</p>
+<div class="arithmatex">\[\rho_l\,\frac{\partial}{\partial t}\!\left(\phi_0 + b\,\varepsilon_v + N(\pi - \pi_0)\right) S_l + \rho_l\,\phi\,\dot{S}_l + \nabla \cdot \mathbf{w}_l = 0\]</div>
+<p>Le premier terme couple la variation de volume (consolidation) à l'évolution hydraulique. Le terme <span class="arithmatex">\(\dot{S}_l\)</span> est nul en milieu saturé.</p>
+<h3 id="54-darcys-law">5.4 Darcy's law</h3>
+<p>Le flux massique de liquide obéit à la loi de Darcy généralisée :</p>
+<div class="arithmatex">\[\mathbf{w}_l = -\frac{\rho_l\,k_\text{int}\,k_{rl}(p_c)}{\mu_l}\,\nabla p_l + \frac{\rho_l^2\,k_\text{int}\,k_{rl}(p_c)}{\mu_l}\,\mathbf{g}\]</div>
+<p>Avec <span class="arithmatex">\(g = 0\)</span> et <span class="arithmatex">\(k_{rl} = 1\)</span> (saturation complète) :</p>
+<div class="arithmatex">\[\mathbf{w}_l = -\frac{\rho_l\,k_\text{int}}{\mu_l}\,\nabla p_l\]</div>
+<p>Le coefficient de conductivité hydraulique effectif est <span class="arithmatex">\(K_l = \rho_l\,k_\text{int}/\mu_l\)</span> (calculé en tant que variable explicite <code>va[0]</code> dans le code).</p>
+<h3 id="55-pression-equivalente-pression-de-bishop-generalisee">5.5 Pression équivalente π (pression de Bishop généralisée)</h3>
+<p>La pression de Bishop généralisée <span class="arithmatex">\(\pi\)</span> est définie par l'intégrale thermodynamique :</p>
+<div class="arithmatex">\[\pi(p_l, p_g) = S_l(p_c)\,p_l + S_g(p_c)\,p_g - \frac{2}{3}\,U(p_c)\]</div>
+<p>où :</p>
+<div class="arithmatex">\[U(p_c) = \int_0^{p_c} S_l(p'_c)\,dp'_c - S_l(p_c)\,p_c\]</div>
+<p>est l'énergie de surface associée à l'interface capillaire (terme de Suction, négatif de l'intégrale de Gibbs-Duhem).</p>
+<p>Dans le code, <span class="arithmatex">\(U(p_c)\)</span> est calculée par quadrature de Gauss–Legendre à 3 points (fonction <code>pie()</code>). En milieu saturé (<span class="arithmatex">\(S_l = 1\)</span>, <span class="arithmatex">\(p_g = 0\)</span>), on retrouve simplement <span class="arithmatex">\(\pi = p_l\)</span>.</p>
+<hr />
+<h2 id="6-parameters-materiaux">6. Parameters matériaux</h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Béton (Surface 1)</th>
+<th>Roche (Surface 2)</th>
+<th>Unité</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(\rho_s\)</span></td>
+<td>2300</td>
+<td>2500</td>
+<td>kg/m³</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(E\)</span> (Young)</td>
+<td><span class="arithmatex">\(1.4 \times 10^{10}\)</span></td>
+<td><span class="arithmatex">\(1.8 \times 10^{10}\)</span></td>
+<td>Pa</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\nu\)</span> (Poisson)</td>
+<td>0.15</td>
+<td>0.15</td>
+<td>—</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\phi_0\)</span></td>
+<td>0.05</td>
+<td>0.40</td>
+<td>—</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\rho_l\)</span></td>
+<td>1000</td>
+<td>1000</td>
+<td>kg/m³</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(p_{l0}\)</span></td>
+<td>0</td>
+<td>0</td>
+<td>Pa</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(k_\text{int}\)</span></td>
+<td><span class="arithmatex">\(10^{-14}\)</span></td>
+<td><span class="arithmatex">\(10^{-11}\)</span></td>
+<td>m²</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\mu_l\)</span></td>
+<td><span class="arithmatex">\(10^{-3}\)</span></td>
+<td><span class="arithmatex">\(10^{-3}\)</span></td>
+<td>Pa·s</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(p_g\)</span></td>
+<td>0</td>
+<td>0</td>
+<td>Pa</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(b\)</span> (Biot)</td>
+<td>0.4</td>
+<td>0.2</td>
+<td>—</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(N\)</span> (stockage)</td>
+<td><span class="arithmatex">\(10^{-10}\)</span></td>
+<td><span class="arithmatex">\(10^{-10}\)</span></td>
+<td>Pa⁻¹</td>
+</tr>
+<tr>
+<td>Courbes</td>
+<td><code>beton</code> (<span class="arithmatex">\(S_l=1\)</span>)</td>
+<td><code>roche</code> (<span class="arithmatex">\(S_l=1\)</span>)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Conductivités hydrauliques effectives</strong> (<span class="arithmatex">\(K = k_\text{int}/\mu_l\)</span>) :</p>
+<table>
+<thead>
+<tr>
+<th>Matériau</th>
+<th><span class="arithmatex">\(K\)</span> (m²/Pa·s)</th>
+<th><span class="arithmatex">\(K_h = K\,\rho_l\,g\)</span> (m/s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Béton</td>
+<td><span class="arithmatex">\(10^{-11}\)</span></td>
+<td><span class="arithmatex">\(\approx 10^{-10}\)</span> m/s</td>
+</tr>
+<tr>
+<td>Roche</td>
+<td><span class="arithmatex">\(10^{-8}\)</span></td>
+<td><span class="arithmatex">\(\approx 10^{-7}\)</span> m/s</td>
+</tr>
+</tbody>
+</table>
+<p>La roche est <strong>1000 fois plus perméable</strong> que le béton : la dissipation de pression se fera principalement dans le béton.</p>
+<hr />
+<h2 id="7-boundary-conditions-et-chargements">7. Boundary conditions et chargements</h2>
+<h3 id="champ-de-pression-de-reference-field-1">Champ de pression de référence (Field 1)</h3>
+<p>Champ affine représentant la pression hydrostatique du réservoir (niveau = 517 m NGF, <span class="arithmatex">\(\rho_l\,g = 10^4\)</span> Pa/m) :</p>
+<div class="arithmatex">\[p_l^\text{ref}(y) = 10000 \times (517 - y) \quad [\text{Pa}]\]</div>
+<table>
+<thead>
+<tr>
+<th>Altitude</th>
+<th><span class="arithmatex">\(p_l^\text{ref}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(y = 517\)</span> m (cote retenue)</td>
+<td>0 Pa</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(y = 476\)</span> m (base barrage)</td>
+<td>410 000 Pa</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(y = 455\)</span> m (pied de fondation)</td>
+<td>620 000 Pa</td>
+</tr>
+</tbody>
+</table>
+<h3 id="conditions-hydrauliques">Conditions hydrauliques</h3>
+<table>
+<thead>
+<tr>
+<th>Région</th>
+<th>Localisation</th>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>121</td>
+<td>Interface roche/amont, <span class="arithmatex">\(y=476\)</span>, <span class="arithmatex">\(x \in [-16;0]\)</span></td>
+<td><span class="arithmatex">\(p_l = p_l^\text{ref}(y)\)</span> (amont)</td>
+</tr>
+<tr>
+<td>101–105</td>
+<td>Parement amont béton</td>
+<td><span class="arithmatex">\(p_l = p_l^\text{ref}(y)\)</span> (amont)</td>
+</tr>
+<tr>
+<td>106–112</td>
+<td>Crête + parement aval béton</td>
+<td><span class="arithmatex">\(p_l = 0\)</span> (drainé)</td>
+</tr>
+<tr>
+<td>125</td>
+<td>Interface roche/aval, <span class="arithmatex">\(y=476\)</span>, <span class="arithmatex">\(x \in [27;43]\)</span></td>
+<td><span class="arithmatex">\(p_l = 0\)</span> (drainé)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="conditions-mecaniques">Conditions mécaniques</h3>
+<table>
+<thead>
+<tr>
+<th>Région</th>
+<th>Localisation</th>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>122</td>
+<td>Côté gauche roche (<span class="arithmatex">\(x = -16\)</span>)</td>
+<td><span class="arithmatex">\(u_1 = 0\)</span> (déplacement horizontal bloqué)</td>
+</tr>
+<tr>
+<td>123</td>
+<td>Base roche (<span class="arithmatex">\(y = 455\)</span>)</td>
+<td><span class="arithmatex">\(u_1 = 0\)</span>, <span class="arithmatex">\(u_2 = 0\)</span> (encastrement)</td>
+</tr>
+<tr>
+<td>124</td>
+<td>Côté droit roche (<span class="arithmatex">\(x = 43\)</span>)</td>
+<td><span class="arithmatex">\(u_1 = 0\)</span></td>
+</tr>
+</tbody>
+</table>
+<h3 id="chargements-mecaniques-pression-deau-sur-le-parement-amont">Chargements mécaniques (pression d'eau sur le parement amont)</h3>
+<p>Les régions 101–105 et 121 reçoivent une <strong>pression normale</strong> égale à <span class="arithmatex">\(p_l^\text{ref}(y)\)</span> (poussée hydrostatique du réservoir sur le parement) :</p>
+<div class="arithmatex">\[\mathbf{t} = -p_l^\text{ref}(y)\,\mathbf{n}\]</div>
+<hr />
+<h2 id="8-parameters-de-simulation">8. Parameters de simulation</h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Géométrie</td>
+<td>2D plan</td>
+</tr>
+<tr>
+<td>Durée</td>
+<td>0 → 1000 (jours)</td>
+</tr>
+<tr>
+<td>Nombre de pas</td>
+<td>10</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\Delta t_\text{ini}\)</span></td>
+<td>100</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\Delta t_\text{max}\)</span></td>
+<td>100</td>
+</tr>
+<tr>
+<td>Variation objective <span class="arithmatex">\(p_l\)</span></td>
+<td><span class="arithmatex">\(10^4\)</span> Pa</td>
+</tr>
+<tr>
+<td>Variation objective <span class="arithmatex">\(u_1, u_2\)</span></td>
+<td><span class="arithmatex">\(10^{-3}\)</span> m</td>
+</tr>
+<tr>
+<td>Tolérance Newton</td>
+<td><span class="arithmatex">\(10^{-4}\)</span></td>
+</tr>
+<tr>
+<td>Itérations max</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="9-sorties-calculees">9. Sorties calculées</h2>
+<p>The model M7 exporte 7 quantités par point de calcul (<code>so7</code>) :</p>
+<table>
+<thead>
+<tr>
+<th>Indice</th>
+<th>Nom</th>
+<th>Dimension</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td><code>pression-liquide</code></td>
+<td>scalaire</td>
+<td><span class="arithmatex">\(p_l\)</span> [Pa]</td>
+</tr>
+<tr>
+<td>1</td>
+<td><code>deplacements</code></td>
+<td>vecteur (3)</td>
+<td><span class="arithmatex">\((u_1, u_2, 0)\)</span> [m]</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>flux-liquide</code></td>
+<td>vecteur (3)</td>
+<td><span class="arithmatex">\(\mathbf{w}_l\)</span> [kg/m²/s]</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>contraintes</code></td>
+<td>tenseur (9)</td>
+<td><span class="arithmatex">\(\sigma_{ij}\)</span> [Pa]</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>porosite</code></td>
+<td>scalaire</td>
+<td><span class="arithmatex">\(\phi\)</span> [-]</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>saturation</code></td>
+<td>scalaire</td>
+<td><span class="arithmatex">\(S_l\)</span> [-]</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>pression-pi</code></td>
+<td>scalaire</td>
+<td><span class="arithmatex">\(\pi\)</span> [Pa]</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="10-physique-attendue">10. Physique attendue</h2>
+<h3 id="mise-en-eau-et-dissipation-des-pressions-interstitielles">Mise en eau et dissipation des pressions interstitielles</h3>
+<p>Lors de la mise en eau, la pression hydrostatique du réservoir est appliquée instantanément sur le parement amont. La <strong>surpression interstitielle</strong> se diffuse ensuite à travers le béton et le rocher selon la loi de consolidation de Biot :</p>
+<div class="arithmatex">\[c_v \,\Delta p_l = \dot{p}_l, \qquad c_v = \frac{k_\text{int}/\mu_l}{b^2/(\lambda+2\mu) + N\,S_l^2}\]</div>
+<p>Les temps de consolidation caractéristiques sont :</p>
+<div class="arithmatex">\[T_c \approx \frac{L^2}{c_v}\]</div>
+<p>Pour <span class="arithmatex">\(L \sim 10\)</span> m (épaisseur béton) :
+- <strong>Béton</strong> : <span class="arithmatex">\(c_v \approx \frac{10^{-11}}{(0.4)^2/(4 \times 10^9)} \approx 2.5 \times 10^{-4}\)</span> m²/s → <span class="arithmatex">\(T_c \approx 4 \times 10^5\)</span> s <span class="arithmatex">\(\approx\)</span> <strong>5 jours</strong>
+- <strong>Roche</strong> : 1000× plus rapide → <span class="arithmatex">\(T_c \approx\)</span> quelques minutes</p>
+<p>Le béton est le <strong>composant limitant</strong> de la consolidation. À <span class="arithmatex">\(t = 1000\)</span> jours, la distribution de pression doit être proche du régime permanent (écoulement en régime établi).</p>
+<h3 id="deformation-et-soulevement">Déformation et soulèvement</h3>
+<p>La pression interstitielle réduit les contraintes effectives :</p>
+<div class="arithmatex">\[\boldsymbol{\sigma}' = \boldsymbol{\sigma} + b\,\pi\,\mathbf{1}\]</div>
+<p>La poussée amont génère un <strong>moment de renversement</strong> partiellement compensé par le poids propre. La surpression interstitielle dans la fondation crée une <strong>force de soulèvement</strong> (uplift) qui réduit la stabilité au glissement à la base.</p>
+<p>En régime établi, le champ de pression dans la fondation suit le potentiel hydraulique (solution de l'équation de Laplace <span class="arithmatex">\(\Delta p_l = 0\)</span> avec les CL amont/aval), et le déplacement atteint son état d'équilibre.</p>
+<hr />
+<h2 id="11-decryptage-ligne-a-ligne-du-fichier-dentree">11. Décryptage ligne à ligne du fichier d'entrée</h2>
+<p>Le fichier <code>examples/M7-1/M7-1</code> est le fichier de données principal de la simulation. Il est lu par le parseur Flex/Bison de Bil. Chaque <strong>bloc</strong> commence par un mot-clé et se termine par une ligne vide. Voici son contenu annoté intégralement.</p>
+<hr />
+<h3 id="bloc-geometry-dimension-et-type-de-probleme">Bloc <code>Geometry</code> — Dimension et type de problème</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Geometry
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>2 plan
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Mot-clé</th>
+<th>Value</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Geometry</code></td>
+<td>—</td>
+<td>Début du bloc géométrie</td>
+</tr>
+<tr>
+<td><code>2</code></td>
+<td>dimension</td>
+<td>Problème <strong>2D</strong></td>
+</tr>
+<tr>
+<td><code>plan</code></td>
+<td>mode</td>
+<td>Hypothèse des <strong>déformations planes</strong> (<code>plan</code> = plane strain). L'alternative serait <code>axi</code> (axisymétrique) ou <code>3</code> (3D).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="bloc-mesh-maillage">Bloc <code>Mesh</code> — Maillage</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Mesh
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a> ternay.msh
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Mot-clé</th>
+<th>Value</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Mesh</code></td>
+<td>—</td>
+<td>Début du bloc maillage</td>
+</tr>
+<tr>
+<td><code>ternay.msh</code></td>
+<td>nom de fichier</td>
+<td>Fichier de maillage au format <strong>GMSH 2.2</strong>, situé dans le même répertoire. Il contient 479 nœuds et les éléments triangulaires/quadrangulaires des deux surfaces.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="blocs-material-proprietes-des-materiaux-2">Blocs <code>Material</code> — Propriétés des matériaux (×2)</h3>
+<p>Il y a <strong>deux blocs Material</strong>, un par zone physique du maillage (Surface 1 = béton, Surface 2 = roche). Bil les associe aux surfaces dans l'ordre de déclaration.</p>
+<h4 id="materiau-1-beton-surface-physique-1">Matériau 1 — Béton (Surface physique 1)</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Material
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Model = M7
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>gravite = 0
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>rho_s = 2300
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>young = 1.4e+10
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>poisson = 0.15
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>phi = 0.05
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>rho_l = 1000
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>p_l0 = 0
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>k_int = 1e-14
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>mu_l = 0.001
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>p_g = 0.
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>b = 0.4
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>N = 1e-10
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>Curves = beton
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Ligne</th>
+<th>Mot-clé</th>
+<th>Value</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>Material</code></td>
+<td>—</td>
+<td>Début du bloc matériau</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>Model</code></td>
+<td><code>M7</code></td>
+<td>Identifiant du modèle physique : appelle les fonctions <code>dm7</code>, <code>ct7</code>, <code>mx7</code>, <code>rs7</code>, <code>so7</code> de <code>M7.c</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>gravite</code></td>
+<td><code>0</code></td>
+<td>Accélération de la pesanteur [m/s²]. Mis à 0 : le poids propre est négligé.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>rho_s</code></td>
+<td><code>2300</code></td>
+<td>Masse volumique du squelette sec [kg/m³]. Utilisé uniquement pour le terme de gravité dans le résidu mécanique.</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>young</code></td>
+<td><code>1.4e+10</code></td>
+<td>Module de Young <span class="arithmatex">\(E\)</span> [Pa] = 14 GPa. Rigidité du béton.</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>poisson</code></td>
+<td><code>0.15</code></td>
+<td>Poisson's ratio <span class="arithmatex">\(\nu\)</span> [-]. Béton peu compressible latéralement.</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>phi</code></td>
+<td><code>0.05</code></td>
+<td>Initial porosity <span class="arithmatex">\(\phi_0\)</span> [-] = 5%. Faible porosité du béton de barrage.</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>rho_l</code></td>
+<td><code>1000</code></td>
+<td>Masse volumique du fluide <span class="arithmatex">\(\rho_l\)</span> [kg/m³] = eau à 20°C.</td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>p_l0</code></td>
+<td><code>0</code></td>
+<td>Pression liquide de référence <span class="arithmatex">\(p_{l0}\)</span> [Pa]. Définit l'état initial sans contrainte capillaire.</td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>k_int</code></td>
+<td><code>1e-14</code></td>
+<td>Intrinsic permeability <span class="arithmatex">\(k_\text{int}\)</span> [m²] = <span class="arithmatex">\(10^{-14}\)</span> m², équivalent à un béton très peu perméable.</td>
+</tr>
+<tr>
+<td>11</td>
+<td><code>mu_l</code></td>
+<td><code>0.001</code></td>
+<td>Viscosité dynamique de l'eau <span class="arithmatex">\(\mu_l\)</span> [Pa·s] = <span class="arithmatex">\(10^{-3}\)</span> Pa·s à 20°C.</td>
+</tr>
+<tr>
+<td>12</td>
+<td><code>p_g</code></td>
+<td><code>0.</code></td>
+<td>Pression de gaz <span class="arithmatex">\(p_g\)</span> [Pa]. Nulle : le gaz est à pression atmosphérique de référence. Implique <span class="arithmatex">\(p_c = -p_l\)</span>.</td>
+</tr>
+<tr>
+<td>13</td>
+<td><code>b</code></td>
+<td><code>0.4</code></td>
+<td>Coefficient de Biot <span class="arithmatex">\(b\)</span> [-]. Représente la fraction de la variation de pression interstitielle transmise aux contraintes totales (<span class="arithmatex">\(b=1\)</span> = milieu totalement saturé avec grains incompressibles).</td>
+</tr>
+<tr>
+<td>14</td>
+<td><code>N</code></td>
+<td><code>1e-10</code></td>
+<td>Coefficient de stockage <span class="arithmatex">\(N\)</span> [Pa⁻¹] à déformation nulle. Lié à la compressibilité des pores et du fluide.</td>
+</tr>
+<tr>
+<td>15</td>
+<td><code>Curves</code></td>
+<td><code>beton</code></td>
+<td>Nom du fichier de courbes de rétention capillaire. Contient deux colonnes (<span class="arithmatex">\(p_c\)</span>, <span class="arithmatex">\(S_l\)</span>, <span class="arithmatex">\(k_{rl}\)</span>). Ici, le fichier <code>beton</code> impose <span class="arithmatex">\(S_l = 1\)</span> et <span class="arithmatex">\(k_{rl} = 1\)</span> : milieu <strong>saturé</strong>.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="materiau-2-roche-surface-physique-2">Matériau 2 — Roche (Surface physique 2)</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Material
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Model = M7
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>gravite = 0
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>rho_s = 2500
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>young = 1.8e+10
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>poisson = 0.15
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>phi = 0.4
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>rho_l = 1000
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>p_l0 = 0
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>k_int = 1e-11
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>mu_l = 0.001
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>p_g = 0
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>b = 0.2
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>N = 1e-10
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Curves = roche
+</code></pre></div>
+<p>Mêmes mots-clés que le béton. Différences notables :</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Béton</th>
+<th>Roche</th>
+<th>Interprétation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rho_s</code></td>
+<td>2300</td>
+<td>2500</td>
+<td>Rocher plus dense</td>
+</tr>
+<tr>
+<td><code>young</code></td>
+<td>1.4e10</td>
+<td>1.8e10</td>
+<td>Rocher plus rigide</td>
+</tr>
+<tr>
+<td><code>phi</code></td>
+<td>0.05</td>
+<td>0.40</td>
+<td>Rocher beaucoup plus poreux (fractures ?)</td>
+</tr>
+<tr>
+<td><code>k_int</code></td>
+<td>1e-14</td>
+<td>1e-11</td>
+<td>Rocher 1000× plus perméable</td>
+</tr>
+<tr>
+<td><code>b</code></td>
+<td>0.4</td>
+<td>0.2</td>
+<td>Couplage hydromécanique plus faible dans le rocher (grains plus rigides)</td>
+</tr>
+<tr>
+<td><code>Curves</code></td>
+<td><code>beton</code></td>
+<td><code>roche</code></td>
+<td>Deux fichiers de courbes distincts, mais même contenu (<span class="arithmatex">\(S_l=1\)</span>)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="bloc-fields-champs-spatiaux">Bloc <code>Fields</code> — Champs spatiaux</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Fields
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>1
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Type = affine Value = 0 Gradient = 0 -10000 0 Point = 0 517 0
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Ligne</th>
+<th>Mot-clé</th>
+<th>Value</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>Fields</code></td>
+<td>—</td>
+<td>Début du bloc champs</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>1</code></td>
+<td>—</td>
+<td>Nombre de champs définis</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>Type</code></td>
+<td><code>affine</code></td>
+<td>Champ <strong>linéaire</strong> (affine) dans l'espace : <span class="arithmatex">\(f(\mathbf{x}) = f_0 + \mathbf{G} \cdot (\mathbf{x} - \mathbf{x}_0)\)</span></td>
+</tr>
+<tr>
+<td></td>
+<td><code>Value</code></td>
+<td><code>0</code></td>
+<td>Value <span class="arithmatex">\(f_0\)</span> au point de référence <span class="arithmatex">\(\mathbf{x}_0\)</span></td>
+</tr>
+<tr>
+<td></td>
+<td><code>Gradient</code></td>
+<td><code>0 -10000 0</code></td>
+<td>Gradient <span class="arithmatex">\(\mathbf{G} = (G_x, G_y, G_z)\)</span> [Pa/m]. <span class="arithmatex">\(G_y = -10000\)</span> Pa/m = <span class="arithmatex">\(-\rho_l g\)</span> : pression qui <strong>diminue</strong> quand <span class="arithmatex">\(y\)</span> augmente (gradient hydrostatique).</td>
+</tr>
+<tr>
+<td></td>
+<td><code>Point</code></td>
+<td><code>0 517 0</code></td>
+<td>Point de référence <span class="arithmatex">\(\mathbf{x}_0 = (0, 517, 0)\)</span> m. C'est la <strong>cote de la retenue</strong> (plan d'eau à <span class="arithmatex">\(y = 517\)</span> m), où la pression est nulle.</td>
+</tr>
+</tbody>
+</table>
+<p>Ce champ définit la pression hydrostatique du réservoir :
+$<span class="arithmatex">\(p_l^\text{ref}(y) = 0 + (0)(x-0) + (-10000)(y - 517) + 0 = 10000\,(517 - y) \quad [\text{Pa}]\)</span>$</p>
+<hr />
+<h3 id="bloc-initialization-initial-conditions">Bloc <code>Initialization</code> — Initial conditions</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Initialization
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>0
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Ligne</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Initialization</code></td>
+<td>Début du bloc d'initialisation</td>
+</tr>
+<tr>
+<td><code>0</code></td>
+<td><strong>Aucune</strong> initialisation particulière : toutes les inconnues sont mises à zéro (<span class="arithmatex">\(u_i = 0\)</span>, <span class="arithmatex">\(p_l = 0\)</span>). L'état initial correspond au barrage sans réservoir, sans contrainte initiale.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="bloc-functions-fonctions-temporelles">Bloc <code>Functions</code> — Fonctions temporelles</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Functions
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>0
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Ligne</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Functions</code></td>
+<td>Début du bloc fonctions</td>
+</tr>
+<tr>
+<td><code>0</code></td>
+<td><strong>Aucune</strong> fonction temporelle définie. Les chargements sont donc <strong>statiques</strong> (les conditions aux limites ne varient pas dans le temps). La mise en charge est appliquée à <span class="arithmatex">\(t=0\)</span> et maintenue constante.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="bloc-boundary-conditions-boundary-conditions">Bloc <code>Boundary Conditions</code> — Boundary conditions</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Boundary Conditions
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>18
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Region = 122 Unk = u_1   Field = 0 Function = 0
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Region = 123 Unk = u_1   Field = 0 Function = 0
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Region = 123 Unk = u_2   Field = 0 Function = 0
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Region = 124 Unk = u_1   Field = 0 Function = 0
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Region = 121 Unk = p_l   Field = 1 Function = 0
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Region = 101 Unk = p_l   Field = 1 Function = 0
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>Region = 102 Unk = p_l   Field = 1 Function = 0
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>Region = 103 Unk = p_l   Field = 1 Function = 0
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>Region = 104 Unk = p_l   Field = 1 Function = 0
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>Region = 105 Unk = p_l   Field = 1 Function = 0
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>Region = 106 Unk = p_l   Field = 0 Function = 0
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>Region = 107 Unk = p_l   Field = 0 Function = 0
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>Region = 108 Unk = p_l   Field = 0 Function = 0
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>Region = 109 Unk = p_l   Field = 0 Function = 0
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>Region = 110 Unk = p_l   Field = 0 Function = 0
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>Region = 111 Unk = p_l   Field = 0 Function = 0
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>Region = 112 Unk = p_l   Field = 0 Function = 0
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>Region = 125 Unk = p_l   Field = 0 Function = 0
+</code></pre></div>
+<p><strong>Syntaxe générale d'une ligne :</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Region = &lt;tag&gt; Unk = &lt;inconnue&gt; Field = &lt;n&gt; Function = &lt;m&gt;
+</code></pre></div></p>
+<ul>
+<li><code>Region</code> : numéro de la <strong>Physical Line</strong> (ou Physical Surface) dans le fichier GMSH auquel s'applique la condition.</li>
+<li><code>Unk</code> : nom de l'inconnue contrainte (défini dans <code>dm7</code> : <code>u_1</code>, <code>u_2</code>, <code>p_l</code>).</li>
+<li><code>Field = n</code> : impose la valeur du champ n°n comme condition de Dirichlet. <code>Field = 0</code> impose la valeur 0. <code>Field = 1</code> impose le champ affine défini plus haut (pression hydrostatique).</li>
+<li><code>Function = m</code> : multiplie la valeur par la fonction temporelle n°m. <code>Function = 0</code> → facteur 1 (aucune modulation temporelle).</li>
+</ul>
+<p><strong>Détail de chaque condition :</strong></p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Région</th>
+<th>Unk</th>
+<th>Field</th>
+<th>Localisation physique</th>
+<th>Interprétation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>122</td>
+<td><span class="arithmatex">\(u_1\)</span></td>
+<td>0</td>
+<td>Côté gauche roche (<span class="arithmatex">\(x=-16\)</span>)</td>
+<td>Déplacement horizontal <strong>bloqué</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td>123</td>
+<td><span class="arithmatex">\(u_1\)</span></td>
+<td>0</td>
+<td>Base roche (<span class="arithmatex">\(y=455\)</span>)</td>
+<td>Déplacement horizontal bloqué</td>
+</tr>
+<tr>
+<td>3</td>
+<td>123</td>
+<td><span class="arithmatex">\(u_2\)</span></td>
+<td>0</td>
+<td>Base roche (<span class="arithmatex">\(y=455\)</span>)</td>
+<td>Déplacement vertical <strong>bloqué</strong> : encastrement complet en base</td>
+</tr>
+<tr>
+<td>4</td>
+<td>124</td>
+<td><span class="arithmatex">\(u_1\)</span></td>
+<td>0</td>
+<td>Côté droit roche (<span class="arithmatex">\(x=43\)</span>)</td>
+<td>Déplacement horizontal bloqué</td>
+</tr>
+<tr>
+<td>5</td>
+<td>121</td>
+<td><span class="arithmatex">\(p_l\)</span></td>
+<td>1</td>
+<td>Tête amont roche (<span class="arithmatex">\(y=476\)</span>, <span class="arithmatex">\(x \in [-16;0]\)</span>)</td>
+<td>Pression hydrostatique du réservoir (sous la base du barrage, côté amont)</td>
+</tr>
+<tr>
+<td>6–10</td>
+<td>101–105</td>
+<td><span class="arithmatex">\(p_l\)</span></td>
+<td>1</td>
+<td>Parement amont béton</td>
+<td>Pression hydrostatique : réservoir plein, <span class="arithmatex">\(p_l = 10000(517-y)\)</span></td>
+</tr>
+<tr>
+<td>11–17</td>
+<td>106–112</td>
+<td><span class="arithmatex">\(p_l\)</span></td>
+<td>0</td>
+<td>Crête + parement aval béton</td>
+<td><strong>Drainage libre</strong> : <span class="arithmatex">\(p_l = 0\)</span> (pression atmosphérique de référence)</td>
+</tr>
+<tr>
+<td>18</td>
+<td>125</td>
+<td><span class="arithmatex">\(p_l\)</span></td>
+<td>0</td>
+<td>Tête aval roche (<span class="arithmatex">\(y=476\)</span>, <span class="arithmatex">\(x \in [27;43]\)</span>)</td>
+<td>Drainage libre côté aval</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note :</strong> Il n'y a pas de condition de déplacement sur le parement du barrage (lignes 101–112) : la surface du béton est <strong>libre</strong> mécaniquement (sauf via les chargements de pression ci-dessous).</p>
+</blockquote>
+<hr />
+<h3 id="bloc-loads-chargements-mecaniques">Bloc <code>Loads</code> — Chargements mécaniques</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Loads
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>6
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Region = 101 Equ = meca_1 Type = pressure Field = 1 Function = 0
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Region = 102 Equ = meca_1 Type = pressure Field = 1 Function = 0
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Region = 103 Equ = meca_1 Type = pressure Field = 1 Function = 0
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Region = 104 Equ = meca_1 Type = pressure Field = 1 Function = 0
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>Region = 105 Equ = meca_1 Type = pressure Field = 1 Function = 0
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>Region = 121 Equ = meca_1 Type = pressure Field = 1 Function = 0
+</code></pre></div>
+<p><strong>Syntaxe générale :</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Region = &lt;tag&gt; Equ = &lt;équation&gt; Type = &lt;type&gt; Field = &lt;n&gt; Function = &lt;m&gt;
+</code></pre></div></p>
+<ul>
+<li><code>Equ</code> : équation dans laquelle le chargement est injecté. <code>meca_1</code> = équation d'équilibre mécanique selon <span class="arithmatex">\(x_1\)</span> (direction horizontale). En 2D, cela génère les composantes normales et tangentielles par projection sur la normale sortante de la région.</li>
+<li><code>Type = pressure</code> : charge de type <strong>pression normale</strong>. La force surfacique appliquée est <span class="arithmatex">\(\mathbf{t} = -p\,\mathbf{n}\)</span> (signe négatif : pression compressive sur la surface).</li>
+<li><code>Field = 1</code> : valeur de la pression = champ affine n°1 = <span class="arithmatex">\(10000\,(517 - y)\)</span> Pa.</li>
+</ul>
+<p><strong>Interprétation :</strong></p>
+<p>Les régions 101–105 et 121 constituent le <strong>parement amont</strong> du barrage et la face amont du massif rocheux. Le réservoir y exerce une <strong>poussée hydrostatique</strong> :</p>
+<div class="arithmatex">\[\mathbf{t}(y) = -p_l^\text{ref}(y)\,\mathbf{n} = -10000\,(517-y)\,\mathbf{n}\]</div>
+<p>Cette force augmente linéairement avec la profondeur. Elle tend à faire basculer le barrage vers l'aval et à le comprimer horizontalement.</p>
+<blockquote>
+<p><strong>Cohérence hydraulique/mécanique :</strong> Les mêmes régions reçoivent à la fois la condition de pression interstitielle (<code>Boundary Conditions</code>) et le chargement mécanique (<code>Loads</code>). C'est la formulation correcte en poroélasticité : le réservoir impose simultanément la <strong>pression dans les pores</strong> de la surface en contact et la <strong>pression totale</strong> comme chargement mécanique.</p>
+</blockquote>
+<hr />
+<h3 id="bloc-points-points-de-sortie">Bloc <code>Points</code> — Points de sortie</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Points
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>0
+</code></pre></div>
+<p>Aucun point de sortie spécifique demandé. The results sont calculés sur l'ensemble du maillage.</p>
+<hr />
+<h3 id="bloc-dates-instants-de-sortie">Bloc <code>Dates</code> — Instants de sortie</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Dates
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>11
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>0 100 200 300 400 500 600 700 800 900 1000
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Ligne</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Dates</code></td>
+<td>Début du bloc</td>
+</tr>
+<tr>
+<td><code>11</code></td>
+<td>Nombre d'instants de sortie</td>
+</tr>
+<tr>
+<td><code>0 100 … 1000</code></td>
+<td>Liste des instants [unité de temps du problème]. Avec <span class="arithmatex">\(k_\text{int}/\mu_l\)</span> en m²/Pa·s et <span class="arithmatex">\(E\)</span> en Pa, l'unité de temps cohérente avec les paramètres est la <strong>seconde</strong>. Les pas de 100 s et le maximum à 1000 s correspondent à ~17 minutes, ce qui est adapté aux temps de consolidation du béton (<span class="arithmatex">\(T_c \sim 10^5\)</span> s). Ces instants sont aussi les instants auxquels Bil écrit les fichiers de résultats (<code>.t0</code>, <code>.t1</code>, …).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="bloc-objective-variations-controle-adaptatif-du-pas-de-temps">Bloc <code>Objective Variations</code> — Contrôle adaptatif du pas de temps</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Objective Variations
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>u_1 = 0.001
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>u_2 = 0.001
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>p_l = 10000
+</code></pre></div>
+<p>Ce bloc définit les <strong>variations maximales admissibles</strong> des inconnues entre deux pas de temps (critère OBJE de Bil). Bil ajuste <span class="arithmatex">\(\Delta t\)</span> pour ne pas dépasser ces seuils :</p>
+<table>
+<thead>
+<tr>
+<th>Inconnue</th>
+<th>Variation objectif</th>
+<th>Interprétation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>u_1</code></td>
+<td><span class="arithmatex">\(10^{-3}\)</span> m</td>
+<td>Déplacement horizontal : variation max de 1 mm par pas</td>
+</tr>
+<tr>
+<td><code>u_2</code></td>
+<td><span class="arithmatex">\(10^{-3}\)</span> m</td>
+<td>Déplacement vertical : variation max de 1 mm par pas</td>
+</tr>
+<tr>
+<td><code>p_l</code></td>
+<td><span class="arithmatex">\(10^4\)</span> Pa</td>
+<td>Pression interstitielle : variation max de 10 kPa par pas</td>
+</tr>
+</tbody>
+</table>
+<p>Si la variation calculée dépasse l'objectif, Bil réduit le pas de temps (et peut le rallonger si la variation est très faible, jusqu'à <code>Dtmax</code>).</p>
+<hr />
+<h3 id="bloc-iterative-variations-parameters-de-newton-raphson">Bloc <code>Iterative Variations</code> — Parameters de Newton-Raphson</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Iterative Variations
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Iter  = 3
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>Tol   = 0.0001
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>Recom = 0
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Mot-clé</th>
+<th>Value</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Iter</code></td>
+<td><code>3</code></td>
+<td>Nombre maximal d'<strong>itérations de Newton</strong> par pas de temps. Faible car le problème est linéaire (poroélasticité sans non-linéarité) : 1 à 2 itérations suffisent.</td>
+</tr>
+<tr>
+<td><code>Tol</code></td>
+<td><code>0.0001</code></td>
+<td>Tolérance de convergence (norme relative du résidu). Si la norme du résidu est inférieure à <span class="arithmatex">\(10^{-4}\)</span> fois la norme initiale, la convergence est acceptée.</td>
+</tr>
+<tr>
+<td><code>Recom</code></td>
+<td><code>0</code></td>
+<td><code>0</code> = pas de recommencement automatique si la convergence échoue. Bil continuera avec le résultat non convergé.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="bloc-time-steps-controle-du-pas-de-temps">Bloc <code>Time Steps</code> — Contrôle du pas de temps</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Time Steps
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Dtini = 100
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Dtmax = 100
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Mot-clé</th>
+<th>Value</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Dtini</code></td>
+<td><code>100</code></td>
+<td>Pas de temps <strong>initial</strong> <span class="arithmatex">\(\Delta t_0\)</span> [unité de temps].</td>
+</tr>
+<tr>
+<td><code>Dtmax</code></td>
+<td><code>100</code></td>
+<td>Pas de temps <strong>maximum</strong> <span class="arithmatex">\(\Delta t_\text{max}\)</span>. Ici, <span class="arithmatex">\(\Delta t_\text{ini} = \Delta t_\text{max}\)</span> : le pas de temps ne pourra pas dépasser 100 s. Combiné aux 11 instants de sortie (de 0 à 1000 par pas de 100), chaque intervalle entre deux sorties est parcouru en <strong>exactement un pas de temps</strong> (sauf si le critère OBJE force une subdivision).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="recapitulatif-structurel-du-fichier">Récapitulatif structurel du fichier</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>examples/M7-1/M7-1
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>│
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>├── Geometry          → 2D déformations planes
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>├── Mesh              → ternay.msh (GMSH, 479 nœuds, 2 surfaces)
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>│
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>├── Material (×2)
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>│   ├── [1] béton    → M7, E=14 GPa, k=1e-14 m², b=0.4, Curves=beton
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>│   └── [2] roche    → M7, E=18 GPa, k=1e-11 m², b=0.2, Curves=roche
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>│
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>├── Fields            → 1 champ affine : pression hydrostatique p(y)=10000(517-y)
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>├── Initialization    → état initial nul
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>├── Functions         → aucune fonction temporelle
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>│
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>├── Boundary Conditions (18)
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>│   ├── Mécaniques    → u₁=0 sur côtés et base roche (4 CL)
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>│   └── Hydrauliques  → p_l = hydrostatique (amont, 6 CL) | p_l = 0 (aval, 8 CL)
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>│
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>├── Loads (6)         → poussée hydrostatique sur parement amont (meca_1, pressure)
+<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a>│
+<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a>├── Points            → 0 (pas de point de sortie ponctuel)
+<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a>├── Dates             → 11 instants : 0, 100, ..., 1000
+<a id="__codelineno-18-22" name="__codelineno-18-22" href="#__codelineno-18-22"></a>│
+<a id="__codelineno-18-23" name="__codelineno-18-23" href="#__codelineno-18-23"></a>├── Objective Variations → Δu≤1 mm, Δp_l≤10 kPa (contrôle Δt adaptatif)
+<a id="__codelineno-18-24" name="__codelineno-18-24" href="#__codelineno-18-24"></a>├── Iterative Variations → max 3 iter Newton, tol=1e-4
+<a id="__codelineno-18-25" name="__codelineno-18-25" href="#__codelineno-18-25"></a>└── Time Steps        → Dtini=Dtmax=100 (pas fixe de 100 s)
+</code></pre></div>
+<hr />
+<h2 id="12-bibliographic-references">12. Bibliographic references</h2>
+<h3 id="poroelasticite-de-biot">Poroélasticité de Biot</h3>
+<ul>
+<li>
+<p><strong>Biot, M. A.</strong> (1941). General theory of three-dimensional consolidation. <em>Journal of Applied Physics</em>, 12(2), 155–164. — Article fondateur couplant déformation élastique et diffusion de fluide en milieu poreux saturé.</p>
+</li>
+<li>
+<p><strong>Biot, M. A.</strong> (1955). Theory of elasticity and consolidation for a porous anisotropic solid. <em>Journal of Applied Physics</em>, 26(2), 182–185. — Extension aux milieux anisotropes.</p>
+</li>
+<li>
+<p><strong>Coussy, O.</strong> (1995). <em>Mechanics of Porous Continua</em>. John Wiley &amp; Sons, Chichester. — Cadre thermodynamique complet ; définition rigoureuse du coefficient de Biot <span class="arithmatex">\(b\)</span> et du module de stockage <span class="arithmatex">\(N\)</span>.</p>
+</li>
+<li>
+<p><strong>Coussy, O.</strong> (2004). <em>Poromechanics</em>. John Wiley &amp; Sons, Chichester. — Extension au cas non saturé ; définition de la pression de Bishop généralisée <span class="arithmatex">\(\pi\)</span>.</p>
+</li>
+</ul>
+<h3 id="poroelasticite-non-saturee-et-pression-de-bishop">Poroélasticité non saturée et pression de Bishop</h3>
+<ul>
+<li>
+<p><strong>Bishop, A. W.</strong> (1959). The principle of effective stress. <em>Teknisk Ukeblad</em>, 106(39), 859–863. — Introduction du concept de contrainte effective en milieu non saturé via un paramètre de pondération <span class="arithmatex">\(\chi\)</span>.</p>
+</li>
+<li>
+<p><strong>Dangla, P., Coussy, O. &amp; Olchitzky, E.</strong> (1997). Nonlinear thermo-mechanical couplings in unsaturated porous media. <em>IUTAM Symposium on Mechanics of Granular and Porous Materials</em>, 369–380. — Definition thermodynamique de la pression équivalente <span class="arithmatex">\(\pi\)</span> (implémentée dans <code>pie()</code> de M7.c).</p>
+</li>
+</ul>
+<h3 id="consolidation-de-barrages">Consolidation de barrages</h3>
+<ul>
+<li>
+<p><strong>Terzaghi, K.</strong> (1943). <em>Theoretical Soil Mechanics</em>. John Wiley &amp; Sons, New York. — Théorie 1D de la consolidation ; base conceptuelle du calcul de dissipation des pressions interstitielles.</p>
+</li>
+<li>
+<p><strong>Uplift pressure in dams</strong> — La pression interstitielle de soulèvement à la base des barrages-poids est une préoccupation classique en génie hydraulique depuis les travaux de Levy (1895) et des premières études sur les barrages en béton.</p>
+</li>
+</ul>
+<h3 id="implementation-numerique">Implémentation numérique</h3>
+<ul>
+<li>
+<p><strong>Dangla, P.</strong> — <em>Bil : a FEM/FVM platform for multiphysics simulations</em>. Université Gustave Eiffel. Code source : <a href="https://github.com/Universite-Gustave-Eiffel/bil">https://github.com/Universite-Gustave-Eiffel/bil</a></p>
+</li>
+<li>
+<p><strong>Geuzaine, C. &amp; Remacle, J.-F.</strong> (2009). GMSH: A three-dimensional finite element mesh generator with built-in pre- and post-processing facilities. <em>International Journal for Numerical Methods in Engineering</em>, 79(11), 1309–1331. — Logiciel utilisé pour générer <code>ternay.msh</code> à partir de <code>ternay.geo</code>.</p>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "navigation.footer", "search.highlight", "search.suggest", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
