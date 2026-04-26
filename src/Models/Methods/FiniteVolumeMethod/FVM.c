@@ -141,6 +141,7 @@ _INLINE_ double* (FVM_ComputeSurfaceLoadResidu)(FVM_t* fvm,Load_t* load,double t
 {
   Element_t* el = FVM_GetElement(fvm) ;
   double** u = Element_ComputePointerToCurrentNodalUnknowns(el) ;
+  double** u_n = Element_ComputePointerToPreviousNodalUnknowns(el) ;
   Geometry_t* geom = Element_GetGeometry(el) ;
   auto dim = Geometry_GetDimension(geom) ;
   Symmetry_t sym = Geometry_GetSymmetry(geom) ;
@@ -169,21 +170,15 @@ _INLINE_ double* (FVM_ComputeSurfaceLoadResidu)(FVM_t* fvm,Load_t* load,double t
 
   /* flux or cumulative flux*/
   if(strncmp(load_type,"flux",4) == 0 || strncmp(load_type,"cumulflux",4) == 0) {
-    double ft = 1 ;
-    
-    
-    if(strncmp(load_type,"flux",4) == 0) {
-      ft = 1 ;
-      
-      if(function) {
-        ft = Function_ComputeValue(function,t) ;
+    double ft = dt ;
+
+    if(function) {
+      if(strncmp(load_type,"flux",4) == 0) {
+        /* Implicit Euler scheme */
+        ft = dt * Function_ComputeValue(function,t);
       }
-    }
-    
-    if(strncmp(load_type,"cumulflux",4) == 0) {
-      ft = dt ;
-    
-      if(function) {
+
+      if(strncmp(load_type,"cumulflux",4) == 0) {
         ft = Function_ComputeValue(function,t) - Function_ComputeValue(function,t - dt) ;
       }
     }
@@ -216,18 +211,20 @@ _INLINE_ double* (FVM_ComputeSurfaceLoadResidu)(FVM_t* fvm,Load_t* load,double t
 
   /* linear dependent flux: F = A*U */
   if(strncmp(load_type,"linearflux",4) == 0) {
-    double ft = 1 ;
-      
+    double ft = 1;
+    
     if(function) {
       ft = Function_ComputeValue(function,t) ;
     }
     
     if(dim == 1 && nn == 1) {
-      double v = u[0][ieq] ;
+      /* Implicit Euler scheme */
+      double vt = u[0][ieq];
+      double fv = dt*ft*vt;
       double* x = Node_GetCoordinate(no[0]) ;
       double radius = x[0] ;
       
-      r[ieq] = ft*Field_ComputeValueAtPoint(field,x,dim)*v ;
+      r[ieq] = Field_ComputeValueAtPoint(field,x,dim)*fv ;
       
       if(Symmetry_IsCylindrical(sym)) r[ieq] *= 2*M_PI*radius ;
       else if(Symmetry_IsSpherical(sym)) r[ieq] *= 4*M_PI*radius*radius ;
@@ -238,9 +235,53 @@ _INLINE_ double* (FVM_ComputeSurfaceLoadResidu)(FVM_t* fvm,Load_t* load,double t
       double rb[Element_MaxNbOfNodes] ;
       
       for(int i = 0 ; i < nn ; i++) {
-        double v = u[i][ieq] ;
+        /* Implicit Euler scheme */
+        double vt = u[i][ieq] ;
+        double fv = dt*ft*vt;
         double* y = Node_GetCoordinate(no[i]) ;
-        rb[i] = ft*Field_ComputeValueAtPoint(field,y,dim)*volume[i]*v ;
+        rb[i] = Field_ComputeValueAtPoint(field,y,dim)*volume[i]*fv ;
+      }
+      
+      for(int i = 0 ; i < nn ; i++) r[i*neq+ieq] = rb[i] ;
+      
+      return(r) ;
+    }
+  }
+
+
+  /* linear rate dependent flux: F = A*dU/dt */
+  if(strncmp(load_type,"linearrateflux",4) == 0) {
+    double ft = 1;
+    
+    if(function) {
+      ft = Function_ComputeValue(function,t) ;
+    }
+    
+    if(dim == 1 && nn == 1) {
+      /* Implicit Euler scheme */
+      double vt = u[0][ieq];
+      double vn = u_n[0][ieq];
+      double fv = ft*(vt - vn);
+      double* x = Node_GetCoordinate(no[0]) ;
+      double radius = x[0] ;
+      
+      r[ieq] = Field_ComputeValueAtPoint(field,x,dim)*fv ;
+      
+      if(Symmetry_IsCylindrical(sym)) r[ieq] *= 2*M_PI*radius ;
+      else if(Symmetry_IsSpherical(sym)) r[ieq] *= 4*M_PI*radius*radius ;
+      return(r) ;
+    }
+    
+    if(dim >= 2) {
+      double rb[Element_MaxNbOfNodes] ;
+      
+      for(int i = 0 ; i < nn ; i++) {
+        /* Implicit Euler scheme */
+        double vt = u[i][ieq] ;
+        double vn = u_n[i][ieq] ;
+        double fv = ft*(vt - vn);
+        double* y = Node_GetCoordinate(no[i]) ;
+        rb[i] = Field_ComputeValueAtPoint(field,y,dim)*volume[i]*fv ;
       }
       
       for(int i = 0 ; i < nn ; i++) r[i*neq+ieq] = rb[i] ;

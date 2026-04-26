@@ -1,4 +1,4 @@
-site_name: Bil
+site_name: Bil - documentation
 site_description: A modeling platform based on finite element/volume methods
 site_author: P. Dangla (Université Gustave Eiffel)
 repo_url: https://github.com/Universite-Gustave-Eiffel/bil
@@ -64,52 +64,47 @@ extra_javascript:
 nav:
   - Introduction: index.md
   - Running Bil: running_bil.md
-  # - Examples:
-    # - Overview: examples.md
-    # - Flow:
-    #   - Overview: flow_examples.md
-    #   - M1: M1_model.md
-    #   - M2: M2_model.md
-    #   - M5: M5_model.md
-    #   - M10-1: M10-1_model.md
+  - Examples:
+    - Overview: examples.md
+    - Flow:
+      - Overview: Flow/flow_examples.md
+      - M1: Flow/M1_model.md
+      - M2: Flow/M2_model.md
+      - Fick: Flow/Fick_model.md
+    #   - M5: Flow/M5_model.md
+    #   - M10-1: Flow/M10-1_model.md
     #   - M10-2: M10-2_model.md
-    #   - Richards 2D: Richards-2d.md
-    # - Mechanics:
-    #   - Overview: mechanics_examples.md
-    #   - Elast0: Elast0_model.md
-    #   - Elasd: Elasd_model.md
-    #   - Plast: Plast_model.md
-    #   - BBM: BBM_model.md
-    #   - Poroplast: Poroplast_model.md
-    # - Poromechanics:
-    #   - Overview: poromechanics_examples.md
-    #   - M7: M7_model.md
-    #   - M7-1: M7-1_model.md
-    # - Freeze-Thaw:
-    #   - Overview: freezethaw_examples.md
-    #   - Frostaco: Frostaco_model.md
-    #   - Frostaco3d: Frostaco3d_model.md
-    # - Durability & Chemistry:
-    #   - Overview: durability_examples.md
-    #   - Fick: Fick_model.md
-    #   - Duracem: Duracem_model.md
-    #   - Chloricem: Chloricem_model.md
-    #   - ChloricemSCM: ChloricemSCM_model.md
-    #   - ChloricemEla: ChloricemEla_model.md
-    #   - ChloricemDLM: ChloricemDLM_model.md
-    #   - Sulfaco: Sulfaco_model.md
-    #   - Sulfuricem: Sulfuricem_model.md
-    #   - Sulfaconew: Sulfaconew_model.md
-    #   - SulfacoESA3d: SulfacoESA3d_model.md
-    # - Coupled Transfers:
-    #   - Overview: coupledtransfers_examples.md
-    #   - DWS1: DWS1_model.md
-    #   - Yuan1: Yuan1_model.md
-    #   - Shen: Shen_model.md
-    #   - usoil: usoil_model.md
-    # - Specialized:
-    #   - Overview: specialized_examples.md
-    #   - MechaMic: MechaMic_model.md
-    #   - M2 VoronoiFVM: M2_VoronoiFVM.md
-  - Internal Architecture: fonctionnement_bil.md
+      - Richards: Flow/Richards.md
+    - Mechanics:
+      - Overview: Mechanics/mechanics_examples.md
+      - Elast: Mechanics/Elast_model.md
+      - Elasd: Mechanics/Elasd_model.md
+      - Plast: Mechanics/Plast_model.md
+      - BBM: Mechanics/BBM_model.md
+    - Poromechanics:
+      - Overview: Poromechanics/poromechanics_examples.md
+      - M7: Poromechanics/M7_model.md
+      - Poroplast: Poromechanics/Poroplast_model.md
+    - Phase change:
+      - Overview: PhaseChange/phasechange_examples.md
+      - Frostaco: PhaseChange/Frostaco_model.md
+      - Frostaco3d: PhaseChange/Frostaco3d_model.md
+    - Durability & Chemistry:
+      - Overview: Durability/durability_examples.md
+      - Duracem: Durability/Duracem_model.md
+      - Chloricem: Durability/Chloricem_model.md
+      - Sulfaco: Durability/Sulfaco_model.md
+      - Sulfuricem: Durability/Sulfuricem_model.md
+      - Sulfaconew: Durability/Sulfaconew_model.md
+    - Coupled Transfers:
+      - Overview: CoupledTransfers/coupledtransfers_examples.md
+      - DWS1: CoupledTransfers/DWS1_model.md
+      - Yuan1: CoupledTransfers/Yuan1_model.md
+      - Shen: CoupledTransfers/Shen_model.md
+      - usoil: CoupledTransfers/usoil_model.md
+    - Specialized:
+      - Overview: Specialized/specialized_examples.md
+      - MechaMic: Specialized/MechaMic_model.md
+    #  - M2 VoronoiFVM: Specialized/M2_VoronoiFVM.md
+  - Code Architecture: code_architecture.md
   - How to Add a New Model: adding_a_model.md

@@ -743,7 +743,10 @@ int ComputeInitialState(Element_t* el)
         double logc_oh    = -7 ;
         double c_cl       = C_Cl(i) ;
         double logc_cl    = log10(c_cl) ;
+
+        HardenedCementChemistry_Init(hcc);
   
+        HardenedCementChemistry_SetInput(hcc,LogA_H2O,0) ;
         HardenedCementChemistry_SetInput(hcc,SI_CH,MIN(zn_ca_s,0)) ;
         HardenedCementChemistry_SetInput(hcc,SI_CSH,MIN(zn_si_s,0)) ;
         HardenedCementChemistry_SetInput(hcc,SI_AH3,MIN(zn_al_s,0)) ;
@@ -751,8 +754,9 @@ int ComputeInitialState(Element_t* el)
         HardenedCementChemistry_SetInput(hcc,LogC_Na,logc_na) ;
         HardenedCementChemistry_SetInput(hcc,LogC_K,logc_k) ;
         HardenedCementChemistry_SetInput(hcc,LogC_OH,logc_oh) ;
+        HardenedCementChemistry_SetInput(hcc,LogC_Cl,logc_cl) ;
     
-        HardenedCementChemistry_SetAqueousConcentrationOf(hcc,Cl,c_cl) ;
+        //HardenedCementChemistry_SetAqueousConcentrationOf(hcc,Cl,c_cl) ;
   
         HardenedCementChemistry_ComputeSystem(hcc,CaO_SiO2_Na2O_K2O_SO3_Al2O3_H2O,0) ;
       
@@ -1641,7 +1645,10 @@ void  ComputeSecondaryVariables(Element_t* el,double dt,double* x)
     double logc_oh    = log10(x[I_C_OHn]) ;
 #endif
     double logc_cl    = log10(c_cl) ;
+
+    HardenedCementChemistry_Init(hcc);
   
+    HardenedCementChemistry_SetInput(hcc,LogA_H2O,0) ;
     HardenedCementChemistry_SetInput(hcc,SI_CH,MIN(zn_ca_s,0)) ;
     HardenedCementChemistry_SetInput(hcc,SI_CSH,MIN(zn_si_s,0)) ;
     HardenedCementChemistry_SetInput(hcc,SI_AH3,MIN(zn_al_s,0)) ;
@@ -1649,9 +1656,10 @@ void  ComputeSecondaryVariables(Element_t* el,double dt,double* x)
     HardenedCementChemistry_SetInput(hcc,LogC_Na,logc_na) ;
     HardenedCementChemistry_SetInput(hcc,LogC_K,logc_k) ;
     HardenedCementChemistry_SetInput(hcc,LogC_OH,logc_oh) ;
+    HardenedCementChemistry_SetInput(hcc,LogC_Cl,logc_cl) ;
     HardenedCementChemistry_SetElectricPotential(hcc,psi) ;
     
-    HardenedCementChemistry_SetAqueousConcentrationOf(hcc,Cl,c_cl) ;
+    //HardenedCementChemistry_SetAqueousConcentrationOf(hcc,Cl,c_cl) ;
   
     HardenedCementChemistry_ComputeSystem(hcc,CaO_SiO2_Na2O_K2O_SO3_Al2O3_H2O,0) ;
 

@@ -1,3 +1,0 @@
-@set MAJOR_EDITION 
-@set MINOR_EDITION 
-@set EDITION   ""

@@ -764,6 +764,14 @@ _INLINE_ void (HardenedCementChemistry_InitPrimaryVariables)(HardenedCementChemi
     T logs_alohmic = Log10SaturationIndexOfAlOHmic(si_al);
     
     LogActivity(AlO2) = logk_alohmic + logs_alohmic - loga_h - loga_h2o;
+  } else if(HardenedCementChemistry_InputIs(hcc,Al,SI_AH3)) {
+    T loga_h2o     = LogActivity(H2O);
+    T loga_h       = LogActivity(H);
+    T si_al        = Input(SI_AH3);
+    T logk_ah3     = 2*GetLogKsp(AlOHmic); // logk_ah3 + logs_ah3 = 2*(loga_alo2 + loga_h + loga_h2o)
+    T logs_ah3     = Log10SaturationIndexOfAH3(si_al);
+    
+    LogActivity(AlO2) = 0.5*(logk_ah3 + logs_ah3) - loga_h - loga_h2o;
   } else if(HardenedCementChemistry_InputIs(hcc,Al,SI_AH3_C3AH6)) {
     T si_al    = Input(SI_AH3_C3AH6);
     T loga_ca  = LogActivity(Ca);
@@ -868,6 +876,13 @@ _INLINE_ void (HardenedCementChemistry_InitPrimaryVariables)(HardenedCementChemi
   
   if(HardenedCementChemistry_InputIs(hcc,S,LogC_SO4)) {
     LogActivity(SO4) = InputLogActivity(SO4);
+  } else if(HardenedCementChemistry_InputIs(hcc,S,LogC_H2SO4)) {
+    T loga_h2so4 = InputLogActivity(H2SO4);
+    T loga_h   = LogActivity(H);
+    T logk_h2so4 = GetLogKeq(H2SO4); // logk_h2so4 = loga_h2so4 - loga_so4 - 2*loga_h
+    LogActivity(SO4) = -logk_h2so4 + loga_h2so4 - 2*loga_h;
+    
+    CementSolutionChemistry_SetInput(csc,LogA_H2SO4,loga_h2so4);
   } else {
     arret("HardenedCementChemistry_InitPrimaryVariables: not available");
   }

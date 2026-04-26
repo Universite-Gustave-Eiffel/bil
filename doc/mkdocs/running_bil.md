@@ -78,8 +78,8 @@ Curves = tab                    # retention curve file: columns p_c, S_l, k_rl
 
 Fields
 2
-Type = affine Value = 1.e5 Gradient = -9.81 Point = 1.  # p_l = 1e5 - 9.81*(x-1)
-Type = affine Value = 1.e5 Gradient = 0.    Point = 0.  # constant p_l = 1e5
+Type = affine Value = 1.e5 Gradient = -9.81 0 0 Point = 1 0 0  # p_l = 1e5 - 9.81*(x-1)
+Type = affine Value = 1.e5 Gradient = 0 0 0     Point = 0 0 0  # constant p_l = 1e5
 
 Initialization
 1
@@ -106,9 +106,9 @@ Objective Variations
 p_l = 1000                      # objective variation Δp_l = 1000 Pa
 
 Iterative Process
-Iterations = 20
-Tolerance = 1e-10
-Repetitions = 0
+Iterations = 20                 # max nb of iterations
+Tolerance = 1e-10               # convergence criterion
+Repetitions = 0                 # no repetitions
 
 Time Steps
 Dtini = 1                       # initial time step = 1 s
@@ -193,17 +193,27 @@ bil -solver method my_file
 | Method | Description |
 |--------|-------------|
 | `crout` | Crout method (default) |
-| `superlu` | Sequential SuperLU (requires `libsuperlu.so`) |
+| `superlu` | Sequential SuperLU (requires SUPERLU to be enabled) |
+| `ma38` | HSL MA38 (requires BLAS and LAPACK to be enabled) |
+| `petscksp` | PETSc KSP solver (requires PETSC to be enabled) |
+<!--
 | `superlumt` | Multi-threaded SuperLU (option `-nthreads N`) |
 | `superludist` | Distributed SuperLU |
-| `ma38` | HSL MA38 (requires `libblas.so`) |
-| `petscksp` | PETSc KSP solver (requires `libpetsc.so`) |
+-->
 
+**SuperLU:**
+
+```bash
+bil -solver superlu my_file
+```
+
+<!--
 **Multi-threaded SuperLU:**
 
 ```bash
 bil -solver superlumt -nthreads 4 my_file
 ```
+-->
 
 **PETSc KSP:**
 
@@ -214,8 +224,8 @@ bil -solver petscksp -ksp_type gmres -pc_type ilu my_file
 ### Resolution module
 
 ```bash
-bil -with "Monolithic N" my_file   # N = number of time solutions kept in memory (default 2)
-bil -with "SNIA N" my_file         # Sequential non-iterative approach
+bil -with Monolithic N my_file   # N = number of time solutions kept in memory (default 2)
+bil -with SNIA N my_file         # Sequential non-iterative approach
 ```
 
 ---

@@ -37,24 +37,22 @@ Upper camel case convention is used for model file names (`MyModel.c`). The same
 
 ### Step 2 — Register the model
 
-Add the model to `src/Models/ListOfModels.h`:
+Add the model to `src/Models/ListOfModels.inc`:
 
 ```c
 /* Before */
-#define ListOfModels_Nb   39
-#define ListOfModels_Names  ..., "Sulfaconew"
-#define ListOfModels_Methods(m)  ..., Sulfaconew##m
+SELECTEDMODELS =  ... Duracemold
 
 /* After */
-#define ListOfModels_Nb   40
-#define ListOfModels_Names  ..., "Sulfaconew", "MyModel"
-#define ListOfModels_Methods(m)  ..., Sulfaconew##m, MyModel##m
+SELECTEDMODELS =  ... Duracemold MyModel
 ```
 
 ### Step 3 — Recompile
 
 ```bash
-cd build && make
+cd build
+cmake ..
+make
 ```
 
 The input file can now use `Model = MyModel`. **No other framework file is modified.**
@@ -239,7 +237,7 @@ struct MPM_t : public MaterialPointMethod_t<V> {
 };
 ```
 
-### 4.3 Automatic differentiation with `autodiff.h`
+### 4.3 Automatic differentiation with `autodiff.h` (requires AUTODIFF to be enabled in OPTIONS)
 
 The tangent matrix can be obtained by **automatic differentiation** rather than finite differences:
 
@@ -318,7 +316,7 @@ These are relatively compact models that illustrate:
 
 | Model | File | Description |
 |-------|------|-------------|
-| `Elast0` | `Elast0.c` | Linear elasticity (FEM) |
+| `Elast` | `Elast.c` | Linear elasticity (FEM) |
 | `Plast` | `Plast.c` | Elastoplasticity with Drucker-Prager criterion |
 | `M7` | `M7.c` | Unsaturated poromechanics (Biot, FEM) |
 | `BBM` | `BBM.c` | Barcelona Basic Model (unsaturated plasticity) |

@@ -1357,7 +1357,10 @@ Values_d* MPM_t::Integrate(Element_t* el,const double& t,const double& dt,Values
 #else
     double logc_oh    = log10(val_n.Concentration_oh) ;
 #endif
-  
+
+    HardenedCementChemistry_Init(hcc) ;
+
+    HardenedCementChemistry_SetInput(hcc,LogA_H2O,0) ;
     HardenedCementChemistry_SetInput(hcc,SI_CH,MIN(zn_ca_s,0)) ;
     HardenedCementChemistry_SetInput(hcc,SI_CSH,MIN(zn_si_s,0)) ;
     HardenedCementChemistry_SetInput(hcc,SI_AH3,MIN(zn_al_s,0)) ;
@@ -1371,7 +1374,7 @@ Values_d* MPM_t::Integrate(Element_t* el,const double& t,const double& dt,Values
     HardenedCementChemistry_SetInput(hcc,LogC_OH,logc_oh) ;
     HardenedCementChemistry_SetElectricPotential(hcc,psi) ;
     
-    HardenedCementChemistry_SetAqueousConcentrationOf(hcc,Cl,1.e-99) ;
+    //HardenedCementChemistry_SetAqueousConcentrationOf(hcc,Cl,1.e-99) ;
   
     HardenedCementChemistry_ComputeSystem(hcc,CaO_SiO2_Na2O_K2O_SO3_Al2O3_H2O,0) ;
 
@@ -1701,7 +1704,10 @@ Values_d*  MPM_t::Initialize(Element_t* el,double const& t,Values_d& val)
         double logc_na    = -99 ;
         double logc_k     = val.U_potassium ;
         double logc_oh    = val.U_eneutral ;
-  
+
+        HardenedCementChemistry_Init(hcc) ;
+
+        HardenedCementChemistry_SetInput(hcc,LogA_H2O,0);
         HardenedCementChemistry_SetInput(hcc,SI_CH,MIN(zn_ca_s,0)) ;
         HardenedCementChemistry_SetInput(hcc,SI_CSH,MIN(zn_si_s,0)) ;
         HardenedCementChemistry_SetInput(hcc,SI_AH3,MIN(zn_al_s,0)) ;
@@ -1714,7 +1720,7 @@ Values_d*  MPM_t::Initialize(Element_t* el,double const& t,Values_d& val)
         HardenedCementChemistry_SetInput(hcc,LogC_K,logc_k) ;
         HardenedCementChemistry_SetInput(hcc,LogC_OH,logc_oh) ;
     
-        HardenedCementChemistry_SetAqueousConcentrationOf(hcc,Cl,1.e-99) ;
+        //HardenedCementChemistry_SetAqueousConcentrationOf(hcc,Cl,1.e-99) ;
   
         HardenedCementChemistry_ComputeSystem(hcc,CaO_SiO2_Na2O_K2O_SO3_Al2O3_H2O,0) ;
       

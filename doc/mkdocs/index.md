@@ -1,8 +1,10 @@
-# Bil — Documentation
+# Introduction
 
 **Bil** is an open-source software framework based on finite element/volume methods, designed for the simulation of coupled phenomena in continuum mechanics, geomechanics, environmental engineering, and materials science. Bil is distributed under the [GNU General Public License](https://www.gnu.org/licenses/gpl-3.0.html) (GPL v3).
 
-Bil is written in C/C++ and can run on any OS with a C++ compiler installed (Linux, macOS, Windows).
+Bil is intended to be used by students, engineers or researchers to work out problems or develop their own models. Bil is written in C/C++ and can run on any OS with a C++ compiler installed (Linux, macOS, Windows).
+
+Bil doesn’t include a mesh generator or a built-in post-processing tools. It relies on **[Gmsh](https://gmsh.info)** for mesh generation (`.msh` files) and post-processing (`.posi` files). The output files created by Bil for 1D problems can be used easily by some plotting programs such as **[Gnuplot](http://www.gnuplot.info)**.
 
 ## General overview
 
@@ -14,16 +16,11 @@ This design makes it possible to:
 - combine different physics (hydro-mechanical, thermo-chemical couplings, …)
 - work with 1D, 2D, and 3D meshes using finite element (FEM) and finite volume (FVM) discretizations
 
-Bil does not include a mesh generator or a built-in post-processing tool. It relies on:
-
-- **[Gmsh](https://gmsh.info)** — mesh generation (`.msh` files) and post-processing (`.posi` files)
-- **[Gnuplot](http://www.gnuplot.info)** — plotting 1D results (`.ti`, `.pi` files)
-
 ## Application domains
 
 | Domain | Available models |
 |--------|-----------------|
-| **Flow & diffusion** | Richards equation, Fick's second law, two-phase flow |
+| **Flow** | Richards equation, Fick's second law, two-phase flow |
 | **Mechanics** | Elasticity, elasticity with damage, hardening plasticity (Drucker-Prager, Cam-Clay, BBM) |
 | **Poromechanics** | Biot's poroelasticity, poroplasticity |
 | **Phase change** | Freeze-thaw in concrete and soils |
@@ -34,15 +31,29 @@ Bil does not include a mesh generator or a built-in post-processing tool. It rel
 ## Quick installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/Universite-Gustave-Eiffel/bil
-cd bil-master
+# 1. Download Bil from the repository
+wget https://github.com/Universite-Gustave-Eiffel/bil/archive/refs/heads/master.zip
 
-# Compile and installation (see README)
-mkdir build & cd build
+# 2. Create a build directory at the Bil's source directory
+cd bil-master
+mkdir build
+
+# 3. Run cmake from within the build directory pointing to the Bil's source directory
+cd build
 cmake ..
+
+# 4. To build Bil, simply type
 make
-sudo make install
+
+# 5. To install Bil type (this may require root permission)
+make install
+
+# To add more features in Bil's capabilities turn to ON options in the file OPIONS.
+# To add private libraries to Bil, indicate their full path in the file EXTRALIBS. 
+# Then repeat from step 3.
+
+# Check if Bil is correctly installed
+bil -info
 
 # Run a calculation
 bil -iperm my_file     # node renumbering (bandwidth optimization)
