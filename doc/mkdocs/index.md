@@ -31,7 +31,7 @@ This design makes it possible to:
 ## Quick installation
 
 ```bash
-# 1. Download Bil from the repository
+# 1. Download Bil from the github repository, github.com/Universite-Gustave-Eiffel/bil, or
 wget https://github.com/Universite-Gustave-Eiffel/bil/archive/refs/heads/master.zip
 
 # 2. Create a build directory at the Bil's source directory

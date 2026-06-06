@@ -12,6 +12,49 @@
         (MolarVolumeOfCementHydrate_##I*MolarVolumeOfCementHydrate_Unit)
 
 
+#include "RefThermoDataBases/CEMDATA/MolarVolumeOfCementHydrate_CEMDATA18.h.in"
+
+
+/* Data using different names
+ * ========================== */
+
+
+#define MolarVolumeOfCementHydrate_CH \
+        MolarVolumeOfCementHydrate_Portlandite
+
+#define MolarVolumeOfCementHydrate_S \
+        MolarVolumeOfCementHydrate_AmorSl
+
+#define MolarVolumeOfCementHydrate_CSH2 \
+        MolarVolumeOfCementHydrate_Gp
+
+#define MolarVolumeOfCementHydrate_AH3 \
+        (2*MolarVolumeOfCementHydrate_AlOHmic)
+
+#define MolarVolumeOfCementHydrate_AFm \
+        MolarVolumeOfCementHydrate_monosulphate12
+        
+#define MolarVolumeOfCementHydrate_AFt \
+        MolarVolumeOfCementHydrate_ettringite
+        
+#define MolarVolumeOfCementHydrate_C2AH8 \
+        MolarVolumeOfCementHydrate_C2AH7d5
+        
+#define MolarVolumeOfCementHydrate_FriedelSalt \
+        MolarVolumeOfCementHydrate_C4AClH10
+        
+#define MolarVolumeOfCementHydrate_KuzelSalt \
+        MolarVolumeOfCementHydrate_C4AsClH12
+        
+#define MolarVolumeOfCementHydrate_Calcite \
+        MolarVolumeOfCementHydrate_Cal
+        
+#define MolarVolumeOfCementHydrate_Aragonite \
+        MolarVolumeOfCementHydrate_Arg
+
+
+#endif
+#if 0
 
 /* Molar Volume of Cement Hydrates (m3/mole)
  * -----------------------------------------
@@ -232,6 +275,15 @@
 #define MolarVolumeOfCementHydrate_N                  (25.e-6)
 
 
+/** Calcium carbonates */
+
+/* Calcite */
+#define MolarVolumeOfCementHydrate_Cal                (36.934e-6)
+#define MolarVolumeOfCementHydrate_Calcite            (36.934e-6)
+
+/* Aragonite */
+#define MolarVolumeOfCementHydrate_Arg                (34.15e-6)
+#define MolarVolumeOfCementHydrate_Aragonite          (34.15e-6)
 
 
 

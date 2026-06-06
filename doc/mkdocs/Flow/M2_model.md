@@ -7,7 +7,7 @@
 > **Model authors:** P. Dangla (Université Gustave Eiffel)
 
 ---
-
+<!--
 ## Table of contents
 
 1. [Context and objective](#1-context-and-objective)
@@ -23,6 +23,7 @@
 9. [Bibliographic references](#9-bibliographic-references)
 
 ---
+-->
 
 ## 1. Context and objective
 
@@ -72,10 +73,10 @@ The model supports a coupled system of 2 scalar equations (mass conservation for
 The system expresses **mass conservation** for each fluid constituent over an elementary partial porous volume.
 
 1. **Liquid mass balance**:
-   $$\frac{\partial m_l}{\partial t} + \nabla \cdot \mathbf{W}_l = 0$$
+   $\frac{\partial m_l}{\partial t} + \nabla \cdot \mathbf{W}_l = 0$
 
 2. **Gas mass balance**:
-   $$\frac{\partial m_g}{\partial t} + \nabla \cdot \mathbf{W}_g = 0$$
+   $\frac{\partial m_g}{\partial t} + \nabla \cdot \mathbf{W}_g = 0$
 
 With local mass state relations:
 - Liquid mass: $m_l = \rho_l \phi S_l(p_c)$
@@ -86,10 +87,10 @@ With local mass state relations:
 Macroscopic flow in the matrix follows the generalized empirical Darcy law extended to relative permeability within pores.
 
 The liquid flux is written as a function of the head gradient:
-$$\mathbf{W}_l = - \frac{\rho_l k_{\text{int}} k_{rl}(p_c)}{\mu_l} \nabla \left( p_l - \rho_l \mathbf{g} z \right)$$
+$\mathbf{W}_l = - \frac{\rho_l k_{\text{int}} k_{rl}(p_c)}{\mu_l} \nabla \left( p_l - \rho_l \mathbf{g} z \right)$
 
 Symmetrically for gas (without neglecting its compressed density):
-$$\mathbf{W}_g = - \frac{\rho_g k_{\text{int}} k_{rg}(p_c)}{\mu_g} \nabla \left( p_g - \rho_g \mathbf{g} z \right)$$
+$\mathbf{W}_g = - \frac{\rho_g k_{\text{int}} k_{rg}(p_c)}{\mu_g} \nabla \left( p_g - \rho_g \mathbf{g} z \right)$
 
 *Note: State curves (saturation and relative permeabilities) are managed by the `Curves = sol` directive in the material file and can be numerically smoothed.*
 

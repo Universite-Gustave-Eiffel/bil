@@ -1,13 +1,13 @@
-# BBM Model — Barcelona Basic Model for Unsaturated Soils (2D Axisymmetric)
+# BBM Model — Barcelona Basic Model for Unsaturated Soils
 
 > **Bil model:** `src/Models/ModelFiles/BBM.c` · `src/Models/ConstitutiveLaws/PlasticityModels/PlasticityBBM.c`
 >
-> **Input file:** `doc/mkdocs/Mechanics/BBM/BBM` · `doc/mkdocs/Mechanics/BBM/BBM2` · `doc/mkdocs/Mechanics/BBM/BBM_pcst`
+> **Input files:** `doc/mkdocs/Mechanics/BBM/BBM` · `doc/mkdocs/Mechanics/BBM/BBM2` · `doc/mkdocs/Mechanics/BBM/BBM_pcst`
 >
 > **Bil model authors:** Eizaguirre, Dangla (Université Gustave Eiffel)
 
 ---
-
+<!--
 ## Table of Contents
 
 1. [Context and Objective](#1-context-and-objective)
@@ -32,6 +32,7 @@
 9. [References](#9-references)
 
 ---
+-->
 
 ## 1. Context and Objective
 
@@ -55,9 +56,6 @@ The three test cases illustrate **drained condition tests** (suction is imposed 
 2. **Two fluid phases**: liquid phase (water) and gas phase (at constant pressure $p_g = 0$, taken as reference).
 3. **Small strains**: continuum mechanics framework with small strains (linearized strain tensor).
 4. **Net stresses**: the mechanical behavior is formulated in terms of **net stresses** $\bar{\boldsymbol{\sigma}} = \boldsymbol{\sigma} + p_g\,\mathbf{I}$ and suction $s = p_g - p_l \geq 0$.
-5. **Transverse isotropy** (axisymmetry): 2D problem with rotational symmetry.
-6. **Drained conditions**: suction is imposed throughout the domain; intrinsic permeability is very low ($k_\text{int} = 10^{-20}$ m²) but the drained state is achieved through the boundary conditions.
-7. **No gravity**: $g = 0$ in all three test cases.
 
 ---
 
@@ -68,11 +66,11 @@ The three test cases illustrate **drained condition tests** (suction is imposed 
 | Symbol | Meaning | Unit |
 |--------|---------|------|
 | $p_l$ | Liquid phase pressure | Pa |
-| $\mathbf{u} = (u_1,\,u_2)$ | Displacement vector | m |
+| $\mathbf{u} = (u_1,\,u_2,\,u_3)$ | Displacement vector | m |
 
 Suction $s$ and net stress $\bar{\boldsymbol{\sigma}}$ follow from these:
 
-$$s = p_g - p_l = -p_l \quad (\text{since } p_g = 0), \qquad \bar{\boldsymbol{\sigma}} = \boldsymbol{\sigma} + p_g\,\mathbf{I} = \boldsymbol{\sigma}$$
+$$s = p_g - p_l, \qquad \bar{\boldsymbol{\sigma}} = \boldsymbol{\sigma} + p_g\,\mathbf{I} = \boldsymbol{\sigma}$$
 
 ### Internal Variables (Stored at Integration Points)
 
@@ -122,37 +120,31 @@ where $\phi = \phi_0 + \text{tr}\,\boldsymbol{\varepsilon}$ is the current poros
 
 $$\nabla \cdot \boldsymbol{\sigma} = \mathbf{0}$$
 
-i.e., in 2D axisymmetry:
-
-$$\frac{\partial \sigma_{rr}}{\partial r} + \frac{\partial \sigma_{rz}}{\partial z} + \frac{\sigma_{rr} - \sigma_{\theta\theta}}{r} = 0$$
-
-$$\frac{\partial \sigma_{rz}}{\partial r} + \frac{\partial \sigma_{zz}}{\partial z} + \frac{\sigma_{rz}}{r} = 0$$
-
 ### 4.2 Nonlinear Elastic Constitutive Law
 
 The BBM elasticity is **nonlinear**: the bulk modulus depends on the stress state and suction.
-
-**Bulk modulus:**
-
-$$K = -\frac{(1 + e_0)\,\bar{p}}{\kappa + \kappa_s\,\Delta\ln(s + p_\text{atm})}$$
-
-In the Bil implementation (in practice, for the current time steps), the simplified formulation is used:
-
-$$K = -\frac{(1 + e_0)\,\bar{p}_n}{\kappa}, \qquad E = 3K(1 - 2\nu)$$
-
-where $\bar{p}_n = (\sigma_{11}^n + \sigma_{22}^n + \sigma_{33}^n)/3 + p_g$ is the mean net pressure at the previous time step. Young's modulus $E$ and the shear modulus $\mu = E/[2(1+\nu)]$ are updated at each time step.
 
 **Elastoplastic strain decomposition:**
 
 $$\boldsymbol{\varepsilon} = \boldsymbol{\varepsilon}^e + \boldsymbol{\varepsilon}^p$$
 
+**Elastic behavior**
+
+The convention of positive tension and expansion is used. Valid only for compression net stress ($\bar{\sigma} < 0$)
+
+$$\varepsilon^e = - \frac{\kappa}{1+e_0} \ln(-\bar{\sigma}) - \frac{\kappa_s}{1+e_0} \ln(s+p_{\text{atm}})$$
+
+$$\text{dev}(\boldsymbol{\varepsilon}^e) = \frac{1}{2G} \text{dev}(\bar{\boldsymbol{\sigma}})$$
+
+where $\varepsilon^e = \text{tr}(\boldsymbol{\varepsilon}^e)$ is the volumetric elastic strain and $\bar{\sigma} = \text{tr}(\bar{\boldsymbol{\sigma}})/3$ is the mean net stress. In the Bil implementation (in practice, for the current time steps), the simplified formulation is used:
+
+$$\Delta(\varepsilon^e) = - \frac{\kappa}{1+e_0} \frac{\Delta(\bar{\sigma})}{\bar{\sigma}_n} - \frac{\kappa_s}{1+e_0} \ln\left(\frac{s+p_{\text{atm}}}{s_n+p_{\text{atm}}}\right)$$
+
+that means that the elastic bulk modulus, $K = -\frac{(1 + e_0)\bar{\sigma}_n}{\kappa}$, the Young's modulus, $E = 3K(1 - 2\nu)$, and the shear modulus, $G = E/[2(1+\nu)]$, are updated at each time step.
+
 **Elastic trial net stresses:**
 
-$$\bar{\boldsymbol{\sigma}}^* = \bar{\boldsymbol{\sigma}}_n + \mathbb{C}^e : \Delta\boldsymbol{\varepsilon}$$
-
-with the additional suction contribution:
-
-$$\Delta\bar{\sigma}_m^s = -\bar{p}_n\,\frac{\kappa_s}{\kappa}\,\Delta\ln\!\left(\frac{s + p_\text{atm}}{s_n + p_\text{atm}}\right)$$
+$$\bar{\boldsymbol{\sigma}}^* = \bar{\boldsymbol{\sigma}}_n + \mathbb{C}^e : \Delta\boldsymbol{\varepsilon} - \bar{\sigma}_n \frac{\kappa_s}{\kappa} \ln\left(\frac{s + p_\text{atm}}{s_n + p_\text{atm}}\right)$$
 
 ### 4.3 Yield Surface and LC Curve
 

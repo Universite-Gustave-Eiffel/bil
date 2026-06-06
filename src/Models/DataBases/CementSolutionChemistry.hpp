@@ -475,12 +475,12 @@ struct Temperature_t;
 
 /* Macro for the resolution of the system
  * --------------------------------------*/
+#if 0
 #define CementSolutionChemistry_ComputeSystem(CSC,SYS) \
        (CementSolutionChemistry_ComputeSystemDEFAULT(CSC))
        
 //       (CementSolutionChemistry_ComputeSystem_##SYS(CSC))
        
-#if 0
 #define CementSolutionChemistry_SupplementSystemWith(CSC,A) \
        (CementSolutionChemistry_SupplementSystemWith_##A(CSC))
 #endif

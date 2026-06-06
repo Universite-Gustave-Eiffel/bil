@@ -112,41 +112,42 @@ enum {
 
 
 
-/* Method chosen at compile time. 
- * Each equation is associated to a specific unknown.
- * Each unknown can deal with a specific model.
- * Uncomment/comment to let only one unknown per equation */
+/* Method chosen at running time. 
+ * Each equation is associated to a specific type of physical unknown.
+ * The definition of the physical unknown associated with the equation "EQUATION"
+ * is dealt with an int "I_U_EQUATION" that can take the values defined below. */
+
+ /* Types of physical unknowns */
+#define I_U_Concentration    0
+#define I_U_LogConcentration 1
+#define I_U_ZN_Solid         2
+#define I_U_LogS             3
+
 
 /* Carbon: unknown either C or logC */
 #ifdef E_CARBON
-  //#define U_C_CO2
-  #define U_LogC_CO2
-  
-  /* Implementation */
-  #if defined (U_LogC_CO2) && !defined (U_C_CO2)
-    #define LogC_CO2(u,n)   U_CARBON(u,n)
-    #define C_CO2(u,n)      (pow(10,LogC_CO2(u,n)))
-  #elif defined (U_C_CO2) && !defined (U_LogC_CO2)
-    #define C_CO2(u,n)      U_CARBON(u,n)
-    #define LogC_CO2(u,n)   (log10(C_CO2(u,n)))
-  #else
-    #error "Ambiguous or undefined unknown"
-  #endif
+  static int I_U_CARBON;
+
+  #define LogC_CO2(u,n) \
+          ((I_U_CARBON == I_U_LogConcentration) ? U_CARBON(u,n) :\
+          ((I_U_CARBON == I_U_Concentration) ? log10(U_CARBON(u,n)) : 0))
+
+  #define C_CO2(u,n) \
+          ((I_U_CARBON == I_U_Concentration) ? U_CARBON(u,n) :\
+          ((I_U_CARBON == I_U_LogConcentration) ? pow(10,U_CARBON(u,n)) : 0))
 #endif
 
 /* Mass: the liquid pressure */
-#define U_P_L
 #define P_L(u,n)        U_MASS(u,n)
 
 /* Calcium:
- * - U_ZN_Ca_S: dissolution kinetics of CH; Cc at equilibrium 
- * - U_LogS_CH: dissolution kinetics of CH; precipitation kinetics of Cc */
+ * - U_CALCIUM = ZN_Ca_S: dissolution kinetics of CH; Cc at equilibrium 
+ * - U_CALCIUM = LogS_CH: dissolution kinetics of CH; precipitation kinetics of Cc */
   /* Definition of U_CALCIUM = ZN_Ca_S: 
    * ZN_Ca_S = N/N0 + log(S) 
    * with N = calcium content in CH and CC  (>= 0)
    * and  S = saturation index of CcH ie max(log(S_CH),log(S_Cc)) (<= 0) */
-#define U_ZN_Ca_S
-//#define U_LogS_CH
+static int I_U_CALCIUM;
 
 /* Silicon: */
 /* Definition of U_SILICON = ZN_Si_S:
@@ -154,92 +155,61 @@ enum {
  * with N = silicon content in CSH
  * and S_CSH = saturation index of CSH */
 #ifdef E_SILICON
-#define U_ZN_Si_S
+  static int I_U_SILICON;
 #endif
 
 /* charge: */
-#define U_PSI
 #define PSI(u,n)        U_CHARGE(u,n)
 
 /* Sodium: unknown either C or logC */
-//#define U_C_Na
-#define U_LogC_Na
+static int I_U_SODIUM;
 
-/* Implementation */
-#if defined (U_LogC_Na) && !defined (U_C_Na)
-  #define LogC_Na(u,n)    U_SODIUM(u,n)
-  #define C_Na(u,n)       (pow(10,LogC_Na(u,n)))
-#elif defined (U_C_Na) && !defined (U_LogC_Na)
-  #define C_Na(u,n)       U_SODIUM(u,n)
-  #define LogC_Na(u,n)    (log10(C_Na(u,n)))
-#else
-  #error "Ambiguous or undefined unknown"
-#endif
+#define LogC_Na(u,n) \
+        ((I_U_SODIUM == I_U_LogConcentration) ? U_SODIUM(u,n) :\
+        ((I_U_SODIUM == I_U_Concentration) ? log10(U_SODIUM(u,n)) : 0))
+
+#define C_Na(u,n) \
+        ((I_U_SODIUM == I_U_Concentration) ? U_SODIUM(u,n) :\
+        ((I_U_SODIUM == I_U_LogConcentration) ? pow(10,U_SODIUM(u,n)) : 0))
 
 /* Potassium: unknown either C or logC */
-//#define U_C_K
-#define U_LogC_K
+static int I_U_POTASSIUM;
 
-/* Implementation */
-#if defined (U_LogC_K) && !defined (U_C_K)
-  #define LogC_K(u,n)     U_POTASSIUM(u,n)
-  #define C_K(u,n)        (pow(10,LogC_K(u,n)))
-#elif defined (U_C_K) && !defined (U_LogC_K)
-  #define C_K(u,n)        U_POTASSIUM(u,n)
-  #define LogC_K(u,n)     (log10(C_K(u,n)))
-#else
-  #error "Ambiguous or undefined unknown"
-#endif
+#define LogC_K(u,n) \
+        ((I_U_POTASSIUM == I_U_LogConcentration) ? U_POTASSIUM(u,n) :\
+        ((I_U_POTASSIUM == I_U_Concentration) ? log10(U_POTASSIUM(u,n)) : 0))
+
+#define C_K(u,n) \
+        ((I_U_POTASSIUM == I_U_Concentration) ? U_POTASSIUM(u,n) :\
+        ((I_U_POTASSIUM == I_U_LogConcentration) ? pow(10,U_POTASSIUM(u,n)) : 0))
 
 /* Electroneutrality: unknown either C_OH, logC_OH or Z_OH = C_H - C_OH */
 #ifdef E_ENEUTRAL
-  //#define U_C_OH
-  #define U_LogC_OH
-  //#define U_Z_OH
-  
-  /* Implementation */
-  #if defined (U_LogC_OH) && !defined (U_C_OH) && !defined (U_Z_OH)
-    #define LogC_OH(u,n)   U_ENEUTRAL(u,n)
-    #define C_OH(u,n)      (pow(10,LogC_OH(u,n)))
-  #elif defined (U_C_OH) && !defined (U_LogC_OH) && !defined (U_Z_OH)
-    #define C_OH(u,n)      U_ENEUTRAL(u,n)
-    #define LogC_OH(u,n)   (log10(C_OH(u,n)))
-  #elif defined (U_Z_OH) && !defined (U_LogC_OH) && !defined (U_C_OH)
-    #define Z_OH(u,n)      U_ENEUTRAL(u,n)
-    #define Z_OHDefinition(c_oh,c_h)   ((c_h) - (c_oh))
-    #define C_OHDefinition(z_oh)       (0.5 * (sqrt((z_oh)*(z_oh) + 4*K_w) - (z_oh)))
-    #define C_OH(u,n)      C_OHDefinition(Z_OH(u,n))
-    #define LogC_OH(u,n)   (log10(C_OH(u,n)))
-    #define dLogC_OHdZ_OH(z_oh)    (-1/(Ln10 * sqrt((z_oh)*(z_oh) + 4*K_w)))
-  #else
-    #error "Ambiguous or undefined unknown"
-  #endif
+  static int I_U_ENEUTRAL;
+
+  #define LogC_OH(u,n) \
+          ((I_U_ENEUTRAL == I_U_LogConcentration) ? U_ENEUTRAL(u,n) :\
+          ((I_U_ENEUTRAL == I_U_Concentration) ? log10(U_ENEUTRAL(u,n)) : 0))
+  #define C_OH(u,n) \
+          ((I_U_ENEUTRAL == I_U_Concentration) ? U_ENEUTRAL(u,n) :\
+          ((I_U_ENEUTRAL == I_U_LogConcentration) ? pow(10,U_ENEUTRAL(u,n)) : 0))
 #endif
 
 /* Chlorine: unknown either C or logC */
 #ifdef E_CHLORINE
-  #define U_LogC_Cl
-  //#define U_C_Cl
-  //#define U_Z_Cl
-  
-  /* Implementation */
-  #if defined (U_LogC_Cl) && !defined (U_C_Cl) && !defined (U_Z_Cl)
-    #define LogC_Cl(u,n)     U_CHLORINE(u,n)
-    #define C_Cl(u,n)        (pow(10,LogC_Cl(u,n)))
-  #elif defined (U_C_Cl) && !defined (U_LogC_Cl) && !defined (U_Z_Cl)
-    #define C_Cl(u,n)        U_CHLORINE(u,n)
-    #define LogC_Cl(u,n)     (log10(C_Cl(u,n)))
-  #elif defined (U_Z_Cl) && !defined (U_C_Cl) && !defined (U_LogC_Cl)
-    #define Z_Cl(u,n)        U_CHLORINE(u,n)
-  #else
-    #error "Ambiguous or undefined unknown"
-  #endif
+  static int I_U_CHLORINE;
+
+  #define LogC_Cl(u,n) \
+          ((I_U_CHLORINE == I_U_LogConcentration) ? U_CHLORINE(u,n) :\
+          ((I_U_CHLORINE == I_U_Concentration) ? log10(U_CHLORINE(u,n)) : 0))
+
+  #define C_Cl(u,n) \
+          ((I_U_CHLORINE == I_U_Concentration) ? U_CHLORINE(u,n) :\
+          ((I_U_CHLORINE == I_U_LogConcentration) ? pow(10,U_CHLORINE(u,n)) : 0))
 #endif
 
 /* Air: the gas pressure */
 #ifdef E_AIR
-  #define U_P_G
-  
   /* Implementation */
   #define P_G(u,n)        U_AIR(u,n)
 #endif
@@ -438,10 +408,10 @@ template<typename T>
 HardenedCementChemistry_t<T>* hcc_func(void) {
   if constexpr(std::is_same_v<T,double>) {
     return(hcc_d);
-    #ifdef HAVE_AUTODIFF
+  #ifdef HAVE_AUTODIFF
   } else if constexpr(std::is_same_v<T,real>) {
     return(hcc_r);
-    #endif
+  #endif
   }
   
   return(NULL);
@@ -570,67 +540,36 @@ using namespace BaseName();
 /* Calcium Hydroxide (Portlandite) Properties (CH)
  * ----------------------------------------------- */
 #define M_CaOH2        MolarMassOfMolecule(CaO2H2)
-/* Molar volume of CH solid */
 #define V_CH           MolarVolumeOfCementHydrate(CH)
 /* Below is how to manage dissolution/precipitation kinetics */
-#define CHSolidContent_kin(n_chn,s_ch,dt) \
-        MAX(n_chn + dt*a_2*dn1_caoh2sdt(1 - n_chn/n_ch0,c_2)*log(s_ch), 0.)
-#if defined (U_ZN_Ca_S)
-  /* Definition of U_CALCIUM = ZN_Ca_S in the next lines: 
-   * ZN_Ca_S = N/N0 + log(S) 
-   * with N = calcium content in CH and CC  (>= 0)
-   * and  S = saturation index of CcH ie max(log(S_CH),log(S_Cc)) (<= 0) */
-  /* Log of saturation index of CcH = CaO-CO2-H2O  */
-  #define Log10SaturationIndexOfCcH(zn_ca_s)   MIN(zn_ca_s,0.)
-  /* Calcium solid content in CcH ie in CH and Cc */
-  #define CalciumContentInCcH(zn_ca_s)        (n_ca_ref*MAX(zn_ca_s,0.))
-  /* Initial solid content of CH */
-  #define InitialCHSolidContent(zn_ca_s,s_ch,s_cc) \
-          (((s_cc) > (s_ch)) ? 0 : CalciumContentInCcH(zn_ca_s))
-  /* Current solid content of CH */
-  #define CHSolidContent(zn_ca_s,n_chn,n_ccn,s_ch,s_cc,dt) \
-          (((s_cc) > (s_ch)) ? CHSolidContent_kin(n_chn,s_ch,dt) : \
-          CalciumContentInCcH(zn_ca_s))
-#elif defined (U_LogS_CH)
-  /* Definition of U_CALCIUM = LogS_CH in the next lines:
-   * LogS_CH = log(S_CH)
-   * with S_CH = saturation index of CH */
-  /* Initial solid content of CH */
-  #define InitialCHSolidContent(logs_ch,s_ch,s_cc)     (n_ca_ref)
-  /* Log of saturation index of CH */
-  #define Log10SaturationIndexOfCH(logs_ch)            (logs_ch)
-  /* Current solid content of CH */
-  #define CHSolidContent(logs_ch,n_chn,n_ccn,s_ch,s_cc,dt) \
-          CHSolidContent_kin(n_chn,s_ch,dt)
-#endif
+#define CalciumContentInCcH(zn_ca_s)        (n_ca_ref*MAX(zn_ca_s,0.))
+#define Log10SaturationIndexOfCcH(zn_ca_s)  MIN(zn_ca_s,0.)
+#define Log10SaturationIndexOfCH(logs_ch)   (logs_ch)
+#define CHSolidContent_kin(n_chn,s_ch,dt)   MAX(n_chn + dt*a_2*dn1_caoh2sdt(1 - n_chn/n_ch0,c_2)*log(s_ch), 0.)
 
+#define InitialCHSolidContent(zn_ca_s,s_ch,s_cc) \
+        ((I_U_CALCIUM == I_U_ZN_Solid) ? (((s_cc) > (s_ch)) ? 0 : CalciumContentInCcH(zn_ca_s)) :\
+        ((I_U_CALCIUM == I_U_LogS) ? n_ca_ref : 0))
+
+#define CHSolidContent(zn_ca_s,n_chn,n_ccn,s_ch,s_cc,dt) \
+        ((I_U_CALCIUM == I_U_ZN_Solid) ? (((s_cc) > (s_ch)) ? CHSolidContent_kin(n_chn,s_ch,dt) : CalciumContentInCcH(zn_ca_s)) :\
+        ((I_U_CALCIUM == I_U_LogS) ? CHSolidContent_kin(n_chn,s_ch,dt) : 0))
 
 
 /* Calcium Carbonate (Calcite) Properties (CC)
  * ------------------------------------------- */
 #define M_CaCO3        MolarMassOfMolecule(CaCO3)
-/* Molar volume of CC */
-#define V_CC           (37 * cm3)
+#define V_CC           MolarVolumeOfCementHydrate(Calcite)
 /* Below is how to manage dissolution/precipitation kinetics */
-#if defined (U_ZN_Ca_S)
-  /* See above the definition of ZN_Ca_S */
-  /* Initial solid content of Cc */
-  #define InitialCCSolidContent(zn_ca_s,s_ch,s_cc) \
-          (((s_cc) > (s_ch)) ? CalciumContentInCcH(zn_ca_s) : 0)
-  /* Current solid content of Cc */
-  #define CCSolidContent(zn_ca_s,n_chn,n_ccn,s_ch,s_cc,dt) \
-          (CalciumContentInCcH(zn_ca_s) - CHSolidContent(zn_ca_s,n_chn,n_ccn,s_ch,s_cc,dt))
-#elif defined (U_LogS_CH)
-  /* See above the definition of LogS_CH */
-  /* Initial solid content of Cc */
-  #define InitialCCSolidContent(logs_ch,s_ch,s_cc)   (0)
-  /* Current solid content */
-  #define CCSolidContent_kin(n,s,dt)        MAX((n + dt*rate_calcite*(s - 1)),0.)
-  #define CCSolidContent(logs_ch,n_chn,n_ccn,s_ch,s_cc,dt) \
-          CCSolidContent_kin(n_ccn,s_cc,dt)
-#endif
+#define CCSolidContent_kin(n,s,dt)  MAX((n + dt*rate_calcite*(s - 1)),0.)
 
+#define InitialCCSolidContent(zn_ca_s,s_ch,s_cc) \
+        ((I_U_CALCIUM == I_U_ZN_Solid) ? (((s_cc) > (s_ch)) ? CalciumContentInCcH(zn_ca_s) : 0) :\
+        ((I_U_CALCIUM == I_U_LogS) ? 0 : 0))
 
+#define CCSolidContent(zn_ca_s,n_chn,n_ccn,s_ch,s_cc,dt) \
+        ((I_U_CALCIUM == I_U_ZN_Solid) ? (CalciumContentInCcH(zn_ca_s) - CHSolidContent(zn_ca_s,n_chn,n_ccn,s_ch,s_cc,dt)) :\
+        ((I_U_CALCIUM == I_U_LogS) ? CCSolidContent_kin(n_ccn,s_cc,dt) : 0))
 
 
 
@@ -721,7 +660,6 @@ static void    GetProperties(Element_t*,double) ;
 
 template<typename T>
 static T  dn1_caoh2sdt(T const,T const) ;
-//static double  CHSolidContent_kin1(double const,double const,double const) ;
 
 static void    ComputePhysicoChemicalProperties(double) ;
 
@@ -875,90 +813,112 @@ void GetProperties(Element_t* el,double t)
 
 int SetModelProp(Model_t* model)
 {
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_GetNbOfEquations(model) = NEQ;
   
-#ifdef E_CARBON
-  Model_CopyNameOfEquation(model,E_CARBON   ,"carbon") ;
-#endif
-
+  /* The name of equations */
+  #ifdef E_CARBON
+    Model_CopyNameOfEquation(model,E_CARBON   ,"carbon") ;
+  #endif
   Model_CopyNameOfEquation(model,E_CHARGE   ,"charge") ;
   Model_CopyNameOfEquation(model,E_MASS     ,"mass") ;
   Model_CopyNameOfEquation(model,E_CALCIUM  ,"calcium") ;
   Model_CopyNameOfEquation(model,E_SODIUM   ,"sodium") ;
   Model_CopyNameOfEquation(model,E_POTASSIUM,"potassium") ;
-  
-#ifdef E_SILICON
-  Model_CopyNameOfEquation(model,E_SILICON  ,"silicon") ;
-#endif
-
-#ifdef E_ENEUTRAL
-  Model_CopyNameOfEquation(model,E_ENEUTRAL ,"electroneutrality") ;
-#endif
-
-#ifdef E_CHLORINE
-  Model_CopyNameOfEquation(model,E_CHLORINE ,"chlorine") ;
-#endif
-
-#ifdef E_AIR
-  Model_CopyNameOfEquation(model,E_AIR      ,"air") ;
-#endif
-  
-  
-#if defined (U_LogC_CO2)
-  Model_CopyNameOfUnknown(model,E_CARBON ,"logc_co2") ;
-#elif defined (U_C_CO2)
-  Model_CopyNameOfUnknown(model,E_CARBON ,"c_co2") ;
-#endif
-
-#ifdef E_SILICON
-  Model_CopyNameOfUnknown(model,E_SILICON,"z_si") ;
-#endif
-
-  Model_CopyNameOfUnknown(model,E_MASS    ,"p_l") ;
-
-#if defined (U_ZN_Ca_S)
-  Model_CopyNameOfUnknown(model,E_CALCIUM,"z_ca") ;
-#elif defined (U_LogS_CH)
-  Model_CopyNameOfUnknown(model,E_CALCIUM,"logs_ch") ;
-#endif
-
-  Model_CopyNameOfUnknown(model,E_CHARGE    ,"psi") ;
-  
-#ifdef U_LogC_Na
-  Model_CopyNameOfUnknown(model,E_SODIUM   ,"logc_na") ;
-#else
-  Model_CopyNameOfUnknown(model,E_SODIUM   ,"c_na") ;
-#endif
-
-#ifdef U_LogC_K
-  Model_CopyNameOfUnknown(model,E_POTASSIUM    ,"logc_k") ;
-#else
-  Model_CopyNameOfUnknown(model,E_POTASSIUM    ,"c_k") ;
-#endif
-
-#ifdef E_ENEUTRAL
-  #if defined (U_LogC_OH)
-    Model_CopyNameOfUnknown(model,E_ENEUTRAL, "logc_oh") ;
-  #elif defined (U_C_OH)
-    Model_CopyNameOfUnknown(model,E_ENEUTRAL, "c_oh") ;
-  #else
-    Model_CopyNameOfUnknown(model,E_ENEUTRAL, "z_oh") ;
+  #ifdef E_SILICON
+    Model_CopyNameOfEquation(model,E_SILICON  ,"silicon") ;
   #endif
-#endif
-
-#ifdef E_CHLORINE
-  #if defined U_LogC_Cl
-    Model_CopyNameOfUnknown(model,E_CHLORINE, "logc_cl") ;
-  #elif defined U_C_Cl
-    Model_CopyNameOfUnknown(model,E_CHLORINE, "c_cl") ;
-  #else
-    Model_CopyNameOfUnknown(model,E_CHLORINE, "z_cl") ;
+  #ifdef E_ENEUTRAL
+    Model_CopyNameOfEquation(model,E_ENEUTRAL ,"electroneutrality") ;
   #endif
-#endif
+  #ifdef E_CHLORINE
+    Model_CopyNameOfEquation(model,E_CHLORINE ,"chlorine") ;
+  #endif
+  #ifdef E_AIR
+    Model_CopyNameOfEquation(model,E_AIR      ,"air") ;
+  #endif
 
-#ifdef E_AIR
-  Model_CopyNameOfUnknown(model,E_AIR, "p_g") ;
-#endif
+  /* The default name of unknowns */
+  #ifdef E_CARBON
+    Model_SetDefaultNameOfUnknown(model,E_CARBON,"logc_co2");
+  #endif
+  #ifdef E_SILICON
+    Model_SetDefaultNameOfUnknown(model,E_SILICON,"z_si");
+  #endif
+  Model_SetDefaultNameOfUnknown(model,E_MASS,"p_l");
+  Model_SetDefaultNameOfUnknown(model,E_CALCIUM ,"z_ca");
+  Model_SetDefaultNameOfUnknown(model,E_CHARGE,"psi");
+  Model_SetDefaultNameOfUnknown(model,E_SODIUM,"logc_na");
+  Model_SetDefaultNameOfUnknown(model,E_POTASSIUM,"logc_k");
+  #ifdef E_ENEUTRAL
+    Model_SetDefaultNameOfUnknown(model,E_ENEUTRAL,"logc_oh");
+  #endif
+  #ifdef E_CHLORINE
+    Model_SetDefaultNameOfUnknown(model,E_CHLORINE,"logc_cl");
+  #endif
+  #ifdef E_AIR
+    Model_SetDefaultNameOfUnknown(model,E_AIR,"p_g");
+  #endif
+
+  /* Deal with the user-defined name of unknowns */
+  #ifdef E_CARBON
+    if(String_Is(Model_GetNameOfUnknown(model)[E_CARBON],"c_co2")) {
+      I_U_CARBON = I_U_Concentration;
+    } else if(String_Is(Model_GetNameOfUnknown(model)[E_CARBON],"logc_co2")) {
+      I_U_CARBON = I_U_LogConcentration;
+    } else {
+      Message_FatalError("SetModelProp: unknown name of carbon unknown: %s\n",Model_GetNameOfUnknown(model)[E_CARBON]);
+    }
+  #endif
+  
+  if(String_Is(Model_GetNameOfUnknown(model)[E_CALCIUM],"z_ca")) {
+    I_U_CALCIUM = I_U_ZN_Solid;
+  } else if(String_Is(Model_GetNameOfUnknown(model)[E_CALCIUM],"logs_ch")) {
+    I_U_CALCIUM = I_U_LogS;
+  } else {
+    Message_FatalError("SetModelProp: unknown name of calcium unknown: %s\n",Model_GetNameOfUnknown(model)[E_CALCIUM]);
+  }
+  
+  if(String_Is(Model_GetNameOfUnknown(model)[E_SILICON],"z_si")) {
+    I_U_SILICON = I_U_ZN_Solid;
+  } else {
+    Message_FatalError("SetModelProp: unknown name of silicon unknown: %s\n",Model_GetNameOfUnknown(model)[E_SILICON]);
+  }
+
+  if(String_Is(Model_GetNameOfUnknown(model)[E_SODIUM],"logc_na")) {
+    I_U_SODIUM = I_U_LogConcentration;
+  } else if(String_Is(Model_GetNameOfUnknown(model)[E_SODIUM],"c_na")) {
+    I_U_SODIUM = I_U_Concentration;
+  } else {
+    Message_FatalError("SetModelProp: unknown name of sodium unknown: %s\n",Model_GetNameOfUnknown(model)[E_SODIUM]);
+  }
+
+  if(String_Is(Model_GetNameOfUnknown(model)[E_POTASSIUM],"logc_k")) {
+    I_U_POTASSIUM = I_U_LogConcentration;
+  } else if(String_Is(Model_GetNameOfUnknown(model)[E_POTASSIUM],"c_k")) {
+    I_U_POTASSIUM = I_U_Concentration;
+  } else {
+    Message_FatalError("SetModelProp: unknown name of potassium unknown: %s\n",Model_GetNameOfUnknown(model)[E_POTASSIUM]);
+  }
+
+  #ifdef E_ENEUTRAL
+    if(String_Is(Model_GetNameOfUnknown(model)[E_ENEUTRAL],"logc_oh")) {
+      I_U_ENEUTRAL = I_U_LogConcentration;
+    } else if(String_Is(Model_GetNameOfUnknown(model)[E_ENEUTRAL],"c_oh")) {
+      I_U_ENEUTRAL = I_U_Concentration;
+    } else {
+      Message_FatalError("SetModelProp: unknown name of electroneutrality unknown: %s\n",Model_GetNameOfUnknown(model)[E_ENEUTRAL]);
+    }
+  #endif
+
+  #ifdef E_CHLORINE
+    if(String_Is(Model_GetNameOfUnknown(model)[E_CHLORINE],"logc_cl")) {
+      I_U_CHLORINE = I_U_LogConcentration;
+    } else if(String_Is(Model_GetNameOfUnknown(model)[E_CHLORINE],"c_cl")) {
+      I_U_CHLORINE = I_U_Concentration;
+    } else {
+      Message_FatalError("SetModelProp: unknown name of chlorine unknown: %s\n",Model_GetNameOfUnknown(model)[E_CHLORINE]);
+    }
+  #endif
   
   //Model_GetComputePropertyIndex(model) = &pm ;
   Model_GetComputeMaterialProperties(model) = &GetProperties;
@@ -1142,59 +1102,58 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
 int PrintModelChar(Model_t* model,FILE *ficd)
 /* Saisie des donnees materiaux */
 {
-  
   printf(TITLE) ;
   
   if(!ficd) return(NEQ) ;
   
   printf("\n") ;
   printf("The set of 7 equations is:\n") ;
-#ifdef E_CARBON
+  #ifdef E_CARBON
   printf("\t- Mass balance of C      (carbon)\n") ;
-#endif
+  #endif
   printf("\t- Mass balance of Ca     (calcium)\n") ;
   printf("\t- Mass balance of Si     (silicon)\n") ;
   printf("\t- Mass balance of Na     (sodium)\n") ;
   printf("\t- Mass balance of K      (potassium)\n") ;
-#ifdef E_CHLORINE
+  #ifdef E_CHLORINE
   printf("\t- Mass balance of Cl     (chlorine)\n") ;
-#endif
+  #endif
   printf("\t- Total mass balance     (mass)\n") ;
   printf("\t- Charge balance         (charge)\n") ;
-#ifdef E_ENEUTRAL
+  #ifdef E_ENEUTRAL
   printf("\t- Electroneutrality      (electroneutrality)\n") ;
-#endif
-#ifdef E_AIR
+  #endif
+  #ifdef E_AIR
   printf("\t- Mass blance of air     (air)\n") ;
-#endif
+  #endif
   
   printf("\n") ;
   printf("The 7-10 primary unknowns are:\n") ;
   printf("\t- Liquid pressure                  (p_l)\n") ;
-#ifdef E_AIR
+  #ifdef E_AIR
   printf("\t- Gas pressure                     (p_g)\n") ;
-#endif
+  #endif
   printf("\t- Electric potential x F/RT        (psi) \n") ;
   printf("\t- Carbon dioxide gas concentration (c_co2 or logc_co2)\n") ;
   printf("\t- Potassium concentration          (c_k or logc_k)\n") ;
   printf("\t- Sodium concentration             (c_na or logc_na)\n") ;
-#if defined (U_ZN_Ca_S)
-  printf("\t- Zeta unknown for calcium         (z_ca)\n") ;
-  printf("\t   \t z_ca is defined as:\n") ;
-  printf("\t   \t z_ca = n_ch/n0 + log(s_ch)  for c_co2 < c_co2_eq\n") ;
-  printf("\t   \t z_ca = n_cc/n0 + log(s_cc)  for c_co2 > c_co2_eq\n") ;
-#elif defined (U_LogS_CH)
-  printf("\t- Log10 of saturation index of CH  (logs_ch)\n") ;
-#endif
+  if(I_U_CALCIUM == I_U_ZN_Solid) {
+    printf("\t- Zeta unknown for calcium         (z_ca)\n") ;
+    printf("\t   \t z_ca is defined as:\n") ;
+    printf("\t   \t z_ca = n_ch/n0 + log(s_ch)  for c_co2 < c_co2_eq\n") ;
+    printf("\t   \t z_ca = n_cc/n0 + log(s_cc)  for c_co2 > c_co2_eq\n") ;
+  } else if(I_U_CALCIUM == I_U_LogS) {
+    printf("\t- Log10 of saturation index of CH  (logs_ch)\n") ;
+  }
   printf("\t- Zeta unknown for silicon         (z_si)\n") ;
   printf("\t   \t z_si is defined as:\n") ;
   printf("\t   \t z_si = n_si/n0 + log(s_sh/s_sh_eq)\n") ;
-#ifdef E_CHLORINE
+  #ifdef E_CHLORINE
   printf("\t- Chloride ion concentration       (c_cl or logc_cl)\n") ;
-#endif
-#ifdef E_ENEUTRAL
+  #endif
+  #ifdef E_ENEUTRAL
   printf("\t- Hydroxide ion concentration     (c_oh or logc_oh or z_oh)\n") ;
-#endif
+  #endif
   
   printf("\n") ;
   printf("PAY ATTENTION to units : \n") ;
@@ -1266,26 +1225,24 @@ int ComputeInitialState(Element_t* el)
     for(int i = 0 ; i < nn ; i++) {
       Values_d& val = *mpm.InitializeValues(el,0,i);
       
-      #ifdef U_LogC_Na
-        LogC_Na(u,i)  = val.U_sodium ;
-      #else
-        C_Na(u,i)     = pow(10,val.U_sodium) ;
-      #endif
+      if(I_U_SODIUM == I_U_LogConcentration) {
+        U_SODIUM(u,i) = val.U_sodium;
+      } else if(I_U_SODIUM == I_U_Concentration) {
+        U_SODIUM(u,i) = pow(10,val.U_sodium);
+      }
       
-      #ifdef U_LogC_K
-        LogC_K(u,i)   = val.U_potassium ;
-      #else
-        C_K(u,i)      = pow(10,val.U_potassium) ;
-      #endif
+      if(I_U_POTASSIUM == I_U_LogConcentration) {
+        U_POTASSIUM(u,i) = val.U_potassium;
+      } else if(I_U_POTASSIUM == I_U_Concentration) {
+        U_POTASSIUM(u,i) = pow(10,val.U_potassium);
+      }
 
       #ifdef E_ENEUTRAL
-        #if defined (U_LogC_OH)
-          LogC_OH(u,i) = log10(val.Concentration_oh) ;
-        #elif defined (U_C_OH)
-          C_OH(u,i)    = val.Concentration_oh ;
-        #elif defined (U_Z_OH)
-          Z_OH(u,i)    = Z_OHDefinition(c_oh,c_h) ;
-        #endif
+        if(I_U_ENEUTRAL == I_U_LogConcentration) {
+          U_ENEUTRAL(u,i) = log10(val.Concentration_oh) ;
+        } else if(I_U_ENEUTRAL == I_U_Concentration) {
+          U_ENEUTRAL(u,i)    = val.Concentration_oh ;
+        }
       #endif
     }
   }
@@ -1364,8 +1321,7 @@ int  ComputeMatrix(Element_t* el,double t,double dt,double* k)
   #endif
   #endif
 
-  #ifdef U_C_Na
-  {
+  if(I_U_SODIUM == I_U_Concentration) {
     double** u = Element_ComputePointerToNodalUnknowns(el) ;
     
     for(int i = 0 ; i < 2*NEQ ; i++){
@@ -1373,10 +1329,8 @@ int  ComputeMatrix(Element_t* el,double t,double dt,double* k)
       K(i,E_SODIUM+NEQ) /= Ln10*C_Na(u,1) ;
     }
   }
-  #endif
 
-  #ifdef U_C_K
-  {
+  if(I_U_POTASSIUM == I_U_Concentration) {
     double** u = Element_ComputePointerToNodalUnknowns(el) ;
     
     for(int i = 0 ; i < 2*NEQ ; i++){
@@ -1384,11 +1338,9 @@ int  ComputeMatrix(Element_t* el,double t,double dt,double* k)
       K(i,E_POTASSIUM+NEQ) /= Ln10*C_K(u,1) ;
     }
   }
-  #endif
   
   #ifdef E_ENEUTRAL
-  #if defined (U_C_OH)
-  {
+  if(I_U_ENEUTRAL == I_U_Concentration) {
     double** u = Element_ComputePointerToNodalUnknowns(el) ;
     
     for(int i = 0 ; i < 2*NEQ ; i++){
@@ -1396,21 +1348,10 @@ int  ComputeMatrix(Element_t* el,double t,double dt,double* k)
       K(i,E_ENEUTRAL+NEQ) /= Ln10*C_OH(u,1) ;
     }
   }
-  #elif defined (U_Z_OH)
-  {
-    double** u = Element_ComputePointerToNodalUnknowns(el) ;
-    
-    for(int i = 0 ; i < 2*NEQ ; i++){
-      K(i,E_ENEUTRAL)     *= dLogC_OHdZ_OH(Z_OH(u,0)) ;
-      K(i,E_ENEUTRAL+NEQ) *= dLogC_OHdZ_OH(Z_OH(u,1)) ;
-    }
-  }
-  #endif
   #endif
   
   #ifdef E_CHLORINE
-  #ifdef U_C_Cl
-  {
+  if(I_U_CHLORINE == I_U_Concentration) {
     double** u = Element_ComputePointerToNodalUnknowns(el) ;
     
     for(int i = 0 ; i < 2*NEQ ; i++){
@@ -1418,7 +1359,6 @@ int  ComputeMatrix(Element_t* el,double t,double dt,double* k)
       K(i,E_CHLORINE+NEQ) /= Ln10*C_Cl(u,1) ;
     }
   }
-  #endif
   #endif
   #undef K
 
@@ -1903,8 +1843,7 @@ void MPM_t::SetIncrementOfPrimaryVariables(Element_t* el,double* dui)
 
       dui[E_SODIUM   ] =  1.e-3 * ObVal_GetValue(obval + E_SODIUM) ;
       /* Derivation wrt LogC_Na -> relative value */
-      #ifdef U_C_Na
-      {
+      if(I_U_SODIUM == I_U_Concentration) {
         double un_sodium = 0;
         
         for(int i = 0 ; i < nn ; i++) {
@@ -1913,12 +1852,10 @@ void MPM_t::SetIncrementOfPrimaryVariables(Element_t* el,double* dui)
         
         dui[E_SODIUM   ] =  1.e-3 * ObVal_GetRelativeValue(obval + E_SODIUM,un_sodium) ;
       }
-      #endif
     
       dui[E_POTASSIUM] =  1.e-3 * ObVal_GetValue(obval + E_POTASSIUM) ;
       /* Derivation wrt LogC_K -> relative value */
-      #ifdef U_C_K
-      {
+      if(I_U_POTASSIUM == I_U_Concentration) {
         double un_potassium = 0;
         
         for(int i = 0 ; i < nn ; i++) {
@@ -1927,19 +1864,18 @@ void MPM_t::SetIncrementOfPrimaryVariables(Element_t* el,double* dui)
         
         dui[E_POTASSIUM] =  1.e-3 * ObVal_GetRelativeValue(obval + E_POTASSIUM,un_potassium) ;
       }
-      #endif
 
       dui[E_CALCIUM  ] =  1.e-4 * ObVal_GetValue(obval + E_CALCIUM) ;
       for(int i = 0 ; i < nn ; i++) {
         un_calcium  += U_CALCIUM(u_n,i)/nn;
         u_calcium   += U_CALCIUM(u,i)/nn;
       }
-      #if defined (U_ZN_Ca_S)
+      if(I_U_CALCIUM == I_U_ZN_Solid) {
         dui[E_CALCIUM  ] =  1.e-4 * ObVal_GetAbsoluteValue(obval + E_CALCIUM,un_calcium) ;
         dui[E_CALCIUM  ] *= ((u_calcium > un_calcium) ? 1 : -1) ;
-      #elif defined (U_LogS_CH)
+      } else if(I_U_CALCIUM == I_U_LogS) {
         dui[E_CALCIUM  ] =  1.e-4 * ObVal_GetAbsoluteValue(obval + E_CALCIUM,un_calcium) ;
-      #endif
+      }
   
       #ifdef E_SILICON
       {
@@ -1968,24 +1904,17 @@ void MPM_t::SetIncrementOfPrimaryVariables(Element_t* el,double* dui)
           un_eneutral += U_ENEUTRAL(u_n,i)/nn;
         }
         dui[E_ENEUTRAL ] =  1.e-2 * ObVal_GetValue(obval + E_ENEUTRAL) ;
-        #if defined (U_C_OH)
+        if(I_U_ENEUTRAL == I_U_Concentration) {
           /* Derivation wrt LogC_OH -> relative value */
           dui[E_ENEUTRAL ] =  1.e-2 * ObVal_GetRelativeValue(obval + E_ENEUTRAL,un_eneutral) ;
-        #elif defined (U_Z_OH)
-        {
-          double z_oh = un_eneutral;
-          double c_oh = C_OHDefinition(z_oh);
-          dui[E_ENEUTRAL ] =  1.e-3 * ObVal_GetAbsoluteValue(obval + E_ENEUTRAL,z_oh) * c_oh * fabs(  dLogC_OHdZ_OH(z_oh)) ;
         }
-        #endif
       }
       #endif
 
       #ifdef E_CHLORINE
       dui[E_CHLORINE ] =  1.e-3 * ObVal_GetValue(obval + E_CHLORINE) ;
         /* Derivation wrt LogC_Cl -> relative value */
-        #ifdef U_C_Cl
-        {
+        if(I_U_CHLORINE == I_U_Concentration) {
           double un_chlorine = 0;
           
           for(int i = 0 ; i < nn ; i++) {
@@ -1994,7 +1923,6 @@ void MPM_t::SetIncrementOfPrimaryVariables(Element_t* el,double* dui)
           
           dui[E_CHLORINE ] =  1.e-3 * ObVal_GetRelativeValue(obval + E_CHLORINE,un_chlorine) ;
         }
-        #endif
       #endif
 
       #ifdef E_AIR
@@ -2113,19 +2041,15 @@ Values_t<T>* MPM_t::Integrate(Element_t* el,const double& t,const double& dt,Val
     HardenedCementChemistry_SetInput(hcc,LogC_CO2,logc_co2aq) ;
     #endif
 
-    #if defined (U_ZN_Ca_S)
-    {
+    if(I_U_CALCIUM == I_U_ZN_Solid) {
       T si_ch_cc = Log10SaturationIndexOfCcH(u_calcium) ;
           
       HardenedCementChemistry_SetInput(hcc,SI_CH_CC,si_ch_cc) ;
-    }
-    #elif defined (U_LogS_CH)
-    {
+    } else if(I_U_CALCIUM == I_U_LogS) {
       T si_ch = Log10SaturationIndexOfCH(u_calcium) ;
           
       HardenedCementChemistry_SetInput(hcc,SI_CH,si_ch) ;
     }
-    #endif
         
     {
       T si_csh = Log10SaturationIndexOfCSH(u_silicon) ;
@@ -2597,19 +2521,15 @@ Values_d*  MPM_t::Initialize(Element_t* el,double const& t,Values_d& val)
     HardenedCementChemistry_SetInput(hcc,LogC_CO2,logc_co2aq) ;
     #endif
     
-    #if defined (U_ZN_Ca_S)
-    {
+    if(I_U_CALCIUM == I_U_ZN_Solid) {
       double si_ch_cc = Log10SaturationIndexOfCcH(u_calcium) ;
-        
+          
       HardenedCementChemistry_SetInput(hcc,SI_CH_CC,si_ch_cc) ;
-    }
-    #elif defined (U_LogS_CH)
-    {
+    } else if(I_U_CALCIUM == I_U_LogS) {
       double si_ch = Log10SaturationIndexOfCH(u_calcium) ;
           
       HardenedCementChemistry_SetInput(hcc,SI_CH,si_ch) ;
     }
-    #endif
         
     {
       double si_csh = Log10SaturationIndexOfCSH(u_silicon) ;
@@ -2727,19 +2647,15 @@ int concentrations_oh_na_k(double c_co2,double u_calcium,double u_silicon,double
     HardenedCementChemistry_SetInput(hcc,LogC_CO2,logc_co2aq) ;
     #endif
 
-    #if defined (U_ZN_Ca_S)
-    {
+    if(I_U_CALCIUM == I_U_ZN_Solid) {
       double si_ch_cc = Log10SaturationIndexOfCcH(u_calcium) ;
           
       HardenedCementChemistry_SetInput(hcc,SI_CH_CC,si_ch_cc) ;
-    }
-    #elif defined (U_LogS_CH)
-    {
+    } else if(I_U_CALCIUM == I_U_LogS) {
       double si_ch = Log10SaturationIndexOfCH(u_calcium) ;
           
       HardenedCementChemistry_SetInput(hcc,SI_CH,si_ch) ;
     }
-    #endif
         
     {
       double si_csh = Log10SaturationIndexOfCSH(u_silicon) ;

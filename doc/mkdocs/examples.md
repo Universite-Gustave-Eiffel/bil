@@ -4,17 +4,19 @@ This chapter presents annotated examples for each of the models available in Bil
 
 $$\frac{\partial m_A}{\partial t} + \nabla \cdot \mathbf{w}_A = 0$$
 
-where $m_A$ is the mass content of $A$ per unit volume of material and $\mathbf{w}_A$ is the mass flow vector of $A$. There is no source term in all these equations because it is implicitly assumed that each equation accounts for the content of $A$ in every phase of the material, whether solid, liquid, or gas. When $A$ refers to some atom (e.g. Ca, Si, Cl, etc...) the equation can refer equivalently to the conservation of the mole content instead of the mass content. There are two situations when $A$ doesn't refer to an atom or a species: the conservation of the total mass (in this case $A$ is either absent or is 'T') and the conservation of the total charge that ions carry (in this case $A$ is noted 'Q').
+where $m_A$ is the mass content of $A$ per unit volume of material and $\mathbf{w}_A$ is the mass flow vector of $A$. There is no source term in all these equations because it is implicitly assumed that each equation accounts for the content of $A$ in every phase of the material, whether solid, liquid, or gas. When $A$ refers to some atom (e.g. Ca, Si, Cl, etc...) the equation can refer equivalently to the conservation of the mole content instead of the mass content. There are two situations when $A$ doesn't refer to an atom or a species: the conservation of the total mass (in this case $A$ is either absent or is noted 'tot') and the conservation of the total charge that ions carry (in this case $A$ is noted 'q').
 
 The static conservation of momemtum or the mechanical equilibrium equation reads
 
 $$\nabla \cdot \boldsymbol{\sigma} + \mathbf{f} = \mathbf{0}$$
 
+**Important note:** throughout the code Bil, the continuum mechanics convention is adopted for the sign of the (Cauchy) stress and strain tensor components, namely the traction is positive and the compression is negative.
+
 When relevant there is an additional equation expressing the electroneutrality of the material or more specifically the pore electrolyte solution:
 
 $$\sum_i z_i \rho_i = 0$$
 
-where $z_i$ stands for the electric charge of the ion $i$ and $\rho_i$ is the mole concentration of $i$ in the solution.
+where $z_i$ stands for the electric charge of the ion $i$ and $\rho_i$ is the mole concentration of $i$ in the solution. This equation stems from Maxwell's electrostatic equation, which degenerates to electroneutrality at the macroscale.
 
 Finally some models need a thermal equation which can be expressed by an entropy balance:
 

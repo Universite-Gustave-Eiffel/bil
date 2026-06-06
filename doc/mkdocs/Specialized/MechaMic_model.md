@@ -7,7 +7,7 @@
 > **Bil model author:** P. Dangla (Université Gustave Eiffel)
 
 ---
-
+<!--
 ## Table of contents
 
 1. [Context and objective](#1-context-and-objective)
@@ -19,6 +19,7 @@
 7. [Results and material behavior](#7-results-and-material-behavior)
 
 ---
+-->
 
 ## 1. Context and objective
 

@@ -9,7 +9,7 @@
 > **BIL internal title:** `"Carbonation of CBM with scCO2 (2012)"`
 
 ---
-
+<!--
 ## Table of contents
 
 1. [Context and objective](#1-context-and-objective)
@@ -29,6 +29,7 @@
 9. [Bibliographic references](#9-bibliographic-references)
 
 ---
+-->
 
 ## 1. Context and objective
 

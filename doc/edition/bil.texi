@@ -8,7 +8,7 @@
 @setfilename        bil.info
 @include version.texi
 @set BIL-WEB        @uref{http://bil.ifsttar.fr}
-@set COPYRIGHT      @copyright{} 2002-2006 Patrick Dangla.
+@set COPYRIGHT      @copyright{} 2002-2026 Patrick Dangla.
 @c @set BIL            Bil-@value{BIL-VERSION} @c Not used
 @c
 @documentlanguage en

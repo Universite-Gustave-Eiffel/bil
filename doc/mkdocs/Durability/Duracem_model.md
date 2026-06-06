@@ -7,7 +7,7 @@
 > **Bil model author:** P. Dangla et al. (Université Gustave Eiffel)
 
 ---
-
+<!--
 ## Table of Contents
 
 1. [Context and Objective](#1-context-and-objective)
@@ -27,6 +27,7 @@
 9. [References](#9-references)
 
 ---
+-->
 
 ## 1. Context and Objective
 
@@ -43,7 +44,7 @@ Duracem serves as the basis for three more specialized derived models:
 | **Chloricem** | Chlorides only |
 | **Carbochloricem** | Coupled carbonation + chlorides |
 
-The test case `base/Duracem/` represents a 1D column of ordinary Portland cement (OPC) paste exposed at the surface to air (CO₂ at 16% vol. after a transient) over a duration of 2 days.
+The test case `Duracem` represents a 1D column of ordinary Portland cement (OPC) paste exposed at the surface to air (CO₂ at 16% vol. after a transient) over a duration of 2 days.
 
 ---
 
@@ -55,7 +56,7 @@ The test case `base/Duracem/` represents a 1D column of ordinary Portland cement
 4. **Single liquid phase** (aqueous pore solution) that is partially saturating; no explicit modeling of the gas phase as a dynamic constituent (the `E_AIR` option is disabled in the test case).
 5. **Local vapor–liquid equilibrium** (Kelvin's law) for the relative water vapor pressure.
 6. **Hardened concrete chemistry resolved locally** at each Gauss point by the `HardenedCementChemistry` module, which computes equilibrium concentrations of all ionic species from the primary unknowns (saturation indices, total concentrations, pH).
-7. **Three main solid phases**: portlandite (CH), C-S-H, and calcite (CC).
+7. **Main solid phases**: portlandite (CH), C-S-H, calcite (CC), Friedel's salt
 8. **Ionic transport in solution** by diffusion (Nernst-Planck via `CementSolutionDiffusion`) + advection (Darcy).
 9. **Gaseous CO₂ transport** by diffusion in partially desaturated pores (Fick's law).
 
@@ -156,9 +157,9 @@ where $f(\phi)$ is the permeability correction coefficient (Verma & Pruess model
 
 #### Ionic Diffusive Fluxes (Nernst-Planck)
 
-$$\mathbf{j}_{\alpha,\text{diff}} = -\tau(\phi,s_l)\,c_{\alpha,l}\,\nabla \mu_\alpha$$
+$$\mathbf{j}_{\alpha,\text{diff}} = -\tau(\phi,s_l)\,c_{\alpha,l}\,\nabla (\mu_\alpha/RT)$$
 
-where $\mu_\alpha = \mu_\alpha^0 + RT\ln(c_\alpha/c_0) + z_\alpha F \psi$ is the electrochemical potential of species $\alpha$, and $\tau$ is the tortuosity factor of the porous network (see §4.6).
+where $\mu_\alpha = \mu_\alpha^0 + RT(\ln(a_\alpha) + z_\alpha \psi)$ is the electrochemical potential of species $\alpha$, and $\tau$ is the tortuosity factor of the porous network (see §4.6).
 
 #### Gaseous CO₂ Flux (Fick)
 
@@ -180,17 +181,17 @@ $$\mathbf{W}_q = \sum_\alpha z_\alpha \mathbf{j}_{\alpha,\text{diff}}$$
 
 The charge balance is quasi-stationary ($\partial_t \approx 0$), which gives $\nabla \cdot \mathbf{W}_q = 0$, an equation solved for $\psi$.
 
-### 4.3 Hardened Concrete Chemistry
+### 4.3 Hardened Concrete Chemistry (Thermochemical database CEMDATA)
 
-The solution chemistry is resolved locally by the `HardenedCementChemistry` module in the **CaO-SiO₂-Na₂O-K₂O-CO₂-H₂O** system. This module computes at thermodynamic equilibrium the concentrations of all ionic species from the primary unknowns (saturation indices, total concentrations, pH).
+The solution chemistry is resolved locally by the `HardenedCementChemistry` module based on the CEMDATA data base. This module computes at thermodynamic equilibrium the concentrations of all ionic species from the primary unknowns (saturation indices, total concentrations, pH).
 
-**Species in solution**: H⁺, OH⁻, Ca²⁺, CaOH⁺, Ca(OH)₂(aq), CaCO₃(aq), CaHCO₃⁺, H₂SiO₄²⁻, H₃SiO₄⁻, H₄SiO₄, CaH₂SiO₄, CaH₃SiO₄⁺, Na⁺, NaOH, NaHCO₃, NaCO₃⁻, K⁺, KOH, CO₂(aq), HCO₃⁻, CO₃²⁻, Cl⁻ (optional), etc.
+**Species in solution**: CEMDATA (H2O, H⁺, OH⁻, Ca²⁺, CaOH⁺, CaCO₃(aq), CaHCO₃⁺, H₂SiO₄²⁻, H₃SiO₄⁻, H₄SiO₄, CaH₂SiO₄, CaH₃SiO₄⁺, Na⁺, NaOH, NaHCO₃, NaCO₃⁻, K⁺, KOH, CO₂(aq), HCO₃⁻, CO₃²⁻, Cl⁻, $\ldots$).
 
 **Solid phases** present:
-- **Portlandite** Ca(OH)₂ (CH)
-- **C-S-H** with variable Ca/Si ratio ($0 \le x \le 1.7$)
-- **Calcite** CaCO₃ (CC)
-- **Friedel's salt** 3CaO·Al₂O₃·CaCl₂·10H₂O (if E_CHLORINE)
+  - **Portlandite** Ca(OH)₂ (CH)
+  - **C-S-H** with variable Ca/Si ratio ($0 \le x \le 1.7$)
+  - **Calcite** CaCO₃ (CC)
+  - **Friedel's salt** 3CaO·Al₂O₃·CaCl₂·10H₂O (if E_CHLORINE)
 
 ### 4.4 Dissolution/Precipitation Kinetics
 
@@ -216,7 +217,7 @@ The decalcification of C-S-H is modeled by **equilibrium-driven dissolution/prec
 
 Calcite precipitation (when $S_{\text{CC}} > 1$) can be either at equilibrium or kinetic:
 
-$$\frac{dn_{\text{CC}}}{dt} = \text{rate\_calcite}\,(S_{\text{CC}} - 1)$$
+$$\frac{dn_{\text{CC}}}{dt} = \text{rate_calcite}\,(S_{\text{CC}} - 1)$$
 
 In the active configuration of `base/Duracem` (`U_ZN_Ca_S`), calcite is at **equilibrium** with respect to CH: the sum $n_{\text{CH}} + n_{\text{CC}} = N_{\text{CcH}}(z_{\text{Ca}})$ is enforced.
 

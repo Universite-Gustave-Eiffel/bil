@@ -14,6 +14,10 @@ Mesh
 1 1
 
 
+Models
+Name = Duracem   Equations = carbon silicon   Unknowns = logc_co2 z_si
+
+
 Material
 Model = Duracem
 InitialPorosity = 0.379

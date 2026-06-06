@@ -9,7 +9,7 @@
 > **Internal title:** *"Internal/External sulfate attack of concrete (2017)"* (similar to Sulfaco)
 
 ---
-
+<!--
 ## Table of contents
 
 1. [Context and objective](#1-contexte-et-objectif)
@@ -28,7 +28,7 @@
 8. [Conseils pour étendre le modèle](#8-conseils-pour-étendre-le-modèle)
 9. [Bibliographic references](#9-références-bibliographiques)
 
----
+-->
 
 ## 1. Context and objective
 

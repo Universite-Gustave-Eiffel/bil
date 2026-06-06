@@ -7,7 +7,7 @@
 > **Model authors:** P. Dangla (Université Gustave Eiffel)
 
 ---
-
+<!--
 ## Table of Contents
 
 1. [Context and Objective](#1-context-and-objective)
@@ -23,7 +23,7 @@
 8. [Step-by-Step Description of Input Files](#8-step-by-step-description-of-input-files)
 9. [References](#9-references)
 
----
+-->
 
 ## 1. Context and Objective
 
@@ -34,18 +34,6 @@ The **Poroplast** model extends the Biot poro-elasticity model (see model M7) by
 - **Permanent deformations** and **borehole closure** over time.
 
 The test case presented here simulates the **progressive excavation of a cylindrical borehole** in a saturated porous medium initially subjected to an isotropic stress state (lithostatic equilibrium). Excavation removes the mechanical support at the inner wall, inducing stress redistribution that may exceed the material strength.
-
-```mermaid
-graph TD
-    A["Initial state:<br>σ₀ = -11.5 MPa (iso)<br>p_l0 = 4.7 MPa"] --> B["Progressive excavation<br>t ∈ [0, 1.5×10⁶ s]"]
-    B --> C{"f(σ') ≤ 0 ?"}
-    C -->|Yes: elastic zone| D["Poro-elastic response<br>ε = ε^e, M7-like"]
-    C -->|No: plastic zone| E["Drucker-Prager return mapping<br>ε = ε^e + ε^p"]
-    E --> F["Amplified porosity<br>(β × tr(ε^p))"]
-    D --> G["Dissipation of p_l<br>by drainage (Darcy)"]
-    F --> G
-    G --> H["Settlement and borehole<br>closure"]
-```
 
 ---
 
@@ -60,7 +48,6 @@ graph TD
 5. **Small strains**: Linearized displacement formulation.
 6. **Darcy's law**: Fluid flux is proportional to the pressure gradient, with no capillary hysteresis.
 
----
 
 ## 3. Variables and Notation
 

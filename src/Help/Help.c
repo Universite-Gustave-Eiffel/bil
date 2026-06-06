@@ -1254,10 +1254,10 @@ void (Help_Model)(void)
   \t N        = Name of the model\n") ;
   
   Message_Direct("\
-  \t E[j]     = Name of the jth equation\n") ;
+  \t E[]      = Names of equations for which the unknowns are renamed\n") ;
   
   Message_Direct("\
-  \t U[j]     = Name of the jth unknown\n") ;
+  \t U[]      = New names of unknowns\n") ;
 }
 
 

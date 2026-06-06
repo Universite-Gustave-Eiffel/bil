@@ -5,7 +5,7 @@
 > **Input file:** `doc/mkdocs/Flow/Fick/Fick`
 
 ---
-
+<!--
 ## Table of contents
 
 1. [Context and objective](#1-context-and-objective)
@@ -16,12 +16,13 @@
 6. [Bibliographic references](#6-bibliographic-references)
 
 ---
+-->
 
 ## 1. Context and objective
 
 The **Fick** model simulates the "pure" diffusion of a solute (typically alkali ions such as Sodium $Na^+$ or Potassium $K^+$) dissolved in an inert, water-saturated porous medium. It is based on **Fick's Second Law**, which describes how a material concentration field fluctuates over time under the sole influence of its own gradients. There is no macroscopic movement of the carrier fluid (no convection, no advection).
 
-The example `test_examples/Fick/Fick` is a one-dimensional demonstration (`1 Axis`) of the leaching of a block of material (a 3 cm rod). It represents a specimen initially saturated with salt (uniform initial concentration), one end of which is suddenly "flushed" upon contact with pure water, causing desorption/diffusion from the interior outward. The history is traced over a full year (31,536,000 seconds).
+The example `Fick` is a one-dimensional demonstration (`1 Axis`) of the leaching of a block of material (a 3 cm rod). It represents a specimen initially saturated with salt (uniform initial concentration), one end of which is suddenly "flushed" upon contact with pure water, causing desorption/diffusion from the interior outward. The history is traced over a full year (31,536,000 seconds).
 
 ---
 
@@ -38,19 +39,19 @@ The example `test_examples/Fick/Fick` is a one-dimensional demonstration (`1 Axi
 ### Unknowns
 | Symbol | Meaning |
 |---------|-----------------|
-| $c_{\text{na}}$   | Molarity or primary solute concentration (state unknown) |
+| $c_{\text{Na}}$   | Molarity or primary solute concentration (state unknown) |
 
 ### Mass conservation
 The nodal equation implicitly named `solute` expresses a balance of molar masses of Na. Its implementation follows the classical time scheme:
 
-$$ \frac{\partial c_{\text{na}}}{\partial t} \phi  + \nabla \cdot \mathbf{w}_{\text{na}} = 0 $$
+$$ \frac{\partial n_{\text{Na}}}{\partial t}  + \nabla \cdot \mathbf{w}_{\text{Na}} = 0 $$
 
-Where the discrete FVM balance implementation is: `(N_solute - N_soluten) + dt * div(W_solute) = 0`
+with $n_{\text{Na}} = \phi c_{\text{Na}}$. The discrete FVM balance implementation is: `(N_solute - N_soluten) + dt * div(W_solute) = 0`
 
 ### Fick's Flux (Constitutive law)
 The relationship governing the exchange vector between cells:
 
-$$ \mathbf{w}_{\text{na}} = - D_{\text{eff}} \nabla c_{\text{na}} - \dots $$
+$$ \mathbf{w}_{\text{Na}} = - D_{\text{eff}} \nabla c_{\text{Na}}$$
 
 With an effective transfer coefficient computed in the code as: $D_{\text{eff}} = D_{\text{water}} \cdot \tau(\phi)$ where $\tau$ is the tortuosity, and $D_{\text{water}}$ is the diffusivity of $Na^+$ in water at $298^\circ K$.
 

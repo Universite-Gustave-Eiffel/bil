@@ -9,7 +9,7 @@
 > **Bil model authors:** P. Dangla et al. (Université Gustave Eiffel)
 
 ---
-
+<!--
 ## Table of Contents
 
 1. [Context and Objective](#1-context-and-objective)
@@ -38,7 +38,7 @@
 8. [Numerical Discretization](#8-numerical-discretization)
 9. [References](#9-references)
 
----
+-->
 
 ## 1. Context and Objective
 

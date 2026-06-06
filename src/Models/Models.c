@@ -91,11 +91,9 @@ Models_t* (Models_Create)(DataFile_t* datafile,Geometry_t* geom)
   Message_Direct("\n") ;
 
 
-  {
-    int i ;
-    
+  {    
     /* Read the models */
-    for(i = 0 ; i < n_models ; i++) {
+    for(int i = 0 ; i < n_models ; i++) {
       Model_t* model = Models_GetModel(models) + i ;
       char* c = DataFile_FindNthToken(datafile,"Model",",",i + 1) ;
       

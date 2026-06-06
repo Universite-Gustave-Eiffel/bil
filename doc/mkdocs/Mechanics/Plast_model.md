@@ -7,7 +7,7 @@
 > **Model authors:** P. Dangla (Université Gustave Eiffel)
 
 ---
-
+<!--
 ## Table of Contents
 
 1. [Context and Objective](#1-context-and-objective)
@@ -32,7 +32,7 @@
 9. [Numerical Implementation (`Plast.cpp`)](#9-numerical-implementation-plastcpp)
 10. [References](#10-references)
 
----
+-->
 
 ## 1. Context and Objective
 
@@ -43,18 +43,6 @@ This model is particularly well-suited to three major classes of problems:
 1. **Periodic homogenization**: computation of the effective macroscopic response of a heterogeneous material (composite, geomaterial with inclusions) subjected to a prescribed macroscopic loading via a mean displacement gradient.
 2. **Local plasticity**: simulations of geomaterials (rocks, cements, clays) exhibiting cracking or plastic flow under stress.
 3. **Axisymmetric structures under pressure**: example of a cylindrical ring under internal/external pressure.
-
-```mermaid
-graph TD
-    A["Imposed macroscopic gradient<br>E_ij (or boundary loading)"] --> B("Total strain<br>ε = ε_e + ε_p")
-    B --> C["Elastic predictor<br>σ_trial = C : ε_e_trial"]
-    C --> D{"Criterion f(σ_trial) > 0 ?"}
-    D -- No --> E["Elastic behavior<br>σ = σ_trial"]
-    D -- Yes --> F["Return Mapping<br>(Drucker-Prager or Cam-Clay)"]
-    F --> G["Corrected σ + plastic strains Δε_p"]
-    G --> H["Mechanical residual<br>∫ σ : δε dΩ = ∫ f·δu dΩ"]
-    E --> H
-```
 
 ---
 

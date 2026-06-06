@@ -74,7 +74,7 @@ void Log10EquilibriumConstantOfHomogeneousReactionInWater_PrintCEMDATA(double T)
   REACSUBTITLE("---------------------------------------------------") ;
   
   REACSUBTITLE(" ") ;
-  REACSUBTITLE("Aluminium compounds:") ;
+  REACSUBTITLE("Aluminium compounds") ;
   PREACT("AlO2[-] + 2H[+] = AlO[+] + H2O",LogKr(AlO2_2H__AlO_H2O));
   PREACT("AlO2[-] + 3H[+] = AlOH[+2] + H2O",LogKr(AlO2_3H__AlOH_H2O));
   PREACT("AlO2[-] + 4H[+] = Al[+3] + 2H2O",LogKr(AlO2_4H__Al_2H2O));
@@ -147,17 +147,17 @@ void Log10EquilibriumConstantOfHomogeneousReactionInWater_PrintCEMDATA(double T)
   REACSUBTITLE(" ") ;
   REACSUBTITLE("Chemical reactions involving compounds of type II");
   REACSUBTITLE("-------------------------------------------------");
-  REACSUBTITLE("Aluminium-Silicon: compounds");
+  REACSUBTITLE("Aluminium-Silicon compounds");
   PREACT("AlO2[-] + H2O + SiO2 = AlSiO5[-3] + 2H[+]",LogKr(AlO2_H2O_SiO2__AlSiO5_2H));
   PREACT("AlO2[-] + 3H[+] + SiO2 = AlHSiO3[+2] + H2O",LogKr(AlO2_3H_SiO2__AlHSiO3_H2O));
   
   REACSUBTITLE(" ") ;
-  REACSUBTITLE("Aluminium-Sulfur: compounds");
+  REACSUBTITLE("Aluminium-Sulfur compounds");
   PREACT("SO4[-2] + AlO2[-] + 4H[+] = AlSO4[+] + 2H2O",LogKr(SO4_AlO2_4H__AlSO4_2H2O));
   PREACT("2SO4[-2] + AlO2[-] + 4H[+] = AlS2O8[-] + 2H2O",LogKr(2SO4_AlO2_4H__AlSO4SO4_2H2O));
   
   REACSUBTITLE(" ") ;
-  REACSUBTITLE("Calcium-Carbon: compounds");
+  REACSUBTITLE("Calcium-Carbon compounds");
   PREACT("CO3[-2] + Ca[+2] + H[+] = CaHCO3[+]",LogKr(CO3_Ca_H__CaHCO3));
   PREACT("CO3[-2] + Ca[+2] = CaCO3",LogKr(CO3_Ca__CaCO3));
   
@@ -167,27 +167,27 @@ void Log10EquilibriumConstantOfHomogeneousReactionInWater_PrintCEMDATA(double T)
   PREACT("Ca[+2] + H2O + SiO2 = CaHSiO3[+] + H[+]",LogKr(Ca_H2O_SiO2__CaHSiO3_H));
   
   REACSUBTITLE(" ") ;
-  REACSUBTITLE("Calcium-Sulfur: compounds");
+  REACSUBTITLE("Calcium-Sulfur compounds");
   PREACT("Ca[+2] + SO4[-2] = CaSO4[0]",LogKr(Ca_SO4__CaSO4));
   
   REACSUBTITLE(" ") ;
-  REACSUBTITLE("Iron-Carbon: compounds");
+  REACSUBTITLE("Iron-Carbon compounds");
   PREACT("CO3[-2] + e[-] + 4H[+] + FeO2[-] = FeCO3 + 2H2O",LogKr(CO3_e_4H_FeO2__FeCO3_2H2O));
   PREACT("CO3[-2] + e[-] + 5H[+] + FeO2[-] = FeHCO3[+] + 2H2O",LogKr(CO3_e_5H_FeO2__FeHCO3_2H2O));
   
   REACSUBTITLE(" ") ;
-  REACSUBTITLE("Iron-Chlorine: compounds");
+  REACSUBTITLE("Iron-Chlorine compounds");
   PREACT("3Cl[-] + 4H[+] + FeO2[-] = FeCl3 + 2H2O",LogKr(3Cl_4H_FeO2__FeCl3_2H2O));
   PREACT("Cl[-] + e[-] + 4H[+] + FeO2[-] = FeCl[+] + 2H2O",LogKr(Cl_e_4H_FeO2__FeCl_2H2O));
   PREACT("Cl[-] + 4H[+] + FeO2[-] = FeCl[+2] + 2H2O",LogKr(Cl_4H_FeO2__FeCl_2H2O));
   PREACT("2Cl[-] + 4H[+] + FeO2[-] = FeCl2[+] + 2H2O",LogKr(2Cl_4H_FeO2__FeCl2_2H2O));
   
   REACSUBTITLE(" ") ;
-  REACSUBTITLE("Iron-Silicon: compounds");
+  REACSUBTITLE("Iron-Silicon compounds");
   PREACT("FeO2[-] + 3H[+] + SiO2 = FeHSiO3[+2] + H2O",LogKr(FeO2_3H_SiO2__FeHSiO3_H2O));
   
   REACSUBTITLE(" ") ;
-  REACSUBTITLE("Iron-Sulfur: compounds");
+  REACSUBTITLE("Iron-Sulfur compounds");
   PREACT("SO4[-2] + e[-] + 5H[+] + FeO2[-] = FeHSO4[+] + 2H2O",LogKr(SO4_e_5H_FeO2__FeHSO4_2H2O));
   PREACT("SO4[-2] + e[-] + 4H[+] + FeO2[-] = FeSO4 + 2H2O",LogKr(SO4_e_4H_FeO2__FeSO4_2H2O));
   PREACT("SO4[-2] + 4H[+] + FeO2[-] = FeSO4[+] + 2H2O",LogKr(SO4_4H_FeO2__FeSO4_2H2O));
@@ -195,17 +195,17 @@ void Log10EquilibriumConstantOfHomogeneousReactionInWater_PrintCEMDATA(double T)
   PREACT("2SO4[-2] + 4H[+] + FeO2[-] = FeS2O8[-] + 2H2O",LogKr(2SO4_4H_FeO2__FeSO4SO4_2H2O));
   
   REACSUBTITLE(" ") ;
-  REACSUBTITLE("Magnesium-Carbon: compounds");
+  REACSUBTITLE("Magnesium-Carbon compounds");
   PREACT("CO3[-2] + Mg[+2] + H[+] = MgHCO3[+]",LogKr(CO3_Mg_H__MgHCO3));
   PREACT("CO3[-2] + Mg[+2] = MgCO3",LogKr(CO3_Mg__MgCO3));
   
   REACSUBTITLE(" ") ;
-  REACSUBTITLE("Magnesium-Silicon: compounds");
+  REACSUBTITLE("Magnesium-Silicon compounds");
   PREACT("Mg[+2] + H2O + SiO2 = MgHSiO3[+] + H[+]",LogKr(Mg_H2O_SiO2__MgHSiO3_H));
   PREACT("Mg[+2] + H2O + SiO2 = MgSiO3 + 2H[+]",LogKr(Mg_H2O_SiO2__MgSiO3_2H));
   
   REACSUBTITLE(" ") ;
-  REACSUBTITLE("Magnesium-Sulfur: compounds");
+  REACSUBTITLE("Magnesium-Sulfur compounds");
   PREACT("SO4[-2] + Mg[+2] = MgSO4",LogKr(SO4_Mg__MgSO4));
   
   REACSUBTITLE(" ") ;
@@ -213,36 +213,36 @@ void Log10EquilibriumConstantOfHomogeneousReactionInWater_PrintCEMDATA(double T)
   PREACT("CO3[-2] + NO3[-] + 10e[-] + 13H[+] = HCN + 6H2O",LogKr(CO3_NO3_10e_13H__HCN_6H2O));
   
   REACSUBTITLE(" ") ;
-  REACSUBTITLE("Potassium-Sulfur: compounds");
+  REACSUBTITLE("Potassium-Sulfur compounds");
   PREACT("SO4[-2] + K[+] = KSO4[-]",LogKr(SO4_K__KSO4));
   
   REACSUBTITLE(" ") ;
-  REACSUBTITLE("Sodium-Carbon: compounds");
+  REACSUBTITLE("Sodium-Carbon compounds");
   PREACT("CO3[-2] + Na[+] + H[+] = NaHCO3",LogKr(CO3_Na_H__NaHCO3));
   PREACT("CO3[-2] + Na[+] = NaCO3[-]",LogKr(CO3_Na__NaCO3));
   
   REACSUBTITLE(" ") ;
-  REACSUBTITLE("Sodium-Sulfur: compounds");
+  REACSUBTITLE("Sodium-Sulfur compounds");
   PREACT("SO4[-2] + Na[+] = NaSO4[-]",LogKr(SO4_Na__NaSO4));
   
   REACSUBTITLE(" ") ;
-  REACSUBTITLE("Strontium-Carbon: compounds");
+  REACSUBTITLE("Strontium-Carbon compounds");
   PREACT("CO3[-2] + Sr[+2] = SrCO3",LogKr(CO3_Sr__SrCO3));
   PREACT("CO3[-2] + Sr[+2] + H[+] = SrHCO3[+]",LogKr(CO3_Sr_H__SrHCO3));
   
   REACSUBTITLE(" ") ;
-  REACSUBTITLE("Strontium-Silicon: compounds");
+  REACSUBTITLE("Strontium-Silicon compounds");
   PREACT("Sr[+2] + H2O + SiO2 = SrSiO3 + 2H[+]",LogKr(Sr_H2O_SiO2__SrSiO3_2H));
   
   REACSUBTITLE(" ") ;
-  REACSUBTITLE("Strontium-Sulfur: compounds");
+  REACSUBTITLE("Strontium-Sulfur compounds");
   PREACT("SO4[-2] + Sr[+2] = SrSO4",LogKr(SO4_Sr__SrSO4));
   
 
   REACSUBTITLE(" ") ;
   REACSUBTITLE("Compound of type III");
   REACSUBTITLE("--------------------");
-  REACSUBTITLE("Sulfur-Carbon-Nitrogen: compounds");
+  REACSUBTITLE("Sulfur-Carbon-Nitrogen compounds");
   PREACT("CO3[-2] + NO3[-] + SO4[-2] + 16e[-] + 20H[+] = SCN[-] + 10H2O",LogKr(CO3_NO3_SO4_16e_20H__SCN_10H2O));
   
   

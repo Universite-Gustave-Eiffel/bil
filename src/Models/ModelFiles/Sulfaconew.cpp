@@ -48,28 +48,15 @@ enum {
 
 
 /* Value of the nodal unknown (u and el must be used below) */
-#define UNKNOWN(n,i)     Element_GetValueOfNodalUnknown(el,u,n,i)
-#define UNKNOWNn(n,i)    Element_GetValueOfNodalUnknown(el,u_n,n,i)
-
+#define UNKNOWN(u,n,i)     Element_GetValueOfNodalUnknown(el,u,n,i)
 
 /* Generic names of nodal unknowns */
-#define U_Sulfur(n)    (UNKNOWN(n,E_SULFUR))
-#define Un_Sulfur(n)   (UNKNOWNn(n,E_SULFUR))
-
-#define U_charge(n)     (UNKNOWN(n,E_CHARGE))
-#define Un_charge(n)    (UNKNOWNn(n,E_CHARGE))
-
-#define U_Calcium(n)    (UNKNOWN(n,E_CALCIUM))
-#define Un_Calcium(n)   (UNKNOWNn(n,E_CALCIUM))
-
-#define U_Potassium(n)  (UNKNOWN(n,E_POTASSIUM))
-#define Un_Potassium(n) (UNKNOWNn(n,E_POTASSIUM))
-
-#define U_Aluminium(n)  (UNKNOWN(n,E_ALUMINIUM))
-#define Un_Aluminium(n) (UNKNOWNn(n,E_ALUMINIUM))
-
-#define U_eneutral(n)   (UNKNOWN(n,E_ENEUTRAL))
-#define Un_eneutral(n)  (UNKNOWNn(n,E_ENEUTRAL))
+#define U_Sulfur(u,n)     (UNKNOWN(u,n,E_SULFUR))
+#define U_charge(u,n)     (UNKNOWN(u,n,E_CHARGE))
+#define U_Calcium(u,n)    (UNKNOWN(u,n,E_CALCIUM))
+#define U_Potassium(u,n)  (UNKNOWN(u,n,E_POTASSIUM))
+#define U_Aluminium(u,n)  (UNKNOWN(u,n,E_ALUMINIUM))
+#define U_eneutral(u,n)   (UNKNOWN(u,n,E_ENEUTRAL))
 
 
 
@@ -127,46 +114,46 @@ enum {
 
 /* Names of nodal unknowns */
 #if defined (U_LogC_H2SO4) && !defined (U_C_H2SO4) && !defined (U_LogC_SO4) && !defined (U_C_SO4)
-  #define LogC_H2SO4(n)   U_Sulfur(n)
-  #define C_H2SO4(n)      (pow(10,LogC_H2SO4(n)))
+  #define LogC_H2SO4(u,n)   U_Sulfur(u,n)
+  #define C_H2SO4(u,n)      (pow(10,LogC_H2SO4(u,n)))
 #elif defined (U_C_H2SO4) && !defined (U_LogC_H2SO4) && !defined (U_LogC_SO4) && !defined (U_C_SO4)
-  #define C_H2SO4(n)      U_Sulfur(n)
-  #define LogC_H2SO4(n)   (log10(C_H2SO4(n)))
+  #define C_H2SO4(u,n)      U_Sulfur(u,n)
+  #define LogC_H2SO4(u,n)   (log10(C_H2SO4(u,n)))
 #elif defined (U_LogC_SO4) && !defined (U_C_SO4) && !defined (U_LogC_H2SO4) && !defined (U_C_H2SO4)
-  #define LogC_SO4(n)     U_Sulfur(n)
-  #define C_SO4(n)        (pow(10,LogC_SO4(n)))
+  #define LogC_SO4(u,n)     U_Sulfur(u,n)
+  #define C_SO4(u,n)        (pow(10,LogC_SO4(u,n)))
 #elif defined (U_C_SO4) && !defined (U_LogC_SO4) && !defined (U_LogC_H2SO4) && !defined (U_C_H2SO4)
-  #define C_SO4(n)        U_Sulfur(n)
-  #define LogC_SO4(n)     (log10(C_SO4(n)))
+  #define C_SO4(u,n)        U_Sulfur(u,n)
+  #define LogC_SO4(u,n)     (log10(C_SO4(u,n)))
 #else
   #error "Ambiguous or undefined unknown"
 #endif
 
 
 
-#define ZN_Ca_S(n)   U_Calcium(n)
+#define ZN_Ca_S(u,n)   U_Calcium(u,n)
 
-#define PSI(n)       U_charge(n)
+#define PSI(u,n)       U_charge(u,n)
 
 #if defined (U_LogC_K) && !defined (U_C_K)
-  #define LogC_K(n)     U_Potassium(n)
-  #define C_K(n)        (pow(10,LogC_K(n)))
+  #define LogC_K(u,n)     U_Potassium(u,n)
+  #define C_K(u,n)        (pow(10,LogC_K(u,n)))
 #elif defined (U_C_K) && !defined (U_LogC_K)
-  #define C_K(n)        U_Potassium(n)
-  #define LogC_K(n)     (log10(C_K(n)))
+  #define C_K(u,n)        U_Potassium(u,n)
+  #define LogC_K(u,n)     (log10(C_K(u,n)))
 #else
   #error "Ambiguous or undefined unknown"
 #endif
 
-#define ZN_Al_S(n)   U_Aluminium(n)
+#define ZN_Al_S(n)   U_Aluminium(u,n)
 
 #ifdef E_ENEUTRAL
   #if defined (U_LogC_OH) && !defined (U_C_OH)
-    #define LogC_OH(n)   U_eneutral(n)
-    #define C_OH(n)      (pow(10,LogC_OH(n)))
+    #define LogC_OH(u,n)   U_eneutral(u,n)
+    #define C_OH(u,n)      (pow(10,LogC_OH(u,n)))
   #elif defined (U_C_OH) && !defined (U_LogC_OH)
-    #define C_OH(n)      U_eneutral(n)
-    #define LogC_OH(n)   (log10(C_OH(n)))
+    #define C_OH(u,n)      U_eneutral(u,n)
+    #define LogC_OH(u,n)   (log10(C_OH(u,n)))
   #else
     #error "Ambiguous or undefined unknown"
   #endif
@@ -884,19 +871,19 @@ int ComputeInitialState(Element_t* el)
       Values_d& val = *mpm.InitializeValues(el,0,i);
       
       #ifdef U_LogC_K
-        LogC_K(i)   = val.U_potassium ;
+        LogC_K(u,i)   = val.U_potassium ;
       #else
-        C_K(i)      = pow(10,val.U_potassium) ;
+        C_K(u,i)      = pow(10,val.U_potassium) ;
       #endif
 
       #ifdef E_ENEUTRAL
         #if defined (U_LogC_OH)
-          LogC_OH(i) = log10(val.Concentration_oh) ;
+          LogC_OH(u,i) = log10(val.Concentration_oh) ;
         #elif defined (U_C_OH)
-          C_OH(i)    = val.Concentration_oh ;
+          C_OH(u,i)    = val.Concentration_oh ;
         #endif
       #else
-        C_OH(i)    = val.Concentration_oh ;
+        C_OH(u,i)    = val.Concentration_oh ;
       #endif
     }
   }
@@ -938,8 +925,8 @@ int  ComputeMatrix(Element_t* el,double t,double dt,double* k)
       double** u = Element_ComputePointerToNodalUnknowns(el) ;
     
       for(i = 0 ; i < 2*NEQ ; i++){
-        K(i,E_SULFUR)     /= Ln10*C_H2SO4(0) ;
-        K(i,E_SULFUR+NEQ) /= Ln10*C_H2SO4(1) ;
+        K(i,E_SULFUR)     /= Ln10*C_H2SO4(u,0) ;
+        K(i,E_SULFUR+NEQ) /= Ln10*C_H2SO4(u,1) ;
       }
     }
   #elif defined (U_C_SO4)
@@ -947,8 +934,8 @@ int  ComputeMatrix(Element_t* el,double t,double dt,double* k)
       double** u = Element_ComputePointerToNodalUnknowns(el) ;
     
       for(i = 0 ; i < 2*NEQ ; i++){
-        K(i,E_SULFUR)     /= Ln10*C_SO4(0) ;
-        K(i,E_SULFUR+NEQ) /= Ln10*C_SO4(1) ;
+        K(i,E_SULFUR)     /= Ln10*C_SO4(u,0) ;
+        K(i,E_SULFUR+NEQ) /= Ln10*C_SO4(u,1) ;
       }
     }
   #endif
@@ -959,8 +946,8 @@ int  ComputeMatrix(Element_t* el,double t,double dt,double* k)
     double** u = Element_ComputePointerToNodalUnknowns(el) ;
     
     for(i = 0 ; i < 2*NEQ ; i++){
-      K(i,E_POTASSIUM)     /= Ln10*C_K(0) ;
-      K(i,E_POTASSIUM+NEQ) /= Ln10*C_K(1) ;
+      K(i,E_POTASSIUM)     /= Ln10*C_K(u,0) ;
+      K(i,E_POTASSIUM+NEQ) /= Ln10*C_K(u,1) ;
     }
   }
   #endif
@@ -972,8 +959,8 @@ int  ComputeMatrix(Element_t* el,double t,double dt,double* k)
     double** u = Element_ComputePointerToNodalUnknowns(el) ;
     
     for(i = 0 ; i < 2*NEQ ; i++){
-      K(i,E_ENEUTRAL)     /= Ln10*C_OH(0) ;
-      K(i,E_ENEUTRAL+NEQ) /= Ln10*C_OH(1) ;
+      K(i,E_ENEUTRAL)     /= Ln10*C_OH(u,0) ;
+      K(i,E_ENEUTRAL+NEQ) /= Ln10*C_OH(u,1) ;
     }
   }
   #endif
@@ -1275,7 +1262,7 @@ void MPM_t::SetIncrementOfPrimaryVariables(Element_t* el,double* dui)
         double un_sulfur = 0;
           
         for(int i = 0 ; i < nn ; i++) {
-          un_sulfur += Un_Sulfur(i)/nn;
+          un_sulfur += U_Sulfur(u_n,i)/nn;
         }
         
         dui[E_SULFUR] =  1.e-2*ObVal_GetValue(obval + E_SULFUR)/(Ln10*un_sulfur) ;
@@ -1288,7 +1275,7 @@ void MPM_t::SetIncrementOfPrimaryVariables(Element_t* el,double* dui)
         double un_potassium = 0;
           
         for(int i = 0 ; i < nn ; i++) {
-          un_potassium += Un_Potassium(i)/nn;
+          un_potassium += U_Potassium(u_n,i)/nn;
         }
         
         dui[E_POTASSIUM] =  1.e-2*ObVal_GetValue(obval + E_POTASSIUM)/(Ln10*un_potassium) ;
@@ -1302,7 +1289,7 @@ void MPM_t::SetIncrementOfPrimaryVariables(Element_t* el,double* dui)
         double un_eneutral = 0;
           
         for(int i = 0 ; i < nn ; i++) {
-          un_eneutral += Un_eneutral(i)/nn;
+          un_eneutral += U_eneutral(u_n,i)/nn;
         }
         
         dui[E_ENEUTRAL] =  1.e-2*ObVal_GetValue(obval + E_ENEUTRAL)/(Ln10*un_eneutral) ;
@@ -1317,16 +1304,16 @@ void MPM_t::SetIncrementOfPrimaryVariables(Element_t* el,double* dui)
 Values_d* MPM_t::SetInputs(Element_t* el,const double& t,const int& n,double const* const* u,Values_d& val)
 {
   #if defined (U_C_H2SO4) || defined (U_LogC_H2SO4)
-  val.U_sulfur = LogC_H2SO4(n) ;
+  val.U_sulfur = LogC_H2SO4(u,n) ;
   #elif defined (U_C_SO4) || defined (U_LogC_SO4)
-  val.U_sulfur = LogC_SO4(n) ;
+  val.U_sulfur = LogC_SO4(u,n) ;
   #endif
-  val.U_calcium = ZN_Ca_S(n) ;
-  val.U_potassium = LogC_K(n) ;
-  val.U_charge = PSI(n) ;
+  val.U_calcium = ZN_Ca_S(u,n) ;
+  val.U_potassium = LogC_K(u,n) ;
+  val.U_charge = PSI(u,n) ;
   val.U_aluminium = ZN_Al_S(n) ;
   #if defined (E_ENEUTRAL)
-  val.U_eneutral = LogC_OH(n) ;
+  val.U_eneutral = LogC_OH(u,n) ;
   #endif
   
   return(&val) ;

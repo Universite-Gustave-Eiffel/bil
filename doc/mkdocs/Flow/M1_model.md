@@ -5,20 +5,21 @@ number-sections: false
 
 # M1 Model — Richards Equation (1D liquid flow)
 
-> **Source files:**
-> `src/Models/ModelFiles/M1.c` · `doc/mkdocs/Flow/M1/M1`
+> **Bil model:** `src/Models/ModelFiles/M1.c`
+
+> **Input file:** `doc/mkdocs/Flow/M1/M1`
 >
 > **Model authors:** P. Dangla (Université Gustave Eiffel)
 
 ---
-
+<!--
 ## Table of contents
 
 1. [Context and objective](#1-context-and-objective)
 2. [Assumptions](#2-assumptions)
 3. [Variables and notation](#3-variables-and-notation)
 4. [Mathematical model](#4-mathematical-model)
-   - 4.1 [Conservation equation](#41-conservation-equation)
+   - 1 [Conservation equation](#41-conservation-equation)
    - 4.2 [Flux law (generalized Darcy)](#42-flux-law-generalized-darcy)
 5. [Boundary and initial conditions](#5-boundary-and-initial-conditions)
 6. [Test case: drainage of a bead column (`test_examples/M1`)](#6-test-case-drainage-of-a-bead-column)
@@ -29,6 +30,7 @@ number-sections: false
 9. [Bibliographic references](#9-bibliographic-references)
 
 ---
+-->
 
 ## 1. Context and objective
 

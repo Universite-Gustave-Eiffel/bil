@@ -19,12 +19,18 @@
 /* Physical constants (Units SI: Length = m, Mass = kg, Time = s, Degree = K) */
 
 #define PhysicalConstant_Faraday \
-       (9.64846e4)*PhysicalConstant_FaradayUnit            /* (C/mol) */
+        (9.648533e4)*PhysicalConstant_FaradayUnit            /* (C/mol) */
        
 #define PhysicalConstant_PerfectGasConstant \
-       (8.3143)*PhysicalConstant_PerfectGasConstantUnit    /* (J/mol/K) */
+        (8.3143)*PhysicalConstant_PerfectGasConstantUnit    /* (J/mol/K) */
        
 #define PhysicalConstant_BoltzmannConstant \
-       (1.38e-23)*PhysicalConstant_BoltzmannConstantUnit   /* (J/K) */
+        (1.38e-23)*PhysicalConstant_BoltzmannConstantUnit   /* (J/K) */
+       
+#define PhysicalConstant_AvogadroConstant \
+        (6.02214076e23)
+       
+#define PhysicalConstant_ElementaryChargeConstant \
+        (1.602176634e-19)*InternationalSystemOfUnits_OneCoulomb   /* (C) */
 
 #endif

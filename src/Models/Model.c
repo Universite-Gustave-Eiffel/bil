@@ -35,10 +35,9 @@ Model_t* (Model_New)(void)
       char* name = (char*) Mry_New(char,Model_MaxLengthOfKeyWord*Model_MaxNbOfEquations) ;
     
       {
-        int j ;
-      
-        for(j = 0 ; j < Model_MaxNbOfEquations ; j++) {
-          Model_GetNameOfEquation(model)[j] = name + j*Model_MaxLengthOfKeyWord ;
+        for(int j = 0 ; j < Model_MaxNbOfEquations ; j++) {
+          Model_GetNameOfEquation(model)[j] = name + j*Model_MaxLengthOfKeyWord;
+          Model_CopyNameOfEquation(model,j,"\0");
         }
       }
     }
@@ -55,10 +54,9 @@ Model_t* (Model_New)(void)
       char* name = (char*) Mry_New(char,Model_MaxLengthOfKeyWord*Model_MaxNbOfEquations) ;
     
       {
-        int j ;
-      
-        for(j = 0 ; j < Model_MaxNbOfEquations ; j++) {
-          Model_GetNameOfUnknown(model)[j]  = name + j*Model_MaxLengthOfKeyWord ;
+        for(int j = 0 ; j < Model_MaxNbOfEquations ; j++) {
+          Model_GetNameOfUnknown(model)[j]  = name + j*Model_MaxLengthOfKeyWord;
+          Model_CopyNameOfUnknown(model,j,"\0");
         }
       }
     }
@@ -85,7 +83,6 @@ Model_t* (Model_New)(void)
       char* name = (char*) Mry_New(char,Model_MaxLengthOfShortTitle) ;
       
       Model_GetShortTitle(model) = name ;
-    
       Model_CopyShortTitle(model,"\0") ;
     }
   
@@ -95,7 +92,6 @@ Model_t* (Model_New)(void)
       char* name = (char*) Mry_New(char,Model_MaxLengthOfAuthorNames) ;
     
       Model_GetNameOfAuthors(model) = name ;
-      
       Model_CopyNameOfAuthors(model,"\0") ;
     }
     
@@ -256,6 +252,7 @@ void (Model_Scan)(Model_t* model,DataFile_t* datafile,Geometry_t* geom)
     }
   }
       
+  #if 0
   /* Name of equations */
   {
     int n = String_FindAndScanExp(line,"Equations",","," = ") ;
@@ -263,9 +260,8 @@ void (Model_Scan)(Model_t* model,DataFile_t* datafile,Geometry_t* geom)
     if(n) {
       int neq = Model_GetNbOfEquations(model) ;
       char* pline = String_GetAdvancedPosition ;
-      int i ;
           
-      for(i = 0 ; i < neq ; i++) {
+      for(int i = 0 ; i < neq ; i++) {
         char  name[Model_MaxLengthOfKeyWord] ;
         
         pline += String_Scan(pline,"%s",name) ;
@@ -282,9 +278,8 @@ void (Model_Scan)(Model_t* model,DataFile_t* datafile,Geometry_t* geom)
     if(n) {
       int neq = Model_GetNbOfEquations(model) ;
       char* pline = String_GetAdvancedPosition ;
-      int i ;
           
-      for(i = 0 ; i < neq ; i++) {
+      for(int i = 0 ; i < neq ; i++) {
         char  name[Model_MaxLengthOfKeyWord] ;
         
         pline += String_Scan(pline,"%s",name) ;
@@ -292,5 +287,47 @@ void (Model_Scan)(Model_t* model,DataFile_t* datafile,Geometry_t* geom)
         Model_CopyNameOfUnknown(model,i,name) ;
       }
     }
+  }
+  #else
+  {
+    int neq = Model_GetNbOfEquations(model) ;
+
+    /* Name of equations */
+    if(String_FindAndScanExp(line,"Equations",","," = ")) {
+      char* pline_equ = String_GetAdvancedPosition ;
+
+      /* Name of unknowns */
+      if(String_FindAndScanExp(line,"Unknowns",","," = ")) {
+        char* pline_unk = String_GetAdvancedPosition ;
+          
+        for(int i = 0 ; i < neq ; i++) {
+          char  name_equ[Model_MaxLengthOfKeyWord] ;
+        
+          pline_equ += String_Scan(pline_equ,"%s",name_equ) ;
+
+          {
+            int j = Model_IndexOfEquation(model,name_equ) ;
+
+            if(j >= 0 && j < neq) {
+              char  name_unk[Model_MaxLengthOfKeyWord] ;
+        
+              pline_unk += String_Scan(pline_unk,"%s",name_unk) ;
+        
+              Model_CopyNameOfUnknown(model,j,name_unk) ;
+            } else {
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+  #endif
+
+  /* To account for the new unknown and equation names */
+  {
+    char* codename = Model_GetCodeNameOfModel(model);
+    
+    Model_Initialize(model,codename,geom,datafile) ;
   }
 }

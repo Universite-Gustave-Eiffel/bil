@@ -5,7 +5,7 @@
 > **Input file:** `doc/mkdocs/Mechanics/Elast/Elast0`
 
 ---
-
+<!--
 ## Table of contents
 
 1. [Context and objective](#1-context-and-objective)
@@ -14,7 +14,7 @@
 4. [Input file description](#4-input-file-description)
 5. [Expected results](#5-expected-results)
 
----
+-->
 
 ## 1. Context and objective
 

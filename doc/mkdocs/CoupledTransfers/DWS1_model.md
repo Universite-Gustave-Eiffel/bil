@@ -7,7 +7,7 @@
 > **Model author:** P. Dangla
 
 ---
-
+<!--
 ## Table of contents
 
 1. [Context and objective](#1-context-and-objective)
@@ -22,6 +22,7 @@
 7. [Bibliographic references](#7-bibliographic-references)
 
 ---
+-->
 
 ## 1. Context and objective
 

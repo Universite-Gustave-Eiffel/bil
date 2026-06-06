@@ -8,7 +8,7 @@
 > `src/Models/Methods/MaterialPointMethod.h` · `src/Models/Methods/CustomValues.h`
 
 ---
-
+<!--
 ## Table of contents
 
 1. [Overview](#1-overview)
@@ -23,6 +23,7 @@
 10. [Comparison with other patterns](#10-comparison-with-other-patterns)
 
 ---
+-->
 
 ## 1. Overview
 

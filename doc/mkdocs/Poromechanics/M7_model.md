@@ -7,7 +7,7 @@
 > **Model authors:** P. Dangla (Université Gustave Eiffel)
 
 ---
-
+<!--
 ## Table of contents
 
 1. [Context and objective](#1-context-and-objective)
@@ -22,7 +22,7 @@
 8. [Step-by-step file description](#8-step-by-step-file-description)
 9. [Bibliographic references](#9-bibliographic-references)
 
----
+-->
 
 ## 1. Context and objective
 

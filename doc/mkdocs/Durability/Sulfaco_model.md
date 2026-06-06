@@ -8,7 +8,7 @@
 > **Internal title:** *"Internal/External sulfate attack of concrete (2017)"*
 
 ---
-
+<!--
 ## Table of Contents
 
 1. [Context and Objective](#1-context-and-objective)
@@ -26,7 +26,7 @@
 8. [Step-by-Step Description of Input Files](#8-step-by-step-description-of-input-files)
 9. [References](#9-references)
 
----
+-->
 
 ## 1. Context and Objective
 

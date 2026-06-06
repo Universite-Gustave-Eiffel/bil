@@ -7,7 +7,7 @@
 > **Model authors:** Q. Zeng, T. Fen-Chong, P. Dangla (Université Gustave Eiffel)
 
 ---
-
+<!--
 ## Table of contents
 
 1. [Context and objective](#1-context-and-objective)
@@ -26,7 +26,7 @@
    - 8.2 [Model file `src/Models/ModelFiles/Frostaco.c`](#82-model-file-srcmodelsmodelfilesfrostacoc)
 9. [Bibliographic references](#9-bibliographic-references)
 
----
+-->
 
 ## 1. Context and objective
 

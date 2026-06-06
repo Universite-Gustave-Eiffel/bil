@@ -7,7 +7,7 @@
 > `src/Models/DataBases/`
 
 ---
-
+<!--
 ## Table of contents
 
 1. [Where and how](#1-where-and-how)
@@ -17,7 +17,7 @@
 5. [Physico-chemical databases](#5-physico-chemical-databases)
 6. [Learning from existing models](#6-learning-from-existing-models)
 
----
+-->
 
 ## 1. Where and how
 
@@ -25,7 +25,7 @@ Adding a new model to Bil requires **only two steps** and does not modify any fr
 
 ### Step 1 — Create the model file
 
-Create `src/Models/ModelFiles/MyModel.c` (or `.cpp`) using one of the available templates:
+Create `src/Models/ModelFiles/MyModel.c` (or `.cpp`) by learning from an existing model or using one of the available templates:
 
 | Template | Discretization | Use case |
 |----------|---------------|----------|
@@ -33,7 +33,7 @@ Create `src/Models/ModelFiles/MyModel.c` (or `.cpp`) using one of the available 
 | `TemplateFEM.c` | FEM | Finite element models |
 | `TemplateFVM.c` | FVM | Finite volume models |
 
-Upper camel case convention is used for model file names (`MyModel.c`). The same convention applies to attributes and methods.
+<!--Upper camel case convention is used for model file names (`MyModel.c`). The same convention applies to attributes and methods.-->
 
 ### Step 2 — Register the model
 
@@ -85,6 +85,7 @@ These three counters must be defined in each model file:
 ```
 
 Choosing the correct type for each variable is important for correctness:
+
 - Use **implicit** for quantities that depend on the current unknown values.
 - Use **explicit** for quantities evaluated at the previous time step that remain fixed during Newton iterations (avoids recomputing expensive constitutive laws at each iteration).
 - Use **constant** for quantities that are spatially variable but time-independent.
@@ -161,10 +162,13 @@ int PrintModelProp(Model_t* model, FILE* f)
 
 int DefineElementProp(Element_t* el, IntFcts_t* intfcts, ShapeFcts_t* shpfcts)
 {
+  IntFct_t* intfct = Element_GetIntFct(el) ;
+  int NbOfIntPoints = IntFct_GetNbOfPoints(intfct) ;
+
   /* Allocate NVI, NVE, NV0 arrays */
-  Element_GetNbOfImplicitTerms(el) = NVI ;
-  Element_GetNbOfExplicitTerms(el) = NVE ;
-  Element_GetNbOfConstantTerms(el) = NV0 ;
+  Element_GetNbOfImplicitTerms(el) = NVI*NbOfIntPoints ;
+  Element_GetNbOfExplicitTerms(el) = NVE*NbOfIntPoints ;
+  Element_GetNbOfConstantTerms(el) = NV0*NbOfIntPoints ;
   return(0) ;
 }
 
@@ -221,7 +225,7 @@ struct MPM_t : public MaterialPointMethod_t<V> {
                        int const& p, V<double> const& val, V<double> const& dval,
                        int const& k, double* c);
 
-  /* Fill the transfer matrix (FVM) */
+  /* Fill the transfer matrix (FEM) */
   int SetTransferMatrix(Element_t* el, double const& dt, int const& p,
                         V<double> const& val, double* c);
 

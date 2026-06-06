@@ -7,7 +7,7 @@
 > **Model author:** P. Dangla
 
 ---
-
+<!--
 ## Table of contents
 
 1. [Context and objective](#1-context-and-objective)
@@ -20,7 +20,7 @@
 5. [Input file description](#5-input-file-description)
 6. [Simulation results](#6-simulation-results)
 
----
+-->
 
 ## 1. Context and objective
 

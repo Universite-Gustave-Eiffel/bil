@@ -48,6 +48,7 @@ set linetype cycle 15
 
 # Input files
 file1  = 'Sulfaco'
+file1  = 'toto'
 
 
 # Files

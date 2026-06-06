@@ -1,7 +1,8 @@
 BEGIN {
   # phase and data are sent by awk (see phreeqc2bil.sh)
-  # phase = 0; # -> Log10EquilibriumConstantOfHomogeneousReactionInWater.h
-  # phase = 1; # -> Log10DissociationConstantOfCementHydrationProduct.h
+  # phase = 0; # -> Log10EquilibriumConstantOfHomogeneousReactionInWater_CEMDATA18.h.in
+  # phase = 1; # -> Log10DissociationConstantOfCementHydrationProduct_CEMDATA18.h.in
+  # phase = 2; # -> MolarVolumeOfCementHydrate_CEMDATA18.h.in
   ndata = split(data,dat,"-");
   title = "";
   if(ndata > 0) {
@@ -16,15 +17,23 @@ BEGIN {
       title = "LOG10DISSOCIATIONCONSTANTOFCEMENTHYDRATIONPRODUCT_";
       expr1 = "PHASES"
       expr2 = "!PHASES"
+    } else if(phase == 2) {
+      title = "MOLARVOLUMEOFCEMENTHYDRATE_";
+      expr1 = "PHASES"
+      expr2 = "!PHASES"
     } else {
       title = "";
       expr1 = "SOLUTION_SPECIES"
       expr2 = "!PHASES"
+      print "not valid entry";
+      exit;
     }
     print "#ifndef "title dat[1] "_H_IN";
     print "#define "title dat[1] "_H_IN";
     print;
-    print "#include \"TemperatureDependenceOfLog10EquilibriumConstant.h\""
+    if(phase < 2) {
+      print "#include \"TemperatureDependenceOfLog10EquilibriumConstant.h\""
+    }
     print;
   } else {
     print "no data!";
@@ -49,7 +58,7 @@ $1 ~ expr1 , $1 ~ expr2 {
     # Print the reaction with possibly the phase name
     printf("\n/* ");
     if(phase > 0) {printf("Phase = %s ; ",phasename);}
-    printf("Reaction: %s",$0);
+    if(phase < 2) {printf("Reaction: %s",$0);}
     printf(" */\n");
 
     #if(phase > 0) {$1 = gensub(/(\()([a-zA-Z1-9]*)(\))([^1-9]|$)/,"\\2\\4","g",phasename);}
@@ -62,7 +71,7 @@ $1 ~ expr1 , $1 ~ expr2 {
     r = gensub(/[ ]*#[^#]*$/,"","g",r);
   }
 
-  if($0 ~ /-analytical_expression/) {
+  if($0 ~ /-analytical_expression/ && phase < 2) {
     sub(/^[ \t]*-analytical_expression[ \t]*/,"TemperatureDependenceOfLog10EquilibriumConstant(T,");
     sub(/[ ]*#[^#]*$/,"");
     sub(/0[ ]*$/,"0)");
@@ -74,6 +83,15 @@ $1 ~ expr1 , $1 ~ expr2 {
       print "#define Log10DissociationConstantOfCementHydrationProduct_"r"(T)\\";
       print "        "$0;
     }
+  }
+
+  if($0 ~ /-Vm/ && phase == 2) {
+    sub(/^[ \t]*-Vm[ \t]*/,"");
+    sub(/[ ]*#[^#]*$/,"");
+    sub(/[ ]*$/,"");
+    r = transform(phasename);
+    gsub(/[+-][1-9]?/,"",r);
+    print "#define MolarVolumeOfCementHydrate_"r"   ("$0"e-6)";
   }
 }
 

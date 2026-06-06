@@ -124,6 +124,17 @@ extern void      (Model_Scan)(Model_t*,DataFile_t*,Geometry_t*) ;
 #define Model_CopyNameOfAuthors(MOD,authors) \
         (strcpy(Model_GetNameOfAuthors(MOD),authors))
 
+#define Model_SetDefaultNameOfUnknown(MOD,index,name) \
+        do {\
+          if(Model_GetNameOfUnknown(MOD)[index][0] == '\0') {\
+            Model_CopyNameOfUnknown(MOD,index,name) ;\
+          }\
+        } while(0)
+
+
+/* Index of equation*/
+#define Model_IndexOfEquation(MOD,name) (MOD)->IndexOfEquation(name)
+
 
 /* Dimension */
 #define Model_GetDimension(MOD) \
@@ -153,6 +164,7 @@ extern void      (Model_Scan)(Model_t*,DataFile_t*,Geometry_t*) ;
         } while(0)
 
 
+#include <string.h>
 
 struct Model_t {              /* model */
   Model_SetModelProperties_t*       setmodelprop ;
@@ -184,6 +196,14 @@ struct Model_t {              /* model */
   void*    numericalmethod ;  /* Numerical method */
   ObVal_t* obval ;            /* Objective values of unknowns */
   Views_t* views ;            /* Views */
+
+  /* Methods*/
+  int IndexOfEquation(char* const name) {
+    for(int i = 0 ; i < nbofequations ; i++) {
+      if(strcmp(nameofequations[i],name) == 0) return(i);
+    }
+    return(-1);
+  }
 } ;
 
 
