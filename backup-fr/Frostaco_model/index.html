@@ -1,0 +1,2515 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A modeling platform based on finite element/volume methods">
+      
+      
+        <meta name="author" content="P. Dangla (Université Gustave Eiffel)">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Modèle Frostaco — Action du gel dans le béton - Bil - documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#modele-frostaco-action-du-gel-dans-le-beton" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Bil - documentation" class="md-header__button md-logo" aria-label="Bil - documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Bil - documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Modèle Frostaco — Action du gel dans le béton
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Universite-Gustave-Eiffel/bil" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Universite-Gustave-Eiffel/bil
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Introduction
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../running_bil/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Running Bil
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../examples/" class="md-tabs__link">
+          
+  
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code_architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../adding_a_model/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  How to Add a New Model
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Bil - documentation" class="md-nav__button md-logo" aria-label="Bil - documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Bil - documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Universite-Gustave-Eiffel/bil" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Universite-Gustave-Eiffel/bil
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../running_bil/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Running Bil
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flow
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Flow
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/flow_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/M1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/M2_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/Fick_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fick
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flow/Richards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Richards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mechanics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mechanics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/mechanics_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/Elast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/Elasd_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elasd
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/Plast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mechanics/BBM_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BBM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poromechanics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Poromechanics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Poromechanics/poromechanics_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Poromechanics/M7_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Poromechanics/Poroplast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poroplast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Phase change
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase change
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PhaseChange/phasechange_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PhaseChange/Frostaco_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frostaco
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PhaseChange/Frostaco3d_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frostaco3d
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durability & Chemistry
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Durability & Chemistry
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/durability_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Duracem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Duracem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Chloricem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chloricem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Sulfaco_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfaco
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Sulfuricem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfuricem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Durability/Sulfaconew_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfaconew
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Coupled Transfers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Coupled Transfers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/coupledtransfers_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/DWS1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DWS1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/Yuan1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Yuan1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/Shen_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CoupledTransfers/usoil_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    usoil
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8" id="__nav_3_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specialized
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Specialized
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Specialized/specialized_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Specialized/MechaMic_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MechaMic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code_architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adding_a_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to Add a New Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-des-matieres" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table des matières
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-contexte-et-objectif" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Contexte et objectif
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-hypotheses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Hypothèses
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-variables-et-notation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Variables et notation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Variables et notation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inconnues-primaires" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inconnues primaires
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variables-secondaires" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variables secondaires
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#constantes-physico-chimiques-principales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constantes physico-chimiques principales
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-modele-mathematique" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Modèle mathématique
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Modèle mathématique">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-equations-de-conservation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Équations de conservation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-lois-de-flux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Lois de flux
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-equilibre-thermodynamique-glace-liquide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Équilibre thermodynamique glace-liquide
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-couplage-poromecanique" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Couplage poromécanique
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-conditions-aux-limites-et-initiales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Conditions aux limites et initiales
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Conditions aux limites et initiales">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#variables-imposees-dirichlet-neumann" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variables imposées (Dirichlet / Neumann)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-cas-test-congelation-unidimensionnelle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Cas test : congélation unidimensionnelle
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Cas test : congélation unidimensionnelle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parametres-de-simulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paramètres de simulation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#physique-attendue-dans-le-cas-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physique attendue dans le cas test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resultats-et-commentaires-physiques-du-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Résultats et commentaires physiques du test
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-discretisation-numerique" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Discrétisation numérique
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-description-pas-a-pas-des-fichiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Description pas-à-pas des fichiers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Description pas-à-pas des fichiers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-fichier-de-pilotage-test_examplesfrostacofrostaco" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Fichier de pilotage test_examples/Frostaco/Frostaco
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-fichier-modele-srcmodelsmodelfilesfrostacoc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Fichier modèle src/Models/ModelFiles/Frostaco.c
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-references-bibliographiques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Références bibliographiques
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="modele-frostaco-action-du-gel-dans-le-beton">Modèle Frostaco — Action du gel dans le béton</h1>
+<blockquote>
+<p><strong>Fichiers sources :</strong>
+<code>src/Models/ModelFiles/Frostaco.c</code> · <code>test_examples/Frostaco/Frostaco</code></p>
+<p><strong>Auteurs du modèle :</strong> Q. Zeng, T. Fen-Chong, P. Dangla (Université Gustave Eiffel)</p>
+</blockquote>
+<hr />
+<h2 id="table-des-matieres">Table des matières</h2>
+<ol>
+<li><a href="#1-contexte-et-objectif">Contexte et objectif</a></li>
+<li><a href="#2-hypothèses">Hypothèses</a></li>
+<li><a href="#3-variables-et-notation">Variables et notation</a></li>
+<li><a href="#4-modèle-mathématique">Modèle mathématique</a></li>
+<li>4.1 <a href="#41-équations-de-conservation">Équations de conservation</a></li>
+<li>4.2 <a href="#42-lois-de-flux">Lois de flux</a></li>
+<li>4.3 <a href="#43-équilibre-thermodynamique-glace-liquide">Équilibre thermodynamique glace-liquide</a></li>
+<li>4.4 <a href="#44-couplage-poromécanique">Couplage poromécanique</a></li>
+<li><a href="#5-conditions-aux-limites-et-initiales">Conditions aux limites et initiales</a></li>
+<li><a href="#6-cas-test--congélation-unidimensionnelle">Cas test : congélation unidimensionnelle (<code>test_examples/Frostaco/</code>)</a></li>
+<li><a href="#7-discrétisation-numérique">Discrétisation numérique</a></li>
+<li><a href="#8-description-pas-à-pas-des-fichiers">Description pas-à-pas des fichiers</a></li>
+<li>8.1 <a href="#81-fichier-de-pilotage-test_examplesfrostacofrostaco">Fichier de pilotage <code>test_examples/Frostaco/Frostaco</code></a></li>
+<li>8.2 <a href="#82-fichier-modèle-srcmodelsmodelfilesfrostacoc">Fichier modèle <code>src/Models/ModelFiles/Frostaco.c</code></a></li>
+<li><a href="#9-références-bibliographiques">Références bibliographiques</a></li>
+</ol>
+<hr />
+<h2 id="1-contexte-et-objectif">1. Contexte et objectif</h2>
+<p>Le modèle <strong>Frostaco</strong> (<em>Frost actions in concrete</em>) décrit les transferts <strong>thermo-hydro-chimio-mécaniques</strong> dans un milieu poreux cimentaire soumis au gel et au dégel. Il permet d'évaluer la pénétration du front de gel, la formation de glace dans l'espace poreux, et la pression générée par l'expansion volumique de l'eau se transformant en glace et par la cryo-succion. </p>
+<p>Le modèle incorpore également le transport d'un sel dissous (ex: NaCl ou CaCl₂) dont la présence modifie l'activité thermochimique de l'eau et abaisse la température de congélation. Il trouve des applications directes dans la durabilité des bétons soumis aux intempéries hivernales (sels de déverglaçage).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>graph TD
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    A[&quot;Pore (Milieu saturé)&quot;] --&gt; B[&quot;Solution Liquide (H₂O + Sel)&quot;]
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    A --&gt; C[&quot;Cristal de Glace (H₂O pure)&quot;]
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    B -- &quot;Gel (T &lt; T_m) : Pression capillaire ↑&quot; &lt;--&gt; C
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    B -- &quot;Concentration résiduelle&quot; --&gt; D[&quot;Salinité locale ↑&quot;]
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    C -- &quot;Tension mécanique&quot; --&gt; E[&quot;Squelette Solide&quot;]
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    D -- &quot;Abaissement cryoscopique&quot; --&gt; B
+</code></pre></div>
+<hr />
+<h2 id="2-hypotheses">2. Hypothèses</h2>
+<ol>
+<li><strong>Trois phases en présence</strong> : solide (matrice cimentaire/granulats), liquide (solution aqueuse salée) et glace (cristaux de glace purs). Le milieu est supposé saturé en eau et en glace (<span class="arithmatex">\(S_l + S_i = 1\)</span>).</li>
+<li><strong>Transfert de la phase liquide</strong> : l'écoulement se fait par advection selon la loi de Darcy. La perméabilité est réduite par la présence de la glace. </li>
+<li><strong>Phase glace immobile</strong> : la glace se forme in situ et ne s'écoule pas, sa déformation et sa pression modifient l'état de contrainte de la matrice solide.</li>
+<li><strong>Transport de sel</strong> : par advection avec l'eau liquide et diffusion (Fick) ralentie par la tortuosité du réseau poreux. La glace est formée d'eau pure (exclusion ionique), ce qui concentre la solution résiduelle.</li>
+<li><strong>Thermodynamique</strong> : équilibre local instantané entre l'eau liquide et la glace, régi par l'équation de Kelvin généralisée (avec l'activité de l'eau).</li>
+<li><strong>Poromécanique</strong> : la matrice se déforme sous l'effet des pressions de pores (liquide et glace) et des variations thermiques. Le modèle de Mori-Tanaka est utilisé pour évaluer les coefficients poroélastiques équivalents (modules massiques du squelette).</li>
+</ol>
+<hr />
+<h2 id="3-variables-et-notation">3. Variables et notation</h2>
+<h3 id="inconnues-primaires">Inconnues primaires</h3>
+<p>Pour éviter les singularités de changement de phase (apparition/disparition de la glace), le modèle substitue les variables de pression <span class="arithmatex">\(p_l\)</span> et <span class="arithmatex">\(p_i\)</span> classiques par une pression maximale <span class="arithmatex">\(p_{\max}\)</span>.</p>
+<table>
+<thead>
+<tr>
+<th>Symbole</th>
+<th>Signification</th>
+<th>Unité</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(p_{\max}\)</span></td>
+<td>Pression de pore maximale : <span class="arithmatex">\(\max(p_l, p_i)\)</span></td>
+<td>Pa</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(c_s\)</span></td>
+<td>Concentration en sel dans la solution interstitielle</td>
+<td>mol/m³</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(T\)</span></td>
+<td>Température</td>
+<td>K</td>
+</tr>
+</tbody>
+</table>
+<h3 id="variables-secondaires">Variables secondaires</h3>
+<table>
+<thead>
+<tr>
+<th>Symbole</th>
+<th>Signification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(p_l\)</span></td>
+<td>Pression de la phase liquide</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(p_i\)</span></td>
+<td>Pression de la phase glace</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(p_c\)</span></td>
+<td>Pression capillaire glace-eau (<span class="arithmatex">\(p_c = p_i - p_l\)</span>)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(S_l\)</span></td>
+<td>Degré de saturation en eau liquide</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(S_i\)</span></td>
+<td>Degré de saturation en glace (<span class="arithmatex">\(1 - S_l\)</span>)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(a_w\)</span></td>
+<td>Activité de l'eau de la solution (dépend de <span class="arithmatex">\(c_s\)</span> et <span class="arithmatex">\(T\)</span>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="constantes-physico-chimiques-principales">Constantes physico-chimiques principales</h3>
+<table>
+<thead>
+<tr>
+<th>Symbole</th>
+<th>Valeur typique</th>
+<th>Signification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(V_w\)</span></td>
+<td><span class="arithmatex">\(18 \times 10^{-6}\)</span> m³/mol</td>
+<td>Volume molaire de l'eau liquide</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(V_i\)</span></td>
+<td><span class="arithmatex">\(19.63 \times 10^{-6}\)</span> m³/mol</td>
+<td>Volume molaire de la glace</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(S_m\)</span></td>
+<td><span class="arithmatex">\(23.54\)</span> J/(mol·K)</td>
+<td>Entropie molaire de fusion de la glace</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(T_m\)</span></td>
+<td><span class="arithmatex">\(273\)</span> K</td>
+<td>Température de fusion à la pression atmosphérique</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(R\)</span></td>
+<td><span class="arithmatex">\(8.314\)</span> J/(mol·K)</td>
+<td>Constante des gaz parfaits</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\alpha_i\)</span></td>
+<td><span class="arithmatex">\(155 \times 10^{-6}\)</span> K⁻¹</td>
+<td>Coefficient de dilatation thermique volumique (glace)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-modele-mathematique">4. Modèle mathématique</h2>
+<h3 id="41-equations-de-conservation">4.1 Équations de conservation</h3>
+<p>Le système se compose de trois équations de bilan intégrées sur le volume élémentaire représentatif (VER) :</p>
+<p><strong>1. Conservation de la masse totale d'eau</strong> (liquide + glace) :</p>
+<div class="arithmatex">\[\frac{\partial m_T}{\partial t} + \nabla \cdot \mathbf{W}_l = 0$$
+avec 
+$$m_T = \phi S_l \rho_l + \phi S_i \rho_i\]</div>
+<p><strong>2. Bilan de masse du sel</strong> :</p>
+<div class="arithmatex">\[\frac{\partial m_s}{\partial t} + \nabla \cdot \mathbf{W}_{\text{sels}} = 0$$
+avec
+$$m_s = \phi S_l M_s c_s\]</div>
+<p><strong>3. Bilan d'entropie (Thermique)</strong> :</p>
+<div class="arithmatex">\[\frac{\partial S_{\text{tot}}}{\partial t} + \nabla \cdot \left( \frac{\mathbf{q}}{T} + s_l \mathbf{W}_l \right) = 0\]</div>
+<p>L'entropie totale comprend les composantes du squelette solide, de la matrice liquide et de la matrice glace : <span class="arithmatex">\(S_{\text{tot}} = S_{\text{sol}} + m_l s_l + m_i s_i\)</span>.</p>
+<h3 id="42-lois-de-flux">4.2 Lois de flux</h3>
+<p><strong>Flux de Darcy pour la phase liquide</strong> :</p>
+<p>$<span class="arithmatex">\(\mathbf{W}_l = - \frac{\rho_l k_{\text{int}} k_{rl}(p_c)}{\mu_l} \nabla p_l\)</span>$
+La perméabilité relative <span class="arithmatex">\(k_{rl}\)</span> dépend de la pression capillaire et traduit le blocage par la matrice de glace (ex: modèle de Mualem).</p>
+<p><strong>Flux de sel</strong> (advection et diffusion de Fick) :</p>
+<p>$<span class="arithmatex">\(\mathbf{W}_{\text{sels}} = c_s M_s \left( \frac{\mathbf{W}_l}{\rho_l} \right) - \phi S_l \tau D_{\text{sel}} \nabla c_s\)</span>$
+La tortuosité <span class="arithmatex">\(\tau\)</span> varie fortement avec le front de congélation.</p>
+<p><strong>Flux de chaleur (Fourier)</strong> :</p>
+<p>$<span class="arithmatex">\(\mathbf{q} = - \lambda_{\text{hom}} \nabla T\)</span>$
+Où <span class="arithmatex">\(\lambda_{\text{hom}}\)</span> est une conductivité thermique macroscopique moyenne déduite de la matrice solide, de l'eau, et de la glace.</p>
+<h3 id="43-equilibre-thermodynamique-glace-liquide">4.3 Équilibre thermodynamique glace-liquide</h3>
+<p>La relation thermodynamique fondamentale qui lie les pressions est donnée par l'égalité des potentiels chimiques <span class="arithmatex">\(\mu_l = \mu_i\)</span> :</p>
+<div class="arithmatex">\[V_w(p_l - p_{\text{atm}}) + R T \ln(a_w) = V_i(p_i - p_{\text{atm}}) + S_m(T - T_m)\]</div>
+<p>L'activité de l'eau <span class="arithmatex">\(a_w(T, c_s)\)</span> inclut les effets du sel sur l'abaissement cryoscopique (modèle de Pitzer simplifié ou loi de Raoult-Lin, et dépend de la force ionique du CaCl₂ ou du NaCl). </p>
+<p>De cette relation, il est possible de déduire <span class="arithmatex">\(p_c = p_i - p_l\)</span> en fonction de la température et de la salinité, ce qui permet à son tour d'accéder aux saturations <span class="arithmatex">\(S_l\)</span> et <span class="arithmatex">\(S_i\)</span> via la courbe de rétention (modèle de Van Genuchten).</p>
+<h3 id="44-couplage-poromecanique">4.4 Couplage poromécanique</h3>
+<p>Une évaluation des contraintes mécaniques causées par l'expansion de la glace est effectuée post-résolution (dans la fonction de sortie), utilisant le schéma de <strong>Mori-Tanaka</strong> pour déduire les modules de compressibilité <span class="arithmatex">\(K\)</span> et le module de cisaillement <span class="arithmatex">\(G\)</span> équivalent. 
+Les déformations volumiques se composent des contributions mécaniques de pression, et des dilatations thermiques d'origine hydrique et élastique.</p>
+<hr />
+<h2 id="5-conditions-aux-limites-et-initiales">5. Conditions aux limites et initiales</h2>
+<h3 id="variables-imposees-dirichlet-neumann">Variables imposées (Dirichlet / Neumann)</h3>
+<p>Le modèle s'attend à recevoir des conditions sur les 3 variables clés :
+1. Dépression thermique via une condition de Dirichlet ou un flux nul en bord.
+2. Évolution de la salinité ou flux nul (imperméable).
+3. Pression <span class="arithmatex">\(p_{\max}\)</span> gérant les arrivées d'eau (sèchage/réhumification ou étanchéité hydrique).</p>
+<hr />
+<h2 id="6-cas-test-congelation-unidimensionnelle">6. Cas test : congélation unidimensionnelle</h2>
+<p>Le dossier <code>test_examples/Frostaco/</code> contient un fichier d'entrée (<code>Frostaco</code>) représentatif du refroidissement d'une éprouvette ou d'un mur en béton selon les paramètres de matériau définis intrinsèquement.</p>
+<h3 id="parametres-de-simulation">Paramètres de simulation</h3>
+<table>
+<thead>
+<tr>
+<th>Paramètre</th>
+<th>Valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Porosité <span class="arithmatex">\(\phi\)</span></td>
+<td>0.20</td>
+</tr>
+<tr>
+<td>Perméabilité  <span class="arithmatex">\(k_{\text{int}}\)</span></td>
+<td><span class="arithmatex">\(5 \times 10^{-21}\)</span> m²</td>
+</tr>
+<tr>
+<td>Capacitée calorifique solide <span class="arithmatex">\(C_s\)</span></td>
+<td><span class="arithmatex">\(2 \times 10^6\)</span> J/m³/K</td>
+</tr>
+<tr>
+<td>Conductivité thermique solide <span class="arithmatex">\(\lambda_s\)</span></td>
+<td>1.0 W/m/K</td>
+</tr>
+<tr>
+<td>Compression de matrice <span class="arithmatex">\(K_s\)</span></td>
+<td>31.8 GPa</td>
+</tr>
+<tr>
+<td>Cisaillement de matrice <span class="arithmatex">\(G_s\)</span></td>
+<td>19.1 GPa</td>
+</tr>
+<tr>
+<td>Exemples géométriques</td>
+<td>Domaine 1D de 20 cm, 100 mailles</td>
+</tr>
+<tr>
+<td>Courbe de rétention</td>
+<td><code>Van-Genuchten</code> avec <span class="arithmatex">\(p_0 = 0.7\)</span> MPa, <span class="arithmatex">\(m = 0.4\)</span></td>
+</tr>
+</tbody>
+</table>
+<h3 id="physique-attendue-dans-le-cas-test">Physique attendue dans le cas test</h3>
+<p>La simulation pilote l'application progressive d'un protocole thermique et le suivi des champs <span class="arithmatex">\(p_{\max}, T, c_s\)</span> sur la géométrie 1D, reproduisant la propagation du front de gel et les déplacements des fluides causés par la "pompe" thermocinétique de la glace.</p>
+<h3 id="resultats-et-commentaires-physiques-du-test">Résultats et commentaires physiques du test</h3>
+<p>Une exécution typique du modèle <code>test_examples/Frostaco</code> illustrerait le comportement séquentiel suivant :</p>
+<p><img alt="Résultats d'exécution Frostaco 1D" src="Frostaco_results.png" /></p>
+<ol>
+<li><strong>Propagation du Gel</strong> : Au refroidissement (de 283 K vers 253 K pour une face, par exemple), le modèle va prédire l'avancée du front de glace depuis le bord libre. En tout point atteignant des températures négatives adaptées, l'inconnue <code>p_max</code> dictera une apparition de <code>p_i</code> (pression de glace) dominante face à <code>p_l</code>.</li>
+<li><strong>Cryo-succion</strong> : La solidification de l'eau réduit la pression interstitielle liquide, créant un gradient très fort de succion attirant l'eau proche non gelée vers le front (pompage cryogénique).</li>
+<li><strong>Surconcentration saline</strong> : L’incorporation de l'eau dans le cristal de glace excluant le sel, le front dégage une surconcentration <span class="arithmatex">\(c_s\)</span> (effet de chasse visible sur les fichiers <code>.t1</code> et <code>.t2</code> de résultat) qui a pour vocation de stabiliser la transition en inhibant un gel ultérieur à cette même température.</li>
+<li><strong>Impact Poro-thermique</strong> : La densité de l'eau baissant lors de la glaciation (le volume gonflant de +9%), le bilan de masse entraîne la montée de tensions poroélastiques dans la matrice de sortie, provoquant des pressions macroscopiques évaluées via Mori-Tanaka à des mégapascals (Mpa) dommageables pour le béton.</li>
+</ol>
+<hr />
+<h2 id="7-discretisation-numerique">7. Discrétisation numérique</h2>
+<p>La plateforme Bil s'appuie ici sur une discrétisation par la technique <strong>Volumes Finis Centrés sur les Cellules</strong> (<code>FVM.h</code>). Le modèle est totalement implicite pour la conservation de la masse, l'entropie, et la concentration de sel. </p>
+<p>Les dérivées pour l'assemblage de la matrice jacobienne (Newton-Raphson) sont calculées numériquement et analytiquement aux niveaux des termes flux, à travers le couplage des variables <code>(M_TOT, M_SALT, S_TOT, W_TOT, W_SALT, W_THE)</code>. </p>
+<hr />
+<h2 id="8-description-pas-a-pas-des-fichiers">8. Description pas-à-pas des fichiers</h2>
+<h3 id="81-fichier-de-pilotage-test_examplesfrostacofrostaco">8.1 Fichier de pilotage <code>test_examples/Frostaco/Frostaco</code></h3>
+<p>Ce fichier définit intégralement la simulation du cas test de façon déclarative. Voici sa structure détaillée pas-à-pas :</p>
+<ol>
+<li><strong>Geometry / Mesh</strong> : Initialise un problème de coordonnées géométriques via un maillage simple composé de 100 éléments le long d'un segment de 0.2 m.</li>
+<li><strong>Material</strong> : Indique le type de modèle à charger (<code>Model = Frostaco</code>) et définit tous les paramètres matériels (conductivités, porosité, modules mécaniques). On y trouve l'appel aux courbes <code>Curves_log = cement_log</code> intégrant les lois de Van-Genuchten et Mualem pour la thermodynamique liquide-glace.</li>
+<li><strong>Fields</strong> : Définit 8 champs de base (valeurs de référence) permettant d'associer des constantes fixes aux lois de conditions initiales ou aux limites (ex: 283 K pour la température ambiante via le champ 1, 1000 mol/m³ pour le sel via le champ 8).</li>
+<li><strong>Initialization</strong> : Spécifie les conditions microscopiques à <span class="arithmatex">\(t=0\)</span> dans le domaine (<code>Region = 2</code>). Les 3 inconnues primaires (<code>tem</code>, <code>c_s</code>, <code>p_max</code>) sont paramétrées à partir des champs pré-référencés.</li>
+<li><strong>Functions</strong> : Introduit des profils mathématiques de variation spatiale ou temporelle. La dimension thermique de gel de l'échantillon est pilotée par la fonction définissant une évolution passant de 273 K à 253 K en un intervalle de temps donné.</li>
+<li><strong>Boundary Conditions</strong> : Aligne les bords du modèle (ex: <code>Region = 1</code>) sur l'évolution prévue de la température et l'imperméabilité au transport par les autres variables (conditions de Neumann et Dirichlet).</li>
+<li><strong>Dates &amp; Time Steps</strong> : Configure le moteur de pas de temps adaptatif propre à Bil. La ligne <code>Dtini</code> dicte le pas d'initialisation (très faible), et <code>Dates</code> gère aux quels marqueurs temporels les résultats doivent être écrits sur disque.</li>
+<li><strong>Objective Variations</strong> : Sert de tolérance maximale entre deux étapes itératives. Le solveur recalibrera les calculs si par exemple, la variation de thermie <code>tem</code> excède un pas de marge défini.</li>
+</ol>
+<h3 id="82-fichier-modele-srcmodelsmodelfilesfrostacoc">8.2 Fichier modèle <code>src/Models/ModelFiles/Frostaco.c</code></h3>
+<p>Le fichier source C embarque toute la physique couplée de la loi Frostaco en s'interfaçant avec le noyau analytique <em>Bil</em>. Voici ses grands blocs de traitement fonctionnels (étapes de calcul) :</p>
+<ol>
+<li><strong>Initialisation et Constantes</strong> :</li>
+<li>Définition des 3 équations primaires (<code>mass</code>, <code>salt</code>, <code>the</code>) associées aux inconnues clés (<code>p_max</code>, <code>c_s</code>, <code>tem</code>).</li>
+<li>
+<p>La fonction <code>ComputePhysicoChemicalProperties()</code> pré-calcule les grandeurs absolues de l'eau (densité, viscosité), l'activité molaire des sels et l'entropie de fusion du cristal de glace sur ce contexte physique.</p>
+</li>
+<li>
+<p><strong>Évaluation aux Noeuds (<code>ComputeVariables</code> et <code>ComputeSecondaryVariables</code>)</strong> :</p>
+</li>
+<li>La structure logique est conçue pour dédoubler <code>p_max</code> en pression limite liquide <code>p_l</code> et glace <code>p_i</code>. La méthode vérifie numériquement la possibilité thermodynamique via la loi généralisée de Kelvin, évitant ainsi d'imposer physiquement des degrés de glace dans un milieu modérément chaud.</li>
+<li>
+<p>Des paramètres locaux comme <code>rho_i</code>, <code>rho_salt</code>, module d'entropie <code>s_tot</code>, la viscosité de la solution, et le degré de saturation microscopique (<code>sd_l</code> via la courbe rétentionnelle) en découlent purement en variables d'états secondaires.</p>
+</li>
+<li>
+<p><strong>Flux Échanges (<code>ComputeTransferCoefficients</code> et flux associés)</strong> :</p>
+</li>
+<li>Construit les mobilités hydrodynamiques et tortuosités des conductances permettant d'advecter l'eau liquide (perte de rendement de Darcy par glace obstrusive).</li>
+<li>
+<p>Génère les flux nodaux exacts (<code>w_l</code> pour le liquide, <code>w_salt</code> pour le flux transporté cumulé à l'advection, et <code>w_the</code> la chaleur emportée).</p>
+</li>
+<li>
+<p><strong>Jacobien et Bilan Numérique (<code>ComputeResidu</code> et <code>TangentCoefficients</code>)</strong> :</p>
+</li>
+<li>Le vecteur de <code>Residu</code> calcule l'erreur numérique pour contraindre les 3 principes de conservation. Le bilan est construit via la fonction noyau <code>FVM_ComputeMassAndFluxResidu(..)</code>.</li>
+<li>
+<p><code>TangentCoefficients</code> assemble numériquement (par différence finie ciblée et perturbations <span class="arithmatex">\(10^{-4}\)</span> des vecteurs d'état) l'entièreté de la jacobienne de sensibilité afin de nourrir la résolution Newton-Raphson.</p>
+</li>
+<li>
+<p><strong>Déformations Post-Calcul (<code>ComputeOutputs</code>)</strong> :</p>
+</li>
+<li>Les propriétés hydro-thermiques résiduelles et l'expansion interstitielle causée par la phase "Glace" modélisent des déformations effectives au sein de la matrice cimentaire. Ce poste reconstruit le modèle poroélastique contraint d'intégration locale selon le schéma de Mori-Tanaka, renvoyant l'incrément de fissuration estimée sur l'output physique final.</li>
+</ol>
+<hr />
+<h2 id="9-references-bibliographiques">9. Références bibliographiques</h2>
+<ul>
+<li><strong>Coussy, O.</strong> (2005). Poromechanics of freezing materials. <em>Journal of the Mechanics and Physics of Solids</em>, 53(8), 1689–1718. — Cadre thermodynamique poromécanique rigoureux pour le gel/dégel de milieux poreux et l'usage de la relation de Kelvin sur la glace.</li>
+<li><strong>Zeng, Q., Fen-Chong, T. &amp; Dangla, P.</strong> (2012). Water freezing in cement paste: observation and calculation. <em>Advances in civil engineering materials</em>, 1(1), 1–16.</li>
+<li><strong>Zeng, Q., Fen-Chong, T. &amp; Dangla, P.</strong> (2014). Poromechanics model of freezing/thawing phenomena in porous geomaterials: application to concrete. <em>International Journal for Numerical and Analytical Methods in Geomechanics</em>. — Base principale du formalisme du présent modèle <code>Frostaco</code>.</li>
+<li><strong>Mori, T., &amp; Tanaka, K.</strong> (1973). Average stress in matrix and average elastic energy of materials with misfitting inclusions. <em>Acta metallurgica</em>, 21(5), 571–574. — Hypothèses d’homogénéisation pour déterminer le tenseur d'élasticité avec des cristaux de glace inclus dans les pores.</li>
+<li><strong>Lin, S. T., &amp; Lee, H.</strong> (1993). Hydration-based thermodynamic model for phase equilibria in aqueous solutions. <em>AIChE Journal</em>, 39(6), 1064–1075. — Modélisation de l'activité du sel utilisée et codée dans la fonction d'équilibre d'activité d'eau (<span class="arithmatex">\(Ca^{2+}\)</span>, <span class="arithmatex">\(Na^+\)</span>).</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "navigation.footer", "search.highlight", "search.suggest", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
