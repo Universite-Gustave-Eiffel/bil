@@ -10,7 +10,7 @@
 #define TITLE "Short title of my model"
 #define AUTHORS "Authors"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 /*
  * The numbers below are arbitrary and serve only as example
@@ -59,7 +59,7 @@ static int    pm(char *s) ;
 #define CURVE1(x)    Curve_ComputeValue(Element_GetCurve(el),x)
 #define CURVE2(x)    Curve_ComputeValue(Element_GetCurve(el) + 1,x)
 /* To retrieve the material properties */
-#define GetProperty(a)   (Element_GetProperty(el)[pm(a)]) 
+#define GetMaterialProperty(a)   (Element_GetProperty(el)[pm(a)]) 
 
 /* Intern variables */
 static double coef1, coef2,coef3 ;
@@ -80,7 +80,7 @@ int SetModelProp(Model_t *model)
  */
 {
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */
   Model_CopyNameOfEquation(model,IE_Eq1,"first") ;
@@ -143,9 +143,9 @@ int DefineElementProp(Element_t *el,IntFcts_t *intfcts)
   int NbOfIntPoints = IntFct_GetNbOfPoints(intfct) ;
 
   /** Define the length of tables */
-  Element_GetNbOfImplicitTerms(el) = NVI*NbOfIntPoints ;
-  Element_GetNbOfExplicitTerms(el) = NVE*NbOfIntPoints ;
-  Element_GetNbOfConstantTerms(el) = NV0*NbOfIntPoints ;
+  Element_SetNbOfImplicitTerms(el,NVI*NbOfIntPoints) ;
+  Element_SetNbOfExplicitTerms(el,NVE*NbOfIntPoints) ;
+  Element_SetNbOfConstantTerms(el,NV0*NbOfIntPoints) ;
   
   /* Find below some examples of possible operations */
   

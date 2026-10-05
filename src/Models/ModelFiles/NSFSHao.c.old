@@ -224,7 +224,7 @@ int SetModelProp(Model_t* model)
   int i ;
   
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */
   Model_CopyNameOfEquation(model,E_liq,"liq") ;

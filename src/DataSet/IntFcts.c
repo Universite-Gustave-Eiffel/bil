@@ -48,7 +48,7 @@ void (IntFcts_Delete)(void* self)
         IntFct_Delete(intfct_i) ;
       }
     
-      free(intfct) ;
+      Mry_Free(intfct) ;
     }
   }
 }
@@ -107,7 +107,7 @@ int IntFcts_AddIntFct(IntFcts_t* intfcts,unsigned short int nn,unsigned short in
     IntFct_t* intfcti = IntFct_Create(nn,dim,type) ;
     
     intfct[i] = intfcti[0] ;
-    free(intfcti) ;
+    Mry_Free(intfcti) ;
   }
   
   return(i) ;

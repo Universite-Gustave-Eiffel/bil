@@ -3,7 +3,7 @@
 
 
 /* Forward declarations */
-struct Matrix_t; //typedef struct Matrix_t       Matrix_t ;
+struct Matrix_t;
 struct Mesh_t;
 struct Options_t;
 struct Element_t;
@@ -103,5 +103,8 @@ struct Matrix_t {             /* Matrix */
   int*    rowpermutation ;
   int*    columnpermutation ;
 } ;
+
+#include "MatrixStorageFormat.h"
+#include "GenericData.h"
 
 #endif

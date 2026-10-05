@@ -5,6 +5,7 @@
 #include <string.h>
 #include <strings.h>
 #include <assert.h>
+#include <vector>
 #include "FEM2.h"
 #include "FEM.h"
 #include "Message.h"
@@ -64,7 +65,7 @@ void (FEM2_Delete)(void* self)
     
     if(buf) {
       Buffers_Delete(buf)  ;
-      free(buf) ;
+      Mry_Free(buf) ;
       FEM2_GetBuffers(fem2) = NULL ;
     }
   }
@@ -320,8 +321,9 @@ int (FEM2_ComputeHomogenizedStressTensor)(FEM2_t* fem2,double t,double dt,double
       
       for(j = 0 ; j < nfcts ; j++) {
         Function_t* func = Functions_GetFunction(fcts) + j ;
-        double* x = Function_GetXValue(func) ;
-        double* f = Function_GetFValue(func) ;
+        FunctionPiecewiseAffine_t* fpa = (FunctionPiecewiseAffine_t*) Function_GetFunctionFormat(func);
+        double* x = FunctionPiecewiseAffine_GetXValue(fpa) ;
+        double* f = FunctionPiecewiseAffine_GetFValue(fpa) ;
 
         x[0] = t - dt ;
         x[1] = t ;
@@ -347,8 +349,8 @@ int (FEM2_ComputeHomogenizedStressTensor)(FEM2_t* fem2,double t,double dt,double
       }
       
       /* There are 2 dates */
-      Date_GetTime(date) = t_n ;
-      Date_GetTime(date + 1) = t ;
+      Date_SetTime(date,t_n) ;
+      Date_SetTime(date + 1, t) ;
     
       {
         Solution_t* sol   = Solutions_GetSolution(sols) ;
@@ -400,10 +402,9 @@ void (FEM2_InitializeMicrostructureDataSet)(FEM2_t* fem2)
     /* Update the macro-gradient and the macro-fctindex */
     {
       Materials_t* mats = DataSet_GetMaterials(dataset) ;
-      int nmats = Materials_GetNbOfMaterials(mats) ;
-      int j ;
+      size_t nmats = Materials_GetNbOfMaterials(mats) ;
     
-      for(j = 0 ; j < nmats ; j++) {
+      for(size_t j = 0 ; j < nmats ; j++) {
         Material_t* mat = Materials_GetMaterial(mats) + j ;
         Model_t* model = Material_GetModel(mat) ;
         Model_ComputePropertyIndex_t* pidx = Model_GetComputePropertyIndex(model) ;
@@ -429,32 +430,18 @@ void (FEM2_InitializeMicrostructureDataSet)(FEM2_t* fem2)
     /* Check and update the function of time */
     {
       Functions_t* fcts = DataSet_GetFunctions(dataset) ;
-      int nfcts = Functions_GetNbOfFunctions(fcts) ;
-      int j ;
+      size_t nfcts = Functions_GetNbOfFunctions(fcts) ;
       
       if(nfcts < 9) {
-        Message_FatalError("FEM2_InitializeMicrostructureDataSet: the nb of functions is %d but it must be 9 at least",nfcts) ;
+        Message_FatalError("FEM2_InitializeMicrostructureDataSet: the nb of functions is %lu but it must be 9 at least",nfcts) ;
       }
       
-      nfcts = 9 ;
-      for(j = 0 ; j < nfcts ; j++) {
+      for(size_t j = 0 ; j < 9 ; j++) {
         Function_t* func = Functions_GetFunction(fcts) + j ;
-        int npts = Function_GetNbOfPoints(func) ;
-          
-        if(npts < 2) {
-          Message_FatalError("FEM2_InitializeMicrostructureDataSet: the nb of points is %d but it must be 2 at least",npts) ;
-        }
-          
-        {
-          double* t = Function_GetXValue(func) ;
-          double* f = Function_GetFValue(func) ;
+        std::vector<double> t_vec = {0,1};
+        std::vector<double> f_vec = {0,1};
             
-          Function_GetNbOfPoints(func) = 2 ;
-          t[0] = 0 ;
-          t[1] = 1 ;
-          f[0] = 0 ;
-          f[1] = 1 ;
-        }
+        Function_Set(func,"piecewiseaffine",t_vec,f_vec) ;
       }
     }
     
@@ -462,314 +449,14 @@ void (FEM2_InitializeMicrostructureDataSet)(FEM2_t* fem2)
     {
       {
         Dates_t* dates = DataSet_GetDates(dataset) ;
-        int     nbofdates  = Dates_GetNbOfDates(dates) ;
+        size_t   nbofdates  = Dates_GetNbOfDates(dates) ;
           
         if(nbofdates < 2) {
-          Message_FatalError("FEM2_InitializeMicrostructureDataSet: the nb of dates is %d but it must be 2 at least",nbofdates) ;
+          Message_FatalError("FEM2_InitializeMicrostructureDataSet: the nb of dates must be 2 at least") ;
         }
       
-        Dates_GetNbOfDates(dates) = 2 ;
+        Dates_SetNbOfDates(dates, 2) ;
       }
     }
   }
 }
-
-
-
-
-#if 0
-int (FEM2_HomogenizeTangentStiffnessTensor1)(Mesh_t* mesh,Solver_t* solver,double t,double dt,double* c)
-/** Compute the homogenized tangent stiffness tensor of a microstructure
- *  by the finite element method.
- *  Inputs:
- *  - mesh: contained the mesh of the microstructure
- *  - solver: the solver created from mesh
- *  - t, dt: the time and the time step
- *  Output:
- *  - c: the stiffness tensor as an array of 81 doubles.
- *  Return 0 if succeeds or else if fails.
- */
-{
-#define C(i,j,k,l)  (c[(((i)*3+(j))*3+(k))*3+(l)])
-  int dim = Mesh_GetDimension(mesh) ;
-  Matrix_t* a = Solver_GetMatrix(solver) ;
-  Residu_t* residu = Solver_GetResidu(solver) ;
-  double*   b = (double*) Residu_GetRHS(residu) ;
-  double*   u = (double*) Residu_GetSolution(residu) ;
-  size_t nrhs = Residu_GetNbOfRHS(residu) ;
-  size_t ncol = Residu_GetLengthOfRHS(residu) ;
-  double*  pb[9] = {b,b+ncol,b+2*ncol,b+ncol,b+3*ncol,b+4*ncol,b+2*ncol,b+4*ncol,b+5*ncol} ;
-  double*  pu[9] = {u,u+ncol,u+2*ncol,u+ncol,u+3*ncol,u+4*ncol,u+2*ncol,u+4*ncol,u+5*ncol} ;
-  double    E[9] = {1,0.5,0.5,0.5,1,0.5,0.5,0.5,1} ;
-  
-  if(nrhs < 6) {
-    arret("FEM2_HomogenizeStiffnessTensor") ;
-  }
-
-
-  /* Initializations */
-  {
-    int j ;
-    
-    for(j = 0 ; j < 81 ; j++) c[j] = 0 ;
-  }
-  
-    
-  Matrix_SetValuesToZero(a) ;
-  Residu_SetValuesToZero(residu) ;
-  
-
-  /* The matrix and the r.h.s. */
-  {
-    int n_el = Mesh_GetNbOfElements(mesh) ;
-    Element_t* el = Mesh_GetElement(mesh) ;
-#define NE (Element_MaxNbOfNodes*Model_MaxNbOfEquations)
-    double ke[NE*NE] ;
-#undef NE
-    int ie ;
-    
-    for(ie = 0 ; ie < n_el ; ie++) {
-      Material_t* mat = Element_GetMaterial(el + ie) ;
-    
-      if(mat) {
-      
-        Element_FreeBuffer(el + ie) ;
-        {
-          int i = Element_ComputeMatrix(el + ie,t,dt,ke) ;
-        
-          if(i != 0) return(i) ;
-        }
-      
-        Matrix_AssembleElementMatrix(a,el+ie,ke) ;
-      
-        {
-          int  nn = Element_GetNbOfNodes(el + ie) ;
-          int neq = Element_GetNbOfEquations(el + ie) ;
-          int ndof = nn*neq ;
-          int n ;
-                
-          for(n = 0 ; n < nn ; n++) {
-            Node_t* node_n = Element_GetNode(el + ie,n) ;
-            double* x_n = Node_GetCoordinate(node_n) ;
-            int m ;
-                
-            for(m = 0 ; m < nn ; m++) {
-              Node_t* node_m = Element_GetNode(el + ie,m) ;
-              double* x_m = Node_GetCoordinate(node_m) ;
-              int i ;
-        
-              for(i = 0 ; i < dim ; i++) {
-                int ni = n*neq + i ;
-                int jj_row = Element_GetEquationPosition(el + ie)[ni] ;
-                
-                /*  The r.h.s. stored in pb */
-                if(jj_row >= 0) {
-                  int row_i = Node_GetMatrixRowIndex(node_n)[jj_row] ;
-                  int j ;
-          
-                  if(row_i >= 0) {
-                    for(j = 0 ; j < dim ; j++) {
-                      int mj = m*neq + j ;
-                      int ij = ni * ndof + mj ;
-                      int k ;
-                      
-                      for(k = j ; k < dim ; k++) {
-                        int      jk = 3 * j + k ;
-                        double* bjk = pb[jk] ;
-
-                        bjk[row_i] -= ke[ij] * E[jk] * x_m[k] ;
-                      }
-                    }
-                  }
-                }
-                
-                /*  First part of C */
-                {
-                  int j ;
-          
-                  for(j = 0 ; j < dim ; j++) {
-                    int mj = m*neq + j ;
-                    int ij = ni * ndof + mj ;
-                    int k ;
-                      
-                    for(k = 0 ; k < dim ; k++) {
-                      int l ;
-          
-                      for(l = 0 ; l < dim ; l++) {
-                        C(k,i,l,j) += x_n[k] * ke[ij] * x_m[l] ;
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-
-  /* The solutions */
-  {
-    int k ;
-
-    for(k = 0 ; k < dim ; k++) {
-      int l ;
-          
-      for(l = k ; l < dim ; l++) {
-        Solver_GetRHS(solver) = pb[3 * k + l] ;
-        Solver_GetSolution(solver) = pu[3 * k + l] ;
-        Solver_Solve(solver) ;
-      }
-    }
-    
-    Solver_GetRHS(solver) = b ;
-    Solver_GetSolution(solver) = u ;
-  }
-
-
-  /* The macroscopic tangent stiffness matrix */
-  {
-    int i ;
-        
-    for(i = 0 ; i < dim ; i++) {
-      int j ;
-      
-      for(j = 0 ; j < dim ; j++) {
-        int k ;
-          
-        for(k = 0 ; k < dim ; k++) {
-          int l ;
-          
-          for(l = 0 ; l < dim ; l++) {
-            double  ub = 0. ;
-            
-            {
-              double* uik = pu[3 * i + k] ;
-              double* blj = pb[3 * l + j] ;
-              int p ;
-              
-              for(p = 0 ; p < ncol ; p++) {
-                ub += uik[p] * blj[p] ;
-              }
-            }
-            
-            {
-              double  Eik =  E[3 * i + k] ;
-              double  Elj =  E[3 * l + j] ;
-
-              C(k,i,j,l) -= ub / (Eik * Elj) ;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  {
-    double vol = FEM_ComputeVolume(mesh) ;
-    int j ;
-    
-    for(j = 0 ; j < 81 ; j++) c[j] /= vol ;
-  }
-  
-  return(0) ;
-#undef C
-}
-
-
-
-
-
-
-int (FEM2_ComputeHomogenizedStressTensor1)(DataSet_t* dataset,Solver_t* solver,double t,double dt,Solutions_t* sols_n,Solutions_t* sols,double* dstrain,double* stress)
-/** Compute the homogenized stress tensor of a microstructure.
- *  Inputs:
- *  - dataset:
- *  - solver:
- *  - t, dt:
- *  - sols_n, sols:
- *  - dstrain: strain increment as an array of 9 doubles
- *  Output:
- *  - stress: stress tensor as an array of 9 doubles.
- */
-{
-  /* Set input data of the microstructure */
-  {
-    /* Update the time function */
-    {
-      Functions_t* fcts = DataSet_GetFunctions(dataset) ;
-      int nfcts = 9 ;
-      int j ;
-      
-      for(j = 0 ; j < nfcts ; j++) {
-        Function_t* func = Functions_GetFunction(fcts) + j ;
-        double* x = Function_GetXValue(func) ;
-        double* f = Function_GetFValue(func) ;
-
-        x[0] = t - dt ;
-        x[1] = t ;
-        f[0] = 0 ;
-        f[1] = dstrain[j] ;
-      }
-    }
-  }
-    
-  /* Compute the microstructure */
-  {
-    Module_t* module = DataSet_GetModule(dataset) ;
-    Dates_t*   dates  = DataSet_GetDates(dataset) ;
-    Date_t*    date   = Dates_GetDate(dates) ;
-    TimeStep_t*  timestep  = DataSet_GetTimeStep(dataset) ;
-    double dtini = TimeStep_GetInitialTimeStep(timestep) ;
-    double t_n = Solutions_GetTime(sols_n) ;
-    
-    {
-      /* t should be equal to t_n + dt. */
-      if(fabs(t - dt - t_n) > 1.e-4*dtini) {
-        Message_FatalError("FEM2_ComputeStressTensor: t_n = %e ; t - dt = %e",t_n,t-dt) ;
-      }
-      
-      /* There are 2 dates */
-      Date_GetTime(date) = t_n ;
-      Date_GetTime(date + 1) = t ;
-    
-      {
-        Solution_t* sol   = Solutions_GetSolution(sols) ;
-        Solution_t* sol_n = Solutions_GetSolution(sols_n) ;
-        
-        Solution_Copy(sol,sol_n) ;
-      }
-      
-      {
-        int i ;
-        
-        #if 1
-        i = Module_SolveProblem(module,dataset,sols,solver,NULL) ;
-        #else
-        {
-          Module_InitializeProblem(module,dataset,sols) ;
-          i = Module_Increment(module,dataset,sols,solver,NULL,t_n,t) ;
-        }
-        #endif
-        
-        if(i < 0) {
-          return(i) ;
-          //Message_FatalError("FEM2_ComputeStressTensor: something went wrong") ;
-          //Exception_Interrupt ;
-        }
-      }
-    }
-  }
-
-  /* Backup stresses as averaged stresses */
-  {
-    Mesh_t* mesh = DataSet_GetMesh(dataset) ;
-    
-    FEM_AverageStresses(mesh,stress) ;
-  }
-  
-  return(0) ;
-}
-#endif

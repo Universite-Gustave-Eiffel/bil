@@ -14,7 +14,7 @@
 #define TITLE "Mechanics from a microstructure (2017)"
 #define AUTHORS "Dangla"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 
 /* Nb of equations */
@@ -120,7 +120,7 @@ static double  macrogradient[9] ;
 static double  macrostrain[9] ;
 
 
-#define GetProperty(a)   (Element_GetProperty(el)[pm(a)])
+#define GetMaterialProperty(a)   (Element_GetProperty(el)[pm(a)])
 
 #define ItIsPeriodic  (Geometry_IsPeriodic(Element_GetGeometry(el)))
 
@@ -161,8 +161,8 @@ double* MacroGradient(Element_t* el,double t)
   {
     Functions_t* fcts = Material_GetFunctions(Element_GetMaterial(el)) ;
     Function_t*  fct = Functions_GetFunction(fcts) ;
-    int nf = Functions_GetNbOfFunctions(fcts) ;
-    double* fctindex = &GetProperty("macro-fctindex") ;
+    size_t nf = Functions_GetNbOfFunctions(fcts) ;
+    double* fctindex = &GetMaterialProperty("macro-fctindex") ;
     int i ;
     
     for(i = 0 ; i < 9 ; i++) {
@@ -177,7 +177,7 @@ double* MacroGradient(Element_t* el,double t)
   }
   
   {
-    double* g = &GetProperty("macro-gradient") ;
+    double* g = &GetMaterialProperty("macro-gradient") ;
     int i ;
     
     for(i = 0 ; i < 9 ; i++) {
@@ -211,8 +211,8 @@ double* MacroStrain(Element_t* el,double t)
 
 void GetProperties(Element_t* el,double t)
 {
-  //gravity = GetProperty("gravity") ;
-  //rho_s   = GetProperty("rho_s") ;
+  //gravity = GetMaterialProperty("gravity") ;
+  //rho_s   = GetMaterialProperty("rho_s") ;
     
   {
     DataSet_t* dataset = Element_GetDataSet(el) ;
@@ -231,7 +231,7 @@ int SetModelProp(Model_t* model)
   char i ;
   
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */
   for(i = 0 ; i < dim ; i++) {
@@ -247,8 +247,8 @@ int SetModelProp(Model_t* model)
     Model_CopyNameOfUnknown(model,U_DISP + i,name_unk) ;
   }
   
-  Model_GetComputePropertyIndex(model) = &pm ;
-  Model_GetComputeMaterialProperties(model) = &GetProperties;
+  Model_SetComputePropertyIndex(model,&pm) ;
+  Model_SetComputeMaterialProperties(model,&GetProperties);
     
   return(0) ;
 }
@@ -286,17 +286,10 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
     if(!strncmp(method,"Microstructure",14)) {
       char* p = strstr(method," ") ;
       char* cellname = p + strspn(p," ") ;
-      Options_t* options = Options_Create(NULL) ;
-      DataSet_t* dataset = DataSet_Create(cellname,options) ;
+      DataSet_t* dataset = DataSet_Create(cellname) ;
+      Options_t* options = DataSet_GetOptions(dataset) ;
       Mesh_t* mesh = DataSet_GetMesh(dataset) ;
       Solvers_t* solvers = Solvers_Create(mesh,options,6) ;
-      
-      /* Store options in mat */
-      {
-        GenericData_t* gdat = GenericData_Create(1,options,"Options") ;
-      
-        Material_AppendGenericData(mat,gdat) ;
-      }
       
       /* Store dataset in mat */
       {
@@ -729,8 +722,8 @@ Values_d* MPM_t::Integrate(Element_t* el,const double& t,const double& dt,Values
   /* Backup body force */
   {
     {
-      double gravity = GetProperty("gravity") ;
-      double rho_s   = GetProperty("rho_s") ;
+      double gravity = GetMaterialProperty("gravity") ;
+      double rho_s   = GetMaterialProperty("rho_s") ;
       int dim = Element_GetDimensionOfSpace(el) ;
       double* f_mass = val.BodyForce ;
       

@@ -40,7 +40,7 @@ void (Buffer_Delete)(void* self)
     void* v = Buffer_GetBeginOfBuffer(buffer) ;
   
     if(v) {
-      free(v) ;
+      Mry_Free(v) ;
       Buffer_GetBeginOfBuffer(buffer) = NULL ;
     }
   }

@@ -19,7 +19,7 @@
 #define TITLE   "Internal/External sulfate attack of concrete (2017)" 
 #define AUTHORS "Gu-Dangla"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 
 
@@ -509,7 +509,7 @@ enum {
 
 
 /* To retrieve the material properties */
-#define GetProperty(a) \
+#define GetMaterialProperty(a) \
         (pm(a) < 0) ? 0 : Element_GetProperty(el)[pm(a)]
 
 
@@ -706,33 +706,33 @@ int pm(const char *s)
 
 void GetProperties(Element_t* el)
 {
-  phi0      = GetProperty("porosity") ;
-  n_ca_ref  = GetProperty("N_CH") ;
-  n_si_ref  = GetProperty("N_CSH") ;
-  n_al_ref  = GetProperty("N_AH3") ;
-  n_csh2_0  = GetProperty("N_CSH2") ;
-  n_afm_0   = GetProperty("N_AFm") ;
-  n_aft_0   = GetProperty("N_AFt") ;
-  n_c3ah6_0 = GetProperty("N_C3AH6") ;
-  r_afm     = GetProperty("R_AFm") ;
-  r_aft     = GetProperty("R_AFt") ;
-  r_c3ah6   = GetProperty("R_C3AH6") ;
-  r_csh2    = GetProperty("R_CSH2") ;
-  K_bulk    = GetProperty("K_bulk") ;
-  strain0   = GetProperty("Strain0") ;
-  strainf   = GetProperty("Strainf") ;
-  alphacoef = GetProperty("AlphaCoef") ;
-  betacoef  = GetProperty("BetaCoef") ;
-  r0        = GetProperty("r0") ;
-  Biot      = GetProperty("Biot") ;
-  //G_s       = GetProperty("G_s") ;
+  phi0      = GetMaterialProperty("porosity") ;
+  n_ca_ref  = GetMaterialProperty("N_CH") ;
+  n_si_ref  = GetMaterialProperty("N_CSH") ;
+  n_al_ref  = GetMaterialProperty("N_AH3") ;
+  n_csh2_0  = GetMaterialProperty("N_CSH2") ;
+  n_afm_0   = GetMaterialProperty("N_AFm") ;
+  n_aft_0   = GetMaterialProperty("N_AFt") ;
+  n_c3ah6_0 = GetMaterialProperty("N_C3AH6") ;
+  r_afm     = GetMaterialProperty("R_AFm") ;
+  r_aft     = GetMaterialProperty("R_AFt") ;
+  r_c3ah6   = GetMaterialProperty("R_C3AH6") ;
+  r_csh2    = GetMaterialProperty("R_CSH2") ;
+  K_bulk    = GetMaterialProperty("K_bulk") ;
+  strain0   = GetMaterialProperty("Strain0") ;
+  strainf   = GetMaterialProperty("Strainf") ;
+  alphacoef = GetMaterialProperty("AlphaCoef") ;
+  betacoef  = GetMaterialProperty("BetaCoef") ;
+  r0        = GetMaterialProperty("r0") ;
+  Biot      = GetMaterialProperty("Biot") ;
+  //G_s       = GetMaterialProperty("G_s") ;
   //K_s       = K_bulk/(1-Biot) ;
   //N_Biot    = K_s/(Biot - phi0) ;
   //G_Biot    = G_s/(0.75*phi0) ;
-  ar_AFt    = GetProperty("A_r") ;
-  ap_AFt    = GetProperty("A_p") ;
-  dr_AFt    = GetProperty("B_r") ;
-  dp_AFt    = GetProperty("B_p") ;
+  ar_AFt    = GetMaterialProperty("A_r") ;
+  ap_AFt    = GetMaterialProperty("A_p") ;
+  dr_AFt    = GetMaterialProperty("B_r") ;
+  dp_AFt    = GetMaterialProperty("B_p") ;
   
   satcurve  = Element_FindCurve(el,"S_r") ;
 }
@@ -740,7 +740,7 @@ void GetProperties(Element_t* el)
 
 int SetModelProp(Model_t* model)
 {
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   Model_CopyNameOfEquation(model,E_Sulfur, "sulfur") ;
   Model_CopyNameOfEquation(model,E_Calcium,"calcium") ;

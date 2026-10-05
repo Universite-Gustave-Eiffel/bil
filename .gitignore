@@ -49,3 +49,6 @@ site
 
 # Specific files
 ._sync_*
+
+# BilWrap
+deps_vars.jl

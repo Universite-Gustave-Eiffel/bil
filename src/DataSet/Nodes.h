@@ -10,6 +10,7 @@ struct Node_t;
 struct ObVals_t;
 struct Element_t;
 struct Buffers_t;
+struct ObVals_t;
 
 
 #include <stdio.h>
@@ -17,8 +18,8 @@ extern Nodes_t*  (Nodes_New)                         (const size_t,const int,con
 extern void      (Nodes_Delete)                      (void*) ;
 extern void      (Nodes_CreateMore)                  (Nodes_t*) ;
 extern int       (Nodes_ComputeNbOfUnknownFields)    (Nodes_t*) ;
-extern void      (Nodes_InitializeObValIndexes)      (Nodes_t*) ;
 extern void      (Nodes_SetMatrixRowColumnIndexes)   (Nodes_t*,DataFile_t*) ;
+extern void      (Nodes_LinkUpToObVals)              (Nodes_t*,ObVals_t*);
 extern void      (Nodes_InitializeMatrixRowColumnIndexes)(Nodes_t*) ;
 
 

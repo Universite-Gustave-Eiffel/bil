@@ -145,7 +145,7 @@ LDUSKLFormat_t* (LDUSKLFormat_Create)(Mesh_t* mesh,const int imatrix)
       }
     }
 
-    free(hc) ;
+    Mry_Free(hc) ;
   }
 
   return(a) ;
@@ -162,7 +162,7 @@ void (LDUSKLFormat_Delete)(void* self)
     double* z = LDUSKLFormat_GetNonZeroValue(a) ;
     
     if(z) {
-      free(z) ;
+      Mry_Free(z) ;
     }
   }
       
@@ -170,7 +170,7 @@ void (LDUSKLFormat_Delete)(void* self)
     double** p = LDUSKLFormat_GetPointerToLowerRow(a) ;
     
     if(p) {
-      free(p) ;
+      Mry_Free(p) ;
     }
   }
 }

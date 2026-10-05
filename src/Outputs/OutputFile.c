@@ -18,7 +18,7 @@ OutputFile_t*   (OutputFile_Create)(char* filename)
   OutputFile_t* outputfile = (OutputFile_t*) Mry_New(OutputFile_t) ;
   
   {
-    TextFile_t* textfile = TextFile_Create(filename) ;
+    TextFile_t* textfile = TextFile_New(filename) ;
 
     OutputFile_GetTextFile(outputfile) = textfile ;
   }
@@ -36,6 +36,6 @@ void   (OutputFile_Delete)(void* self)
     TextFile_t* textfile = OutputFile_GetTextFile(outputfile) ;
     
     TextFile_Delete(textfile) ;
-    free(textfile) ;
+    Mry_Free(textfile) ;
   }
 }

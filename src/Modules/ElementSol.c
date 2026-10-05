@@ -41,7 +41,7 @@ void   (ElementSol_Delete)(void* self)
     
     if(gdat) {
       GenericData_Delete(gdat) ;
-      free(gdat) ;
+      Mry_Free(gdat) ;
       ElementSol_GetImplicitGenericData(elementsol) = NULL ;
     }
   }
@@ -51,7 +51,7 @@ void   (ElementSol_Delete)(void* self)
     
     if(gdat) {
       GenericData_Delete(gdat) ;
-      free(gdat) ;
+      Mry_Free(gdat) ;
       ElementSol_GetExplicitGenericData(elementsol) = NULL ;
     }
   }
@@ -61,7 +61,7 @@ void   (ElementSol_Delete)(void* self)
     
     if(gdat) {
       GenericData_Delete(gdat) ;
-      free(gdat) ;
+      Mry_Free(gdat) ;
       ElementSol_GetConstantGenericData(elementsol) = NULL ;
     }
   }

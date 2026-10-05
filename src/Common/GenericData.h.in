@@ -64,7 +64,7 @@ _INLINE_ void (GenericData_Delete)(void* self)
       char* name = GenericData_GetName(gdat) ;
 
       if(name) {
-        free(name) ;
+        Mry_Free(name) ;
         GenericData_SetName(gdat,NULL) ;
       }
     }
@@ -86,11 +86,11 @@ _INLINE_ void (GenericData_Delete)(void* self)
             TypeId_DeleteData(typ,data_i) ;
           }
 
-          free(data) ;
+          Mry_Free(data) ;
         }
 
         TypeId_Delete(typ); // Do nothing!
-        free(typ);
+        Mry_Free(typ);
         
         //GenericData_SetData(gdat,NULL) ;
         GenericData_SetTypeId(gdat,NULL) ;
@@ -109,13 +109,13 @@ _INLINE_ void (GenericData_Delete)(void* self)
     
       if(prev) {
         GenericData_Delete(prev) ;
-        free(prev) ;
+        Mry_Free(prev) ;
         GenericData_SetPreviousGenericData(gdat,NULL) ;
       }
   
       if(next) {
         GenericData_Delete(next) ;
-        free(next) ;
+        Mry_Free(next) ;
         GenericData_SetNextGenericData(gdat,NULL) ;
       }
     }

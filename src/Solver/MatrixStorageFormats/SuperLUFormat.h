@@ -1,14 +1,17 @@
 #ifndef SUPERLUFORMAT_H
 #define SUPERLUFORMAT_H
 
+#include "BilConfig.h"
+
+#if defined (HAVE_SUPERLU) || defined (HAVE_SUPERLUMT) || defined (HAVE_SUPERLUDIST)
+
+/* SuperLUFormat_t mimics the SuperMatrix struct defined in SuperLu */
+#define SuperLUFormat_t     SuperMatrix
 
 /* Forward declaration */
-//struct SuperLUFormat_t; typedef struct SuperLUFormat_t    SuperLUFormat_t ;
-#define SuperLUFormat_t     SuperMatrix  /* Mimic the SuperMatrix struct defined in SuperLu */
+//struct SuperLUFormat_t;
 struct Mesh_t;
 
-  
-#include "superlu.h"
 
 //extern SuperLUFormat_t* (SuperLUFormat_Create)(Mesh_t*) ;
 extern SuperLUFormat_t* (SuperLUFormat_Create)(Mesh_t*,const int) ;
@@ -88,4 +91,5 @@ struct SuperLUFormat_t {
 
 
 
+#endif
 #endif

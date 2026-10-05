@@ -64,7 +64,7 @@ void (Curve_Delete)(void* self)
     double* mry = Curve_GetXRange(curve) ;
     
     if(mry) {
-      free(mry) ;
+      Mry_Free(mry) ;
       Curve_GetXRange(curve) = NULL ;
     }
   }
@@ -73,7 +73,7 @@ void (Curve_Delete)(void* self)
     char* name = Curve_GetNameOfXAxis(curve) ;
     
     if(name) {
-      free(name) ;
+      Mry_Free(name) ;
       Curve_GetNameOfXAxis(curve) = NULL ;
     }
   }
@@ -98,7 +98,7 @@ Curve_t* Curve_CreateDerivative(Curve_t const* curve)
     dy[i] = Curve_ComputeDerivative(curve,x[i]) ;
   }
   
-  free(x) ;
+  Mry_Free(x) ;
 
   return(dcurve) ;
 }
@@ -122,7 +122,7 @@ Curve_t* Curve_CreateIntegral(Curve_t const* curve)
     intydx[i] = Curve_ComputeIntegral(curve,x[i]) ;
   }
   
-  free(x) ;
+  Mry_Free(x) ;
 
   return(icurve) ;
 }
@@ -203,8 +203,8 @@ Curve_t* Curve_CreateInverse(Curve_t const* curve,const char scale)
       }
     }
     
-    free(yi) ;
-    free(xo) ;
+    Mry_Free(yi) ;
+    Mry_Free(xo) ;
   }
   
   return(evruc) ;
@@ -349,7 +349,7 @@ char* Curve_PrintInFile(Curve_t const* curve)
   
   fclose(target) ;
   
-  free(x) ;
+  Mry_Free(x) ;
   
   return(targetfile) ;
 }

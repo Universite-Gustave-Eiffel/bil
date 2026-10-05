@@ -10,8 +10,8 @@
 #include "ObVals.h"
 
 
-
-static size_t  Nodes_UpdateTheNbOfUnknownsAndEquationsPerNode(Nodes_t*) ;
+static void    (Nodes_InitializeObValIndexes)(Nodes_t*) ;
+static size_t  (Nodes_UpdateTheNbOfUnknownsAndEquationsPerNode)(Nodes_t*) ;
 
 
 Nodes_t*  (Nodes_New)(const size_t nn,const int dim,const size_t nc)
@@ -110,7 +110,7 @@ void (Nodes_Delete)(void* self)
     Element_t** pel = Nodes_GetPointerToElement(nodes) ;
     
     if(pel) {
-      free(pel) ;
+      Mry_Free(pel) ;
     }
   }
 
@@ -119,7 +119,7 @@ void (Nodes_Delete)(void* self)
     Node_t* node = Nodes_GetNode(nodes) ;
       
     Mry_Delete(node,n_no,Node_Delete) ;
-    free(node) ;
+    Mry_Free(node) ;
   }
     
   {
@@ -127,7 +127,7 @@ void (Nodes_Delete)(void* self)
       
     if(buf) {
       Buffers_Delete(buf) ;
-      free(buf) ;
+      Mry_Free(buf) ;
     }
   }
 
@@ -135,7 +135,7 @@ void (Nodes_Delete)(void* self)
     size_t* nb_rows = Nodes_GetNbOfMatrixRows(nodes) ;
     
     if(nb_rows) {
-      free(nb_rows) ;
+      Mry_Free(nb_rows) ;
     }
   }
 }
@@ -405,7 +405,7 @@ void (Nodes_SetMatrixRowColumnIndexes)(Nodes_t* nodes,DataFile_t* datafile)
       }
     }
   
-    if(perm) free(perm) ;
+    if(perm) Mry_Free(perm) ;
   }
   
   
@@ -491,15 +491,25 @@ void (Nodes_InitializeObValIndexes)(Nodes_t* nodes)
         int   j = ObVals_FindObValIndex(obvals,name_node) ;
         
         if(j >= 0) {
-          
           Node_GetObValIndex(node_i)[ieq] = j ;
-          
         } else {
-          
-          arret("Nodes_InitializeObValIndex: not enough objective values") ;
-          
+          arret("Nodes_InitializeObValIndexes: not enough objective values") ;
         }
       }
     }
   }
+}
+
+
+
+
+void  (Nodes_LinkUpToObVals)(Nodes_t* nodes,ObVals_t* obvals)
+/* Link up Nodes and ObVals
+* access to objective values
+* initialize the objective value indexes at the nodes */
+{
+  ObVal_t* obval = ObVals_GetObVal(obvals) ;
+    
+  Nodes_GetObjectiveValues(nodes) = obvals ;
+  Nodes_InitializeObValIndexes(nodes) ;
 }

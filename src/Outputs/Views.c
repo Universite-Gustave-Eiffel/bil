@@ -19,7 +19,7 @@ Views_t* (Views_Create)(int n)
       View_t* vw = View_Create() ;
   
       view[i] = vw[0] ;
-      free(vw) ;
+      Mry_Free(vw) ;
     }
   
     Views_GetView(views) = view ;
@@ -43,7 +43,7 @@ void (Views_Delete)(void* self)
       View_Delete(view + i) ;
     }
     
-    free(view) ;
+    Mry_Free(view) ;
     Views_GetView(views) = NULL ;
   }
 }

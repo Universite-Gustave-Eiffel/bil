@@ -107,23 +107,23 @@ struct FEM_t {
   /* Destructor */
   ~FEM_t() {
     if(_output) {
-      free(_output);
+      Mry_Free(_output);
       _output = NULL;
     }
     
     if(_input) {
-      free(_input);
+      Mry_Free(_input);
       _input = NULL;
     }
     
     if(_pintfct) {
-      free(_pintfct);
+      Mry_Free(_pintfct);
       _pintfct = NULL;
     }
 
     if(_buffers) {
       Buffers_Delete(_buffers)  ;
-      free(_buffers) ;
+      Mry_Free(_buffers) ;
       _buffers = NULL ;
     }
   }

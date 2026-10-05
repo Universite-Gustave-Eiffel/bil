@@ -20,12 +20,16 @@ struct Loads_t;
 struct Elements_t;
 struct Nodes_t;
 
+#include <string>
 
-//extern Mesh_t*  (Mesh_New)(void) ;
-extern Mesh_t*  (Mesh_Create)(DataFile_t*,Materials_t*,Geometry_t*) ;
+extern Mesh_t*  (Mesh_New)(Geometry_t*,DataFile_t* = nullptr) ;
+extern Mesh_t*  (Mesh_Create)(DataFile_t*,Geometry_t*,Materials_t* = nullptr) ;
+extern void     (Mesh_Scan)(Mesh_t*,DataFile_t*) ;
+extern void     (Mesh_CreateMore)(Mesh_t*,Materials_t*) ;
 extern void     (Mesh_Delete)(void*) ;
-//extern void     (Mesh_CreateMore)(Mesh_t*) ; // declared as extern only for Parser.y
-extern char*    (Mesh_Scan)(Mesh_t*,char*) ;
+extern void     (Mesh_Set)(Mesh_t*,std::string const&) ;
+extern void     (Mesh_Set)(Mesh_t*,char const*) ;
+extern void     (Mesh_SetNodeConnectivities)(Mesh_t*) ;
 extern void     (Mesh_SetMatrixRowColumnIndexes)(Mesh_t*,BConds_t*) ;
 extern void     (Mesh_UpdateMatrixRowColumnIndexes)(Mesh_t*) ;
 extern void     (Mesh_InitializeMatrixRowColumnIndexes)(Mesh_t*) ;
@@ -59,10 +63,15 @@ extern void     (Mesh_BroadcastImplicitTerms)(Mesh_t*) ;
 
 
 /* Accessors */
-#define Mesh_GetDataFile(MSH)               ((MSH)->datafile)
-#define Mesh_GetGeometry(MSH)               ((MSH)->geometry)
-#define Mesh_GetNodes(MSH)                  ((MSH)->nodes)
-#define Mesh_GetElements(MSH)               ((MSH)->elements)
+#define Mesh_GetDataFile(MSH)               ((MSH)->GetDataFile())
+#define Mesh_GetGeometry(MSH)               ((MSH)->GetGeometry())
+#define Mesh_GetNodes(MSH)                  ((MSH)->GetNodes())
+#define Mesh_GetElements(MSH)               ((MSH)->GetElements())
+
+#define Mesh_SetDataFile(MSH,A)             ((MSH)->SetDataFile(A))
+#define Mesh_SetGeometry(MSH,A)             ((MSH)->SetGeometry(A))
+#define Mesh_SetNodes(MSH,A)                ((MSH)->SetNodes(A))
+#define Mesh_SetElements(MSH,A)             ((MSH)->SetElements(A))
 
 
 
@@ -128,14 +137,27 @@ extern void     (Mesh_BroadcastImplicitTerms)(Mesh_t*) ;
 #define Mesh_IsPeriodic(MSH) \
         Mesh_GetPeriodicities(MSH)
 
-
+        
+ #include <stdexcept>
 
 
 struct Mesh_t {
-  DataFile_t* datafile ;
-  Geometry_t* geometry ;
-  Elements_t* elements ;
-  Nodes_t*    nodes ;
+  private:
+  DataFile_t* _datafile ;
+  Geometry_t* _geometry ;
+  Elements_t* _elements ;
+  Nodes_t*    _nodes ;
+
+  public:
+  DataFile_t* GetDataFile(){return _datafile;}
+  Geometry_t* GetGeometry(){return _geometry;}
+  Elements_t* GetElements(){return _elements;}
+  Nodes_t*    GetNodes(){return _nodes;}
+
+  void SetDataFile(DataFile_t* a){_datafile = a;}
+  void SetGeometry(Geometry_t* a){_geometry = a;}
+  void SetElements(Elements_t* a){_elements = a;}
+  void SetNodes(Nodes_t* a){_nodes = a;}
 } ;
 
 

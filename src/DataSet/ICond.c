@@ -14,16 +14,18 @@
 
 
 
-ICond_t* (ICond_New)(void)
+ICond_t* (ICond_New)(Fields_t* fields,Functions_t* functions)
 {
   ICond_t* icond = (ICond_t*) Mry_New(ICond_t) ;
-    
+      
+  ICond_SetFields(icond,fields) ;
+  ICond_SetFunctions(icond,functions) ;
     
   /* Allocation of space for the name of unknowns */
   {
     char* name = (char*) Mry_New(char,ICond_MaxLengthOfKeyWord) ;
   
-    ICond_GetNameOfUnknown(icond) = name ;
+    ICond_SetNameOfUnknown(icond,name) ;
   }
     
     
@@ -31,7 +33,7 @@ ICond_t* (ICond_New)(void)
   {
     char* filename = (char*) Mry_New(char,ICond_MaxLengthOfFileName) ;
   
-    ICond_GetFileNameOfNodalValues(icond) = filename ;
+    ICond_SetFileNameOfNodalValues(icond,filename) ;
     ICond_GetFileNameOfNodalValues(icond)[0] = '\0' ;
   }
   
@@ -40,7 +42,7 @@ ICond_t* (ICond_New)(void)
   {
     char* name = (char*) Mry_New(char,ICond_MaxLengthOfRegionName) ;
     
-    ICond_GetRegionName(icond) = name ;
+    ICond_SetRegionName(icond,name) ;
   }
   
   return(icond) ;
@@ -56,7 +58,7 @@ void (ICond_Delete)(void* self)
     char* name = ICond_GetNameOfUnknown(icond) ;
     
     if(name) {
-      free(name) ;
+      Mry_Free(name) ;
     }
   }
   
@@ -64,7 +66,7 @@ void (ICond_Delete)(void* self)
     char* name = ICond_GetFileNameOfNodalValues(icond) ;
     
     if(name) {
-      free(name) ;
+      Mry_Free(name) ;
     }
   }
   
@@ -72,7 +74,7 @@ void (ICond_Delete)(void* self)
     char* name = ICond_GetRegionName(icond) ;
     
     if(name) {
-      free(name) ;
+      Mry_Free(name) ;
     }
   }
 }
@@ -82,17 +84,18 @@ void (ICond_Delete)(void* self)
 void (ICond_Scan)(ICond_t* icond,DataFile_t* datafile)
 {
   char* line = DataFile_ReadLineFromCurrentFilePositionInString(datafile) ;
+  char region[ICond_MaxLengthOfRegionName] ;
+  char unknown[ICond_MaxLengthOfKeyWord] ;
+  char name[ICond_MaxLengthOfFileName] ;
+  char* filename ;
+  size_t ifld ;
+  size_t ifct ;
   
   /* Region */
   {
-    char name[ICond_MaxLengthOfRegionName] ;
-    int n = String_FindAndScanExp(line,"Reg",","," = %s",name) ;
-    //int i ;
-    //int n = String_FindAndScanExp(line,"Reg",","," = %d",&i) ;
+    int n = String_FindAndScanExp(line,"Reg",","," = %s",region) ;
     
-    if(n) {
-      strncpy(ICond_GetRegionName(icond),name,ICond_MaxLengthOfRegionName)  ;
-    } else {
+    if(!n) {
       arret("ICond_Scan: no region") ;
     }
   }
@@ -100,105 +103,48 @@ void (ICond_Scan)(ICond_t* icond,DataFile_t* datafile)
     
   /* Unknown */
   {
-    char name[ICond_MaxLengthOfKeyWord] ;
-    int n = String_FindAndScanExp(line,"Unk,Inc",","," = %s",name) ;
+    int n = String_FindAndScanExp(line,"Unk,Inc",","," = %s",unknown) ;
         
-    if(n) {
-      strcpy(ICond_GetNameOfUnknown(icond),name) ;
-    } else {
+    if(!n) {
       arret("ICond_Scan: no unknown") ;
-    }
-      
-    if(strlen(name) > ICond_MaxLengthOfKeyWord-1)  {
-      arret("ICond_Scan: too long name of unknown") ;
-    }
-    
-    if(isdigit(ICond_GetNameOfUnknown(icond)[0])) {
-      if(ICond_GetNameOfUnknown(icond)[0] < '1') {
-        arret("ICond_Scan: non positive unknown") ;
-      }
-    }
-  }
-    
-    
-  /* Field */
-  {
-    int i ;
-    int n = String_FindAndScanExp(line,"Field,Champ",","," = %d",&i) ;
-    
-    ICond_GetFieldIndex(icond) = -1 ;
-    ICond_GetField(icond) = NULL ;
-        
-    if(n) {
-      Fields_t* fields = ICond_GetFields(icond) ;
-      int  n_fields = Fields_GetNbOfFields(fields) ;
-      int ifld = i - 1 ;
-      
-      ICond_GetFieldIndex(icond) = ifld ;
-      
-      if(ifld < 0) {
-        
-        ICond_GetField(icond) = NULL ;
-        
-      } else if(ifld < n_fields) {
-        Field_t* field = Fields_GetField(fields) ;
-        
-        ICond_GetField(icond) = field + ifld ;
-          
-      } else {
-        
-        arret("ICond_Scan: field out of range") ;
-          
-      }
     }
   }
     
     
   /* File */
   {
-    char name[ICond_MaxLengthOfFileName] ;
     int n = String_FindAndScanExp(line,"File,Fichier",","," = %s",name) ;
         
     if(n) {
-      
-      if(strlen(name) > ICond_MaxLengthOfFileName-1)  {
-        arret("ICond_Scan: name too long") ;
-      }
-      
-      strcpy(ICond_GetFileNameOfNodalValues(icond),name) ;
+      filename = name;
+    } else {
+      filename = nullptr;
+    }
+  }
+    
+    
+  /* Field */
+  {
+    int n = String_FindAndScanExp(line,"Field,Champ",","," = %lu",&ifld) ;
+        
+    if(!n) {
+      ifld = 0;
     }
   }
     
     
   /* Function (not mandatory) */
   {
-    int i ;
-    int n = String_FindAndScanExp(line,"Func,Fonc",","," = %d",&i) ;
-    
-    ICond_GetFunctionIndex(icond) = -1 ;
-    ICond_GetFunction(icond) = NULL ;
+    int n = String_FindAndScanExp(line,"Func,Fonc",","," = %lu",&ifct) ;
         
-    if(n) {
-      Functions_t* functions = ICond_GetFunctions(icond) ;
-      int n_functions = Functions_GetNbOfFunctions(functions) ;
-      int ifct = i - 1 ;
-      
-      ICond_GetFunctionIndex(icond) = ifct ;
-      
-      if(ifct < 0) {
-        
-        ICond_GetFunction(icond) = NULL ;
-        
-      } else if(ifct < n_functions) {
-        Function_t* fct = Functions_GetFunction(functions) ;
-        
-        ICond_GetFunction(icond) = fct + ifct ;
-        
-      } else {
-        
-        arret("ICond_Scan: function out of range") ;
-        
-      }
+    if(!n) {
+      ifct = 0;
     }
+  }
+
+  if(filename) {
+    ICond_Set(icond,region,unknown,filename,ifct);
+  } else {
+    ICond_Set(icond,region,unknown,ifld,ifct);
   }
 }

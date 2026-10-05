@@ -311,27 +311,27 @@ static void    GetProperties(Element_t*) ;
 void GetProperties(Element_t* el)
 {
 /* To retrieve the material properties */
-#define GetProperty(a)   (Element_GetProperty(el)[pm(a)])
-  gravity = GetProperty("gravity") ;
-  rho_s   = GetProperty("rho_s") ;
-  phi0    = GetProperty("porosity") ;
-  k_int   = GetProperty("k_int") ;
-  C_s     = GetProperty("C_s") ;
-  lam_s   = GetProperty("lam_s") ;
-  alpha_s = GetProperty("alpha_s") ;
-  p0      = GetProperty("p0") ;
-  T0      = GetProperty("T0") ;
-  young   = GetProperty("Young") ;
-  poisson = GetProperty("Poisson") ;
-  biot    = GetProperty("Biot") ;
+#define GetMaterialProperty(a)   (Element_GetProperty(el)[pm(a)])
+  gravity = GetMaterialProperty("gravity") ;
+  rho_s   = GetMaterialProperty("rho_s") ;
+  phi0    = GetMaterialProperty("porosity") ;
+  k_int   = GetMaterialProperty("k_int") ;
+  C_s     = GetMaterialProperty("C_s") ;
+  lam_s   = GetMaterialProperty("lam_s") ;
+  alpha_s = GetMaterialProperty("alpha_s") ;
+  p0      = GetMaterialProperty("p0") ;
+  T0      = GetMaterialProperty("T0") ;
+  young   = GetMaterialProperty("Young") ;
+  poisson = GetMaterialProperty("Poisson") ;
+  biot    = GetMaterialProperty("Biot") ;
   
   thickness = 1 ;
   youngfraction  = 1 ;
   capillarypressurefraction = 1 ;
   
   if(Element_HasZeroThickness(el)) {
-    thickness = GetProperty("thickness") ;
-    youngfraction  = GetProperty("YoungFraction") ;
+    thickness = GetMaterialProperty("thickness") ;
+    youngfraction  = GetMaterialProperty("YoungFraction") ;
     capillarypressurefraction = 10 ;
 
     young    /= thickness ;
@@ -342,7 +342,7 @@ void GetProperties(Element_t* el)
   
   elasty  = Element_FindMaterialData(el,Elasticity_t,"Elasticity") ;
   cijkl   = Elasticity_GetStiffnessTensor(elasty) ;
-#undef GetProperty
+#undef GetMaterialProperty
 }
 
 
@@ -479,7 +479,7 @@ int SetModelProp(Model_t* model)
   int i ;
 
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */
   Model_CopyNameOfEquation(model,E_Mass,"mass") ;
@@ -501,7 +501,7 @@ int SetModelProp(Model_t* model)
     Model_CopyNameOfUnknown(model,U_Mech + i,name_unk[i]) ;
   }
   
-  Model_GetComputePropertyIndex(model) = pm ;
+  Model_SetComputePropertyIndex(model,pm) ;
   
   Model_GetSequentialIndexOfUnknown(model)[E_The] = 0 ;
   Model_GetSequentialIndexOfUnknown(model)[E_Mass] = 1 ;

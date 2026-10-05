@@ -11,7 +11,7 @@
 #define TITLE "Freezing and thawing of concrete with salt"
 #define AUTHORS "Zeng"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 
 /* Nb of equations */
@@ -172,7 +172,7 @@
 
 
 /* To retrieve the material properties */
-#define GetProperty(a)   (Element_GetProperty(el)[pm(a)])
+#define GetMaterialProperty(a)   (Element_GetProperty(el)[pm(a)])
 
 /* Fonctions */
 static int    pm(const char *s) ;
@@ -211,7 +211,7 @@ int SetModelProp(Model_t *model)
  *  Return 0 */
 {
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */
   Model_CopyNameOfEquation(model,E_h2o,"water") ;
@@ -339,13 +339,13 @@ int ComputeInitialState(Element_t *el)
   if(Element_IsSubmanifold(el)) return(0) ;
 
   /*Donnees */
-  phi     = GetProperty("phi") ;
-  k_int   = GetProperty("k_int") ;
-  lam_s   = GetProperty("lam_s") ;
-  C_s     = GetProperty("C_s") ;
-  k_s     = GetProperty("k_s") ;
-  g_s     = GetProperty("g_s") ;
-  alpha_s = GetProperty("alpha_s") ;
+  phi     = GetMaterialProperty("phi") ;
+  k_int   = GetMaterialProperty("k_int") ;
+  lam_s   = GetMaterialProperty("lam_s") ;
+  C_s     = GetMaterialProperty("C_s") ;
+  k_s     = GetMaterialProperty("k_s") ;
+  g_s     = GetMaterialProperty("g_s") ;
+  alpha_s = GetMaterialProperty("alpha_s") ;
   
   /* masses of h2o, salt and entropies */
   for(i = 0 ; i < 2 ; i++) {
@@ -434,13 +434,13 @@ int  ComputeImplicitTerms(Element_t *el,double t,double dt)
   /*
     Donnees
   */
-  phi     = GetProperty("phi") ;
-  k_int   = GetProperty("k_int") ;
-  lam_s   = GetProperty("lam_s") ;
-  C_s     = GetProperty("C_s") ;
-  k_s     = GetProperty("k_s") ;
-  g_s     = GetProperty("g_s") ;
-  alpha_s = GetProperty("alpha_s") ;
+  phi     = GetMaterialProperty("phi") ;
+  k_int   = GetMaterialProperty("k_int") ;
+  lam_s   = GetMaterialProperty("lam_s") ;
+  C_s     = GetMaterialProperty("C_s") ;
+  k_s     = GetMaterialProperty("k_s") ;
+  g_s     = GetMaterialProperty("g_s") ;
+  alpha_s = GetMaterialProperty("alpha_s") ;
 
   /* masses of h2o, salt and entropies */
   for(i = 0 ; i < 2 ; i++) {
@@ -586,13 +586,13 @@ int  ComputeOutputs(Element_t *el,double t,double *s,Result_t *r)
   /*
     Donnees
   */
-  phi     = GetProperty("phi") ;
-  k_int   = GetProperty("k_int") ;
-  lam_s   = GetProperty("lam_s") ;
-  C_s     = GetProperty("C_s") ;
-  k_s     = GetProperty("k_s") ;
-  g_s     = GetProperty("g_s") ;
-  alpha_s = GetProperty("alpha_s") ;
+  phi     = GetMaterialProperty("phi") ;
+  k_int   = GetMaterialProperty("k_int") ;
+  lam_s   = GetMaterialProperty("lam_s") ;
+  C_s     = GetMaterialProperty("C_s") ;
+  k_s     = GetMaterialProperty("k_s") ;
+  g_s     = GetMaterialProperty("g_s") ;
+  alpha_s = GetMaterialProperty("alpha_s") ;
   
   /* Quantities */
   {
@@ -679,8 +679,7 @@ int  ComputeOutputs(Element_t *el,double t,double *s,Result_t *r)
     double phi_p  = phi + phi_l + phi_i ;
     
     
-    
-    if(Element_GetCoordinateSystem(el) != CARTESIAN) {
+    if(!CoorSys_IsCartesian(Element_GetCoordinateSystem(el))) {
       Message_FatalError("Impossible") ;
     }
     
@@ -717,13 +716,13 @@ void  ComputeTransferCoefficients(Element_t *el,double **u,double *f)
   /*
     Donnees
   */
-  phi     = GetProperty("phi") ;
-  k_int   = GetProperty("k_int") ;
-  lam_s   = GetProperty("lam_s") ;
-  C_s     = GetProperty("C_s") ;
-  k_s     = GetProperty("k_s") ;
-  g_s     = GetProperty("g_s") ;
-  alpha_s = GetProperty("alpha_s") ;
+  phi     = GetMaterialProperty("phi") ;
+  k_int   = GetMaterialProperty("k_int") ;
+  lam_s   = GetMaterialProperty("lam_s") ;
+  C_s     = GetMaterialProperty("C_s") ;
+  k_s     = GetMaterialProperty("k_s") ;
+  g_s     = GetMaterialProperty("g_s") ;
+  alpha_s = GetMaterialProperty("alpha_s") ;
 
   for(i = 0 ; i < NVE ; i++) va[i] = 0. ;
 
@@ -822,13 +821,13 @@ int  TangentCoefficients(Element_t *el,double dt,double *c)
   /*
     Donnees
   */
-  phi     = GetProperty("phi") ;
-  k_int   = GetProperty("k_int") ;
-  lam_s   = GetProperty("lam_s") ;
-  C_s     = GetProperty("C_s") ;
-  k_s     = GetProperty("k_s") ;
-  g_s     = GetProperty("g_s") ;
-  alpha_s = GetProperty("alpha_s") ;
+  phi     = GetMaterialProperty("phi") ;
+  k_int   = GetMaterialProperty("k_int") ;
+  lam_s   = GetMaterialProperty("lam_s") ;
+  C_s     = GetMaterialProperty("C_s") ;
+  k_s     = GetMaterialProperty("k_s") ;
+  g_s     = GetMaterialProperty("g_s") ;
+  alpha_s = GetMaterialProperty("alpha_s") ;
 
   
   /* termes d'accumulation */

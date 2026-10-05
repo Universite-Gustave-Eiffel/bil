@@ -32,7 +32,7 @@
 #define AUTHORS  "Dangla"
 #define TITLE    "Monolithic approach"
 
-#include "PredefinedModuleMethods.h"
+#include "PredeclaredModuleMethods.h.in"
 
 static Module_ComputeProblem_t   calcul ;
 static Module_SolveProblem_t     Algorithm ;
@@ -470,7 +470,7 @@ int (Monolithic_Initialize)(DataSet_t* dataset,Solutions_t* sols)
     
     if(i) {
       Dates_t*     dates     = DataSet_GetDates(dataset) ;
-      int          nbofdates = Dates_GetNbOfDates(dates) ;
+      size_t       nbofdates = Dates_GetNbOfDates(dates) ;
       Date_t*      date      = Dates_GetDate(dates) ;
       
       while(idate + 1 < nbofdates && T_1 >= Date_GetTime(date + idate + 1)) idate++ ;
@@ -523,7 +523,7 @@ int   Algorithm(DataSet_t* dataset,Solutions_t* sols,Solver_t* solver,OutputFile
   Dates_t*       dates       = DataSet_GetDates(dataset) ;
   IterProcess_t* iterprocess = DataSet_GetIterProcess(dataset) ;
   
-  int            nbofdates   = Dates_GetNbOfDates(dates) ;
+  size_t         nbofdates   = Dates_GetNbOfDates(dates) ;
   Date_t*        date        = Dates_GetDate(dates) ;
 
   int            idate = Initialize(dataset,sols) ;
@@ -630,9 +630,9 @@ int calcul(DataSet_t* dataset)
     {
       char*   filename = DataFile_GetFileName(datafile) ;
       Dates_t*  dates    = DataSet_GetDates(dataset) ;
-      int     nbofdates  = Dates_GetNbOfDates(dates) ;
+      size_t    nbofdates  = Dates_GetNbOfDates(dates) ;
       Points_t* points   = DataSet_GetPoints(dataset) ;
-      int     n_points   = Points_GetNbOfPoints(points) ;
+      size_t    n_points   = Points_GetNbOfPoints(points) ;
       OutputFiles_t* outputfiles = OutputFiles_Create(filename,nbofdates,n_points) ;
       Solvers_t* solvers = Solvers_Create(mesh,options,1) ;
       Solver_t* solver = Solvers_GetSolver(solvers) ;
@@ -640,9 +640,9 @@ int calcul(DataSet_t* dataset)
       i = Algorithm(dataset,sols,solver,outputfiles) ;
       
       Solvers_Delete(solvers) ;
-      free(solvers) ;
+      Mry_Free(solvers) ;
       OutputFiles_Delete(outputfiles) ;
-      free(outputfiles) ;
+      Mry_Free(outputfiles) ;
     }
       
   /* 3. Store for future resumption */
@@ -654,7 +654,7 @@ int calcul(DataSet_t* dataset)
     }
     
     Solutions_Delete(sols) ;
-    free(sols) ;
+    Mry_Free(sols) ;
     return(i) ;
   }
 }

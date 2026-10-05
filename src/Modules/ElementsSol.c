@@ -27,7 +27,7 @@ ElementsSol_t*   (ElementsSol_Create)(Mesh_t* mesh)
         ElementSol_t* elementsol_i = ElementSol_New() ;
         
         elementsol[i] = elementsol_i[0] ;
-        free(elementsol_i) ;
+        Mry_Free(elementsol_i) ;
       }
     }
   }
@@ -52,7 +52,7 @@ void (ElementsSol_Delete)(void* self)
         ElementSol_Delete(elementsol_i) ;
       }
     
-      free(elementsol) ;
+      Mry_Free(elementsol) ;
       ElementsSol_SetElementSol(elementssol,NULL) ;
     }
   }

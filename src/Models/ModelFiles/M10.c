@@ -8,7 +8,7 @@
 #define TITLE   "Richards Equation (3D)"
 #define AUTHORS "Dangla"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 /* Macros */
 #define NEQ     (1)
@@ -43,7 +43,7 @@
 
 
 /* To retrieve the material properties */
-#define GetProperty(a)   (Element_GetProperty(el)[pm(a)])
+#define GetMaterialProperty(a)   (Element_GetProperty(el)[pm(a)])
 
 #define ItIsPeriodic  (Geometry_IsPeriodic(Element_GetGeometry(el)))
 
@@ -87,9 +87,9 @@ double* MacroGradient(Element_t* el,double t)
 {
   Functions_t* fcts = Material_GetFunctions(Element_GetMaterial(el)) ;
   Function_t*  fct = Functions_GetFunction(fcts) ;
-  int nf = Functions_GetNbOfFunctions(fcts) ;
-  double* fctindex = &GetProperty("macro-fctindex") ;
-  double* g = &GetProperty("macro-gradient") ;
+  size_t nf = Functions_GetNbOfFunctions(fcts) ;
+  double* fctindex = &GetMaterialProperty("macro-fctindex") ;
+  double* g = &GetMaterialProperty("macro-gradient") ;
   double  f[3] = {0,0,0} ;
     
   for(int i = 0 ; i < 3 ; i++) {
@@ -135,18 +135,18 @@ int pm(const char *s) {
 
 void GetProperties(Element_t *el)
 {
-  gravite = GetProperty("gravite") ;
-  phi     = GetProperty("phi") ;
-  rho_l   = GetProperty("rho_l") ;
-  k_int   = GetProperty("k_int") ;
-  mu_l    = GetProperty("mu_l") ;
-  p_g     = GetProperty("p_g") ;
+  gravite = GetMaterialProperty("gravite") ;
+  phi     = GetMaterialProperty("phi") ;
+  rho_l   = GetMaterialProperty("rho_l") ;
+  k_int   = GetMaterialProperty("k_int") ;
+  mu_l    = GetMaterialProperty("mu_l") ;
+  p_g     = GetMaterialProperty("p_g") ;
 }
 
 
 int SetModelProp(Model_t *model)
 {
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   Model_CopyNameOfEquation(model,E_liq, "liq") ;
 

@@ -10,9 +10,9 @@ extern void Log10EquilibriumConstantOfHomogeneousReactionInWater_PrintCEMDATA(do
         (Log10EquilibriumConstantOfHomogeneousReactionInWater_##R(T))
 
 
-//#include "Log10EquilibriumConstantOfHomogeneousReactionInWater_DEFAULT.h.in"
-//#include "Log10EquilibriumConstantOfHomogeneousReactionInWater_Cemdata18.h.in"
-#include "RefThermoDataBases/CEMDATA/Log10EquilibriumConstantOfHomogeneousReactionInWater_CEMDATA18.h.in"
+#define LOG10EQUILIBRIUMCONSTANTOFHOMOGENEOUSREACTIONINWATER_CEMDATA18_IN_H
+#include "Log10EquilibriumConstantOfHomogeneousReactionInWater_CEMDATA18.in.h"
+#undef LOG10EQUILIBRIUMCONSTANTOFHOMOGENEOUSREACTIONINWATER_CEMDATA18_IN_H
 
 
 

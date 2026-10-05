@@ -90,7 +90,7 @@ void (IntFct_Delete)(void* self)
     char* p = IntFct_GetType(intfct) ;
     
     if(p) {
-      free(p) ;
+      Mry_Free(p) ;
       IntFct_GetType(intfct) = NULL ;
     }
   }
@@ -99,7 +99,7 @@ void (IntFct_Delete)(void* self)
     double* weight = IntFct_GetWeight(intfct) ;
     
     if(weight) {
-      free(weight) ;
+      Mry_Free(weight) ;
       IntFct_GetWeight(intfct) = NULL ;
     }
   }

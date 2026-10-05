@@ -71,7 +71,7 @@ _INLINE_ void (Math_Delete)(void* self)
     
     if(buf) {
       Buffers_Delete(buf)  ;
-      free(buf)  ;
+      Mry_Free(buf)  ;
     }
   }
   

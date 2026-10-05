@@ -9,7 +9,7 @@
 #define TITLE   "Chemo-hydro-mechanics of bituminized waste products"
 #define AUTHORS "G.MELOT, Y.CHEN"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 /* Nb of equations */
 #define NEQ     (2 + dim)
@@ -415,48 +415,48 @@ void GetProperties(Element_t* el)// copy the value of material properties
 {
 
 /* To retrieve the material properties */
-#define GetProperty(a)   (Element_GetProperty(el)[pm(a)])
-  k_i       = GetProperty("k_i");
-  d_i        = GetProperty("d_i");
-  tau_i      = GetProperty("tau_i");
-  phi_l_i    = GetProperty("phi_l_i");
-  rho_w_i    = GetProperty("rho_w_i");
-  viscosity_w  = GetProperty("viscosity_w");
-  compressibility_w  = GetProperty("compressibility_w");
-  rho_c      = GetProperty("rho_c");
-  beta      = GetProperty("beta");
-  sigma_c    = GetProperty("sigma_c");
-  Molarm_s    = GetProperty("Molarm_s");
-  w_s_sat    = GetProperty("w_s_sat");
-  v_m_s      = GetProperty("v_m_s");
-  young      = GetProperty("young");
-  poisson    = GetProperty("poisson");
-  eta_v      = GetProperty("eta_v");
-  eta_d      = GetProperty("eta_d");
-  sig0_11    = GetProperty("sig0_11");
-  sig0_22    = GetProperty("sig0_22");
-  sig0_33    = GetProperty("sig0_33");
-  w_s_i      = GetProperty("w_s_i");
-  phi_c_i    = GetProperty("phi_c_i");
-  p_i        = GetProperty("p_i");
-  //biot       = GetProperty("b");
-  D_dep         = GetProperty("D_dep");
-  K_dep         = GetProperty("K_dep");
-  Tau_dep       = GetProperty("Tau_dep");
-  rho_l_dep     = GetProperty("rho_l_dep");
-  SampleSurface  = GetProperty("SampleSurface");
-  ElementSize  = GetProperty("ElementSize");
-  d_w_bit  = GetProperty("d_w_bit");  
-  d_s_bit  = GetProperty("d_s_bit");
-  alpha_w_bit  = GetProperty("alpha_w_bit");
-  alpha_s_bit  = GetProperty("alpha_s_bit");
-  beta_0  = GetProperty("beta_0");
-  beta_1  = GetProperty("beta_1");
-  C_gamma  = GetProperty("C_gamma");
-  A_phi  = GetProperty("A_phi");
-  b_gamma  = GetProperty("b_gamma");
-  alpha_gamma  = GetProperty("alpha_gamma");
-  v_spv  = GetProperty("v_spv");
+#define GetMaterialProperty(a)   (Element_GetProperty(el)[pm(a)])
+  k_i       = GetMaterialProperty("k_i");
+  d_i        = GetMaterialProperty("d_i");
+  tau_i      = GetMaterialProperty("tau_i");
+  phi_l_i    = GetMaterialProperty("phi_l_i");
+  rho_w_i    = GetMaterialProperty("rho_w_i");
+  viscosity_w  = GetMaterialProperty("viscosity_w");
+  compressibility_w  = GetMaterialProperty("compressibility_w");
+  rho_c      = GetMaterialProperty("rho_c");
+  beta      = GetMaterialProperty("beta");
+  sigma_c    = GetMaterialProperty("sigma_c");
+  Molarm_s    = GetMaterialProperty("Molarm_s");
+  w_s_sat    = GetMaterialProperty("w_s_sat");
+  v_m_s      = GetMaterialProperty("v_m_s");
+  young      = GetMaterialProperty("young");
+  poisson    = GetMaterialProperty("poisson");
+  eta_v      = GetMaterialProperty("eta_v");
+  eta_d      = GetMaterialProperty("eta_d");
+  sig0_11    = GetMaterialProperty("sig0_11");
+  sig0_22    = GetMaterialProperty("sig0_22");
+  sig0_33    = GetMaterialProperty("sig0_33");
+  w_s_i      = GetMaterialProperty("w_s_i");
+  phi_c_i    = GetMaterialProperty("phi_c_i");
+  p_i        = GetMaterialProperty("p_i");
+  //biot       = GetMaterialProperty("b");
+  D_dep         = GetMaterialProperty("D_dep");
+  K_dep         = GetMaterialProperty("K_dep");
+  Tau_dep       = GetMaterialProperty("Tau_dep");
+  rho_l_dep     = GetMaterialProperty("rho_l_dep");
+  SampleSurface  = GetMaterialProperty("SampleSurface");
+  ElementSize  = GetMaterialProperty("ElementSize");
+  d_w_bit  = GetMaterialProperty("d_w_bit");  
+  d_s_bit  = GetMaterialProperty("d_s_bit");
+  alpha_w_bit  = GetMaterialProperty("alpha_w_bit");
+  alpha_s_bit  = GetMaterialProperty("alpha_s_bit");
+  beta_0  = GetMaterialProperty("beta_0");
+  beta_1  = GetMaterialProperty("beta_1");
+  C_gamma  = GetMaterialProperty("C_gamma");
+  A_phi  = GetMaterialProperty("A_phi");
+  b_gamma  = GetMaterialProperty("b_gamma");
+  alpha_gamma  = GetMaterialProperty("alpha_gamma");
+  v_spv  = GetMaterialProperty("v_spv");
   {
     double molality_sat = w_s_sat/((1.-w_s_sat)*Molarm_s) ; //number of moles of solute per kg of solvent
       double sqm_sat = sqrt(molality_sat) ;         //square root of molality
@@ -465,7 +465,7 @@ void GetProperties(Element_t* el)// copy the value of material properties
       double tau0_sat = nu*w_s_sat*Q_sat/((1.-w_s_sat)*(1.-w_s_sat*rho_l_sat*v_spv))  ;
     tau_sat = OsmoticEfficiencyCoefficient(phi_l_i,w_s_sat,rho_l_sat,tau0_sat) ;
   }
-#undef GetProperty
+#undef GetMaterialProperty
 }
 
 
@@ -477,7 +477,7 @@ int SetModelProp(Model_t *model)
   int i ;
   
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */  
   for(i = 0 ; i < dim ; i++) {

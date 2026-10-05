@@ -165,7 +165,7 @@ void (Help_WriteData)(char *nom)
     Message_Direct("models ? ") ;
     fscanf(stdin,"%s",mot) ;
     fprintf(ficd,"Model = %s\n",mot) ;
-    Models_Print(mot,ficd) ;
+    Models_PrintAll(mot,ficd) ;
   }
 
   Message_Direct("4. Fields:\n") ;

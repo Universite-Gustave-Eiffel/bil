@@ -12,7 +12,9 @@
         (MolarVolumeOfCementHydrate_##I*MolarVolumeOfCementHydrate_Unit)
 
 
-#include "RefThermoDataBases/CEMDATA/MolarVolumeOfCementHydrate_CEMDATA18.h.in"
+#define MOLARVOLUMEOFCEMENTHYDRATE_CEMDATA18_IN_H
+#include "MolarVolumeOfCementHydrate_CEMDATA18.in.h"
+#undef MOLARVOLUMEOFCEMENTHYDRATE_CEMDATA18_IN_H
 
 
 /* Data using different names

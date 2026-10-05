@@ -8,7 +8,7 @@
 #define TITLE "Richards Equation (1D)"
 #define AUTHORS "Dangla"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 /* Macros */
 #define NEQ (1)
@@ -44,7 +44,7 @@
 
 
 /* To retrieve the material properties */
-#define GetProperty(a)   (Element_GetProperty(el)[pm(a)])
+#define GetMaterialProperty(a)   (Element_GetProperty(el)[pm(a)])
 
 
 
@@ -78,7 +78,7 @@ int pm(const char *s)
 int SetModelProp(Model_t *model)
 {
   Model_CopyShortTitle(model,TITLE) ;
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   Model_CopyNameOfEquation(model,E_liq,"liq") ;
   Model_CopyNameOfUnknown(model,I_p_l,"p_l") ;
   
@@ -160,12 +160,12 @@ int ComputeInitialState(Element_t *el)
   /*
     Donnees
   */
-  gravite = GetProperty("gravite") ;
-  phi     = GetProperty("phi") ;
-  rho_l   = GetProperty("rho_l") ;
-  k_int   = GetProperty("k_int") ;
-  mu_l    = GetProperty("mu_l") ;
-  p_g     = GetProperty("p_g") ;
+  gravite = GetMaterialProperty("gravite") ;
+  phi     = GetMaterialProperty("phi") ;
+  rho_l   = GetMaterialProperty("rho_l") ;
+  k_int   = GetMaterialProperty("k_int") ;
+  mu_l    = GetMaterialProperty("mu_l") ;
+  p_g     = GetMaterialProperty("p_g") ;
 
   /* MASSE LIQUIDE */
   for(i=0;i<2;i++) {
@@ -207,12 +207,12 @@ int  ComputeExplicitTerms(Element_t *el,double t)
   /*
     Donnees
   */
-  gravite = GetProperty("gravite") ;
-  rho_l   = GetProperty("rho_l") ;
-  k_int   = GetProperty("k_int") ;
-  mu_l    = GetProperty("mu_l") ;
-  p_g     = GetProperty("p_g") ;
-  schema  = GetProperty("schema") ;
+  gravite = GetMaterialProperty("gravite") ;
+  rho_l   = GetMaterialProperty("rho_l") ;
+  k_int   = GetMaterialProperty("k_int") ;
+  mu_l    = GetMaterialProperty("mu_l") ;
+  p_g     = GetMaterialProperty("p_g") ;
+  schema  = GetMaterialProperty("schema") ;
   
   /*
     COEFFICIENTS DE TRANSFERT
@@ -251,12 +251,12 @@ int  ComputeImplicitTerms(Element_t *el,double t,double dt)
   /*
     Donnees
   */
-  gravite = GetProperty("gravite") ;
-  phi     = GetProperty("phi") ;
-  rho_l   = GetProperty("rho_l") ;
-  k_int   = GetProperty("k_int") ;
-  mu_l    = GetProperty("mu_l") ;
-  p_g     = GetProperty("p_g") ;
+  gravite = GetMaterialProperty("gravite") ;
+  phi     = GetMaterialProperty("phi") ;
+  rho_l   = GetMaterialProperty("rho_l") ;
+  k_int   = GetMaterialProperty("k_int") ;
+  mu_l    = GetMaterialProperty("mu_l") ;
+  p_g     = GetMaterialProperty("p_g") ;
 
   /* masse de fluide */
   for(i=0;i<2;i++) {
@@ -313,9 +313,9 @@ int  ComputeMatrix(Element_t *el,double t,double dt,double *k)
   /*
     Data
   */
-  phi     = GetProperty("phi") ;
-  rho_l   = GetProperty("rho_l") ;
-  p_g     = GetProperty("p_g") ;
+  phi     = GetMaterialProperty("phi") ;
+  rho_l   = GetMaterialProperty("rho_l") ;
+  p_g     = GetMaterialProperty("p_g") ;
   
   TangentCoefficients(el,dt,c) ;
   {
@@ -376,12 +376,12 @@ int  ComputeOutputs(Element_t *el,double t,double *s,Result_t *r)
   /*
     Donnees
   */
-  gravite = GetProperty("gravite") ;
-  phi     = GetProperty("phi") ;
-  rho_l   = GetProperty("rho_l") ;
-  k_int   = GetProperty("k_int") ;
-  mu_l    = GetProperty("mu_l") ;
-  p_g     = GetProperty("p_g") ;
+  gravite = GetMaterialProperty("gravite") ;
+  phi     = GetMaterialProperty("phi") ;
+  rho_l   = GetMaterialProperty("rho_l") ;
+  k_int   = GetMaterialProperty("k_int") ;
+  mu_l    = GetMaterialProperty("mu_l") ;
+  p_g     = GetMaterialProperty("p_g") ;
 
   /* initialisation */
   for(i = 0 ; i < nso ; i++) Result_SetValuesToZero(r+i) ;
@@ -425,9 +425,9 @@ int c1(Element_t *el,double *c)
   /*
     Data
   */
-  phi     = GetProperty("phi") ;
-  rho_l   = GetProperty("rho_l") ;
-  p_g     = GetProperty("p_g") ;
+  phi     = GetMaterialProperty("phi") ;
+  rho_l   = GetMaterialProperty("rho_l") ;
+  p_g     = GetMaterialProperty("p_g") ;
   
   for(i = 0 ; i < nn ; i++) {
     double pc      = p_g - P_l(i) ;

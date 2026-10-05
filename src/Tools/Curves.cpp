@@ -32,7 +32,7 @@ Curves_t* (Curves_Create)(int n_curves)
       Curve_t* cvi   = (Curve_t*) Mry_New(Curve_t) ;
       
       cv[i] = cvi[0] ;
-      free(cvi) ;
+      Mry_Free(cvi) ;
     }
     
     Curves_GetCurve(curves) = cv ;
@@ -60,7 +60,7 @@ void (Curves_Delete)(void* self)
         Curve_Delete(cv) ;
       }
     
-      free(curve) ;
+      Mry_Free(curve) ;
       Curves_GetCurve(curves) = NULL ;
     }
   }
@@ -139,7 +139,7 @@ int (Curves_CreateDerivative)(Curves_t* curves,Curve_t* cv)
   Curve_t* dcv = Curve_CreateDerivative(cv) ;
   int i = Curves_Append(curves,dcv) ;
   
-  free(dcv) ;
+  Mry_Free(dcv) ;
   return(i) ;
 }
 
@@ -150,7 +150,7 @@ int (Curves_CreateIntegral)(Curves_t* curves,Curve_t* cv)
   Curve_t* icv = Curve_CreateIntegral(cv) ;
   int i = Curves_Append(curves,icv) ;
   
-  free(icv) ;
+  Mry_Free(icv) ;
   return(i) ;
 }
 
@@ -161,7 +161,7 @@ int (Curves_CreateInverse)(Curves_t* curves,Curve_t* cv,const char sc)
   Curve_t* icv = Curve_CreateInverse(cv,sc) ;
   int i = Curves_Append(curves,icv) ;
   
-  free(icv) ;
+  Mry_Free(icv) ;
   return(i) ;
 }
 
@@ -211,7 +211,7 @@ int   Curves_ReadCurves(Curves_t* curves,const char* dline)
       Curve_t* cb   = Curve_Create(n_points) ;
     
       cb_i[0] = cb[0] ;
-      free(cb) ;
+      Mry_Free(cb) ;
     }
   }
   
@@ -339,7 +339,7 @@ int   Curves_ReadCurves(Curves_t* curves,const char* dline)
   Curves_GetNbOfCurves(curves) += n_curves ;
   
   CurvesFile_Delete(curvesfile) ;
-  free(curvesfile) ;
+  Mry_Free(curvesfile) ;
 
   return(n_curves) ;
 }

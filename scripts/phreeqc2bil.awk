@@ -1,8 +1,8 @@
 BEGIN {
   # phase and data are sent by awk (see phreeqc2bil.sh)
-  # phase = 0; # -> Log10EquilibriumConstantOfHomogeneousReactionInWater_CEMDATA18.h.in
-  # phase = 1; # -> Log10DissociationConstantOfCementHydrationProduct_CEMDATA18.h.in
-  # phase = 2; # -> MolarVolumeOfCementHydrate_CEMDATA18.h.in
+  # phase = 0; # -> Log10EquilibriumConstantOfHomogeneousReactionInWater_CEMDATA18.in.h
+  # phase = 1; # -> Log10DissociationConstantOfCementHydrationProduct_CEMDATA18.in.h
+  # phase = 2; # -> MolarVolumeOfCementHydrate_CEMDATA18.in.h
   ndata = split(data,dat,"-");
   title = "";
   if(ndata > 0) {
@@ -28,8 +28,7 @@ BEGIN {
       print "not valid entry";
       exit;
     }
-    print "#ifndef "title dat[1] "_H_IN";
-    print "#define "title dat[1] "_H_IN";
+    print "#ifdef "title dat[1] "_IN_H";
     print;
     if(phase < 2) {
       print "#include \"TemperatureDependenceOfLog10EquilibriumConstant.h\""
@@ -102,34 +101,43 @@ function transform(t) {
   # "(X) " -> "X "
   if(match(t,/(\()([a-zA-Z1-9]*)(\))([^1-9]|$)/) > 0) {
     r = gensub(/(\()([a-zA-Z1-9]*)(\))([^1-9]|$)/,"\\2\\4","g",r);
+  }
   # "(X)1" -> "X"
-  } else if(match(t,/(\()([a-zA-Z1-9]*)(\))(1([^.]))/) > 0) {
-    r = gensub(/(\()([a-zA-Z1-9]*)(\))(1)/,"\\2","g",r);
+  if(match(t,/(\()([a-zA-Z1-9]*)(\))(1([^.]))/) > 0) {
+    r = gensub(/(\()([a-zA-Z1-9]*)(\))(1)/,"\\2","g",r);  
+  }
   # "(X)2" -> "XX"
-  } else if(match(t,/(\()([a-zA-Z1-9]*)(\))(2([^.]))/) > 0) {
+  if(match(t,/(\()([a-zA-Z1-9]*)(\))(2([^.]))/) > 0) {
     r = gensub(/(\()([a-zA-Z1-9]*)(\))(2)/,"\\2\\2","g",r);
+  }
   # "(X)3" -> "XXX"
-  } else if(match(t,/(\()([a-zA-Z1-9]*)(\))(3([^.]))/) > 0) {
+  if(match(t,/(\()([a-zA-Z1-9]*)(\))(3([^.]))/) > 0) {
     r = gensub(/(\()([a-zA-Z1-9]*)(\))(3)/,"\\2\\2\\2","g",r);
+  }
   # "(X)4" -> "XXXX"
-  } else if(match(t,/(\()([a-zA-Z1-9]*)(\))(4([^.]))/) > 0) {
+  if(match(t,/(\()([a-zA-Z1-9]*)(\))(4([^.]))/) > 0) {
     r = gensub(/(\()([a-zA-Z1-9]*)(\))(4)/,"\\2\\2\\2\\2","g",r);
+  }
   # "(X)5" -> "XXXXX"
-  } else if(match(t,/(\()([a-zA-Z1-9]*)(\))(5([^.]))/) > 0) {
+  if(match(t,/(\()([a-zA-Z1-9]*)(\))(5([^.]))/) > 0) {
     r = gensub(/(\()([a-zA-Z1-9]*)(\))(5)/,"\\2\\2\\2\\2\\2","g",r);
+  }
   # "(X)6" -> "XXXXXX"
-  } else if(match(t,/(\()([a-zA-Z1-9]*)(\))(6([^.]))/) > 0) {
+  if(match(t,/(\()([a-zA-Z1-9]*)(\))(6([^.]))/) > 0) {
     r = gensub(/(\()([a-zA-Z1-9]*)(\))(6)/,"\\2\\2\\2\\2\\2\\2","g",r);
+  }
   # "(X)7" -> "XXXXXXX"
-  } else if(match(t,/(\()([a-zA-Z1-9]*)(\))(7([^.]))/) > 0) {
+  if(match(t,/(\()([a-zA-Z1-9]*)(\))(7([^.]))/) > 0) {
     r = gensub(/(\()([a-zA-Z1-9]*)(\))(7)/,"\\2\\2\\2\\2\\2\\2\\2","g",r);
+  }
   # "(X)8" -> "XXXXXXXX"
-  } else if(match(t,/(\()([a-zA-Z1-9]*)(\))(8([^.]))/) > 0) {
+  if(match(t,/(\()([a-zA-Z1-9]*)(\))(8([^.]))/) > 0) {
     r = gensub(/(\()([a-zA-Z1-9]*)(\))(8)/,"\\2\\2\\2\\2\\2\\2\\2\\2","g",r);
+  }
   # "(X)9" -> "XXXXXXXXX"
-  } else if(match(t,/(\()([a-zA-Z1-9]*)(\))(9([^.]))/) > 0) {
+  if(match(t,/(\()([a-zA-Z1-9]*)(\))(9([^.]))/) > 0) {
     r = gensub(/(\()([a-zA-Z1-9]*)(\))(9)/,"\\2\\2\\2\\2\\2\\2\\2\\2\\2","g",r);
-  } else {}
+  }
 
   # "I.J" -> "IdJ"
   r = gensub(/([0-9])(\.)([0-9])/,"\\1d\\3","g",r); # Replace a "." by "d"

@@ -19,75 +19,53 @@
 static void     BConds_SetDefaultNameOfEquations(BConds_t*,Mesh_t*) ;
 
 
-BConds_t* (BConds_New)(const int n_bconds)
+BConds_t* (BConds_New)(Fields_t* fields,Functions_t* functions)
 {
   BConds_t* bconds  = (BConds_t*) Mry_New(BConds_t) ;
     
-  BConds_GetNbOfBConds(bconds) = n_bconds ;
-  
+  BConds_SetNbOfBConds(bconds,0) ;
   
   /* Allocation of space for the boundary conditions */
-  #if 0
-  if(n_bconds > 0) {
-    BCond_t* bcond  = (BCond_t*) Mry_New(BCond_t,n_bconds) ;
-    int i ;
+  {
+    BCond_t* bcond = Mry_Create(BCond_t,BConds_MaxNbOfBConds,BCond_New(fields,functions)) ;
 
-    for(i = 0 ; i < n_bconds ; i++) {
-      BCond_t* bc  = BCond_New() ;
-      
-      bcond[i] = bc[0] ;
-    }
-
-    BConds_GetBCond(bconds) = bcond ;
+    BConds_SetBCond(bconds,bcond) ;
   }
-  #endif
-  
-  #if 1
-  if(n_bconds > 0) {
-    BConds_GetBCond(bconds) = Mry_Create(BCond_t,n_bconds,BCond_New()) ;
-  }
-  #endif
   
   return(bconds) ;
 }
 
 
-
+#if 0
 BConds_t* (BConds_Create)(DataFile_t* datafile,Fields_t* fields,Functions_t* functions)
 {
   char* filecontent = DataFile_GetFileContent(datafile) ;
   char* c  = String_FindToken(filecontent,"COND,Boundary Conditions",",") ;
-  int n_bconds = (c = String_SkipLine(c)) ? atoi(c) : 0 ;
-  BConds_t* bconds = BConds_New(n_bconds) ;
+  size_t n_bconds = (c = String_SkipLine(c)) ? String_ToSize_t(c) : 0 ;
+  BConds_t* bconds = BConds_New(fields,functions) ;
+  
+  {
+    int i = String_ToInt(c) ;
+
+    if(i <= 0) return(bconds) ;
+  }
   
   
   Message_Direct("Enter in %s","Boundary Conditions") ;
   Message_Direct("\n") ;
-  
-  
-  if(n_bconds <= 0) {
-    return(bconds) ;
-  }
-  
-
-
 
   /* Scan the datafile */
-  {
-    int ibc ;
-    
+  {    
     c = String_SkipLine(c) ;
       
     DataFile_SetCurrentPositionInFileContent(datafile,c) ;
     
-    for(ibc = 0 ; ibc < n_bconds ; ibc++) {
+    BConds_SetNbOfBConds(bconds,n_bconds);
+    for(size_t ibc = 0 ; ibc < n_bconds ; ibc++) {
       BCond_t* bcond = BConds_GetBCond(bconds) + ibc ;
     
       Message_Direct("Enter in %s %d","Boundary Condition",ibc+1) ;
       Message_Direct("\n") ;
-      
-      BCond_GetFields(bcond) = fields ;
-      BCond_GetFunctions(bcond) = functions ;
       
       BCond_Scan(bcond,datafile) ;
     }
@@ -96,6 +74,54 @@ BConds_t* (BConds_Create)(DataFile_t* datafile,Fields_t* fields,Functions_t* fun
   
   return(bconds) ;
 }
+#else
+BConds_t* (BConds_Create)(DataFile_t* datafile,Fields_t* fields,Functions_t* functions)
+{
+  BConds_t* bconds = BConds_New(fields,functions) ;
+  
+  BConds_Scan(bconds,datafile);
+  
+  return(bconds) ;
+}
+#endif
+
+
+
+void (BConds_Scan)(BConds_t* bconds,DataFile_t* datafile)
+{
+  char* filecontent = DataFile_GetFileContent(datafile) ;
+  char* c  = String_FindToken(filecontent,"COND,Boundary Conditions",",") ;
+  size_t n_bconds = (c = String_SkipLine(c)) ? String_ToSize_t(c) : 0 ;
+  
+  {
+    int i = String_ToInt(c) ;
+
+    if(i <= 0) return ;
+  }
+  
+  
+  Message_Direct("Enter in %s","Boundary Conditions") ;
+  Message_Direct("\n") ;
+
+  /* Scan the datafile */
+  {    
+    c = String_SkipLine(c) ;
+      
+    DataFile_SetCurrentPositionInFileContent(datafile,c) ;
+    
+    BConds_SetNbOfBConds(bconds,n_bconds);
+    for(size_t ibc = 0 ; ibc < n_bconds ; ibc++) {
+      BCond_t* bcond = BConds_GetBCond(bconds) + ibc ;
+    
+      Message_Direct("Enter in %s %d","Boundary Condition",ibc+1) ;
+      Message_Direct("\n") ;
+      
+      BCond_Scan(bcond,datafile) ;
+    }
+  }
+  
+  return ;
+}
 
 
 
@@ -103,32 +129,15 @@ void (BConds_Delete)(void* self)
 {
   BConds_t* bconds = (BConds_t*) self ;
   
-  #if 0
-  {
-    int n_bconds = BConds_GetNbOfBConds(bconds) ;
-    BCond_t* bcond  = BConds_GetBCond(bconds) ;
-    int i ;
-
-    for(i = 0 ; i < n_bconds ; i++) {
-      BCond_t* bc  = bcond + i ;
-      
-      BCond_Delete(bc) ;
-    }
-    
-    free(bcond) ;
-  }
-  #endif
-  
-  #if 1
-  {
-    int n_bconds = BConds_GetNbOfBConds(bconds) ;
+  if(bconds) {
+    size_t n_bconds = BConds_GetNbOfBConds(bconds) ;
     BCond_t* bcond  = BConds_GetBCond(bconds) ;
     
     Mry_Delete(bcond,n_bconds,BCond_Delete) ;
     
-    free(bcond) ;
+    Mry_Free(bcond) ;
+    BConds_SetBCond(bconds,nullptr);
   }
-  #endif
 }
 
 
@@ -139,10 +148,10 @@ void  (BConds_SetDefaultNameOfEquations)(BConds_t* bconds,Mesh_t* mesh)
   size_t n_elts = Mesh_GetNbOfElements(mesh) ;
   Element_t* elt = Mesh_GetElement(mesh) ;
   BCond_t* bcond = BConds_GetBCond(bconds) ;
-  int n_bconds = BConds_GetNbOfBConds(bconds) ;
+  size_t n_bconds = BConds_GetNbOfBConds(bconds) ;
   
   
-  for(int ibc = 0 ; ibc < n_bconds ; ibc++) {
+  for(size_t ibc = 0 ; ibc < n_bconds ; ibc++) {
     BCond_t* bcond_i = bcond + ibc ;
     char*    reg_cl = BCond_GetRegionName(bcond_i) ;
     char*  inc_cl = BCond_GetNameOfUnknown(bcond_i) ;
@@ -187,7 +196,7 @@ void  BConds_EliminateMatrixRowColumnIndexes(BConds_t* bconds,Mesh_t* mesh)
   size_t n_elts = Mesh_GetNbOfElements(mesh) ;
   Element_t* elt = Mesh_GetElement(mesh) ;
   BCond_t* bcond = BConds_GetBCond(bconds) ;
-  int n_bconds = BConds_GetNbOfBConds(bconds) ;
+  size_t n_bconds = BConds_GetNbOfBConds(bconds) ;
   
   
   BConds_SetDefaultNameOfEquations(bconds,mesh) ;
@@ -195,7 +204,7 @@ void  BConds_EliminateMatrixRowColumnIndexes(BConds_t* bconds,Mesh_t* mesh)
   
   /* Set to arbitrary negative value the matrix row/column indexes
    * so as to eliminate rows and columns due to boundary conditions */
-  for(int ibc = 0 ; ibc < n_bconds ; ibc++) {
+  for(size_t ibc = 0 ; ibc < n_bconds ; ibc++) {
     BCond_t* bcond_i = bcond + ibc ;
     char*    reg_cl = BCond_GetRegionName(bcond_i) ;
     char*  inc_cl = BCond_GetNameOfUnknown(bcond_i) ;
@@ -276,11 +285,11 @@ void   BConds_AssignBoundaryConditions(BConds_t* bconds,Mesh_t* mesh,double t)
   int dim = Mesh_GetDimension(mesh) ;
   size_t n_el = Mesh_GetNbOfElements(mesh) ;
   Element_t* el = Mesh_GetElement(mesh) ;
-  int n_bconds = BConds_GetNbOfBConds(bconds) ;
+  size_t n_bconds = BConds_GetNbOfBConds(bconds) ;
   BCond_t* bcond = BConds_GetBCond(bconds) ;
 
 
-  for(int ibc = 0 ; ibc < n_bconds ; ibc++) {
+  for(size_t ibc = 0 ; ibc < n_bconds ; ibc++) {
     BCond_t* bcond_i = bcond + ibc ;
     char*    reg_cl = BCond_GetRegionName(bcond_i) ;
     char*  inc_cl = BCond_GetNameOfUnknown(bcond_i) ;

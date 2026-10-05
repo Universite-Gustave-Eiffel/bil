@@ -7,7 +7,7 @@ extern "C" {
 
 
 /* Forward declarations */
-struct Exception_t; //typedef struct Exception_t     Exception_t ;
+struct Exception_t;
 
 
 extern Exception_t*    (Exception_GetInstance)(void) ;

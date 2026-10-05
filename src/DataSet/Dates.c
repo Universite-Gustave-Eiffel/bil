@@ -13,16 +13,16 @@
 
 
 
-Dates_t*  (Dates_New)(const int n_dates)
+Dates_t*  (Dates_New)(void)
 {
   Dates_t* dates = (Dates_t*) Mry_New(Dates_t) ;
   
-  {
-    Dates_GetNbOfDates(dates) = n_dates ;
+  Dates_SetNbOfDates(dates,0) ;
 
-    if(n_dates) {
-      Dates_GetDate(dates) = Mry_Create(Date_t,n_dates,Date_New()) ;
-    }
+  {
+    Date_t* date = Mry_Create(Date_t,Dates_MaxNbOfDates,Date_New()) ;
+
+    Dates_SetDate(dates, date) ;
   }
   
   return(dates) ;
@@ -31,13 +31,13 @@ Dates_t*  (Dates_New)(const int n_dates)
 
 
 
-
+#if 0
 Dates_t*  (Dates_Create)(DataFile_t* datafile)
 {
   char* filecontent = DataFile_GetFileContent(datafile) ;
   char* c  = String_FindToken(filecontent,"TEMP,DATE,Dates",",") ;
-  int n_dates = (c = String_SkipLine(c)) ? atoi(c) : 0 ;
-  Dates_t* dates = Dates_New(n_dates) ;
+  size_t n_dates = (c = String_SkipLine(c)) ? String_ToSize_t(c) : 0 ;
+  Dates_t* dates = Dates_New() ;
   
   
   Message_Direct("Enter in %s","Dates") ;
@@ -50,21 +50,55 @@ Dates_t*  (Dates_Create)(DataFile_t* datafile)
     c = String_SkipLine(c) ;
     
     String_ScanArray(c,n_dates," %lf",t) ;
-      
-    {
-      Date_t* date = Dates_GetDate(dates) ;
-      int   i ;
+
+    Dates_Set(dates,n_dates,t);
     
-      for(i = 0 ; i < n_dates ; i++) {
-        Date_GetTime(date + i) = t[i] ;
-      }
-    }
-    
-    free(t) ;
+    Mry_Free(t) ;
   }
   
   
   return(dates) ;
+}
+#else
+Dates_t*  (Dates_Create)(DataFile_t* datafile)
+{
+  Dates_t* dates = Dates_New() ;
+  
+  Dates_Scan(dates,datafile);
+  
+  return(dates) ;
+}
+#endif
+
+
+
+
+
+void  (Dates_Scan)(Dates_t* dates,DataFile_t* datafile)
+{
+  char* filecontent = DataFile_GetFileContent(datafile) ;
+  char* c  = String_FindToken(filecontent,"TEMP,DATE,Dates",",") ;
+  size_t n_dates = (c = String_SkipLine(c)) ? String_ToSize_t(c) : 0 ;
+  
+  
+  Message_Direct("Enter in %s","Dates") ;
+  Message_Direct("\n") ;
+
+
+  {
+    double* t = (double*) Mry_New(double,n_dates) ;
+    
+    c = String_SkipLine(c) ;
+    
+    String_ScanArray(c,n_dates," %lf",t) ;
+
+    Dates_Set(dates,n_dates,t);
+    
+    Mry_Free(t) ;
+  }
+  
+  
+  return ;
 }
 
 
@@ -73,12 +107,13 @@ void  (Dates_Delete)(void* self)
 {
   Dates_t* dates = (Dates_t*) self ;
   
-  {
-    int n_dates = Dates_GetNbOfDates(dates) ;
+  if(dates) {
     Date_t* date  = Dates_GetDate(dates) ;
     
-    Mry_Delete(date,n_dates,Date_Delete) ;
-    
-    free(date) ;
+    if(date) {
+      Mry_Delete(date,Dates_MaxNbOfDates,Date_Delete) ;
+      Mry_Free(date) ;
+      Dates_SetDate(dates,NULL) ;
+    }
   }
 }

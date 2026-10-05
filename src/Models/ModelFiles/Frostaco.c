@@ -11,7 +11,7 @@
 #define TITLE   "Frost actions in concrete"
 #define AUTHORS "Zeng,Fen-Chong,Dangla"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 
 /* Nb of equations */
@@ -283,17 +283,17 @@ static void    GetProperties(Element_t*) ;
 void GetProperties(Element_t* el)
 {
 /* To retrieve the material properties */
-#define GetProperty(a)   (Element_GetProperty(el)[pm(a)])
-  phi     = GetProperty("porosity") ;
-  k_int   = GetProperty("k_int") ;
-  C_s     = GetProperty("C_s") ;
-  lam_s   = GetProperty("lam_s") ;
-  k_s     = GetProperty("k_s") ;
-  g_s     = GetProperty("g_s") ;
-  alpha_s = GetProperty("alpha_s") ;
-  p0      = GetProperty("p0") ;
-  T0      = GetProperty("T0") ;
-#undef GetProperty
+#define GetMaterialProperty(a)   (Element_GetProperty(el)[pm(a)])
+  phi     = GetMaterialProperty("porosity") ;
+  k_int   = GetMaterialProperty("k_int") ;
+  C_s     = GetMaterialProperty("C_s") ;
+  lam_s   = GetMaterialProperty("lam_s") ;
+  k_s     = GetMaterialProperty("k_s") ;
+  g_s     = GetMaterialProperty("g_s") ;
+  alpha_s = GetMaterialProperty("alpha_s") ;
+  p0      = GetMaterialProperty("p0") ;
+  T0      = GetMaterialProperty("T0") ;
+#undef GetMaterialProperty
 }
 
 
@@ -405,7 +405,7 @@ int SetModelProp(Model_t* model)
  *  Return 0 */
 {
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */
   Model_CopyNameOfEquation(model,E_Mass,"mass") ;
@@ -941,9 +941,8 @@ int  ComputeOutputs(Element_t* el,double t,double* s,Result_t* r)
     double phi_i  = b_i*Eps_xx + N_il*dp_l + N_ii*dp_i - alpha_phi_i*dtem ;
     //double phi_p  = phi + phi_l + phi_i ;
     
-    
-    
-    if(Element_GetCoordinateSystem(el) != CARTESIAN) {
+  
+    if(!CoorSys_IsCartesian(Element_GetCoordinateSystem(el))) {
       Message_FatalError("Impossible") ;
     }
     

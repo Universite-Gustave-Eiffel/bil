@@ -11,7 +11,7 @@
 #define TITLE "Transversely isotropic ThermoPoroplasticity with hardening (2020)"
 #define AUTHORS "Braun-Dangla"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 
 /* Nb of equations */
@@ -150,7 +150,7 @@ static double wf7[] = {0.5589,    0.000485,    0.002186,    -3.391E-08,    -0.00
 
 
 
-#define GetProperty(a)      Element_GetPropertyValue(el,a)
+#define GetMaterialProperty(a)      Element_GetPropertyValue(el,a)
 
 
 #define NbOfVariables     (92) 
@@ -290,32 +290,32 @@ int pm(const char *s)
 
 void GetProperties(Element_t* el)
 {
-  gravite = GetProperty("gravity") ;
-  phi0    = GetProperty("porosity") ;
-  k_int_1   = GetProperty("k_int_1") ;
-  k_int_3   = GetProperty("k_int_3") ;
-  mu_l    = GetProperty("mu_l") ;
-  rho_l0  = GetProperty("rho_l") ;         //TODO OBSOLETE
-  bulk_l     = GetProperty("bulk_l") ;
-  rho_s   = GetProperty("rho_s") ;
-  //p_l0    = GetProperty("p_l0") ;
-  b       = GetProperty("b") ;
-  b_3       = GetProperty("b_3") ;
-  N       = GetProperty("N") ;
-  beta    = GetProperty("beta") ;
-  //sig0    = &GetProperty("sig0") ;
-  hardv0  = GetProperty("initial_preconsolidation_pressure") ;
+  gravite = GetMaterialProperty("gravity") ;
+  phi0    = GetMaterialProperty("porosity") ;
+  k_int_1   = GetMaterialProperty("k_int_1") ;
+  k_int_3   = GetMaterialProperty("k_int_3") ;
+  mu_l    = GetMaterialProperty("mu_l") ;
+  rho_l0  = GetMaterialProperty("rho_l") ;         //TODO OBSOLETE
+  bulk_l     = GetMaterialProperty("bulk_l") ;
+  rho_s   = GetMaterialProperty("rho_s") ;
+  //p_l0    = GetMaterialProperty("p_l0") ;
+  b       = GetMaterialProperty("b") ;
+  b_3       = GetMaterialProperty("b_3") ;
+  N       = GetMaterialProperty("N") ;
+  beta    = GetMaterialProperty("beta") ;
+  //sig0    = &GetMaterialProperty("sig0") ;
+  hardv0  = GetMaterialProperty("initial_preconsolidation_pressure") ;
   
-  pc0 = GetProperty("initial_preconsolidation_pressure") ;
-  beta_T0  = GetProperty("thermal_hardening_parameter") ;
+  pc0 = GetMaterialProperty("initial_preconsolidation_pressure") ;
+  beta_T0  = GetMaterialProperty("thermal_hardening_parameter") ;
 
-  young   = GetProperty("young") ;      //ADDED only to calculate bulk modulus
-  poisson = GetProperty("poisson") ;    //ADDED only to calculate bulk modulus
+  young   = GetMaterialProperty("young") ;      //ADDED only to calculate bulk modulus
+  poisson = GetMaterialProperty("poisson") ;    //ADDED only to calculate bulk modulus
   K_d = young / 3 / (1 - 2 * poisson) ;       //ADDED only to calculate bulk modulus
-  young_3   = GetProperty("young_3") ;//ADDED
-  poisson_3 = GetProperty("poisson_3") ;//ADDED
-  shear_3   = GetProperty("shear_3") ;//ADDED
-  axis_3  = (short int) GetProperty("axis_3") - 1 ;//ADDED
+  young_3   = GetMaterialProperty("young_3") ;//ADDED
+  poisson_3 = GetMaterialProperty("poisson_3") ;//ADDED
+  shear_3   = GetMaterialProperty("shear_3") ;//ADDED
+  axis_3  = (short int) GetMaterialProperty("axis_3") - 1 ;//ADDED
   axis_1  = (axis_3 + 4) % 3 ;//ADDED
   axis_2  = (axis_3 + 5) % 3 ;//ADDED
 
@@ -331,20 +331,20 @@ void GetProperties(Element_t* el)
     cijkl   = Elasticity_GetStiffnessTensor(elasty) ;
   }
 
-  lam_1     = GetProperty("lam_1");       /* ADDED Thermal conductivity of bulk (W/m/K) */
-  lam_3     = GetProperty("lam_3");       /* ADDED Thermal conductivity of bulk (W/m/K) */
-  C_d       = GetProperty("C_d");         /* ADDED Specific volumetric heat capacity (J/K/m3) */
-  alpha_1   = GetProperty("alpha_1") ;    /* ADDED Thermal linear expansion coefficient of solid (1/K) */
-  alpha_3   = GetProperty("alpha_3") ;    /* ADDED Thermal linear expansion coefficient of solid (1/K) */
+  lam_1     = GetMaterialProperty("lam_1");       /* ADDED Thermal conductivity of bulk (W/m/K) */
+  lam_3     = GetMaterialProperty("lam_3");       /* ADDED Thermal conductivity of bulk (W/m/K) */
+  C_d       = GetMaterialProperty("C_d");         /* ADDED Specific volumetric heat capacity (J/K/m3) */
+  alpha_1   = GetMaterialProperty("alpha_1") ;    /* ADDED Thermal linear expansion coefficient of solid (1/K) */
+  alpha_3   = GetMaterialProperty("alpha_3") ;    /* ADDED Thermal linear expansion coefficient of solid (1/K) */
   alpha_s   = 2*alpha_1 + alpha_3 ;       /* ADDED Thermal volumetric expansion coefficient of solid (1/K) */
-  //T0        = GetProperty("T0") ;           /* ADDED initial temperature (C)*/  
-  s_tot0    = GetProperty("s_tot0") ;       /* ADDED initial bulk entropy  */
-  c_a_11  = GetProperty("c_a_11") ;
-  c_b_11  = GetProperty("c_b_11") ;
-  c_a_33  = GetProperty("c_a_33") ;
-  c_b_33  = GetProperty("c_b_33") ;
-  c_a_22  = GetProperty("c_a_22") ;
-  c_b_22  = GetProperty("c_b_22") ;
+  //T0        = GetMaterialProperty("T0") ;           /* ADDED initial temperature (C)*/  
+  s_tot0    = GetMaterialProperty("s_tot0") ;       /* ADDED initial bulk entropy  */
+  c_a_11  = GetMaterialProperty("c_a_11") ;
+  c_b_11  = GetMaterialProperty("c_b_11") ;
+  c_a_33  = GetMaterialProperty("c_a_33") ;
+  c_b_33  = GetMaterialProperty("c_b_33") ;
+  c_a_22  = GetMaterialProperty("c_a_22") ;
+  c_b_22  = GetMaterialProperty("c_b_22") ;
 
 }
 
@@ -359,7 +359,7 @@ int SetModelProp(Model_t* model)
   int i ;
   
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */
   Model_CopyNameOfEquation(model,E_liq,"liq") ;
@@ -375,7 +375,7 @@ int SetModelProp(Model_t* model)
     Model_CopyNameOfUnknown(model,U_u + i,name_unk[i]) ;
   }
   
-  Model_GetComputePropertyIndex(model) = pm ;
+  Model_SetComputePropertyIndex(model,pm) ;
     
   return(0) ;
 }

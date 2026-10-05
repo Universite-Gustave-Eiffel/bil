@@ -24,7 +24,7 @@
 #define TITLE   "Carbonation of CBM with scCO2 (2012)"
 #define AUTHORS "Shen"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 /* Macros */
 #define NEQ     (7)
@@ -342,7 +342,7 @@
 
 
 /* To retrieve the material properties */
-#define GetProperty(a)   (Element_GetProperty(el)[pm(a)])
+#define GetMaterialProperty(a)   (Element_GetProperty(el)[pm(a)])
 
 
 
@@ -551,7 +551,7 @@ int SetModelProp(Model_t *model)
  *  Return 0 */
 {
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */
   Model_CopyNameOfEquation(model,E_C,"carbone") ;
@@ -728,13 +728,13 @@ int ComputeInitialState(Element_t *el)
   /*
     Input data
   */
-  phi0      = GetProperty("porosite") ;
-  n_ca_ref  = GetProperty("N_CH") ;
-  n_si_ref  = GetProperty("N_Si") ;
-  c_co2_eq  = GetProperty("C_CO2_eq") ;
-  t_ch      = GetProperty("T_CH") ;
-  t_cc      = GetProperty("T_CC") ;
-  temperature = GetProperty("temperature") ;
+  phi0      = GetMaterialProperty("porosite") ;
+  n_ca_ref  = GetMaterialProperty("N_CH") ;
+  n_si_ref  = GetMaterialProperty("N_Si") ;
+  c_co2_eq  = GetMaterialProperty("C_CO2_eq") ;
+  t_ch      = GetMaterialProperty("T_CH") ;
+  t_cc      = GetMaterialProperty("T_CC") ;
+  temperature = GetMaterialProperty("temperature") ;
   
   
   /* Contents */
@@ -826,13 +826,13 @@ int  ComputeImplicitTerms(Element_t *el,double t,double dt)
   /*
     Input data
   */
-  phi0      = GetProperty("porosite") ;
-  n_ca_ref  = GetProperty("N_CH") ;
-  n_si_ref  = GetProperty("N_Si") ;
-  c_co2_eq  = GetProperty("C_CO2_eq") ;
-  t_ch      = GetProperty("T_CH") ;
-  t_cc      = GetProperty("T_CC") ;
-  temperature = GetProperty("temperature") ;
+  phi0      = GetMaterialProperty("porosite") ;
+  n_ca_ref  = GetMaterialProperty("N_CH") ;
+  n_si_ref  = GetMaterialProperty("N_Si") ;
+  c_co2_eq  = GetMaterialProperty("C_CO2_eq") ;
+  t_ch      = GetMaterialProperty("T_CH") ;
+  t_cc      = GetMaterialProperty("T_CC") ;
+  temperature = GetMaterialProperty("temperature") ;
   
   for(i = 0 ; i < nn ; i++) {
     /* Components */
@@ -1028,13 +1028,13 @@ int  ComputeOutputs(Element_t *el,double t,double *s,Result_t *r)
   /*
     Input Data
   */
-  phi0      = GetProperty("porosite") ;
-  n_ca_ref  = GetProperty("N_CH") ;
-  n_si_ref  = GetProperty("N_Si") ;
-  c_co2_eq  = GetProperty("C_CO2_eq") ;
-  t_ch      = GetProperty("T_CH") ;
-  t_cc      = GetProperty("T_CC") ;
-  temperature = GetProperty("temperature") ;
+  phi0      = GetMaterialProperty("porosite") ;
+  n_ca_ref  = GetMaterialProperty("N_CH") ;
+  n_si_ref  = GetMaterialProperty("N_Si") ;
+  c_co2_eq  = GetMaterialProperty("C_CO2_eq") ;
+  t_ch      = GetMaterialProperty("T_CH") ;
+  t_cc      = GetMaterialProperty("T_CC") ;
+  temperature = GetMaterialProperty("temperature") ;
   
   /* Quantities */
   {
@@ -1193,15 +1193,15 @@ void ComputeTransferCoefficients(Element_t *el,double **u,double *f)
   /*
     Input data
   */
-  k_intl    = GetProperty("k_intl") ;
-  k_intg    = GetProperty("k_intg") ;
-  phi0      = GetProperty("porosite") ;
-  n_ca_ref  = GetProperty("N_CH") ;
-  n_si_ref  = GetProperty("N_Si") ;
-  c_co2_eq  = GetProperty("C_CO2_eq") ;
-  t_ch      = GetProperty("T_CH") ;
-  t_cc      = GetProperty("T_CC") ;
-  temperature = GetProperty("temperature") ;
+  k_intl    = GetMaterialProperty("k_intl") ;
+  k_intg    = GetMaterialProperty("k_intg") ;
+  phi0      = GetMaterialProperty("porosite") ;
+  n_ca_ref  = GetMaterialProperty("N_CH") ;
+  n_si_ref  = GetMaterialProperty("N_Si") ;
+  c_co2_eq  = GetMaterialProperty("C_CO2_eq") ;
+  t_ch      = GetMaterialProperty("T_CH") ;
+  t_cc      = GetMaterialProperty("T_CC") ;
+  temperature = GetMaterialProperty("temperature") ;
 
 
   /* initialisation */
@@ -1600,13 +1600,13 @@ void ComputeFluxes(Element_t *el,double **u)
   /*
     Input data
   */
-  phi0      = GetProperty("porosite") ;
-  n_ca_ref  = GetProperty("N_CH") ;
-  n_si_ref  = GetProperty("N_Si") ;
-  c_co2_eq  = GetProperty("C_CO2_eq") ;
-  t_ch      = GetProperty("T_CH") ;
-  t_cc      = GetProperty("T_CC") ;
-  temperature = GetProperty("temperature") ;
+  phi0      = GetMaterialProperty("porosite") ;
+  n_ca_ref  = GetMaterialProperty("N_CH") ;
+  n_si_ref  = GetMaterialProperty("N_Si") ;
+  c_co2_eq  = GetMaterialProperty("C_CO2_eq") ;
+  t_ch      = GetMaterialProperty("T_CH") ;
+  t_cc      = GetMaterialProperty("T_CC") ;
+  temperature = GetMaterialProperty("temperature") ;
 
   /* Gradients (electric potential included) */
   {
@@ -1792,13 +1792,13 @@ int TangentCoefficients(Element_t *el,double dt,double *c)
   /*
     Donnees
   */
-  phi0      = GetProperty("porosite") ;
-  n_ca_ref  = GetProperty("N_CH") ;
-  n_si_ref  = GetProperty("N_Si") ;
-  c_co2_eq  = GetProperty("C_CO2_eq") ;
-  t_ch      = GetProperty("T_CH") ;
-  t_cc      = GetProperty("T_CC") ;
-  temperature   = GetProperty("temperature") ;
+  phi0      = GetMaterialProperty("porosite") ;
+  n_ca_ref  = GetMaterialProperty("N_CH") ;
+  n_si_ref  = GetMaterialProperty("N_Si") ;
+  c_co2_eq  = GetMaterialProperty("C_CO2_eq") ;
+  t_ch      = GetMaterialProperty("T_CH") ;
+  t_cc      = GetMaterialProperty("T_CC") ;
+  temperature   = GetMaterialProperty("temperature") ;
   
   
   for(i = 0 ; i < 2 ; i++) {

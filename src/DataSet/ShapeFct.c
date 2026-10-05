@@ -52,7 +52,7 @@ void  (ShapeFct_Delete)(void* self)
     double* b = ShapeFct_GetCoordinate(shapefct) ;
     
     if(b) {
-      free(b) ;
+      Mry_Free(b) ;
       ShapeFct_GetCoordinate(shapefct) = NULL ;
     }
   }

@@ -397,7 +397,7 @@ void (Parser_Delete)(void* self)
   Parser_t** pparser = (Parser_t**) self ;
   Parser_t*  parser  = *pparser ;
   
-  free(parser) ;
+  Mry_Free(parser) ;
   *pparser = NULL ;
 }
 

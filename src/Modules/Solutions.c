@@ -33,7 +33,7 @@ Solutions_t*   (Solutions_Create)(Mesh_t* mesh,const int n_sol)
       Solution_t* soli = Solution_Create(mesh) ;
       
       sol[i] = soli[0] ;
-      free(soli) ;
+      Mry_Free(soli) ;
     }
       
     Solutions_GetSolution(sols) = sol ;
@@ -99,7 +99,7 @@ void (Solutions_Delete)(void* self)
         Solution_Delete(soli) ;
       }
       
-      free(sol) ;
+      Mry_Free(sol) ;
     }
   }
 }

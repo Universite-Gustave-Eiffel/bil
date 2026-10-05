@@ -1,6 +1,7 @@
 #include "Algos.h"
 #include "Utils.h"
 #include "Codes.h"
+#include "Arith.h"
 
 
 
@@ -86,9 +87,6 @@ Test Algos:
 #undef T
 #undef F
 
-#endif
-#if 0
-
 
 
 #define T1         (1,5,9,6,8,0,4)
@@ -135,7 +133,7 @@ Test Algos:
 
 #define T         (A,b,C,d,E,f,G,h,I,j)
 "T                 " = T
-"Algos_SEP(T)      " = Algos_SEP(T);
+"Algos_SEP(T)      " = Algos_SEP(T)
 "Algos_SEPWITH(T, )" = Algos_SEPWITH(T, )
 #undef T
 
@@ -148,7 +146,38 @@ Test Algos:
 
 
 
+#define T1        DataSet_t*,int,DataFile_t*
+#define T2        (1,2,3,4,5,6,7,8,9)
+#define F1(A,B)    A Utils_CAT(a,B)
+#define F2(A,B)    Utils_CAT(a,B)
+"T1             " = T1
+"T2             " = T2
+"F1(A,B)           = A Utils_CAT(a,B)"
+"F2(A,B)           = Utils_CAT(a,B)"
+"Tuple_SEQ(Algos_MAP2(Tuple_TUPLE(T1),T2,F1)) " = Tuple_SEQ(Algos_MAP2(Tuple_TUPLE(T1),T2,F1))
+"Tuple_SEQ(Algos_MAP2(Tuple_TUPLE(T1),T2,F2)) " = Tuple_SEQ(Algos_MAP2(Tuple_TUPLE(T1),T2,F2))
+#undef T1
+#undef T2
+#undef F
 
+"Arith_INCR(10) " = Arith_INCR(10)
+
+
+#define T       A
+"T              " = T
+"Arg_DUPSEQ_N(T) " = Arg_DUPSEQ_N(T)
+
+"Arg_NUMSEQ_N(T) " = Arg_NUMSEQ_N(T)
+
+"Arg_REVSEQ_N(T) " = Arg_REVSEQ_N(T)
+#undef T
+
+
+#endif
+
+
+
+#if 0
 #include "TypeId.h"
 
 Test TypeId:

@@ -9,7 +9,7 @@
 #define TITLE   "Drying-Wetting (1D isothermal case)"
 #define AUTHORS "Dangla"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 /* Nb of equations */
 #define NEQ      (2)
@@ -90,7 +90,7 @@
 
 
 /* To retrieve the material properties */
-#define GetProperty(a)   (Element_GetProperty(el)[pm(a)])
+#define GetMaterialProperty(a)   (Element_GetProperty(el)[pm(a)])
 
 
 /* Functions */
@@ -213,17 +213,17 @@ int pm(const char *s)
 
 void GetProperties(Element_t *el)
 {
-  gravite = GetProperty("gravite") ;
-  phi     = GetProperty("phi") ;
-  kl_int  = GetProperty("kl_int") ;
-  kg_int  = GetProperty("kg_int") ;
-  p_c3    = GetProperty("p_c3") ;
+  gravite = GetMaterialProperty("gravite") ;
+  phi     = GetMaterialProperty("phi") ;
+  kl_int  = GetMaterialProperty("kl_int") ;
+  kg_int  = GetMaterialProperty("kg_int") ;
+  p_c3    = GetMaterialProperty("p_c3") ;
 }
 
 
 int SetModelProp(Model_t *model)
 {
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   Model_CopyNameOfEquation(model,E_Mass,"mass") ;
   Model_CopyNameOfEquation(model,E_Air,"air") ;

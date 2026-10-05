@@ -162,63 +162,63 @@ void  (Plasticity_Delete)(void* self)
   {
     char* name = Plasticity_GetCodeNameOfModel(plasty) ;
     
-    if(name) free(name) ;
+    if(name) Mry_Free(name) ;
   }
   
   {
     double* c = Plasticity_GetYieldFunctionGradient(plasty) ;
     
-    if(c) free(c) ;
+    if(c) Mry_Free(c) ;
   }
   
   {
     double* c = Plasticity_GetPotentialFunctionGradient(plasty) ;
     
-    if(c) free(c) ;
+    if(c) Mry_Free(c) ;
   }
   
   {
     double* c = Plasticity_GetHardeningVariable(plasty) ;
     
-    if(c) free(c) ;
+    if(c) Mry_Free(c) ;
   }
   
   {
     double* c = Plasticity_GetCriterionValue(plasty) ;
     
-    if(c) free(c) ;
+    if(c) Mry_Free(c) ;
       
   }
   
   {
     double* c = Plasticity_GetPlasticMultiplier(plasty) ;
     
-    if(c) free(c) ;
+    if(c) Mry_Free(c) ;
       
   }
   
   {
     double* c = Plasticity_GetHardeningModulus(plasty) ;
     
-    if(c) free(c) ;
+    if(c) Mry_Free(c) ;
   }
   
   {
     double* c = Plasticity_GetFjiCijkl(plasty) ;
     
-    if(c) free(c) ;
+    if(c) Mry_Free(c) ;
   }
   
   {
     double* c = Plasticity_GetCijklGlk(plasty) ;
     
-    if(c) free(c) ;
+    if(c) Mry_Free(c) ;
   }
   
   {
     double* c = Plasticity_GetTangentStiffnessTensor(plasty) ;
     
-    if(c) free(c) ;
+    if(c) Mry_Free(c) ;
   }
   
   {
@@ -226,7 +226,7 @@ void  (Plasticity_Delete)(void* self)
     
     if(elasty) {
       Elasticity_Delete(elasty) ;
-      free(elasty) ;
+      Mry_Free(elasty) ;
       Plasticity_GetElasticity(plasty) = NULL ;
     }
   }
@@ -236,7 +236,7 @@ void  (Plasticity_Delete)(void* self)
     
     if(gdat) {
       GenericData_Delete(gdat) ;
-      free(gdat) ;
+      Mry_Free(gdat) ;
       Plasticity_GetGenericData(plasty) = NULL ;
     }
   }
@@ -247,7 +247,7 @@ void  (Plasticity_Delete)(void* self)
     if(curves) {
       /* The curves are deleted in Material_Delete */
       //Curves_Delete(curves) ;
-      free(curves) ;
+      Mry_Free(curves) ;
       Plasticity_GetCurves(plasty) = NULL ;
     }
   }
@@ -257,7 +257,7 @@ void  (Plasticity_Delete)(void* self)
 
     if(buf) {
       Buffers_Delete(buf)  ;
-      free(buf) ;
+      Mry_Free(buf) ;
       Plasticity_GetBuffers(plasty) = NULL ;
     }
   }

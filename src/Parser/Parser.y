@@ -207,10 +207,10 @@ GeometryItem :
       
       if(!geom) {
         geom = Geometry_New() ;
-        DataSet_GetGeometry(dataset) = geom ;
+        DataSet_SetGeometry(dataset,geom) ;
       }
 
-      Geometry_GetDimension(geom) = $3 ;
+      Geometry_SetDimension(geom,$3);
 
       printf("%s = { %d } %s\n",$1,$3,$4);
     }
@@ -220,7 +220,7 @@ GeometryItem :
       
       if(!geom) {
         geom = Geometry_New() ;
-        DataSet_GetGeometry(dataset) = geom ;
+        DataSet_SetGeometry(dataset,geom) ;
       }
 
       {
@@ -247,15 +247,14 @@ GeometryItem :
 Mesh :
     tMesh tAFFECT tBIGSTR tEND
     {
-      Mesh_t* mesh = (Mesh_t*) Mry_New(Mesh_t) ;
+      Mesh_t* mesh = Mesh_New(DataSet_GetGeometry(dataset)) ;
 
-      DataSet_GetMesh(dataset) = mesh ;
-      Mesh_GetGeometry(mesh) = DataSet_GetGeometry(dataset) ;
+      DataSet_SetMesh(dataset,mesh) ;
       Mesh_Scan(mesh,$3) ;
       {
         Materials_t* materials = DataSet_GetMaterials(dataset) ;
         if(materials) {
-          Elements_LinkUp(Mesh_GetElements(mesh),materials) ;
+          Elements_LinkUpToMaterials(Mesh_GetElements(mesh),materials) ;
           Elements_CreateMore(Mesh_GetElements(mesh)) ;
           Nodes_CreateMore(Mesh_GetNodes(mesh)) ;
           Mesh_SetEquationContinuity(mesh) ;
@@ -606,7 +605,7 @@ void (Parser_Delete)(void* self)
 {
   Parser_t* parser = (Parser_t*) self ;
   
-  //free(parser) ;
+  //Mry_Free(parser) ;
 }
 
 
@@ -649,14 +648,14 @@ int Parser_ParseFile(DataSet_t* dataset)
 
 DataSet_t* Parser_CreateDataSet(char* filename,Options_t* options)
 {
-  DataSet_t*  dataset  = DataSet_New() ;
+  DataSet_t*  dataset  = (DataSet_t*) Mry_New(DataSet_t) ;
   
-  DataSet_GetOptions(dataset) = options ;
+  DataSet_SetOptions(dataset,options) ;
 
   {
-    DataFile_t* datafile = DataFile_Create(filename) ;
+    DataFile_t* datafile = DataFile_New(filename) ;
   
-    DataSet_GetDataFile(dataset) = datafile ;
+    DataSet_SetDataFile(dataset,datafile) ;
   
     if(DataFile_DoesNotExist(datafile)) {
       Message_FatalError("The file \"%s\" doesn't exist\n",filename) ;

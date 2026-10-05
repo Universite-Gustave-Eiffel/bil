@@ -105,59 +105,59 @@ void  (Damage_Delete)(void* self)
   
   {
     char* name = Damage_GetCodeNameOfModel(damage) ;
-    free(name) ;
+    Mry_Free(name) ;
   }
   
   {
     double* c = Damage_GetYieldFunctionGradient(damage) ;
-    free(c) ;
+    Mry_Free(c) ;
   }
   
   {
     double* c = Damage_GetPotentialFunctionGradient(damage) ;
-    free(c) ;
+    Mry_Free(c) ;
   }
   
   {
     double* c = Damage_GetHardeningVariable(damage) ;
-    free(c) ;
+    Mry_Free(c) ;
   }
   
   {
     double* c = Damage_GetHardeningModulus(damage) ;
-    free(c) ;
+    Mry_Free(c) ;
   }
   
   {
     double* c = Damage_GetFjiCijkl(damage) ;
-    free(c) ;
+    Mry_Free(c) ;
   }
   
   {
     double* c = Damage_GetCijklGlk(damage) ;
-    free(c) ;
+    Mry_Free(c) ;
   }
   
   {
     double* c = Damage_GetTangentStiffnessTensor(damage) ;
-    free(c) ;
+    Mry_Free(c) ;
   }
   
   {
     double* c = Damage_GetDamagedStiffnessTensor(damage) ;
-    free(c) ;
+    Mry_Free(c) ;
   }
   
   {
     Elasticity_t* elasty = Damage_GetElasticity(damage) ;
     
     Elasticity_Delete(elasty) ;
-    free(elasty) ;
+    Mry_Free(elasty) ;
   }
   
   {
     double* c = Damage_GetParameter(damage) ;
-    free(c) ;
+    Mry_Free(c) ;
   }
 }
 

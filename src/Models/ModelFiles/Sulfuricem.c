@@ -35,7 +35,7 @@
 #define TITLE   "Sulfuric acid attack of concrete" 
 #define AUTHORS "Grandclerc-Yuan-Dangla"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 
 /* Nb of nodes (el must be used below) */
@@ -343,7 +343,7 @@
 
 
 /* To retrieve the material properties */
-#define GetProperty(a)   (Element_GetProperty(el)[pm(a)])
+#define GetMaterialProperty(a)   (Element_GetProperty(el)[pm(a)])
 
 
 
@@ -487,23 +487,23 @@ int pm(const char *s)
 
 void GetProperties(Element_t* el)
 {
-  phi0      = GetProperty("porosite") ;
-  n_ca_ref  = GetProperty("N_CH") ;
-  n_si_ref  = GetProperty("N_Si") ;
-  n_al_ref  = GetProperty("N_AH3") ;
-  n_csh2_0  = GetProperty("N_CSH2") ;
-  n_afm_0   = GetProperty("N_AFm") ;
-  n_aft_0   = GetProperty("N_AFt") ;
-  n_c3ah6_0 = GetProperty("N_C3AH6") ;
-  t_ch      = GetProperty("T_CH") ;
-  t_csh2    = GetProperty("T_CSH2") ;
-  t_afm     = GetProperty("T_AFm") ;
-  t_aft     = GetProperty("T_AFt") ;
-  r_afm     = GetProperty("R_AFm") ;
-  r_aft     = GetProperty("R_AFt") ;
-  r_c3ah6   = GetProperty("R_C3AH6") ;
-  r_csh2    = GetProperty("R_CSH2") ;
-  phi_min  = GetProperty("porosity_min") ;
+  phi0      = GetMaterialProperty("porosite") ;
+  n_ca_ref  = GetMaterialProperty("N_CH") ;
+  n_si_ref  = GetMaterialProperty("N_Si") ;
+  n_al_ref  = GetMaterialProperty("N_AH3") ;
+  n_csh2_0  = GetMaterialProperty("N_CSH2") ;
+  n_afm_0   = GetMaterialProperty("N_AFm") ;
+  n_aft_0   = GetMaterialProperty("N_AFt") ;
+  n_c3ah6_0 = GetMaterialProperty("N_C3AH6") ;
+  t_ch      = GetMaterialProperty("T_CH") ;
+  t_csh2    = GetMaterialProperty("T_CSH2") ;
+  t_afm     = GetMaterialProperty("T_AFm") ;
+  t_aft     = GetMaterialProperty("T_AFt") ;
+  r_afm     = GetMaterialProperty("R_AFm") ;
+  r_aft     = GetMaterialProperty("R_AFt") ;
+  r_c3ah6   = GetMaterialProperty("R_C3AH6") ;
+  r_csh2    = GetMaterialProperty("R_CSH2") ;
+  phi_min  = GetMaterialProperty("porosity_min") ;
   
   MolarVolumeOfCSH_Curve = Element_FindCurve(el,"V_CSH") ;
 }
@@ -511,7 +511,7 @@ void GetProperties(Element_t* el)
 
 int SetModelProp(Model_t* model)
 {
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   Model_CopyNameOfEquation(model,E_S, "sulfur") ;
   Model_CopyNameOfEquation(model,E_Ca,"calcium") ;

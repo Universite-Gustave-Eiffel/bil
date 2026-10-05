@@ -50,7 +50,7 @@ void  (ShapeFcts_Delete)(void* self)
         ShapeFct_Delete(shapefct_i) ;
       }
     
-      free(shapefct) ;
+      Mry_Free(shapefct) ;
     }
   }
 }
@@ -103,7 +103,7 @@ int ShapeFcts_AddShapeFct(ShapeFcts_t* shapefcts,unsigned short int nn,unsigned 
     ShapeFct_t* shapefcti = ShapeFct_Create(nn,dim) ;
     
     shapefct[i] = shapefcti[0] ;
-    free(shapefcti) ;
+    Mry_Free(shapefcti) ;
   }
   
   return(i) ;

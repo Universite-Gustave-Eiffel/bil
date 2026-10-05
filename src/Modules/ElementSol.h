@@ -98,7 +98,7 @@ extern void          (ElementSol_Copy)(ElementSol_t*,ElementSol_t*) ;
         do { \
           GenericData_t* gdat = ElementSol_GetExplicitGenericData(ES) ; \
           GenericData_Delete(gdat) ; \
-          free(gdat) ; \
+          Mry_Free(gdat) ; \
           ElementSol_GetExplicitGenericData(ES) = NULL ; \
         } while(0)
         
@@ -107,7 +107,7 @@ extern void          (ElementSol_Copy)(ElementSol_t*,ElementSol_t*) ;
         do { \
           GenericData_t* gdat = ElementSol_GetConstantGenericData(ES) ; \
           GenericData_Delete(gdat) ; \
-          free(gdat) ; \
+          Mry_Free(gdat) ; \
           ElementSol_GetConstantGenericData(ES) = NULL ; \
         } while(0)
 

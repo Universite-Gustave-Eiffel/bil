@@ -64,7 +64,7 @@ void   (Solution_Delete)(void* self)
     
     if(nodessol) {
       NodesSol_Delete(nodessol) ;
-      free(nodessol) ;
+      Mry_Free(nodessol) ;
       Solution_SetNodesSol(sol,NULL) ;
     }
   }
@@ -74,7 +74,7 @@ void   (Solution_Delete)(void* self)
     
     if(elementssol) {
       ElementsSol_Delete(elementssol) ;
-      free(elementssol) ;
+      Mry_Free(elementssol) ;
       Solution_SetElementsSol(sol,NULL) ;
     }
   }
@@ -83,7 +83,7 @@ void   (Solution_Delete)(void* self)
     double* t = Solution_GetSequentialTime(sol) ;
     
     if(t) {
-      free(t) ;
+      Mry_Free(t) ;
       Solution_SetSequentialTime(sol,NULL) ;
     }
   }
@@ -92,7 +92,7 @@ void   (Solution_Delete)(void* self)
     int* index = Solution_GetSequentialStepIndex(sol) ;
     
     if(index) {
-      free(index) ;
+      Mry_Free(index) ;
       Solution_SetSequentialStepIndex(sol,NULL) ;
     }
   }

@@ -40,233 +40,74 @@
 
 
 /* Extern functions */
+DataSet_t*  (DataSet_New)(std::string const& filestr,Context_t* ctx){
+  return(DataSet_New(filestr.c_str(),ctx));
+}
 
-DataSet_t*  (DataSet_Create)(char* filename,Options_t* opt)
+DataSet_t*  (DataSet_New)(char const* filename,Context_t* ctx)
 {
-  DataSet_t* dataset = DataSet_New() ;
-  char*   debug  = Options_GetPrintedInfos(opt) ;
-  
-  
-  DataSet_GetOptions(dataset) = opt ;
-  
-  
-  /* DataFile */
-  {
-    DataFile_t* datafile = DataFile_Create(filename) ;
-    
-    DataFile_RemoveComments(datafile) ;
-    DataFile_GetParent(datafile) = dataset ;
-  
-    DataSet_GetDataFile(dataset) = datafile ;
-  
-    if(DataFile_DoesNotExist(datafile)) {
-      Message_Info("File %s not found\n",filename) ;
-      Message_Exit ;
-    }
-  }
-  if(!strcmp(debug,"data")) DataSet_PrintData(dataset,debug) ;
+  DataSet_t* dataset = (DataSet_t*) Mry_New(DataSet_t) ;
+  Options_t*     options = Options_New(ctx);
+  DataFile_t*    datafile = DataFile_New(filename) ;
+  Units_t*       units = Units_New() ;
+  Geometry_t*    geometry = Geometry_New() ;
+  Models_t*      models = Models_New(geometry,datafile) ;
+  Functions_t*   functions = Functions_New() ;
+  Fields_t*      fields = Fields_New() ;
+  Materials_t*   materials = Materials_New(models,fields,functions) ;
+  Dates_t*       dates = Dates_New() ;
+  Points_t*      points = Points_New() ;
+  IConds_t*      iconds = IConds_New(fields,functions) ;
+  BConds_t*      bconds = BConds_New(fields,functions) ;
+  Loads_t*       loads = Loads_New(fields,functions) ;
+  ObVals_t*      obvals = ObVals_New() ;
+  TimeStep_t*    timestep = TimeStep_New(obvals,datafile) ;
+  IterProcess_t* iterprocess = IterProcess_New(obvals) ;
+  Module_t*      module = Module_New() ;
+  Mesh_t*        mesh = Mesh_New(geometry,datafile);
 
-  Message_Direct("Reading %s\n",filename) ;
+  DataSet_SetOptions(dataset,options) ;
+  DataSet_SetDataFile(dataset,datafile) ;
+  DataSet_SetUnits(dataset,units) ;
+  DataSet_SetGeometry(dataset,geometry) ;
+  DataSet_SetFields(dataset,fields) ;
+  DataSet_SetFunctions(dataset,functions) ;
+  DataSet_SetModels(dataset,models) ;
+  DataSet_SetMaterials(dataset,materials) ;
+  DataSet_SetMesh(dataset,mesh) ;
+  DataSet_SetIConds(dataset,iconds) ;
+  DataSet_SetLoads(dataset,loads) ;
+  DataSet_SetBConds(dataset,bconds) ;
+  DataSet_SetPoints(dataset,points) ;
+  DataSet_SetDates(dataset,dates) ;
+  DataSet_SetObVals(dataset,obvals) ;
+  DataSet_SetTimeStep(dataset,timestep) ;
+  DataSet_SetIterProcess(dataset,iterprocess) ;
+  DataSet_SetModule(dataset,module) ;
 
+  DataFile_SetParent(datafile,dataset) ;
 
-  /* Units */
-  {
-    DataFile_t*    datafile = DataSet_GetDataFile(dataset) ;
-    Units_t* units = Units_Create(datafile) ;
-    
-    DataSet_GetUnits(dataset) = units ;
+  if(options) {
+    char* codename = Options_GetModule(options) ;
+
+    if(codename) Module_Set(module,codename) ;
+    Module_SetNbOfSequences(module,Options_GetNbOfSequences(options)) ;
   }
-  
-  
-  /* Geometry */
-  {
-    DataFile_t* datafile = DataSet_GetDataFile(dataset) ;
-    Geometry_t* geometry = Geometry_Create(datafile) ;
-  
-    DataSet_GetGeometry(dataset) = geometry ;
-  }
-  if(!strcmp(debug,"geom")) DataSet_PrintData(dataset,debug) ;
-  
-  
-  /* Fields */
-  {
-    DataFile_t*  datafile = DataSet_GetDataFile(dataset) ;
-    Fields_t*    fields = Fields_Create(datafile) ;
-  
-    DataSet_GetFields(dataset) = fields ;
-  }
-  if(!strcmp(debug,"field")) DataSet_PrintData(dataset,debug) ;
-  
-  
-  /* Functions */
-  {
-    DataFile_t*  datafile = DataSet_GetDataFile(dataset) ;
-    Functions_t* functions = Functions_Create(datafile) ;
-  
-    DataSet_GetFunctions(dataset) = functions ;
-  }
-  if(!strcmp(debug,"func")) DataSet_PrintData(dataset,debug) ;
-  
-  
-  /* Models */
-  {
-    DataFile_t*    datafile = DataSet_GetDataFile(dataset) ;
-    Geometry_t*    geometry = DataSet_GetGeometry(dataset) ;
-    Models_t*      models   = Models_Create(datafile,geometry) ;
-  
-    DataSet_GetModels(dataset) = models ;
-  }
-  if(!strcmp(debug,"model")) DataSet_PrintData(dataset,debug) ;
-  
-  
-  /* Materials */
-  {
-    DataFile_t*    datafile = DataSet_GetDataFile(dataset) ;
-    Geometry_t*    geometry = DataSet_GetGeometry(dataset) ;
-    Fields_t*      fields = DataSet_GetFields(dataset) ;
-    Functions_t*   functions = DataSet_GetFunctions(dataset) ;
-    Models_t*      models = DataSet_GetModels(dataset) ;
-    Materials_t*   materials = Materials_Create(datafile,geometry,fields,functions,models) ;
-  
-    DataSet_GetMaterials(dataset) = materials ;
-  }
-  if(!strcmp(debug,"mate")) DataSet_PrintData(dataset,debug) ;
-  
-  
-  /* Mesh */
-  {
-    DataFile_t*    datafile = DataSet_GetDataFile(dataset) ;
-    Geometry_t*    geometry = DataSet_GetGeometry(dataset) ;
-    Materials_t*   materials = DataSet_GetMaterials(dataset) ;
-    Mesh_t*        mesh = Mesh_Create(datafile,materials,geometry) ;
-  
-    DataSet_GetMesh(dataset) = mesh ;
-  }
-  if(!strcmp(debug,"mesh")) DataSet_PrintData(dataset,debug) ;
-  
-  
-  /* Initial conditions */
-  {
-    DataFile_t*    datafile = DataSet_GetDataFile(dataset) ;
-    Fields_t*      fields = DataSet_GetFields(dataset) ;
-    Functions_t*   functions = DataSet_GetFunctions(dataset) ;
-    IConds_t*      iconds = IConds_Create(datafile,fields,functions) ;
-  
-    DataSet_GetIConds(dataset) = iconds ;
-  }
-  if(!strcmp(debug,"init")) DataSet_PrintData(dataset,debug) ;
-  
-  
-  /* Loads */
-  {
-    DataFile_t*    datafile = DataSet_GetDataFile(dataset) ;
-    Fields_t*      fields = DataSet_GetFields(dataset) ;
-    Functions_t*   functions = DataSet_GetFunctions(dataset) ;
-    Loads_t*       loads = Loads_Create(datafile,fields,functions) ;
-  
-    DataSet_GetLoads(dataset) = loads ;
-  }
-  if(!strcmp(debug,"load")) DataSet_PrintData(dataset,debug) ;
-  
-  
-  /* Boundary conditions */
-  {
-    DataFile_t*    datafile = DataSet_GetDataFile(dataset) ;
-    Fields_t*      fields = DataSet_GetFields(dataset) ;
-    Functions_t*   functions = DataSet_GetFunctions(dataset) ;
-    BConds_t*      bconds = BConds_Create(datafile,fields,functions) ;
-  
-    DataSet_GetBConds(dataset) = bconds ;
-  }
-  if(!strcmp(debug,"bcond")) DataSet_PrintData(dataset,debug) ;
-  
-  
-  /* Points */
-  {
-    DataFile_t*    datafile = DataSet_GetDataFile(dataset) ;
-    Mesh_t*        mesh = DataSet_GetMesh(dataset) ;
-    Points_t*      points = Points_Create(datafile,mesh) ;
-  
-    DataSet_GetPoints(dataset) = points ;
-  }
-  if(!strcmp(debug,"points")) DataSet_PrintData(dataset,debug) ;
-  
-  
-  /* Dates */
-  {
-    DataFile_t*    datafile = DataSet_GetDataFile(dataset) ;
-    Dates_t*       dates = Dates_Create(datafile) ;
-    
-    DataSet_GetDates(dataset) = dates ;
-  }
-  if(!strcmp(debug,"dates")) DataSet_PrintData(dataset,debug) ;
-  
-  
-  /* Objective variations */
-  {
-    DataFile_t*    datafile = DataSet_GetDataFile(dataset) ;
-    Materials_t*   materials = DataSet_GetMaterials(dataset) ;
-    Mesh_t*        mesh = DataSet_GetMesh(dataset) ;
-    ObVals_t*      obvals = ObVals_Create(datafile,mesh,materials) ;
-  
-    DataSet_GetObVals(dataset) = obvals ;
-  }
-  if(!strcmp(debug,"obval")) DataSet_PrintData(dataset,debug) ;
-  
-  
-  /* Time steps */
-  {
-    DataFile_t*    datafile = DataSet_GetDataFile(dataset) ;
-    ObVals_t*      obvals = DataSet_GetObVals(dataset) ;
-    TimeStep_t*    timestep = TimeStep_Create(datafile,obvals) ;
-    
-    DataSet_GetTimeStep(dataset) = timestep ;
-  }
-  if(!strcmp(debug,"time")) DataSet_PrintData(dataset,debug) ;
-  
-  
-  /* Iterative process */
-  {
-    DataFile_t*    datafile = DataSet_GetDataFile(dataset) ;
-    ObVals_t*      obvals = DataSet_GetObVals(dataset) ;
-    IterProcess_t* iterprocess = IterProcess_Create(datafile,obvals) ;
-    
-    DataSet_GetIterProcess(dataset) = iterprocess ;
-  }
-  if(!strcmp(debug,"iter")) DataSet_PrintData(dataset,debug) ;
+
+  return(dataset);
+}
 
 
-  Message_Direct("End of reading %s\n",filename) ;
-  Message_Direct("\n") ;
-  
-  
-  /* Module */
-  {
-    Module_t*  module  = Module_New() ;
-    char* codename = Options_GetModule(opt) ;
 
-    Module_Initialize(module,codename) ;
-    Module_GetNbOfSequences(module) = Options_GetNbOfSequences(opt) ;
-    
-    DataSet_GetModule(dataset) = module ;
-    
-    //DataSet_GetModule(dataset) = Modules_FindModule(modules,Options_GetModule(opt)) ;
-  }
-  if(!strcmp(debug,"module")) DataSet_PrintData(dataset,debug) ;
-  
-  
-  
-  /* Set up the system of equations before
-   * passing through Elements_DefineProperties */
-  {
-    BConds_t*      bconds = DataSet_GetBConds(dataset) ;
-    Mesh_t*        mesh = DataSet_GetMesh(dataset) ;
-    
-    Mesh_GetNbOfMatrices(mesh) = Options_GetNbOfSequences(opt) ;
-  
-    Mesh_SetMatrixRowColumnIndexes(mesh,bconds) ;
-  }
-  
+DataSet_t*  (DataSet_Create)(char const* filename,Context_t* ctx)
+{
+  DataSet_t*  dataset = DataSet_New(filename,ctx) ;
+  DataFile_t* datafile = DataSet_GetDataFile(dataset) ;
+  Options_t* options = DataSet_GetOptions(dataset);
+  char*   debug  = Options_GetPrintedInfos(options) ;
+
+  DataSet_Scan(dataset,datafile);
+  DataSet_Finalize(dataset);
   
   /* Other printings in debug mode */
   if(!strcmp(debug,"continuity")) DataSet_PrintData(dataset,debug) ;
@@ -278,21 +119,195 @@ DataSet_t*  (DataSet_Create)(char* filename,Options_t* opt)
 }
 
 
+void  (DataSet_Scan)(DataSet_t* dataset,DataFile_t* datafile)
+{
+  char* filename = DataFile_GetFileName(datafile);
+  Options_t* opt = DataSet_GetOptions(dataset);
+  char* debug  = Options_GetPrintedInfos(opt) ;
+
+  /* DataFile */
+  {
+    if(DataFile_DoesNotExist(datafile)) {
+      Message_Info("File %s not found\n",filename) ;
+      Message_Exit ;
+    }
+
+    DataFile_RemoveComments(datafile) ;
+  }
+  if(!strcmp(debug,"data")) DataSet_PrintData(dataset,debug) ;
+
+  Message_Direct("Reading %s\n",filename) ;
+
+
+  /* Units */
+  {
+    Units_t* units = DataSet_GetUnits(dataset) ;
+
+    Units_Scan(units,datafile);
+  }
+  
+  
+  /* Geometry */
+  {
+    Geometry_t* geometry = DataSet_GetGeometry(dataset) ;
+
+    Geometry_Scan(geometry,datafile);
+  }
+  if(!strcmp(debug,"geom")) DataSet_PrintData(dataset,debug) ;
+  
+  
+  /* Fields */
+  {
+    Fields_t* fields = DataSet_GetFields(dataset) ;
+  
+    Fields_Scan(fields,datafile);
+  }
+  if(!strcmp(debug,"field")) DataSet_PrintData(dataset,debug) ;
+  
+  
+  /* Functions */
+  {
+    Functions_t* functions = DataSet_GetFunctions(dataset) ;
+  
+    Functions_Scan(functions,datafile);
+  }
+  if(!strcmp(debug,"func")) DataSet_PrintData(dataset,debug) ;
+  
+  
+  /* Models */
+  {
+    Models_t* models   = DataSet_GetModels(dataset) ;
+
+    Models_Scan(models,datafile);
+  }
+  if(!strcmp(debug,"model")) DataSet_PrintData(dataset,debug) ;
+  
+  
+  /* Materials */
+  {
+    Materials_t* materials = DataSet_GetMaterials(dataset) ;
+  
+    Materials_Scan(materials,datafile);
+  }
+  if(!strcmp(debug,"mate")) DataSet_PrintData(dataset,debug) ;
+  
+  
+  /* Mesh */
+  {
+    Mesh_t*      mesh = DataSet_GetMesh(dataset) ;
+    Materials_t* materials = DataSet_GetMaterials(dataset) ;
+  
+    Mesh_Scan(mesh,datafile);
+  }
+  if(!strcmp(debug,"mesh")) DataSet_PrintData(dataset,debug) ;
+  
+  
+  /* Initial conditions */
+  {
+    IConds_t* iconds = DataSet_GetIConds(dataset) ;
+  
+    IConds_Scan(iconds,datafile);
+  }
+  if(!strcmp(debug,"init")) DataSet_PrintData(dataset,debug) ;
+  
+  
+  /* Loads */
+  {
+    Loads_t* loads = DataSet_GetLoads(dataset) ;
+  
+    Loads_Scan(loads,datafile);
+  }
+  if(!strcmp(debug,"load")) DataSet_PrintData(dataset,debug) ;
+  
+  
+  /* Boundary conditions */
+  {
+    BConds_t* bconds = DataSet_GetBConds(dataset) ;
+  
+    BConds_Scan(bconds,datafile);
+  }
+  if(!strcmp(debug,"bcond")) DataSet_PrintData(dataset,debug) ;
+  
+  
+  /* Points */
+  {
+    Points_t* points = DataSet_GetPoints(dataset) ;
+    Mesh_t*   mesh = DataSet_GetMesh(dataset) ;
+  
+    Points_Scan(points,datafile,mesh);
+  }
+  if(!strcmp(debug,"points")) DataSet_PrintData(dataset,debug) ;
+  
+  
+  /* Dates */
+  {
+    Dates_t* dates = DataSet_GetDates(dataset) ;
+    
+    Dates_Scan(dates,datafile);
+  }
+  if(!strcmp(debug,"dates")) DataSet_PrintData(dataset,debug) ;
+  
+  
+  /* Objective variations */
+  {
+    ObVals_t* obvals = DataSet_GetObVals(dataset) ;
+  
+    ObVals_Scan(obvals,datafile);
+  }
+  if(!strcmp(debug,"obval")) DataSet_PrintData(dataset,debug) ;
+  
+  
+  /* Time steps */
+  {
+    TimeStep_t*    timestep = DataSet_GetTimeStep(dataset) ;
+    
+    TimeStep_Scan(timestep,datafile);
+  }
+  if(!strcmp(debug,"time")) DataSet_PrintData(dataset,debug) ;
+  
+  
+  /* Iterative process */
+  {
+    IterProcess_t* iterprocess = DataSet_GetIterProcess(dataset) ;
+    
+    IterProcess_Scan(iterprocess,datafile);
+  }
+  if(!strcmp(debug,"iter")) DataSet_PrintData(dataset,debug) ;
+  
+  
+  /* Module */
+  if(!strcmp(debug,"module")) DataSet_PrintData(dataset,debug) ;
+
+  Message_Direct("End of reading %s\n",filename) ;
+  Message_Direct("\n") ;
+  
+  return ;
+}
+
+
 
 void (DataSet_Delete)(void* self)
 {
   DataSet_t* dataset = (DataSet_t*) self ;
   
+  {
+    Options_t* options = DataSet_GetOptions(dataset);
+
+    if(options) {
+      Options_Delete(options);
+      Mry_Free(options);
+      DataSet_SetOptions(dataset,NULL);
+    }
+  }
   
   {
     Units_t* units = DataSet_GetUnits(dataset) ;
     
     if(units) {
       Units_Delete(units) ;
-      free(units) ;
+      Mry_Free(units) ;
+      DataSet_SetUnits(dataset,NULL) ;
     }
-    
-    DataSet_GetUnits(dataset) = NULL ;
   }
   
   {
@@ -300,10 +315,9 @@ void (DataSet_Delete)(void* self)
     
     if(datafile) {
       DataFile_Delete(datafile) ;
-      free(datafile) ;
+      Mry_Free(datafile) ;
+      DataSet_SetDataFile(dataset,NULL) ;
     }
-    
-    DataSet_GetDataFile(dataset) = NULL ;
   }
   
   {
@@ -311,10 +325,9 @@ void (DataSet_Delete)(void* self)
     
     if(geometry) {
       Geometry_Delete(geometry) ;
-      free(geometry) ;
+      Mry_Free(geometry) ;
+      DataSet_SetGeometry(dataset,NULL) ;
     }
-    
-    DataSet_GetGeometry(dataset) = NULL ;
   }
   
   {
@@ -322,10 +335,19 @@ void (DataSet_Delete)(void* self)
     
     if(mesh) {
       Mesh_Delete(mesh) ;
-      free(mesh) ;
+      Mry_Free(mesh) ;
+      DataSet_SetMesh(dataset,NULL) ;
     }
-    
-    DataSet_GetMesh(dataset) = NULL ;
+  }
+
+  {
+    Models_t* models = DataSet_GetModels(dataset) ;
+
+    if(models){
+      Models_Delete(models);
+      Mry_Free(models);
+      DataSet_SetModels(dataset,NULL) ;
+    }
   }
   
   {
@@ -333,10 +355,9 @@ void (DataSet_Delete)(void* self)
     
     if(materials) {
       Materials_Delete(materials) ;
-      free(materials) ;
-    }
-    
-    DataSet_GetMaterials(dataset) = NULL ;
+      Mry_Free(materials) ;
+      DataSet_SetMaterials(dataset,NULL) ;
+    } 
   }
   
   {
@@ -344,10 +365,9 @@ void (DataSet_Delete)(void* self)
     
     if(dates) {
       Dates_Delete(dates) ;
-      free(dates) ;
+      Mry_Free(dates) ;
+      DataSet_SetDates(dataset,NULL) ;
     }
-    
-    DataSet_GetDates(dataset) = NULL ;
   }
   
   {
@@ -355,10 +375,9 @@ void (DataSet_Delete)(void* self)
     
     if(points) {
       Points_Delete(points) ;
-      free(points) ;
+      Mry_Free(points) ;
+      DataSet_SetPoints(dataset,NULL) ;
     }
-    
-    DataSet_GetPoints(dataset) = NULL ;
   }
   
   {
@@ -366,10 +385,9 @@ void (DataSet_Delete)(void* self)
     
     if(iconds) {
       IConds_Delete(iconds) ;
-      free(iconds) ;
+      Mry_Free(iconds) ;
+      DataSet_SetIConds(dataset,NULL) ;
     }
-    
-    DataSet_GetIConds(dataset) = NULL ;
   }
   
   {
@@ -377,10 +395,9 @@ void (DataSet_Delete)(void* self)
     
     if(bconds) {
       BConds_Delete(bconds) ;
-      free(bconds) ;
+      Mry_Free(bconds) ;
+      DataSet_SetBConds(dataset,NULL) ;
     }
-    
-    DataSet_GetBConds(dataset) = NULL ;
   }
   
   {
@@ -388,10 +405,9 @@ void (DataSet_Delete)(void* self)
     
     if(loads) {
       Loads_Delete(loads) ;
-      free(loads) ;
+      Mry_Free(loads) ;
+      DataSet_SetLoads(dataset,NULL) ;
     }
-    
-    DataSet_GetLoads(dataset) = NULL ;
   }
   
   {
@@ -399,10 +415,9 @@ void (DataSet_Delete)(void* self)
     
     if(functions) {
       Functions_Delete(functions) ;
-      free(functions) ;
+      Mry_Free(functions) ;
+      DataSet_SetFunctions(dataset,NULL) ;
     }
-    
-    DataSet_GetFunctions(dataset) = NULL ;
   }
   
   {
@@ -410,10 +425,9 @@ void (DataSet_Delete)(void* self)
     
     if(fields) {
       Fields_Delete(fields) ;
-      free(fields) ;
+      Mry_Free(fields) ;
+      DataSet_SetFields(dataset,NULL) ;
     }
-    
-    DataSet_GetFields(dataset) = NULL ;
   }
   
   //IntFcts_t*     intfcts ; */
@@ -423,23 +437,19 @@ void (DataSet_Delete)(void* self)
     
     if(obvals) {
       ObVals_Delete(obvals) ;
-      free(obvals) ;
+      Mry_Free(obvals) ;
+      DataSet_SetObVals(dataset,NULL) ;
     }
-    
-    DataSet_GetObVals(dataset) = NULL ;
   }
-  
-  //Models_t*      models ;
   
   {
     TimeStep_t* timestep = DataSet_GetTimeStep(dataset) ;
     
     if(timestep) {
       TimeStep_Delete(timestep) ;
-      free(timestep) ;
+      Mry_Free(timestep) ;
+      DataSet_SetTimeStep(dataset,NULL) ;
     }
-    
-    DataSet_GetTimeStep(dataset) = NULL ;
   }
   
   {
@@ -447,27 +457,19 @@ void (DataSet_Delete)(void* self)
     
     if(iterprocess) {
       IterProcess_Delete(iterprocess) ;
-      free(iterprocess) ;
+      Mry_Free(iterprocess) ;
+      DataSet_SetIterProcess(dataset,NULL) ;
     }
-    
-    DataSet_GetIterProcess(dataset) = NULL ;
   }
-  
-  {
-    DataSet_GetOptions(dataset) = NULL ;
-  }
-  
-  //Modules_t*     modules ;
   
   {
     Module_t* module = DataSet_GetModule(dataset) ;
     
     if(module) {
       Module_Delete(module) ;
-      free(module) ;
+      Mry_Free(module) ;
+      DataSet_SetModule(dataset,NULL) ;
     }
-    
-    DataSet_GetModule(dataset) = NULL ;
   }
 }
 
@@ -476,14 +478,14 @@ void (DataSet_Delete)(void* self)
 #if 0
 DataSet_t*  (DataSet_Create1)(char* filename,Options_t* opt)
 {
-  DataSet_t* dataset = DataSet_New() ;
+  DataSet_t* dataset = (DataSet_t*) Mry_New(DataSet_t) ;
   
-  DataSet_GetOptions(dataset) = opt ;
+  DataSet_SetOptions(dataset,opt) ;
   
   {
-    DataFile_t* datafile = DataFile_Create(filename) ;
+    DataFile_t* datafile = DataFile_New(filename) ;
   
-    DataSet_GetDataFile(dataset) = datafile ;
+    DataSet_SetDataFile(dataset,datafile) ;
   
     if(DataFile_DoesNotExist(datafile)) {
       Help_WriteData(filename) ;
@@ -582,7 +584,10 @@ DataSet_t*  (DataSet_Create1)(char* filename,Options_t* opt)
         //Message_Direct(__VA_ARGS__)
 
 
-void DataSet_PrintData(DataSet_t* dataset,char* mot)
+void DataSet_PrintData(DataSet_t* dataset,std::string const& mot){
+  DataSet_PrintData(dataset,mot.c_str());
+}
+void DataSet_PrintData(DataSet_t* dataset,char const* mot)
 {
   static int i_debug=0 ;
   
@@ -594,49 +599,37 @@ void DataSet_PrintData(DataSet_t* dataset,char* mot)
   
   /* File content
    * ------------ */
-  if(DataFile_GetFileContent(DataSet_GetDataFile(dataset)) && (!strncmp(mot,"data file content",4) || !strncmp(mot,"all",3))) {
+  if(DataSet_GetDataFile(dataset) && (!strncmp(mot,"data file content",4) || !strncmp(mot,"all",3))) {
+    if(DataFile_GetFileContent(DataSet_GetDataFile(dataset))) {
     PRINT("\n") ;
     PRINT("Data file content:\n") ;
     
     PRINT("%s",DataFile_GetFileContent(DataSet_GetDataFile(dataset))) ;
     PRINT("\n") ;
+    }
   }
 
   /* Geometry
    * -------- */
   if(DataSet_GetGeometry(dataset) && (!strncmp(mot,"geometry",4) || !strncmp(mot,"all",3))) {
     PRINT("\n") ;
-    PRINT("Geometry:\n") ;
-    
-    PRINT("\t Dimension = %dD\n",DIM) ;
-    PRINT("\t Symmetry = ") ;
-    
-    if(0) {
-      
-    } else if(Symmetry_IsCylindrical(SYMMETRY)) {
-      PRINT("Axisymmetrical\n") ;
-      
-    } else if(Symmetry_IsSpherical(SYMMETRY)) {
-      PRINT("Spherical\n") ;
-
-    } else if(Symmetry_IsPlane(SYMMETRY)) {
-      PRINT("Plane\n") ;
-
-    } else {
-      PRINT("No symmetry\n") ;
-    }
+    Geometry_Print(DataSet_GetGeometry(dataset));
   }
 
   /* Mesh
    * ---- */
   if(DataSet_GetMesh(dataset) && (!strncmp(mot,"mesh",4) || !strncmp(mot,"all",3))) {
+    Nodes_t* nodes = Mesh_GetNodes(MESH) ;
+    Elements_t* elts = Mesh_GetElements(MESH) ;
     int c1 = 14 ;
     int c2 = 30 ;
     int c3 = 45 ;
     
+    if(nodes && elts) {
+    
     PRINT("\n") ;
     PRINT("Mesh:\n") ;
-    
+
     PRINT("\t Nodes:\n") ;
     PRINT("\t Nb of nodes = %lu\n",N_NO) ;
     
@@ -700,123 +693,36 @@ void DataSet_PrintData(DataSet_t* dataset,char* mot)
       PRINT("\n") ;
     }
   }
+  }
 
   /* Models
    * --------- */
-  if(DataSet_GetModels(dataset) && (!strncmp(mot,"model",5) || !strncmp(mot,"all",3))) {
-    int c2 = 40 ;
-    int i ;
-    
+  if(DataSet_GetModels(dataset) && (!strncmp(mot,"model",5) || !strncmp(mot,"all",3))) {    
     PRINT("\n") ;
-    
-    for(i = 0 ; i < (int) N_MODELS ; i++) {
-      int nb_eqn = Model_GetNbOfEquations(MODEL + i) ;
-      char* codename = Model_GetCodeNameOfModel(MODEL + i) ;
-      char** name_eqn = Model_GetNameOfEquation(MODEL + i) ;
-      char** name_unk = Model_GetNameOfUnknown(MODEL + i) ;
-      int j ;
-      
-      PRINT("Model(%d) = %s\n",i,codename) ;
-      
-      PRINT("\n") ;
-      
-      PRINT("\t Equations:\n") ;
-      PRINT("\t Nb of equations = %d\n",nb_eqn) ;
-      
-      for(j = 0 ; j < nb_eqn ; j++) {
-        int n = PRINT("\t equation(%d): (%s)",j + 1,name_eqn[j]) ;
-      
-        while(n < c2) n += PRINT(" ") ;
-        
-        n += PRINT("unknown(%d): (%s)",j + 1,name_unk[j]) ;
-        
-        PRINT("\n") ;
-      }
-    }
+    Models_Print(MODELS);
   }
 
   /* Materials
    * --------- */
-  if(DataSet_GetMaterials(dataset) && (!strncmp(mot,"material",3) || !strncmp(mot,"all",3))) {
-    int i ;
-    int c2 = 40 ;
-    
+  if(DataSet_GetMaterials(dataset) && (!strncmp(mot,"material",3) || !strncmp(mot,"all",3))) {   
     PRINT("\n") ;
-    
-    for(i = 0 ; i < (int) N_MAT ; i++) {
-      int nb_pr = Material_GetNbOfProperties(MAT + i) ;
-      int nb_eqn = Material_GetNbOfEquations(MAT + i) ;
-      char** name_eqn = Material_GetNameOfEquation(MAT + i) ;
-      char** name_unk = Material_GetNameOfUnknown(MAT + i) ;
-      int nb_cv = Material_GetNbOfCurves(MAT + i) ;
-      Curve_t* cv = Material_GetCurve(MAT + i) ;
-      int j ;
-      
-      PRINT("Material(%d):\n",i) ;
-      
-      PRINT("\t Model = %s\n",Material_GetCodeNameOfModel(MAT + i)) ;
-      
-      PRINT("\n") ;
-      
-      PRINT("\t Equations:\n") ;
-      PRINT("\t Nb of equations = %d\n",nb_eqn) ;
-      
-      for(j = 0 ; j < nb_eqn ; j++) {
-        int n = PRINT("\t equation(%d): (%s)",j + 1,name_eqn[j]) ;
-      
-        while(n < c2) n += PRINT(" ") ;
-        
-        n += PRINT("unknown(%d): (%s)",j + 1,name_unk[j]) ;
-        
-        PRINT("\n") ;
-      }
-      
-      PRINT("\n") ;
-      
-      PRINT("\t Properties:\n") ;
-      PRINT("\t Nb of properties = %d\n",nb_pr) ;
-      
-      for(j = 0 ; j < nb_pr ; j++) {
-        PRINT("\t prop(%d) = %e\n",j,Material_GetProperty(MAT + i)[j]) ;
-      }
-      
-      PRINT("\n") ;
-      
-      PRINT("\t Curves:\n") ;
-      PRINT("\t Nb of curves = %d\n",nb_cv) ;
-      
-      for(j = 0 ; j < nb_cv ; j++) {
-        PRINT("\t curve(%d): np = %d\n",j + 1,Curve_GetNbOfPoints(cv + j)) ;
-      }
-    }
-    
-      
-    PRINT("\n") ;
-    {
-      Models_t* usedmodels = Materials_GetUsedModels(MATERIALS) ;
-      int n_usedmodels = Models_GetNbOfModels(usedmodels) ;
-      
-      PRINT("Nb of used models = %d\n",n_usedmodels) ;
-    
-      for(i = 0 ; i < n_usedmodels ; i++) {
-        Model_t* usedmodel = Models_GetModel(usedmodels) + i ;
-      
-        PRINT("\t Used model(%d): %s\n",i,Model_GetCodeNameOfModel(usedmodel)) ;
-      }
-    }
+    Materials_Print(MATERIALS);
   }
 
   /* Continuity
    * ---------- */
   if(DataSet_GetMesh(dataset) && (!strncmp(mot,"continuity",3))) {
-    int i ;
+    Nodes_t* nodes = Mesh_GetNodes(MESH) ;
+    Elements_t* elts = Mesh_GetElements(MESH) ;
     
+    if(nodes && elts) {
+
     PRINT("\n") ;
     PRINT("Continuity:\n") ;
     
     PRINT("\t Positions of unknowns and equations at nodes of elements\n") ;
     
-    for(i = 0 ; i < (int) N_EL ; i++) {
+    for(size_t i = 0 ; i < N_EL ; i++) {
       Element_t* elt_i = EL + i ;
       int nn = Element_GetNbOfNodes(elt_i) ;
       int neq = Element_GetNbOfEquations(elt_i) ;
@@ -824,7 +730,7 @@ void DataSet_PrintData(DataSet_t* dataset,char* mot)
       char** name_eqn = Element_GetNameOfEquation(elt_i) ;
       int j ;
       
-      PRINT("\t el(%d): %d nodes\n",i,nn) ;
+      PRINT("\t el(%lu): %d nodes\n",i,nn) ;
       
       PRINT("\t    %d unknowns\n",neq) ;
       
@@ -858,13 +764,13 @@ void DataSet_PrintData(DataSet_t* dataset,char* mot)
     PRINT("\n") ;
     PRINT("\t Equations and unknowns at nodes:\n") ;
     
-    for(i = 0 ; i < (int) N_NO ; i++) {
+    for(size_t i = 0 ; i < N_NO ; i++) {
       Node_t* node_i = NO + i ;
       int nb_unk = Node_GetNbOfUnknowns(node_i) ;
       int nb_eqn = Node_GetNbOfEquations(node_i) ;
       int j ;
       
-      PRINT("\t no(%d):\n",i) ;
+      PRINT("\t no(%lu):\n",i) ;
       PRINT("\t    %d unknowns:",nb_unk) ;
       
       for(j = 0 ; j < nb_unk ; j++) {
@@ -884,11 +790,15 @@ void DataSet_PrintData(DataSet_t* dataset,char* mot)
       PRINT("\n") ;
     }
   }
+  }
 
   /* Matrix numbering
    * ---------------- */
   if(DataSet_GetMesh(dataset) && !strncmp(mot,"numbering",3)) {
-    int i ;
+    Nodes_t* nodes = Mesh_GetNodes(MESH) ;
+    Elements_t* elts = Mesh_GetElements(MESH) ;
+    
+    if(nodes && elts) {
     
     PRINT("\n") ;
     PRINT("Matrix numbering:\n") ;
@@ -896,13 +806,13 @@ void DataSet_PrintData(DataSet_t* dataset,char* mot)
     PRINT("\n") ;
     PRINT("\t Matrix indexes of equations and unknowns at nodes:\n") ;
     
-    for(i = 0 ; i < (int) N_NO ; i++) {
+    for(size_t i = 0 ; i < N_NO ; i++) {
       Node_t* node_i = NO + i ;
       int nb_unk = Node_GetNbOfUnknowns(node_i) ;
       int nb_eqn = Node_GetNbOfEquations(node_i) ;
       int j ;
       
-      PRINT("\t node(%d):\n",i) ;
+      PRINT("\t node(%lu):\n",i) ;
       PRINT("\t    %d unknowns(col):",nb_unk) ;
       
       for(j = 0 ; j < nb_unk ; j++) {
@@ -924,111 +834,34 @@ void DataSet_PrintData(DataSet_t* dataset,char* mot)
       PRINT("\n") ;
     }
   }
+  }
 
   /* Functions
    * --------- */
   if(DataSet_GetFunctions(dataset) && (!strncmp(mot,"function",4) || !strncmp(mot,"all",3))) {
-    int i ;
-    
     PRINT("\n") ;
-    
-    for(i = 0 ; i < (int) N_FN ; i++) {
-      int nb_pts = Function_GetNbOfPoints(FN + i) ;
-      double* t  = Function_GetXValue(FN + i) ;
-      double* f  = Function_GetFValue(FN + i) ;
-      int j ;
-      
-      PRINT("Time Function(%d):\n",i) ;
-      PRINT("\t Nb of points = %d\n",nb_pts) ;
-      
-      for(j = 0 ; j < nb_pts ; j++) {
-        PRINT("\t F(%e) = %e\n",t[j],f[j]) ;
-      }
-    }
+    Functions_Print(DataSet_GetFunctions(dataset));
   }
 
   /* Fields
    * ------ */
-  if(DataSet_GetFields(dataset) && (!strncmp(mot,"field",4) || !strncmp(mot,"all",3))) {
-    int i ;
-    
+  if(DataSet_GetFields(dataset) && (!strncmp(mot,"field",4) || !strncmp(mot,"all",3))) {    
     PRINT("\n") ;
-    
-    for(i = 0 ; i < (int) N_CH ; i++) {
-      char* type = Field_GetType(CH + i) ;
-      
-      PRINT("Field(%d):\n",i) ;
-      PRINT("\t Type: %s\n",type) ;
-
-      if(!strcmp(type,"affine")) {
-        FieldAffine_t* affine =  (FieldAffine_t*) Field_GetFieldFormat(CH + i) ;
-        double g[3] = {0.,0.,0.} ;
-        double x[3] = {0.,0.,0.} ;
-        int j ;
-        
-        PRINT("\t Value    = %e\n",FieldAffine_GetValue(affine)) ;
-        
-        PRINT("\t Gradient = ") ;
-        
-        for(j = 0 ; j < DIM ; j++) {
-          g[j] = FieldAffine_GetGradient(affine)[j] ;
-        }
-        
-        PRINT("(%e,%e,%e)",g[0],g[1],g[2]) ;
-        
-        PRINT("\n") ;
-        
-        PRINT("\t Point    = ") ;
-        
-        for(j = 0 ; j < DIM ; j++) x[j] = FieldAffine_GetCoordinate(affine)[j] ;
-        
-        PRINT("(%e,%e,%e)",x[0],x[1],x[2]) ;
-        
-        PRINT("\n") ;
-        
-      } else if(!strncmp(type,"grid",3)) {
-        FieldGrid_t* grille =  (FieldGrid_t*) Field_GetFieldFormat(CH + i) ;
-        size_t    n_x = FieldGrid_GetNbOfPointsAlongX(grille) ;
-        size_t    n_y = FieldGrid_GetNbOfPointsAlongY(grille) ;
-        size_t    n_z = FieldGrid_GetNbOfPointsAlongZ(grille) ;
-        double* x  = FieldGrid_GetCoordinateAlongX(grille) ;
-        double* y  = FieldGrid_GetCoordinateAlongY(grille) ;
-        double* z  = FieldGrid_GetCoordinateAlongZ(grille) ;
-        
-        for(size_t u = 0 ; u < n_x ; u++) {          
-          for(size_t j = 0 ; j < n_y ; j++) {            
-            for(size_t k = 0 ; k < n_z ; k++) {
-              double* v = FieldGrid_GetValue(grille) ;
-              
-              PRINT("\t v(%e,%e,%e) = %e\n",x[u],y[j],z[k],v[(u) + (j)*n_x + (k)*n_x*n_y]) ;
-            }
-          }
-        }
-
-      } else if(!strcmp(type,"random")) {
-        FieldRandom_t* cst =  (FieldRandom_t*) Field_GetFieldFormat(CH + i) ;
-        
-        PRINT("\t Value    = %e\n",FieldConstant_GetValue(cst)) ;
-        PRINT("\t RandomRange = %e\n",FieldConstant_GetRandomRangeLength(cst)) ;
-        
-        PRINT("\n") ;
-        
-      } else {
-        arret("DataSet_PrintData: type de champ non connu") ;
-      }
-    }
+    Fields_Print(DataSet_GetFields(dataset));
   }
 
   /* Initial conditions
    * ------------------ */
   if(DataSet_GetIConds(dataset) && (!strncmp(mot,"initialization",3) || !strncmp(mot,"all",3))) {
-    int i ;
+    char* nom = IConds_GetFileNameOfNodalValues(ICONDS) ;
     int c1 = 14 ;
     
     PRINT("\n") ;
+    PRINT("Initial conditions:\n") ;
     
-    if(N_IC < 0) {
-      char* nom = IConds_GetFileNameOfNodalValues(ICONDS) ;
+    PRINT("\t Nb of initial condtions = %lu\n",N_IC) ;
+    
+    if(!nom) {
       FILE*  fic_ini = fopen(nom,"r") ;
       
       if(!fic_ini) {
@@ -1038,17 +871,16 @@ void DataSet_PrintData(DataSet_t* dataset,char* mot)
       PRINT("\n") ;
       PRINT("Initialization of nodal unknowns from %s:\n",nom) ;
     
-      for(i = 0 ; i < (int) N_NO ; i++) {
+      for(size_t i = 0 ; i < N_NO ; i++) {
         Node_t* node_i = NO + i ;
         int neq = Node_GetNbOfEquations(node_i) ;
-        int n = PRINT("\t no(%d)",i) ;
-        int j ;
+        int n = PRINT("\t no(%lu)",i) ;
       
         while(n < c1) n += PRINT(" ") ;
       
         n += PRINT(":") ;
       
-        for(j = 0 ; j < neq ; j++) {
+        for(int j = 0 ; j < neq ; j++) {
           double u ;
           
           fscanf(fic_ini,"%le",&u) ;
@@ -1062,98 +894,63 @@ void DataSet_PrintData(DataSet_t* dataset,char* mot)
       fclose(fic_ini) ;
     }
     
+    IConds_Print(DataSet_GetIConds(dataset));
+  }
+
+  /* Boundary conditions
+   * ------------------- */
+  if(DataSet_GetBConds(dataset) && (!strncmp(mot,"bcondition",4) || !strncmp(mot,"all",3))) {    
+    PRINT("\n") ;
+    PRINT("Boundary conditions:\n") ;
     
-    for(i = 0 ; i < (int) N_IC ; i++) {
-      char* reg = ICond_GetRegionName(IC + i) ;
-      char* name_unk =ICond_GetNameOfUnknown(IC + i) ;
-      Field_t* ch = ICond_GetField(IC + i) ;
-      Function_t* fn = ICond_GetFunction(IC + i) ;
+    PRINT("\t Nb of boundary conditions = %lu\n",N_CL) ;
+    
+    for(size_t i = 0 ; i < N_CL ; i++) {
+      char* reg = BCond_GetRegionName(CL + i) ;
+      char* name_unk =BCond_GetNameOfUnknown(CL + i) ;
+      Field_t* ch = BCond_GetField(CL + i) ;
+      Function_t* fn = BCond_GetFunction(CL + i) ;
       
-      PRINT("Initial Condition(%d):\n",i) ;
+      PRINT("Boundary Condition(%lu):\n",i) ;
       
       //PRINT("\t Region  = %d\n",reg) ;
       PRINT("\t Region  = %s\n",reg) ;
-      
       PRINT("\t Unknown = %s\n",name_unk) ;
       
       if(ch) {
         ptrdiff_t n = ch - CH ;
         
         PRINT("\t Field = %td (type %s)\n",n,Field_GetType(ch)) ;
-        
       } else {
-        PRINT("\t Natural initial condition (null)\n") ;
-        
+        PRINT("\t Natural boundary condition (null)\n") ;
       }
       
       if(fn) {
         ptrdiff_t n = fn - FN ;
         
         PRINT("\t Function = %td\n",n) ;
-        
       } else {
         PRINT("\t Function unity (f(t) = 1)\n") ;
-        
-      }
-    }
-  }
-
-  /* Boundary conditions
-   * ------------------- */
-  if(DataSet_GetBConds(dataset) && (!strncmp(mot,"bcondition",4) || !strncmp(mot,"all",3))) {
-    int i ;
-    
-    PRINT("\n") ;
-    
-    for(i = 0 ; i < (int) N_CL ; i++) {
-      char* reg = BCond_GetRegionName(CL + i) ;
-      char* name_unk =BCond_GetNameOfUnknown(CL + i) ;
-      int ich = BCond_GetFieldIndex(CL + i) ;
-      int ifn = BCond_GetFunctionIndex(CL + i) ;
-      
-      PRINT("Boundary Condition(%d):\n",i) ;
-      
-      //PRINT("\t Region  = %d\n",reg) ;
-      PRINT("\t Region  = %s\n",reg) ;
-      
-      PRINT("\t Unknown = %s\n",name_unk) ;
-      
-      if(ich >= 0 && ich < N_CH) {
-        Field_t* ch = BCond_GetField(CL + i) ;
-        
-        PRINT("\t Field = %d (type %s)\n",ich,Field_GetType(ch)) ;
-        
-      } else {
-        PRINT("\t Natural boundary condition (null)\n") ;
-        
-      }
-      
-      if(ifn >= 0 && ifn < N_FN) {
-        
-        PRINT("\t Function = %d\n",ifn) ;
-        
-      } else {
-        PRINT("\t Function unity (f(t) = 1)\n") ;
-        
       }
     }
   }
 
   /* Loads
    * ----- */
-  if(DataSet_GetLoads(dataset) && (!strncmp(mot,"load",4) || !strncmp(mot,"all",3))) {
-    int i ;
-    
+  if(DataSet_GetLoads(dataset) && (!strncmp(mot,"load",4) || !strncmp(mot,"all",3))) {    
     PRINT("\n") ;
+    PRINT("Loads:\n") ;
     
-    for(i = 0 ; i < (int) N_CG ; i++) {
+    PRINT("\t Nb of loads = %lu\n",N_CG) ;
+    
+    for(size_t i = 0 ; i < N_CG ; i++) {
       char* reg = Load_GetRegionName(CG + i) ;
       char* name_eqn = Load_GetNameOfEquation(CG + i) ;
       char* type = Load_GetType(CG + i) ;
       Field_t* ch = Load_GetField(CG + i) ;
       Function_t* fn = Load_GetFunction(CG + i) ;
       
-      PRINT("Load(%d):\n",i) ;
+      PRINT("Load(%lu):\n",i) ;
       
       //PRINT("\t Region   = %d\n",reg) ;
       PRINT("\t Region   = %s\n",reg) ;
@@ -1185,23 +982,22 @@ void DataSet_PrintData(DataSet_t* dataset,char* mot)
   /* Points
    * ------ */
   if(DataSet_GetPoints(dataset) && (!strncmp(mot,"points",4) || !strncmp(mot,"all",3))) {
-    int n_points = N_POINTS ;
+    size_t n_points = N_POINTS ;
     Point_t* point = Points_GetPoint(POINTS) ;
-    int i ;
     
     PRINT("\n") ;
     PRINT("Points:\n") ;
     
-    PRINT("\t Nb of points = %d\n",n_points) ;
+    PRINT("\t Nb of points = %lu\n",n_points) ;
 
-    for(i = 0 ; i < n_points ; i++) {
+    for(size_t i = 0 ; i < n_points ; i++) {
       double* coor = Point_GetCoordinate(point + i) ;
       double x = (DIM > 0) ? coor[0] : 0. ;
       double y = (DIM > 1) ? coor[1] : 0. ;
       double z = (DIM > 2) ? coor[2] : 0. ;
       Element_t* elt = Point_GetEnclosingElement(point + i) ;
       
-      PRINT("\t Point(%d): ",i) ;
+      PRINT("\t Point(%lu): ",i) ;
       
       PRINT("(%e,%e,%e)",x,y,z) ;
       
@@ -1220,19 +1016,18 @@ void DataSet_PrintData(DataSet_t* dataset,char* mot)
   /* Dates
    * ----- */
   if(DataSet_GetDates(dataset) && (!strncmp(mot,"dates",4) || !strncmp(mot,"all",3))) {
-    int n_dates = N_DATES ;
+    size_t n_dates = N_DATES ;
     Date_t* date = Dates_GetDate(DATES) ;
-    int i ;
     
     PRINT("\n") ;
     PRINT("Dates:\n") ;
     
-    PRINT("\t Nb of dates = %d\n",n_dates) ;
+    PRINT("\t Nb of dates = %lu\n",n_dates) ;
     
-    for(i = 0 ; i < n_dates ; i++) {
+    for(size_t i = 0 ; i < n_dates ; i++) {
       double t = Date_GetTime(date + i) ;
       
-      PRINT("\t Date(%d): ",i) ;
+      PRINT("\t Date(%lu): ",i) ;
       
       PRINT("%e\n",t) ;
     }
@@ -1264,15 +1059,13 @@ void DataSet_PrintData(DataSet_t* dataset,char* mot)
 
   /* Objective variations
    * -------------------- */
-  if(DataSet_GetObVals(dataset) && (!strncmp(mot,"obvariations",4) || !strncmp(mot,"all",3))) {
-    int i ;
-    
+  if(DataSet_GetObVals(dataset) && (!strncmp(mot,"obvariations",4) || !strncmp(mot,"all",3))) {    
     PRINT("\n") ;
     PRINT("Objective values:\n") ;
     
-    PRINT("\t Nb of objective values = %d\n",N_OBJ) ;
+    PRINT("\t Nb of objective values = %lu\n",N_OBJ) ;
     
-    for(i = 0 ; i < (int) N_OBJ ; i++) {
+    for(size_t i = 0 ; i < N_OBJ ; i++) {
       PRINT("\t %s = %e",ObVal_GetNameOfUnknown(OBJ + i),ObVal_GetValue(OBJ + i)) ;
       PRINT(" , type = %c",ObVal_GetType(OBJ + i)) ;
       PRINT(" , relaxation factor = %e",ObVal_GetRelaxationFactor(OBJ + i)) ;
@@ -1283,7 +1076,11 @@ void DataSet_PrintData(DataSet_t* dataset,char* mot)
   /* Interpolation functions
    * ----------------------- */
   if(DataSet_GetMesh(dataset) && (!strncmp(mot,"interpolation",4))) {
+    Nodes_t* nodes = Mesh_GetNodes(MESH) ;
+    Elements_t* elts = Mesh_GetElements(MESH) ;
     int i ;
+    
+    if(nodes && elts) {
     
     PRINT("\n") ;
     PRINT("Interpolation:\n") ;
@@ -1418,6 +1215,7 @@ void DataSet_PrintData(DataSet_t* dataset,char* mot)
       }
 #undef DHJ
     }
+  }
   }
 
   fflush(stdout) ;

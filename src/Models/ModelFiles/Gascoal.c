@@ -12,7 +12,7 @@
 #define TITLE   "Transport and adsorption of gas in fractured coal seam"
 #define AUTHORS "Nikoosokhan-Espinoza-Dangla"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 /* Nb of equations of the model */
 #define NEQ   (dim+1)
@@ -190,28 +190,28 @@ static void    GetProperties(Element_t*) ;
 void GetProperties(Element_t* el)
 {
 /* To retrieve the material properties */
-#define GetProperty(a)   (Element_GetProperty(el)[pm(a)])
+#define GetMaterialProperty(a)   (Element_GetProperty(el)[pm(a)])
   
-  thickness = GetProperty("thickness") ;
-  gravity = GetProperty("gravity") ;
-  young   = GetProperty("young") ;
-  K_m     = GetProperty("K_m") ;
-  poisson = GetProperty("poisson") ;
-  young_3   = GetProperty("young_3") ;
-  poisson_3 = GetProperty("poisson_3") ;
-  shear_3   = GetProperty("shear_3") ;
-  phi0_M  = GetProperty("phi0_M") ;
-  k_int   = GetProperty("k_int") ;
-  mu_g    = GetProperty("mu_g") ;
-  rho_s   = GetProperty("rho_s") ;
-  p0_g    = GetProperty("p0_g") ;
-  sig0    = &GetProperty("sig0") ;
-  axis_3  = (short int) GetProperty("axis_3") - 1 ;
+  thickness = GetMaterialProperty("thickness") ;
+  gravity = GetMaterialProperty("gravity") ;
+  young   = GetMaterialProperty("young") ;
+  K_m     = GetMaterialProperty("K_m") ;
+  poisson = GetMaterialProperty("poisson") ;
+  young_3   = GetMaterialProperty("young_3") ;
+  poisson_3 = GetMaterialProperty("poisson_3") ;
+  shear_3   = GetMaterialProperty("shear_3") ;
+  phi0_M  = GetMaterialProperty("phi0_M") ;
+  k_int   = GetMaterialProperty("k_int") ;
+  mu_g    = GetMaterialProperty("mu_g") ;
+  rho_s   = GetMaterialProperty("rho_s") ;
+  p0_g    = GetMaterialProperty("p0_g") ;
+  sig0    = &GetMaterialProperty("sig0") ;
+  axis_3  = (short int) GetMaterialProperty("axis_3") - 1 ;
   axis_1  = (axis_3 + 1) % 3 ;
   axis_2  = (axis_3 + 2) % 3 ;
   
-  alpha_h  = GetProperty("alpha_h") ;
-  alpha_v  = GetProperty("alpha_v") ;
+  alpha_h  = GetMaterialProperty("alpha_h") ;
+  alpha_v  = GetMaterialProperty("alpha_v") ;
   
   {
     double h = thickness ;
@@ -232,7 +232,7 @@ void GetProperties(Element_t* el)
     double lam1  = 0.5/lamu1 - 0.5*dmu1 ;
     double lam2  = poisson_3/lamu1 ;
     double lam3  = young_3 + 2*poisson_3*lam2 - dmu3 ;
-    double phi   = GetProperty("phi0_M") ;
+    double phi   = GetMaterialProperty("phi0_M") ;
   
     b1 = 1 - (2*lam1 + lam2 + dmu1)/(3*K_m) ;
     b3 = 1 - (2*lam2 + lam3 + dmu3)/(3*K_m) ;
@@ -258,7 +258,7 @@ void GetProperties(Element_t* el)
   adsorptionstresscurve = Element_FindCurve(el,"stress_ads") ;
   tangentbiotcoefcurve = Element_FindCurve(el,"tangent_biot") ;
   
-#undef GetProperty
+#undef GetMaterialProperty
 }
 
 
@@ -349,7 +349,7 @@ int SetModelProp(Model_t* model)
   int i ;
   
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */
   Model_CopyNameOfEquation(model,E_Gas,"gas") ;

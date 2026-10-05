@@ -9,7 +9,7 @@
 #define TITLE "Unsaturated soils"
 #define AUTHORS "Dangla"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 /* Nb of equations */
 #define NEQ   (1+dim)
@@ -66,7 +66,7 @@ static double cr15(double *,double,double *,double *,double *,Element_t*) ;
 /* Parametres */
 static double gravite,kappa,mu,phi0,k_int,mu_l,rho_l,p_l0,p_g,rho_s,lambda,m,sig0,p_co0 ;
 
-#define GetProperty(a)   (Element_GetProperty(el)[pm(a)])
+#define GetMaterialProperty(a)   (Element_GetProperty(el)[pm(a)])
 
 int pm(const char *s)
 {
@@ -97,7 +97,7 @@ int SetModelProp(Model_t *model)
   int i ;
   
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */
   Model_CopyNameOfEquation(model,E_liq,"liq") ;
@@ -237,20 +237,20 @@ int ComputeInitialState(Element_t *el)
   /*
     Donnees
   */
-  gravite = GetProperty("gravite") ;
-  kappa   = GetProperty("kappa") ;
-  mu      = GetProperty("mu") ;
-  lambda  = GetProperty("lambda") ;
-  m       = GetProperty("M") ;
-  p_co0   = GetProperty("p_co") ;
-  phi0    = GetProperty("phi") ;
-  k_int   = GetProperty("k_int") ;
-  mu_l    = GetProperty("mu_l") ;
-  rho_l   = GetProperty("rho_l") ;
-  rho_s   = GetProperty("rho_s") ;
-  p_l0    = GetProperty("p_l0") ;
-  p_g     = GetProperty("p_g") ;
-  sig0    = GetProperty("sig0") ;
+  gravite = GetMaterialProperty("gravite") ;
+  kappa   = GetMaterialProperty("kappa") ;
+  mu      = GetMaterialProperty("mu") ;
+  lambda  = GetMaterialProperty("lambda") ;
+  m       = GetMaterialProperty("M") ;
+  p_co0   = GetMaterialProperty("p_co") ;
+  phi0    = GetMaterialProperty("phi") ;
+  k_int   = GetMaterialProperty("k_int") ;
+  mu_l    = GetMaterialProperty("mu_l") ;
+  rho_l   = GetMaterialProperty("rho_l") ;
+  rho_s   = GetMaterialProperty("rho_s") ;
+  p_l0    = GetMaterialProperty("p_l0") ;
+  p_g     = GetMaterialProperty("p_g") ;
+  sig0    = GetMaterialProperty("sig0") ;
   pp_0    = EQPRESSURE(p_l0,p_g) ;
   
   /* Loop on integration points */
@@ -348,10 +348,10 @@ int  ComputeExplicitTerms(Element_t *el,double t)
   /*
     Input data
   */
-  k_int   = GetProperty("k_int") ;
-  mu_l    = GetProperty("mu_l") ;
-  rho_l   = GetProperty("rho_l") ;
-  p_g     = GetProperty("p_g") ;
+  k_int   = GetMaterialProperty("k_int") ;
+  mu_l    = GetMaterialProperty("mu_l") ;
+  rho_l   = GetMaterialProperty("rho_l") ;
+  p_g     = GetMaterialProperty("p_g") ;
 
   /* Loop on integration points */
   for(p = 0 ; p < NbOfIntPoints ; p++ , vex += NVE) {
@@ -393,19 +393,19 @@ int  ComputeImplicitTerms(Element_t *el,double t,double dt)
   /*
     Input data
   */
-  gravite = GetProperty("gravite") ;
-  kappa   = GetProperty("kappa") ;
-  mu      = GetProperty("mu") ;
-  lambda  = GetProperty("lambda") ;
-  m       = GetProperty("M") ;
-  p_co0   = GetProperty("p_co") ;
-  phi0    = GetProperty("phi") ;
-  k_int   = GetProperty("k_int") ;
-  mu_l    = GetProperty("mu_l") ;
-  rho_l   = GetProperty("rho_l") ;
-  rho_s   = GetProperty("rho_s") ;
-  p_l0    = GetProperty("p_l0") ;
-  p_g     = GetProperty("p_g") ;
+  gravite = GetMaterialProperty("gravite") ;
+  kappa   = GetMaterialProperty("kappa") ;
+  mu      = GetMaterialProperty("mu") ;
+  lambda  = GetMaterialProperty("lambda") ;
+  m       = GetMaterialProperty("M") ;
+  p_co0   = GetMaterialProperty("p_co") ;
+  phi0    = GetMaterialProperty("phi") ;
+  k_int   = GetMaterialProperty("k_int") ;
+  mu_l    = GetMaterialProperty("mu_l") ;
+  rho_l   = GetMaterialProperty("rho_l") ;
+  rho_s   = GetMaterialProperty("rho_s") ;
+  p_l0    = GetMaterialProperty("p_l0") ;
+  p_g     = GetMaterialProperty("p_g") ;
   
   
   
@@ -666,7 +666,7 @@ int  ComputeOutputs(Element_t *el,double t,double *s,Result_t *r)
   /*
     input data
   */
-  phi0    = GetProperty("phi") ;
+  phi0    = GetMaterialProperty("phi") ;
 
   {
     /* Interpolation functions at s */
@@ -789,19 +789,19 @@ int c15(FEM_t *fem,double *c)
   /*
     Input data
   */
-  gravite = GetProperty("gravite") ;
-  kappa   = GetProperty("kappa") ;
-  mu      = GetProperty("mu") ;
-  lambda  = GetProperty("lambda") ;
-  m       = GetProperty("M") ;
-  p_co0   = GetProperty("p_co") ;
-  phi0    = GetProperty("phi") ;
-  k_int   = GetProperty("k_int") ;
-  mu_l    = GetProperty("mu_l") ;
-  rho_l   = GetProperty("rho_l") ;
-  rho_s   = GetProperty("rho_s") ;
-  p_l0    = GetProperty("p_l0") ;
-  p_g     = GetProperty("p_g") ;
+  gravite = GetMaterialProperty("gravite") ;
+  kappa   = GetMaterialProperty("kappa") ;
+  mu      = GetMaterialProperty("mu") ;
+  lambda  = GetMaterialProperty("lambda") ;
+  m       = GetMaterialProperty("M") ;
+  p_co0   = GetMaterialProperty("p_co") ;
+  phi0    = GetMaterialProperty("phi") ;
+  k_int   = GetMaterialProperty("k_int") ;
+  mu_l    = GetMaterialProperty("mu_l") ;
+  rho_l   = GetMaterialProperty("rho_l") ;
+  rho_s   = GetMaterialProperty("rho_s") ;
+  p_l0    = GetMaterialProperty("p_l0") ;
+  p_g     = GetMaterialProperty("p_g") ;
   
   for(p = 0 ; p < np ; p++ , vim += NVI , vex += NVE) {
     int i,j ;
@@ -933,10 +933,10 @@ double cr15(double *sig,double pc,double *dfsds,double *dgsds,double *hm,Element
   /*
     Donnees
   */
-  kappa   = GetProperty("kappa") ;
-  lambda  = GetProperty("lambda") ;
-  m       = GetProperty("M") ;
-  phi0    = GetProperty("phi") ;
+  kappa   = GetMaterialProperty("kappa") ;
+  lambda  = GetMaterialProperty("lambda") ;
+  m       = GetMaterialProperty("M") ;
+  phi0    = GetMaterialProperty("phi") ;
   m2      = m*m ;
   v       = 1./(lambda - kappa) ;
   /* 
@@ -975,11 +975,11 @@ double rn15(double *sig,double *sig_n,double *p_co,double *eps_p,Element_t *el)
   /*
     Donnees
   */
-  kappa   = GetProperty("kappa") ;
-  mu      = GetProperty("mu") ;
-  lambda  = GetProperty("lambda") ;
-  m       = GetProperty("M") ;
-  phi0    = GetProperty("phi") ;
+  kappa   = GetMaterialProperty("kappa") ;
+  mu      = GetMaterialProperty("mu") ;
+  lambda  = GetMaterialProperty("lambda") ;
+  m       = GetMaterialProperty("M") ;
+  phi0    = GetMaterialProperty("phi") ;
   m2      = m*m ;
   v       = 1./(lambda - kappa) ;
   

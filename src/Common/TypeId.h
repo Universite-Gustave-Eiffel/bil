@@ -201,9 +201,11 @@ struct Views_t;
 #endif
 
 #ifdef HAVE_PETSC
-  #include <petsc.h>
-  //struct KSP;
-  //struct PC;
+  //#include <petsc.h>
+  struct _p_KSP;
+  struct _p_PC;
+  typedef struct _p_KSP *KSP;
+  typedef struct _p_PC  *PC;
   #define TypeId_ListPETSC \
           ,KSP*\
           ,PC*
@@ -230,7 +232,6 @@ using TypeId_Variant_t = std::variant<TypeId_List>;
 #include <stdexcept>
 #include <limits>
 #include <stdarg.h>
-#include "Mry.h"
 
 
 constexpr size_t TypeId_MaxSizeToInt = static_cast<size_t>((std::numeric_limits<int>::max)());
@@ -285,21 +286,13 @@ struct TypeId_t {
   template<typename T> 
   bool Holds() {return(std::holds_alternative<T*>(_var));}
 
-  static TypeId_t* Create() {
-    TypeId_t* tid = (TypeId_t*) Mry_New(TypeId_t) ;
-
-    tid->_index = 0;
-    tid->_size  = 0;
-    tid->_delete = NULL;
-  
-    return(tid) ;
-  }
+  static TypeId_t* Create(void);
 
   void  Delete() {
     if(this) {}
   }
   
-  inline void  DeleteData(void*);
+  void  DeleteData(void*);
   
   /* Safely convert from size_t to int. */
   static int ConvertFromSizeToInt(size_t size) {
@@ -329,6 +322,7 @@ struct TypeId_t {
 #include "Solutions.h"
 #include "Solver.h"
 #include "Solvers.h"
+#include "Mry.h"
 
 #ifdef HAVE_SUPERLUDIST
 #include "superlu.h"
@@ -337,8 +331,18 @@ struct TypeId_t {
 #include <petsc.h>
 #endif
 
+  inline TypeId_t* TypeId_t::Create() {
+    TypeId_t* tid = (TypeId_t*) Mry_New(TypeId_t) ;
 
-void  TypeId_t::DeleteData(void* self) {
+    tid->_index = 0;
+    tid->_size  = 0;
+    tid->_delete = NULL;
+  
+    return(tid) ;
+  }
+
+
+  inline void  TypeId_t::DeleteData(void* self) {
     if(this->Holds<char>()) {
     } else if(this->Holds<double>()) {
     } else if(this->Holds<int>()) {
@@ -395,7 +399,7 @@ void  TypeId_t::DeleteData(void* self) {
     }
 
     return ;
-}
+  }
 
 
 

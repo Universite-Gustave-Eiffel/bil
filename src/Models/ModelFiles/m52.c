@@ -9,7 +9,7 @@
 #define TITLE "Freezing and thawing of concrete with salt"
 #define AUTHORS "Zeng"
 
-#include "OldMethods.h"
+#include "PredeclaredOldModelMethods.h.in"
 
 /* Macros */
 #define NEQ      (3)
@@ -474,9 +474,9 @@ int mx52(double **x,double **u,double **u_n,double *f,double *f_n,double *va,dou
   for(i=0;i<2;i++)
   {
     volume[i] = fabs(dx)*0.5 ; 
-    if(geom == AXIS) volume[i] *= M_PI*(x[i][0] + xm) ; 
+    if(Geometry_HasCylindricalSymmetry(geom)) volume[i] *= M_PI*(x[i][0] + xm) ; 
   }
-  if(geom == AXIS) surf = deux*M_PI*xm ; else surf = un ;
+  if(Geometry_HasCylindricalSymmetry(geom)) surf = deux*M_PI*xm ; else surf = un ;
   
   /* termes d'accumulation */
   for(i=0;i<2;i++) {
@@ -644,9 +644,9 @@ void rs52(double **x,double **u,double **u_n,double *f,double *f_n,double *va,do
   for(i=0;i<2;i++)
   {
     volume[i] = fabs(dx)*0.5 ; 
-    if(geom == AXIS) volume[i] *= M_PI*(x[i][0] + xm) ; 
+    if(Geometry_HasCylindricalSymmetry(geom)) volume[i] *= M_PI*(x[i][0] + xm) ; 
   }
-  if(geom == AXIS) surf = deux*M_PI*xm ; else surf = un ;
+  if(Geometry_HasCylindricalSymmetry(geom)) surf = deux*M_PI*xm ; else surf = un ;
 
   /*
     MASS BALANCE FOR H2O : (m_h2o1 - m_h2on) + dt * div(w_h2o1) = 0

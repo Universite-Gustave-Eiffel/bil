@@ -12,7 +12,7 @@
 #define TITLE   "Richards Equation (3D)"
 #define AUTHORS "Dangla"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 /* Nb of equations */
 #define NEQ     (1)
@@ -219,14 +219,14 @@ void GetProperties(Element_t* el,double t)
 
 int SetModelProp(Model_t *model)
 {
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   Model_CopyNameOfEquation(model,E_LIQ, "liq") ;
 
   Model_CopyNameOfUnknown(model,U_P_L,"p_l") ;
   
-  Model_GetComputePropertyIndex(model) = &pm ;
-  Model_GetComputeMaterialProperties(model) = &GetProperties;
+  Model_SetComputePropertyIndex(model,&pm);
+  Model_SetComputeMaterialProperties(model,&GetProperties);
   
   return(0) ;
 }
@@ -237,10 +237,12 @@ int ReadMatProp(Material_t *mat,DataFile_t *datafile)
 {
   int  NbOfProp = ((int) sizeof(Parameters_t)/sizeof(double)) ;
 
-  /* Par defaut tout a 0 */
-  for(int i = 0 ; i < NbOfProp ; i++) Material_GetProperty(mat)[i] = 0. ;
+  if(datafile) {
+    /* Par defaut tout a 0 */
+    for(int i = 0 ; i < NbOfProp ; i++) Material_GetProperty(mat)[i] = 0. ;
 
-  Material_ScanProperties(mat,datafile,pm) ;
+    Material_ScanProperties(mat,datafile,pm) ;
+  }
   
   return(NbOfProp) ;
 }

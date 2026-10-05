@@ -48,7 +48,7 @@ PetscAIJFormat_t* (PetscAIJFormat_Create)(Mesh_t* mesh,const int imatrix)
     int* nnzrow = Mesh_ComputeNbOfMatrixNonzerosPerRowAndColumn(mesh,imatrix) ;
     
     MatSeqAIJSetPreallocation(*aij,0,nnzrow) ;
-    free(nnzrow) ;
+    Mry_Free(nnzrow) ;
   }
     
   /* Preallocate the MPI matrix aij */
@@ -64,7 +64,7 @@ PetscAIJFormat_t* (PetscAIJFormat_Create)(Mesh_t* mesh,const int imatrix)
       int* o_nnzrow = d_nnzrow + nlocalrows ;
         
       MatMPIAIJSetPreallocation(*aij,0,d_nnzrow,0,o_nnzrow) ;
-      free(d_nnzrow) ;
+      Mry_Free(d_nnzrow) ;
     }
   }
    
@@ -89,7 +89,7 @@ void (PetscAIJFormat_Delete)(void* self)
     
     if(aij) {
       MatDestroy(aij) ;
-      free(aij) ;
+      Mry_Free(aij) ;
     }
   }
 }

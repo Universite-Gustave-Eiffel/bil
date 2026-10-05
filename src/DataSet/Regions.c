@@ -36,7 +36,7 @@ void (Regions_Delete)(void* self)
     Region_t* region = Regions_GetRegion(regions) ;
       
     Mry_Delete(region,n,Region_Delete) ;
-    free(region) ;
+    Mry_Free(region) ;
   }
 }
 

@@ -70,31 +70,31 @@ void  (Elasticity_Delete)(void* self)
   {
     double* c = Elasticity_GetStiffnessTensor(elasty) ;
     
-    if(c) free(c) ;
+    if(c) Mry_Free(c) ;
   }
   
   {
     double* c = Elasticity_GetComplianceTensor(elasty) ;
     
-    if(c) free(c) ;
+    if(c) Mry_Free(c) ;
   }
   
   {
     char* type = Elasticity_GetType(elasty) ;
     
-    if(type) free(type) ;
+    if(type) Mry_Free(type) ;
   }
   
   {
     double* c = Elasticity_GetParameter(elasty) ;
     
-    if(c) free(c) ;
+    if(c) Mry_Free(c) ;
   }
   
   {
     double* c = Elasticity_GetStressTensor(elasty) ;
     
-    if(c) free(c) ;
+    if(c) Mry_Free(c) ;
   }
 }
 

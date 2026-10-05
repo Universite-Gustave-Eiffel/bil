@@ -13,7 +13,7 @@
 #define TITLE   "Drying-Wetting with Salt (only dissolved) (1D case)"
 #define AUTHORS "Dangla"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 
 
@@ -295,7 +295,7 @@ enum {
 
 
 /* To retrieve the material properties */
-#define GetProperty(a)   (Element_GetProperty(el)[pm(a)])
+#define GetMaterialProperty(a)   (Element_GetProperty(el)[pm(a)])
 
 
 /* Fonctions */
@@ -453,16 +453,16 @@ int pm(const char *s)
 
 void GetProperties(Element_t *el)
 {
-  phi0    = GetProperty("porosite") ;
-  kl_int  = GetProperty("kl_int") ;
-  kg_int  = GetProperty("kg_int") ;
-  p_c3    = GetProperty("p_c3") ;
+  phi0    = GetMaterialProperty("porosite") ;
+  kl_int  = GetMaterialProperty("kl_int") ;
+  kg_int  = GetMaterialProperty("kg_int") ;
+  p_c3    = GetMaterialProperty("p_c3") ;
 }
 
 
 int SetModelProp(Model_t *model)
 {
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   Model_CopyNameOfEquation(model,E_Mass,"mass") ;
 #if defined (E_Air)
@@ -548,7 +548,7 @@ int ReadMatProp(Material_t *mat,DataFile_t *datafile)
         y_lnaw[i] = LogActivityOfWater(c_s) ;
         y_lnas[i] = LogActivityOfSalt(c_s) ;
       }
-      free(x) ;
+      Mry_Free(x) ;
     }
 
     /* on met a jour le nb de proprietes */

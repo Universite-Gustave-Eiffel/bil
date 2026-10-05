@@ -62,7 +62,7 @@ void (AdjacencyList_Delete)(void* self)
     size_t* list = AdjacencyList_GetNeighbor(adj) ;
     
     if(list) {
-      free(list) ;
+      Mry_Free(list) ;
       AdjacencyList_GetNeighbor(adj) = NULL ;
     }
   }

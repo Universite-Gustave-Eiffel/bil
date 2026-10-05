@@ -209,7 +209,7 @@ int SetModelProp(Model_t* model)
   int i ;
   
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */
   for(i = 0 ; i < dim ; i++) {
@@ -225,7 +225,7 @@ int SetModelProp(Model_t* model)
     Model_CopyNameOfUnknown(model,U_DISP + i,name_unk) ;
   }
   
-  Model_GetComputePropertyIndex(model) = pm ;
+  Model_SetComputePropertyIndex(model,pm) ;
     
   return(0) ;
 }

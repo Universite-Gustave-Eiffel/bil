@@ -16,7 +16,7 @@ struct OutputFile_t;
 struct Results_t;
 
 
-extern OutputFiles_t*   (OutputFiles_Create)(char*,int,int) ;
+extern OutputFiles_t*   (OutputFiles_Create)(char*,size_t,size_t) ;
 extern void             (OutputFiles_Delete)(void*) ;
 //extern void     (OutputFiles_PostProcessForGmshParsedFileFormat)(OutputFiles_t*,DataSet_t*) ;
 //extern void     (OutputFiles_PostProcessForGmshASCIIFileFormat)(OutputFiles_t*,DataSet_t*) ;
@@ -93,8 +93,8 @@ extern char*   (OutputFiles_Version)(OutputFiles_t*) ;
 /* complete the structure types by using the typedef */
 struct OutputFiles_t {            /* Output files */
   char*  filename ;               /* name of the data file */
-  int    n_dates ;                /* Nb of dates */
-  int    n_points ;               /* Nb of points */
+  size_t n_dates ;                /* Nb of dates */
+  size_t n_points ;               /* Nb of points */
   /* char**  datefilename ;         *//* names of the date output files */
   /* char**  pointfilename ;        *//* names of the point output files */
   /* FILE**  datefilestream ;       *//* results at specified times */

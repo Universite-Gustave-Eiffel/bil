@@ -34,6 +34,6 @@ void (Buffers_Delete)(void* self)
     
     Mry_Delete(buffer,n,Buffer_Delete) ;
     
-    if(buffer) free(buffer) ;
+    if(buffer) Mry_Free(buffer) ;
   }
 }

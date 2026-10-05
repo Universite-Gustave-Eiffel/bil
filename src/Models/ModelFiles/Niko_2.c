@@ -9,7 +9,7 @@
 #define TITLE   "Dual Porosity for Transversely Isotropic Coal Seam"
 #define AUTHORS "Espinoza-Dangla"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 /* Macros */
 #define NEQ     (1+dim)
@@ -82,7 +82,7 @@ static int    pressure_ads = 2 ;
 static int    tangent_biot ;
 static double alpha_h,alpha_v ;
 
-#define GetProperty(a)   (Element_GetProperty(el)[pm(a)]) 
+#define GetMaterialProperty(a)   (Element_GetProperty(el)[pm(a)]) 
 
 int pm(const char *s)
 {
@@ -110,22 +110,22 @@ int pm(const char *s)
 
 void GetProperties(Element_t *el)
 {
-  gravite = GetProperty("gravite") ;
-  young   = GetProperty("young") ;
-  K_m     = GetProperty("K_m") ;
-  poisson = GetProperty("poisson") ;
-  young_3   = GetProperty("young_3") ;
-  poisson_3 = GetProperty("poisson_3") ;
-  shear_3   = GetProperty("shear_3") ;
-  phi0_1  = GetProperty("phi0_1") ;
-  k_int   = GetProperty("k_int") ;
-  mu_co2  = GetProperty("mu_co2") ;
-  rho_s   = GetProperty("rho_s") ;
-  p0_co2  = GetProperty("p0_co2") ;
-  sig0_11 = GetProperty("sig0_11") ;
-  sig0_22 = GetProperty("sig0_22") ;
-  sig0_33 = GetProperty("sig0_33") ;
-  axis_3  = (short int) GetProperty("axis_3") - 1 ;
+  gravite = GetMaterialProperty("gravite") ;
+  young   = GetMaterialProperty("young") ;
+  K_m     = GetMaterialProperty("K_m") ;
+  poisson = GetMaterialProperty("poisson") ;
+  young_3   = GetMaterialProperty("young_3") ;
+  poisson_3 = GetMaterialProperty("poisson_3") ;
+  shear_3   = GetMaterialProperty("shear_3") ;
+  phi0_1  = GetMaterialProperty("phi0_1") ;
+  k_int   = GetMaterialProperty("k_int") ;
+  mu_co2  = GetMaterialProperty("mu_co2") ;
+  rho_s   = GetMaterialProperty("rho_s") ;
+  p0_co2  = GetMaterialProperty("p0_co2") ;
+  sig0_11 = GetMaterialProperty("sig0_11") ;
+  sig0_22 = GetMaterialProperty("sig0_22") ;
+  sig0_33 = GetMaterialProperty("sig0_33") ;
+  axis_3  = (short int) GetMaterialProperty("axis_3") - 1 ;
   axis_1  = (axis_3 + 1) % 3 ;
   axis_2  = (axis_3 + 2) % 3 ;
 }
@@ -137,7 +137,7 @@ int SetModelProp(Model_t *model)
   int dim = Model_GetDimension(model) ;
   int i ;
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */
   Model_CopyNameOfEquation(model,E_co2,"co2") ;
@@ -872,15 +872,15 @@ int c69(FEM_t *fem,double *c)
   /*
     Donnees
   */
-  young   = GetProperty("young") ;
-  K_m     = GetProperty("K_m") ;
-  poisson = GetProperty("poisson") ;
-  young_3   = GetProperty("young_3") ;
-  poisson_3 = GetProperty("poisson_3") ;
-  shear_3   = GetProperty("shear_3") ;
-  phi0_1  = GetProperty("phi0_1") ;
-  p0_co2  = GetProperty("p0_co2") ;
-  axis_3  = (short int) GetProperty("axis_3") - 1 ;
+  young   = GetMaterialProperty("young") ;
+  K_m     = GetMaterialProperty("K_m") ;
+  poisson = GetMaterialProperty("poisson") ;
+  young_3   = GetMaterialProperty("young_3") ;
+  poisson_3 = GetMaterialProperty("poisson_3") ;
+  shear_3   = GetMaterialProperty("shear_3") ;
+  phi0_1  = GetMaterialProperty("phi0_1") ;
+  p0_co2  = GetMaterialProperty("p0_co2") ;
+  axis_3  = (short int) GetMaterialProperty("axis_3") - 1 ;
   axis_1  = (axis_3 + 1) % 3 ;
   axis_2  = (axis_3 + 2) % 3 ;
 
@@ -1029,8 +1029,8 @@ double power10law(Element_t *el,double *sig,double p_co2)
   double dsig_h = sig_h - sig0_h ;
   double dsig_v = sig_v - sig0_v ;
   
-  alpha_h  = GetProperty("alpha_h") ;
-  alpha_v  = GetProperty("alpha_v") ;
+  alpha_h  = GetMaterialProperty("alpha_h") ;
+  alpha_v  = GetMaterialProperty("alpha_v") ;
   
   return(pow(10,alpha_h*dsig_h + alpha_v*dsig_v)) ;
 }

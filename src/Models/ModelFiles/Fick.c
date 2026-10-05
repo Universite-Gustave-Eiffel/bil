@@ -13,7 +13,7 @@
 #define TITLE   "Non linear Fick's second law (2015)"
 #define AUTHORS ""
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 
 
@@ -139,7 +139,7 @@ enum {
 
 
 /* To retrieve the material properties */
-#define GetProperty(a)                   (Element_GetProperty(el)[pm(a)])
+#define GetMaterialProperty(a)                   (Element_GetProperty(el)[pm(a)])
 
 
 
@@ -230,8 +230,8 @@ int pm(const char *s)
 
 void GetProperties(Element_t* el)
 {
-  phii     = GetProperty("porosity") ;
-  d_solute = GetProperty("d_solute") ;
+  phii     = GetMaterialProperty("porosity") ;
+  d_solute = GetMaterialProperty("d_solute") ;
 }
 
 
@@ -239,7 +239,7 @@ void GetProperties(Element_t* el)
 
 int SetModelProp(Model_t* model)
 {
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   Model_CopyNameOfEquation(model,E_solute  ,"solute") ;
   
@@ -251,7 +251,7 @@ int SetModelProp(Model_t* model)
 #endif
 
 
-  Model_GetComputePropertyIndex(model) = pm ;
+  Model_SetComputePropertyIndex(model,pm) ;
   
   ComputePhysicoChemicalProperties(TEMPERATURE) ;
   

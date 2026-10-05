@@ -13,7 +13,7 @@ struct TextFile_t;
 
 
 #include <stdio.h>
-extern DataFile_t*  (DataFile_Create)(char*) ;
+extern DataFile_t*  (DataFile_New)(char const* = nullptr) ;
 extern void         (DataFile_Delete)(void*) ;
 //extern char*        (DataFile_ReadLineFromCurrentFilePosition)(DataFile_t*) ;
 extern char*        (DataFile_ReadLineFromCurrentFilePositionInString)(DataFile_t*) ;
@@ -86,11 +86,19 @@ extern size_t*         (DataFile_ReadInversePermutationOfNodes)(DataFile_t*,size
 
 
 
-#define DataFile_GetTextFile(DF)              ((DF)->textfile)
-#define DataFile_GetTextLine(DF)              ((DF)->line)
-#define DataFile_GetInitialization(DF)        ((DF)->initialization)
-#define DataFile_GetMaxLengthOfTextLine(DF)   ((DF)->linelength)
-#define DataFile_GetParent(DF)                ((DF)->parent)
+#define DataFile_GetTextFile(DF)              ((DF)->GetTextFile())
+#define DataFile_GetTextLine(DF)              ((DF)->GetTextLine())
+#define DataFile_GetInitialization(DF)        ((DF)->GetInitialization())
+#define DataFile_GetMaxLengthOfTextLine(DF)   ((DF)->GetMaxLengthOfTextLine())
+#define DataFile_GetParent(DF)                ((DF)->GetParent())
+
+#define DataFile_SetTextFile(DF,A)              ((DF)->SetTextFile(A))
+#define DataFile_SetTextLine(DF,A)              ((DF)->SetTextLine(A))
+#define DataFile_SetInitialization(DF,A)        ((DF)->SetInitialization(A))
+#define DataFile_SetMaxLengthOfTextLine(DF,A)   ((DF)->SetMaxLengthOfTextLine(A))
+#define DataFile_SetParent(DF,A)                ((DF)->SetParent(A))
+
+#define DataFile_Set(DF,...)                  ((DF)->Set(__VA_ARGS__))
 
 
 
@@ -131,14 +139,11 @@ extern size_t*         (DataFile_ReadInversePermutationOfNodes)(DataFile_t*,size
         
         
 /* Set initialization */
-#define DataFile_ContextSetToFullInitialization(DF) \
-        do {DataFile_GetInitialization(DF) = 0 ;} while(0)
+#define DataFile_ContextSetToFullInitialization(DF)    DataFile_SetInitialization(DF,0)
         
-#define DataFile_ContextSetToPartialInitialization(DF) \
-        do {DataFile_GetInitialization(DF) = 1 ;} while(0)
+#define DataFile_ContextSetToPartialInitialization(DF) DataFile_SetInitialization(DF,1)
         
-#define DataFile_ContextSetToNoInitialization(DF) \
-        do {DataFile_GetInitialization(DF) = 2 ;} while(0)
+#define DataFile_ContextSetToNoInitialization(DF)      DataFile_SetInitialization(DF,2)
         
 
 
@@ -156,14 +161,39 @@ extern size_t*         (DataFile_ReadInversePermutationOfNodes)(DataFile_t*,size
 #define DataFile_GetNbOfSequences(DF) \
         DataSet_GetNbOfSequences(DataFile_GetDataSet(DF))
 
+        
+#include <string>
 
 struct DataFile_t {
-  TextFile_t* textfile ;      /* Text file */
-  char* line ;                /* memory space for a line */
-  int   initialization ;
-  size_t   linelength ;          /* Length of the longest line */
-  void* parent ;
+  TextFile_t* _textfile ;      /* Text file */
+  char* _line ;                /* memory space for a line */
+  int   _initialization ;
+  size_t   _linelength ;          /* Length of the longest line */
+  void* _parent ;
+
+  TextFile_t* GetTextFile(){return _textfile ;}
+  char* GetTextLine(){return _line ;}
+  int   GetInitialization(){return _initialization ;}
+  size_t  GetMaxLengthOfTextLine(){return _linelength ;}
+  void* GetParent(){return _parent ;}
+
+  void SetTextFile( TextFile_t* a){_textfile = a;}
+  void SetTextLine(char* a){_line = a;}
+  void SetInitialization(int const& a){_initialization = a;}
+  void SetMaxLengthOfTextLine(size_t const& a){_linelength = a;}
+  void SetParent(void* a){_parent = a;}
+
+  void Set(std::string const&);
 } ;
+
+
+#include "TextFile.h"
+
+  inline void DataFile_t::Set(std::string const& filestr){
+    TextFile_t* tf = GetTextFile();
+
+    TextFile_Set(tf,filestr.c_str());
+  }
 
 
 #ifdef __CPLUSPLUS

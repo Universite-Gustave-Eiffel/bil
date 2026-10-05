@@ -13,7 +13,7 @@
 #define TITLE "XXX"
 #define AUTHORS "XXX"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 /*
  * The numbers below are arbitrary and serve only as example
@@ -246,7 +246,7 @@ int SetModelProp(Model_t* model)
   int i ;
   
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */ 
   for(i = 0 ; i < dim ; i++) {
@@ -365,9 +365,9 @@ int DefineElementProp(Element_t* el,IntFcts_t* intfcts)
     NbOfIntPoints = IntFct_GetNbOfPoints(intfct) ;
 
     /** Re-define the length of tables */
-    Element_GetNbOfImplicitTerms(el) = NVI*NbOfIntPoints ;
-    Element_GetNbOfExplicitTerms(el) = NVE*NbOfIntPoints ;
-    Element_GetNbOfConstantTerms(el) = NV0*NbOfIntPoints ;
+    Element_SetNbOfImplicitTerms(el,NVI*NbOfIntPoints) ;
+    Element_SetNbOfExplicitTerms(el,NVE*NbOfIntPoints) ;
+    Element_SetNbOfConstantTerms(el,NV0*NbOfIntPoints) ;
   }
   #endif
   

@@ -36,7 +36,7 @@ NodesSol_t* (NodesSol_Create)(Mesh_t* mesh)
           NodeSol_t* nsol = NodeSol_Create(nu) ;
           
           nodesol[i] = nsol[0] ;
-          free(nsol) ;
+          Mry_Free(nsol) ;
         }
       }
     }
@@ -56,7 +56,7 @@ void (NodesSol_Delete)(void* self)
     NodeSol_t* nodesol = NodesSol_GetNodeSol(nodessol) ;
     
     Mry_Delete(nodesol,NbOfNodes,NodeSol_Delete) ;
-    free(nodesol) ;
+    Mry_Free(nodesol) ;
   }
 }
 

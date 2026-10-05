@@ -40,8 +40,8 @@ PosFilesForGMSH_t*   (PosFilesForGMSH_Create)(DataSet_t* dataset)
   {
     DataFile_t* datafile = DataSet_GetDataFile(dataset) ;
     char* filename = DataFile_GetFileName(datafile) ;
-    int n_dates = Dates_GetNbOfDates(DataSet_GetDates(dataset)) ;
-    int n_points = Points_GetNbOfPoints(DataSet_GetPoints(dataset)) ;
+    size_t n_dates = Dates_GetNbOfDates(DataSet_GetDates(dataset)) ;
+    size_t n_points = Points_GetNbOfPoints(DataSet_GetPoints(dataset)) ;
     OutputFiles_t* outputfiles = OutputFiles_Create(filename,n_dates,n_points) ;
     
     PosFilesForGMSH_GetOutputFiles(pf4gmsh) = outputfiles ;
@@ -68,7 +68,7 @@ void   (PosFilesForGMSH_Delete)(void* self)
     
     if(outputfiles) {
       OutputFiles_Delete(outputfiles) ;
-      free(outputfiles) ;
+      Mry_Free(outputfiles) ;
     }
   }
 }
@@ -85,7 +85,7 @@ void (PosFilesForGMSH_ASCIIFileFormat)(PosFilesForGMSH_t* pf4gmsh)
     DataSet_t* dataset = PosFilesForGMSH_GetDataSet(pf4gmsh) ;
     Materials_t* materials = DataSet_GetMaterials(dataset) ;
     Models_t* usedmodels = Materials_GetUsedModels(materials) ;
-    int n_usedmodels = Models_GetNbOfModels(usedmodels) ;
+    size_t n_usedmodels = Models_GetNbOfModels(usedmodels) ;
     
     if(n_usedmodels > 1) {
       arret("PosFilesForGMSH_ASCIIFileFormat") ;
@@ -104,7 +104,7 @@ void (PosFilesForGMSH_ASCIIFileFormatVersion2_2)(PosFilesForGMSH_t* pf4gmsh)
 {
   DataSet_t* dataset = PosFilesForGMSH_GetDataSet(pf4gmsh) ;
   OutputFiles_t* outputfiles = PosFilesForGMSH_GetOutputFiles(pf4gmsh) ;
-  int    n_dates = OutputFiles_GetNbOfDateFiles(outputfiles) ;
+  size_t    n_dates = OutputFiles_GetNbOfDateFiles(outputfiles) ;
   Mesh_t* mesh = DataSet_GetMesh(dataset) ;
   Element_t* el = Mesh_GetElement(mesh) ;
   size_t    n_el = Mesh_GetNbOfElements(mesh) ;
@@ -142,7 +142,7 @@ void (PosFilesForGMSH_ASCIIFileFormatVersion2_2)(PosFilesForGMSH_t* pf4gmsh)
       Element_t*  elt = el + ie ;
       Material_t* mat = Element_GetMaterial(elt) ;
       char* codename = Material_GetCodeNameOfModel(mat) ;
-      int usedmodelindex = Models_FindModelIndex(usedmodels,codename) ;
+      size_t usedmodelindex = Models_FindModelIndex(usedmodels,codename) ;
       Model_t*  usedmodel = Models_GetModel(usedmodels) + usedmodelindex ;
       Views_t*  views = Model_GetViews(usedmodel) ;
       int nviews = Views_GetNbOfViews(views) ;
@@ -166,7 +166,7 @@ void (PosFilesForGMSH_ASCIIFileFormatVersion2_2)(PosFilesForGMSH_t* pf4gmsh)
   
   /* Open the date files for reading */
   {    
-    for(int i = 0 ; i < n_dates ; i++) {
+    for(size_t i = 0 ; i < n_dates ; i++) {
       TextFile_t* textfile = OutputFile_GetTextFile(outputfile + i) ;
     
       TextFile_OpenFile(textfile,"r") ;
@@ -221,7 +221,7 @@ void (PosFilesForGMSH_ASCIIFileFormatVersion2_2)(PosFilesForGMSH_t* pf4gmsh)
     }
 
     
-    for(int i_temps = 0 ; i_temps < n_dates ; i_temps++) {
+    for(size_t i_temps = 0 ; i_temps < n_dates ; i_temps++) {
       TextFile_t* textfile = OutputFile_GetTextFile(outputfile + i_temps) ;
       double temps ;
 
@@ -268,7 +268,7 @@ void (PosFilesForGMSH_ASCIIFileFormatVersion2_2)(PosFilesForGMSH_t* pf4gmsh)
             fprintf(ficp,"%d\n",nb_real_tags) ;
             fprintf(ficp,"%e\n",temps) ;
             fprintf(ficp,"%d\n",nb_integer_tags) ;
-            fprintf(ficp,"%d\n",i_temps) ;
+            fprintf(ficp,"%lu\n",i_temps) ;
             fprintf(ficp,"%d\n",nbcompofview) ;
             fprintf(ficp,"%d\n",nbofrecords[i]) ;
             fprintf(ficp,"%d\n",partition) ;
@@ -281,7 +281,7 @@ void (PosFilesForGMSH_ASCIIFileFormatVersion2_2)(PosFilesForGMSH_t* pf4gmsh)
           Element_t*  elt = el + ie ;
           Material_t* mat = Element_GetMaterial(elt) ;
           char* codename = Material_GetCodeNameOfModel(mat) ;
-          int usedmodelindex = Models_FindModelIndex(usedmodels,codename) ;
+          size_t usedmodelindex = Models_FindModelIndex(usedmodels,codename) ;
           Model_t*  usedmodel = Models_GetModel(usedmodels) + usedmodelindex ;
           Views_t*  views = Model_GetViews(usedmodel) ;
           int nviews = Views_GetNbOfViews(views) ;
@@ -290,7 +290,7 @@ void (PosFilesForGMSH_ASCIIFileFormatVersion2_2)(PosFilesForGMSH_t* pf4gmsh)
 
           double val[OutputFiles_MaxNbOfViews][9*Element_MaxNbOfNodes] ;
           
-          if(usedmodelindex < 0) {
+          if(usedmodelindex > Models_GetMaxNbOfModels(usedmodels)) {
             arret("PosFilesForGMSH_ASCIIFileFormatVersion2_2") ;
           }
           
@@ -379,7 +379,7 @@ void (PosFilesForGMSH_ASCIIFileFormatVersion2_2)(PosFilesForGMSH_t* pf4gmsh)
   
   /* Close the date files */
   {    
-    for(int i = 0 ; i < n_dates ; i++) {
+    for(size_t i = 0 ; i < n_dates ; i++) {
       TextFile_t* textfile = OutputFile_GetTextFile(outputfile + i) ;
     
       TextFile_CloseFile(textfile) ;
@@ -401,7 +401,7 @@ void (PosFilesForGMSH_ParsedFileFormat)(PosFilesForGMSH_t* pf4gmsh)
     DataSet_t* dataset = PosFilesForGMSH_GetDataSet(pf4gmsh) ;
     Materials_t* materials = DataSet_GetMaterials(dataset) ;
     Models_t* usedmodels = Materials_GetUsedModels(materials) ;
-    int n_usedmodels = Models_GetNbOfModels(usedmodels) ;
+    size_t n_usedmodels = Models_GetNbOfModels(usedmodels) ;
     
     if(n_usedmodels > 1) {
       arret("PosFilesForGMSH_ParsedFileFormat") ;
@@ -421,7 +421,7 @@ void (PosFilesForGMSH_ParsedFileFormatVersion2)(PosFilesForGMSH_t* pf4gmsh)
 {
   DataSet_t* dataset = PosFilesForGMSH_GetDataSet(pf4gmsh) ;
   OutputFiles_t* outputfiles = PosFilesForGMSH_GetOutputFiles(pf4gmsh) ;
-  int    n_dates = OutputFiles_GetNbOfDateFiles(outputfiles) ;
+  size_t    n_dates = OutputFiles_GetNbOfDateFiles(outputfiles) ;
   
   Mesh_t* mesh = DataSet_GetMesh(dataset) ;
   Element_t* el = Mesh_GetElement(mesh) ;
@@ -452,7 +452,7 @@ void (PosFilesForGMSH_ParsedFileFormatVersion2)(PosFilesForGMSH_t* pf4gmsh)
 
   /* Open the date files for reading */
   {    
-    for(int i = 0 ; i < n_dates ; i++) {
+    for(size_t i = 0 ; i < n_dates ; i++) {
       TextFile_t* textfile = OutputFile_GetTextFile(outputfile + i) ;
     
       TextFile_OpenFile(textfile,"r") ;
@@ -506,7 +506,7 @@ void (PosFilesForGMSH_ParsedFileFormatVersion2)(PosFilesForGMSH_t* pf4gmsh)
       Element_t* elt = el + ie ;
       Material_t* mat = Element_GetMaterial(elt) ;
       char* codename = Material_GetCodeNameOfModel(mat) ;
-      int usedmodelindex = Models_FindModelIndex(usedmodels,codename) ;
+      size_t usedmodelindex = Models_FindModelIndex(usedmodels,codename) ;
       Model_t*  usedmodel = Models_GetModel(usedmodels) + usedmodelindex ;
       Views_t*  views = Model_GetViews(usedmodel) ;
       int nviews = Views_GetNbOfViews(views) ;
@@ -518,7 +518,7 @@ void (PosFilesForGMSH_ParsedFileFormatVersion2)(PosFilesForGMSH_t* pf4gmsh)
         arret("PosFilesForGMSH_ParsedFileFormatVersion2: unknown type") ;
       }
       
-      if(usedmodelindex < 0) {
+      if(usedmodelindex > Models_GetMaxNbOfModels(usedmodels)) {
         arret("PosFilesForGMSH_ParsedFileFormatVersion2") ;
       }
       
@@ -529,7 +529,7 @@ void (PosFilesForGMSH_ParsedFileFormatVersion2)(PosFilesForGMSH_t* pf4gmsh)
       if(!mat) continue ;
     
     
-      for(int i_temps = 0 ; i_temps < n_dates ; i_temps++) {
+      for(size_t i_temps = 0 ; i_temps < n_dates ; i_temps++) {
         TextFile_t* textfile = OutputFile_GetTextFile(outputfile + i_temps) ;
         double val[OutputFiles_MaxNbOfViews][9*Element_MaxNbOfNodes] ;
         double x_e[3*Element_MaxNbOfNodes] ;
@@ -623,10 +623,10 @@ void (PosFilesForGMSH_ParsedFileFormatVersion2)(PosFilesForGMSH_t* pf4gmsh)
         
         {
           Dates_t* dates = DataSet_GetDates(dataset) ;
-          int nbofdates  = Dates_GetNbOfDates(dates) ;
+          size_t nbofdates  = Dates_GetNbOfDates(dates) ;
           Date_t*    date   = Dates_GetDate(dates) ;
           
-          for(int j = 0 ; j < nbofdates ; j++) {
+          for(size_t j = 0 ; j < nbofdates ; j++) {
             double t = Date_GetTime(date + j) ;
             
             if(j > 0) fprintf(ficp,",") ;
@@ -663,7 +663,7 @@ void (PosFilesForGMSH_ParsedFileFormatVersion2)(PosFilesForGMSH_t* pf4gmsh)
   
   /* Close the date files */
   {    
-    for(int i = 0 ; i < n_dates ; i++) {
+    for(size_t i = 0 ; i < n_dates ; i++) {
       TextFile_t* textfile = OutputFile_GetTextFile(outputfile + i) ;
     
       TextFile_CloseFile(textfile) ;

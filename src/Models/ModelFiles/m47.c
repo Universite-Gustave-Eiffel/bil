@@ -23,7 +23,7 @@
 #define TITLE "Carbonatation du beton (2009)"
 #define AUTHORS "Thiery"
 
-#include "OldMethods.h"
+#include "PredeclaredOldModelMethods.h.in"
 
 /* Macros */
 #define NEQ     (8)
@@ -871,9 +871,9 @@ int mx47(double **x,double **u,double **u_n,double *f,double *f_n,double *va,dou
   xm = (x[1][0] + x[0][0])/deux ;
   for(i=0;i<2;i++) {
     volume[i] = fabs(dx)/deux ; 
-    if(geom == AXIS) volume[i] *= M_PI*(x[i][0] + xm) ; 
+    if(Geometry_HasCylindricalSymmetry(geom)) volume[i] *= M_PI*(x[i][0] + xm) ; 
   }
-  if(geom == AXIS) surf = deux*M_PI*xm ; else surf = un ;
+  if(Geometry_HasCylindricalSymmetry(geom)) surf = deux*M_PI*xm ; else surf = un ;
   /*
     termes d'accumulation
   */
@@ -1406,9 +1406,9 @@ void rs47(double **x,double **u,double **u_n,double *f,double *f_n,double *va,do
   xm = (x[1][0] + x[0][0])/deux ;
   for(i=0;i<2;i++) {
     volume[i] = fabs(dx)/deux ; 
-    if(geom == AXIS) volume[i] *= M_PI*(x[i][0] + xm) ; 
+    if(Geometry_HasCylindricalSymmetry(geom)) volume[i] *= M_PI*(x[i][0] + xm) ; 
   }
-  if(geom == AXIS) surf = deux*M_PI*xm ; else surf = un ;
+  if(Geometry_HasCylindricalSymmetry(geom)) surf = deux*M_PI*xm ; else surf = un ;
   /*
     Conservation de C (carbone) : (n_C1 - n_Cn) + dt * div(w_C) = 0
   */

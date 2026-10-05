@@ -11,7 +11,7 @@
 #define TITLE "Transversely isotropic ThermoPoroplasticity with hardening and hydration process(2021)"
 #define AUTHORS "Lecomte-Pierre-Braun-Dangla"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 //Ce fichier est un mouveau modèle développé par Lecomte et Pierre pour prendre en compte l'hydratation dans le modèle thermo-poro-plast
 //Il s'appuie sur un fichier déja existant par Braun et Dangla
@@ -189,7 +189,7 @@ static double wf7[] = {0.5589,    0.000485,    0.002186,    -3.391E-08,    -0.00
 
 
 
-#define GetProperty(a)      Element_GetPropertyValue(el,a)
+#define GetMaterialProperty(a)      Element_GetPropertyValue(el,a)
 
 #define NbOfVariables     (96)  //! always verify
 static double Variable[NbOfVariables] ;
@@ -378,29 +378,29 @@ double Chi(double Sf)
 
 void GetProperties(Element_t* el)
 {
-  gravite = GetProperty("gravity") ;
-  phi0    = GetProperty("porosity") ;
-  k_int_1   = GetProperty("k_int_1") ;
-  k_int_3   = GetProperty("k_int_3") ;
-  mu_l    = GetProperty("mu_l") ;
-  rho_l0  = GetProperty("rho_l") ;         //TODO OBSOLETE
-  bulk_l     = GetProperty("bulk_l") ;
-  rho_s   = GetProperty("rho_s") ;
-  //p_l0    = GetProperty("p_l0") ;
-  b       = GetProperty("b") ;
-  b_3       = GetProperty("b_3") ;
-  N       = GetProperty("N") ;
-  beta    = GetProperty("beta") ;
-  //sig0    = &GetProperty("sig0") ;
-  hardv0  = GetProperty("initial_preconsolidation_pressure") ;
+  gravite = GetMaterialProperty("gravity") ;
+  phi0    = GetMaterialProperty("porosity") ;
+  k_int_1   = GetMaterialProperty("k_int_1") ;
+  k_int_3   = GetMaterialProperty("k_int_3") ;
+  mu_l    = GetMaterialProperty("mu_l") ;
+  rho_l0  = GetMaterialProperty("rho_l") ;         //TODO OBSOLETE
+  bulk_l     = GetMaterialProperty("bulk_l") ;
+  rho_s   = GetMaterialProperty("rho_s") ;
+  //p_l0    = GetMaterialProperty("p_l0") ;
+  b       = GetMaterialProperty("b") ;
+  b_3       = GetMaterialProperty("b_3") ;
+  N       = GetMaterialProperty("N") ;
+  beta    = GetMaterialProperty("beta") ;
+  //sig0    = &GetMaterialProperty("sig0") ;
+  hardv0  = GetMaterialProperty("initial_preconsolidation_pressure") ;
 
-  young   = GetProperty("young") ;      //ADDED only to calculate bulk modulus
-  poisson = GetProperty("poisson") ;    //ADDED only to calculate bulk modulus
+  young   = GetMaterialProperty("young") ;      //ADDED only to calculate bulk modulus
+  poisson = GetMaterialProperty("poisson") ;    //ADDED only to calculate bulk modulus
   K_d = young / 3 / (1 - 2 * poisson) ;       //ADDED only to calculate bulk modulus
-  young_3   = GetProperty("young_3") ;//ADDED
-  poisson_3 = GetProperty("poisson_3") ;//ADDED
-  shear_3   = GetProperty("shear_3") ;//ADDED
-  axis_3  = (short int) GetProperty("axis_3") - 1 ;//ADDED
+  young_3   = GetMaterialProperty("young_3") ;//ADDED
+  poisson_3 = GetMaterialProperty("poisson_3") ;//ADDED
+  shear_3   = GetMaterialProperty("shear_3") ;//ADDED
+  axis_3  = (short int) GetMaterialProperty("axis_3") - 1 ;//ADDED
   axis_1  = (axis_3 + 1) % 3 ;//ADDED
   axis_2  = (axis_3 + 2) % 3 ;//ADDED
 
@@ -408,35 +408,35 @@ void GetProperties(Element_t* el)
   axis_v[1] = axis_2;
   axis_v[2] = axis_3;
 
-  lam_1     = GetProperty("lam_1");       /* ADDED Thermal conductivity of bulk (W/m/K) */
-  lam_3     = GetProperty("lam_3");       /* ADDED Thermal conductivity of bulk (W/m/K) */
-  C_d       = GetProperty("C_d");         /* ADDED Specific volumetric heat capacity (J/K/m3) */
-  alpha_1   = GetProperty("alpha_1") ;    /* ADDED Thermal linear expansion coefficient of solid (1/K) */
-  alpha_3   = GetProperty("alpha_3") ;    /* ADDED Thermal linear expansion coefficient of solid (1/K) */
+  lam_1     = GetMaterialProperty("lam_1");       /* ADDED Thermal conductivity of bulk (W/m/K) */
+  lam_3     = GetMaterialProperty("lam_3");       /* ADDED Thermal conductivity of bulk (W/m/K) */
+  C_d       = GetMaterialProperty("C_d");         /* ADDED Specific volumetric heat capacity (J/K/m3) */
+  alpha_1   = GetMaterialProperty("alpha_1") ;    /* ADDED Thermal linear expansion coefficient of solid (1/K) */
+  alpha_3   = GetMaterialProperty("alpha_3") ;    /* ADDED Thermal linear expansion coefficient of solid (1/K) */
   alpha_s   = 2*alpha_1 + alpha_3 ;       /* ADDED Thermal volumetric expansion coefficient of solid (1/K) */
-  //TEMP0         = GetProperty("TEMP0") ;            /* ADDED initial temperature (C)*/
-  s_tot0    = GetProperty("s_tot0") ;       /* ADDED initial bulk entropy  */
-  c_a_11  = GetProperty("c_a_11") ;
-  c_b_11  = GetProperty("c_b_11") ;
-  c_a_33  = GetProperty("c_a_33") ;
-  c_b_33  = GetProperty("c_b_33") ;
-  c_a_22  = GetProperty("c_a_22") ;
-  c_b_22  = GetProperty("c_b_22") ;
+  //TEMP0         = GetMaterialProperty("TEMP0") ;            /* ADDED initial temperature (C)*/
+  s_tot0    = GetMaterialProperty("s_tot0") ;       /* ADDED initial bulk entropy  */
+  c_a_11  = GetMaterialProperty("c_a_11") ;
+  c_b_11  = GetMaterialProperty("c_b_11") ;
+  c_a_33  = GetMaterialProperty("c_a_33") ;
+  c_b_33  = GetMaterialProperty("c_b_33") ;
+  c_a_22  = GetMaterialProperty("c_a_22") ;
+  c_b_22  = GetMaterialProperty("c_b_22") ;
 
-  t0  = GetProperty("t0") ;  // initial time relative to hydration
-  beta_alpha = GetProperty("hydration_hardening_parameter") ;
-  beta_ksi_phi = GetProperty("beta_ksi_phi") ; // Porosity evolution with hydration
-  beta_ksi_w = GetProperty("beta_ksi_w") ; //  Consumed water volume with hydration
-  alpha_0 = GetProperty("alpha_0") ; // alpha0 parameter for hydration kinetics
-  n_alpha = GetProperty("n_alpha") ; // n paramater in alpha dot
-  p_alpha = GetProperty("p_alpha") ; // p parameter in alpha dot
-  A_alpha = GetProperty("A_alpha") ; // A parameter in alpha dot
-  Ea_alpha = GetProperty("Ea_alpha") ; // E_a parameter in alpha dot
-  DeltaV_alpha = GetProperty("DeltaV_alpha") ; // Delta V parameter in alpha dot
-  k_alpha_Sf = GetProperty("k_alpha_Sf") ; // k_alpha parameter in S_f
-  n_Sf = GetProperty("n_Sf") ; // n parameter in S_f
-  p_r0_Sf = GetProperty("p_r0_Sf") ; // p_r^0 paramater in S_f
-  sig0 = GetProperty("sig0") ;
+  t0  = GetMaterialProperty("t0") ;  // initial time relative to hydration
+  beta_alpha = GetMaterialProperty("hydration_hardening_parameter") ;
+  beta_ksi_phi = GetMaterialProperty("beta_ksi_phi") ; // Porosity evolution with hydration
+  beta_ksi_w = GetMaterialProperty("beta_ksi_w") ; //  Consumed water volume with hydration
+  alpha_0 = GetMaterialProperty("alpha_0") ; // alpha0 parameter for hydration kinetics
+  n_alpha = GetMaterialProperty("n_alpha") ; // n paramater in alpha dot
+  p_alpha = GetMaterialProperty("p_alpha") ; // p parameter in alpha dot
+  A_alpha = GetMaterialProperty("A_alpha") ; // A parameter in alpha dot
+  Ea_alpha = GetMaterialProperty("Ea_alpha") ; // E_a parameter in alpha dot
+  DeltaV_alpha = GetMaterialProperty("DeltaV_alpha") ; // Delta V parameter in alpha dot
+  k_alpha_Sf = GetMaterialProperty("k_alpha_Sf") ; // k_alpha parameter in S_f
+  n_Sf = GetMaterialProperty("n_Sf") ; // n parameter in S_f
+  p_r0_Sf = GetMaterialProperty("p_r0_Sf") ; // p_r^0 paramater in S_f
+  sig0 = GetMaterialProperty("sig0") ;
 
   plasty = Element_FindMaterialData(el,"Plasticity") ;
   {
@@ -456,7 +456,7 @@ int SetModelProp(Model_t* model)
   int i ;
 
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
 
   /** Names of these equations */
   Model_CopyNameOfEquation(model,E_liq,"liq") ;
@@ -472,7 +472,7 @@ int SetModelProp(Model_t* model)
     Model_CopyNameOfUnknown(model,U_u + i,name_unk[i]) ;
   }
 
-  Model_GetComputePropertyIndex(model) = pm ;
+  Model_SetComputePropertyIndex(model,pm) ;
 
   return(0) ;
 }
@@ -1886,22 +1886,22 @@ void  ComputeSecondaryVariables(Element_t* el,double t,double dt,double* x)
   /* Update poroelastic parameters with hydration */
 
   double biot = BiotCoefficientFromHydration(alpha)*Chi(s_f) ;
-  double K_d = ( GetProperty("young") * ModulusFromHydration(alpha) )/ ( 3 * ( 1 - 2*PoissonFromHydration(alpha)) ) ;
+  double K_d = ( GetMaterialProperty("young") * ModulusFromHydration(alpha) )/ ( 3 * ( 1 - 2*PoissonFromHydration(alpha)) ) ;
   double K_s = K_d / ( 1 - biot )  ;
 
   /* Update elasticity tensor with hydration */
 
   double B_Skem = biot/K_d / (biot/K_d + phi_n / 2.2E+9) ;
-  double young = GetProperty("young") * ModulusFromHydration(alpha) ;
+  double young = GetMaterialProperty("young") * ModulusFromHydration(alpha) ;
   double poisson = PoissonFromHydration(alpha) ;
 
   plasty = Element_FindMaterialData(el,"Plasticity") ;
   
   #if 0
   {
-    double ACC_M = GetProperty("ACC_M") ;
-    double ACC_N = GetProperty("ACC_N") ;
-    double h_eps = GetProperty("volumetric_strain_hardening_parameter") ;
+    double ACC_M = GetMaterialProperty("ACC_M") ;
+    double ACC_N = GetMaterialProperty("ACC_N") ;
+    double h_eps = GetMaterialProperty("volumetric_strain_hardening_parameter") ;
     Plasticity_SetParameter(plasty,"ACC M", alpha * ACC_M) ;
     Plasticity_SetParameter(plasty,"ACC N", alpha * ACC_N) ;
     Plasticity_SetParameter(plasty,"ACC vol strain hardening parameter beta", alpha * h_eps ) ;
@@ -2079,7 +2079,7 @@ void  ComputeSecondaryVariables(Element_t* el,double t,double dt,double* x)
 
     /* Liquid mass content, body force */
     {
-      double m_l = rho_l * ( phi*s_f + GetProperty("beta_ksi_w") * alpha ) ;
+      double m_l = rho_l * ( phi*s_f + GetMaterialProperty("beta_ksi_w") * alpha ) ;
       double* f_mass = x + I_Fmass ;
 
       x[I_M_L] = m_l ;
@@ -2118,4 +2118,4 @@ double* ComputeVariableDerivatives(Element_t* el,double t,double dt,double* x,do
   return(dx) ;
 }
 
-
+

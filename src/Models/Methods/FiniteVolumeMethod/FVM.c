@@ -68,15 +68,15 @@ _INLINE_ void (FVM_Delete)(void* self)
 {
   FVM_t* fvm = (FVM_t*) self ;
   
-  free(FVM_GetOutput(fvm)) ;
-  free(FVM_GetInput(fvm)) ;
+  Mry_Free(FVM_GetOutput(fvm)) ;
+  Mry_Free(FVM_GetInput(fvm)) ;
   
   {
     Buffers_t* buf = FVM_GetBuffers(fvm) ;
     
     if(buf) {
       Buffers_Delete(buf) ;
-      free(buf) ;
+      Mry_Free(buf) ;
       FVM_SetBuffers(fvm,NULL) ;
     }
   }
@@ -144,7 +144,6 @@ _INLINE_ double* (FVM_ComputeSurfaceLoadResidu)(FVM_t* fvm,Load_t* load,double t
   double** u_n = Element_ComputePointerToPreviousNodalUnknowns(el) ;
   Geometry_t* geom = Element_GetGeometry(el) ;
   auto dim = Geometry_GetDimension(geom) ;
-  Symmetry_t sym = Geometry_GetSymmetry(geom) ;
   Node_t* *no = Element_GetPointerToNode(el) ;
   Field_t* field = Load_GetField(load) ;
   char    *load_eqn = Load_GetNameOfEquation(load) ;
@@ -189,8 +188,8 @@ _INLINE_ double* (FVM_ComputeSurfaceLoadResidu)(FVM_t* fvm,Load_t* load,double t
       
       r[ieq] = ft*Field_ComputeValueAtPoint(field,x,dim) ;
       
-      if(Symmetry_IsCylindrical(sym)) r[ieq] *= 2*M_PI*radius ;
-      else if(Symmetry_IsSpherical(sym)) r[ieq] *= 4*M_PI*radius*radius ;
+      if(Geometry_HasCylindricalSymmetry(geom)) r[ieq] *= 2*M_PI*radius ;
+      else if(Geometry_HasSphericalSymmetry(geom)) r[ieq] *= 4*M_PI*radius*radius ;
       return(r) ;
     }
     
@@ -226,8 +225,8 @@ _INLINE_ double* (FVM_ComputeSurfaceLoadResidu)(FVM_t* fvm,Load_t* load,double t
       
       r[ieq] = Field_ComputeValueAtPoint(field,x,dim)*fv ;
       
-      if(Symmetry_IsCylindrical(sym)) r[ieq] *= 2*M_PI*radius ;
-      else if(Symmetry_IsSpherical(sym)) r[ieq] *= 4*M_PI*radius*radius ;
+      if(Geometry_HasCylindricalSymmetry(geom)) r[ieq] *= 2*M_PI*radius ;
+      else if(Geometry_HasSphericalSymmetry(geom)) r[ieq] *= 4*M_PI*radius*radius ;
       return(r) ;
     }
     
@@ -267,8 +266,8 @@ _INLINE_ double* (FVM_ComputeSurfaceLoadResidu)(FVM_t* fvm,Load_t* load,double t
       
       r[ieq] = Field_ComputeValueAtPoint(field,x,dim)*fv ;
       
-      if(Symmetry_IsCylindrical(sym)) r[ieq] *= 2*M_PI*radius ;
-      else if(Symmetry_IsSpherical(sym)) r[ieq] *= 4*M_PI*radius*radius ;
+      if(Geometry_HasCylindricalSymmetry(geom)) r[ieq] *= 2*M_PI*radius ;
+      else if(Geometry_HasSphericalSymmetry(geom)) r[ieq] *= 4*M_PI*radius*radius ;
       return(r) ;
     }
     
@@ -305,8 +304,8 @@ _INLINE_ double* (FVM_ComputeSurfaceLoadResidu)(FVM_t* fvm,Load_t* load,double t
       
       r[ieq] = ft*Field_ComputeValueAtPoint(field,x,dim) ;
       
-      if(Symmetry_IsCylindrical(sym)) r[ieq] *= 2*M_PI*radius ;
-      else if(Symmetry_IsSpherical(sym)) r[ieq] *= 4*M_PI*radius*radius ;
+      if(Geometry_HasCylindricalSymmetry(geom)) r[ieq] *= 2*M_PI*radius ;
+      else if(Geometry_HasSphericalSymmetry(geom)) r[ieq] *= 4*M_PI*radius*radius ;
       
       return(r) ;
     }
@@ -583,7 +582,7 @@ _INLINE_ double* (FVM_ComputeCellVolumes)(FVM_t* fvm)
 {
   Element_t* el = FVM_GetElement(fvm) ;
   auto dim = Element_GetDimension(el) ;
-  Symmetry_t sym = Element_GetSymmetry(el) ;
+  Geometry_t* geom = Element_GetGeometry(el) ;
   unsigned short int nn = Element_GetNbOfNodes(el) ;
   double* volume = FVM_GetCellVolumes(fvm) ;
   
@@ -600,10 +599,10 @@ _INLINE_ double* (FVM_ComputeCellVolumes)(FVM_t* fvm)
   if(dim == 0) {
     if(nn == 1) {
       volume[0] = 1 ;
-      if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+      if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
         double x = Element_GetNodeCoordinate(el,0)[0] ;
         volume[0] = 2*M_PI*x ;
-        if(Symmetry_IsSpherical(sym)) volume[0] *= 4*x ;
+        if(Geometry_HasSphericalSymmetry(geom)) volume[0] *= 4*x ;
       }
       return(volume) ;
     } else {
@@ -621,13 +620,13 @@ _INLINE_ double* (FVM_ComputeCellVolumes)(FVM_t* fvm)
         volume[i] = fabs(dx)*0.5 ; 
       }
       
-      if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+      if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
         double xm = (x1 + x0)*0.5 ;
         for(int i = 0 ; i < 2 ; i++) {
           double x  = Element_GetNodeCoordinate(el,i)[0] ;
           double dm = x + xm ;
           volume[i] *= M_PI*dm ; 
-          if(Symmetry_IsSpherical(sym)) volume[i] *= dm ;
+          if(Geometry_HasSphericalSymmetry(geom)) volume[i] *= dm ;
         }
       }
       
@@ -684,7 +683,7 @@ _INLINE_ double* (FVM_ComputeCellVolumes)(FVM_t* fvm)
           }
         }
       }
-      if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+      if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
         arret("FVM_ComputeCellVolumes (2)") ;
       }
       return(volume) ;
@@ -711,8 +710,8 @@ _INLINE_ double* (FVM_ComputeCellSurfaceAreas)(FVM_t* fvm)
 {
 #define AREA(i,j)     area[nn*(i) + (j)]
   Element_t* el = FVM_GetElement(fvm) ;
+  Geometry_t* geom = Element_GetGeometry(el) ;
   auto dim = Element_GetDimension(el) ;
-  Symmetry_t sym = Element_GetSymmetry(el) ;
   unsigned short int nn = Element_GetNbOfNodes(el) ;
   double* area = FVM_GetCellSurfaceAreas(fvm) ;
   
@@ -746,12 +745,12 @@ _INLINE_ double* (FVM_ComputeCellSurfaceAreas)(FVM_t* fvm)
       
       AREA(0,1) = 1 ;
       
-      if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+      if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
         double x1 = Element_GetNodeCoordinate(el,1)[0] ;
         double x0 = Element_GetNodeCoordinate(el,0)[0] ;
         double dm = x1 + x0 ;
         AREA(0,1) = M_PI*dm ;
-        if(Symmetry_IsSpherical(sym)) AREA(0,1) *= dm ;
+        if(Geometry_HasSphericalSymmetry(geom)) AREA(0,1) *= dm ;
       }
       
       AREA(1,0) = AREA(0,1) ;
@@ -805,7 +804,7 @@ _INLINE_ double* (FVM_ComputeCellSurfaceAreas)(FVM_t* fvm)
           }
         }
       }
-      if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+      if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
         arret("FVM_ComputeCellSurfaceAreas (2)") ;
       }
       return(area) ;
@@ -913,7 +912,7 @@ _INLINE_ double* (FVM_ComputeTheNodalFluxVector)(FVM_t* fvm,double* w)
   #define W(i,j)    w[(i)*nn + (j)]
   Element_t* el = FVM_GetElement(fvm) ;
   auto dim = Element_GetDimension(el) ;
-  Symmetry_t sym = Element_GetSymmetry(el) ;
+  Geometry_t* geom = Element_GetGeometry(el) ;
   unsigned short int nn = Element_GetNbOfNodes(el) ;
   size_t SizeNeeded = 3*nn*sizeof(double) ;
   double* wn = (double*) FVM_AllocateInBuffer(fvm,SizeNeeded) ;
@@ -990,7 +989,8 @@ _INLINE_ double* (FVM_ComputeTheNodalFluxVector)(FVM_t* fvm,double* w)
         }
       }
       
-      if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+Geometry_t* geom = Element_GetGeometry(el) ;
+      if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
         arret("FVM_ComputeTheNodalFluxVector(2)") ;
       }
 

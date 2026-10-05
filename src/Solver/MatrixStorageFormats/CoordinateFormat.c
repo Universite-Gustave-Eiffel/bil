@@ -63,8 +63,8 @@ void (CoordinateFormat_Delete)(void* self)
 {
   CoordinateFormat_t* ac = (CoordinateFormat_t*) self ;
   
-  free(CoordinateFormat_GetNonZeroValue(ac)) ;
-  free(CoordinateFormat_GetIndex(ac)) ;
+  Mry_Free(CoordinateFormat_GetNonZeroValue(ac)) ;
+  Mry_Free(CoordinateFormat_GetIndex(ac)) ;
 }
 
 

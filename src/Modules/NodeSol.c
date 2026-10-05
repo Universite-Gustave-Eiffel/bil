@@ -35,7 +35,7 @@ void (NodeSol_Delete)(void* self)
     double* u = NodeSol_GetUnknown(nodesol) ;
     
     if(u) {
-      free(u) ;
+      Mry_Free(u) ;
       NodeSol_SetUnknown(nodesol,NULL) ;
     }
   }

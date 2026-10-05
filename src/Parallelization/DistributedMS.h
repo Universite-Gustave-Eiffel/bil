@@ -24,7 +24,7 @@
 
 
 #if defined HAVE_MPI
-  #include <mpi.h>
+  #include "MPIManager.h"
   #define DistributedMS_API  MPI
 #else
   #define DistributedMS_API  None
@@ -49,12 +49,16 @@
    * A compound statement enclosed in parentheses may appear 
    * as an expression in GNU C.
    * (https://gcc.gnu.org/onlinedocs/gcc/Statement-Exprs.html#Statement-Exprs) */
-  #define DistributedMS_NbOfProcessors \
+  #if 0
+   #define DistributedMS_NbOfProcessors \
   ({ \
     int DistributedMS_size ; \
     MPI_Comm_size(MPI_COMM_WORLD,&DistributedMS_size); \
     DistributedMS_size ; \
   })
+    #else
+   #define DistributedMS_NbOfProcessors MPIManager_NbOfProcessors
+    #endif
 #else
   #error "Distributed memory system not available"
 #endif
@@ -68,12 +72,16 @@
    * A compound statement enclosed in parentheses may appear 
    * as an expression in GNU C.
    * (https://gcc.gnu.org/onlinedocs/gcc/Statement-Exprs.html#Statement-Exprs) */
-  #define DistributedMS_RankOfCallingProcess \
+  #if 0
+   #define DistributedMS_RankOfCallingProcess \
   ({ \
     int DistributedMS_rank ; \
     MPI_Comm_rank(MPI_COMM_WORLD,&DistributedMS_rank); \
     DistributedMS_rank ; \
   })
+  #else
+   #define DistributedMS_RankOfCallingProcess MPIManager_RankOfCallingProcess
+  #endif
 #else
   #error "Distributed memory system not available"
 #endif

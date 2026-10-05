@@ -27,7 +27,7 @@
 
 
 
-OutputFiles_t*   (OutputFiles_Create)(char* filename,int n_dates,int n_points)
+OutputFiles_t*   (OutputFiles_Create)(char* filename,size_t n_dates,size_t n_points)
 {
   OutputFiles_t* outputfiles = (OutputFiles_t*) Mry_New(OutputFiles_t) ;
   
@@ -54,16 +54,15 @@ OutputFiles_t*   (OutputFiles_Create)(char* filename,int n_dates,int n_points)
     
     {
       OutputFile_t* outputfile = (OutputFile_t*) Mry_New(OutputFile_t,n_dates) ;
-      int i ;
       
-      for(i = 0 ; i < n_dates ; i++) {
-        sprintf(name,"%s.t%d",filename,i) ;
+      for(size_t i = 0 ; i < n_dates ; i++) {
+        sprintf(name,"%s.t%lu",filename,i) ;
         
         {
           OutputFile_t* opf = OutputFile_Create(name) ;
         
           outputfile[i] = opf[0] ;
-          free(opf) ;
+          Mry_Free(opf) ;
         }
       }
       //OutputFile_t* outputfile = OutputFile_Create(name,n_dates) ;
@@ -71,7 +70,7 @@ OutputFiles_t*   (OutputFiles_Create)(char* filename,int n_dates,int n_points)
       OutputFiles_GetDateOutputFile(outputfiles) = outputfile ;
     }
       
-    free(name) ;
+    Mry_Free(name) ;
   }
   
   
@@ -86,16 +85,15 @@ OutputFiles_t*   (OutputFiles_Create)(char* filename,int n_dates,int n_points)
     
     {  
       OutputFile_t* outputfile = (OutputFile_t*) Mry_New(OutputFile_t,n_points) ;
-      int i ;
       
-      for(i = 0 ; i < n_points ; i++) {
-        sprintf(name,"%s.p%d",filename,i+1) ;
+      for(size_t i = 0 ; i < n_points ; i++) {
+        sprintf(name,"%s.p%lu",filename,i+1) ;
         
         {
           OutputFile_t* opf = OutputFile_Create(name) ;
         
           outputfile[i] = opf[0] ;
-          free(opf) ;
+          Mry_Free(opf) ;
         }
       }
       //OutputFile_t* outputfile = OutputFile_Create(name,n_points) ;
@@ -103,7 +101,7 @@ OutputFiles_t*   (OutputFiles_Create)(char* filename,int n_dates,int n_points)
       OutputFiles_GetPointOutputFile(outputfiles) = outputfile ;
     }
       
-    free(name) ;
+    Mry_Free(name) ;
   }
   
   
@@ -136,41 +134,37 @@ void   (OutputFiles_Delete)(void* self)
     char* name = OutputFiles_GetDataFileName(outputfiles) ;
     
     if(name) {
-      free(name) ;
+      Mry_Free(name) ;
     }
   }
 
   {
-    int n_dates = OutputFiles_GetNbOfDateFiles(outputfiles) ;
+    size_t n_dates = OutputFiles_GetNbOfDateFiles(outputfiles) ;
     OutputFile_t* outputfile = OutputFiles_GetDateOutputFile(outputfiles) ;
     
-    if(outputfile) {
-      int i ;
-      
-      for(i = 0 ; i < n_dates ; i++) {
+    if(outputfile) {      
+      for(size_t i = 0 ; i < n_dates ; i++) {
         OutputFile_t* opf = outputfile + i ;
       
         OutputFile_Delete(opf) ;
       }
     
-      free(outputfile) ;
+      Mry_Free(outputfile) ;
     }
   }
 
   {
-    int n_points = OutputFiles_GetNbOfPointFiles(outputfiles) ;
+    size_t n_points = OutputFiles_GetNbOfPointFiles(outputfiles) ;
     OutputFile_t* outputfile = OutputFiles_GetPointOutputFile(outputfiles) ;
     
-    if(outputfile) {
-      int i ;
-      
-      for(i = 0 ; i < n_points ; i++) {
+    if(outputfile) {      
+      for(size_t i = 0 ; i < n_points ; i++) {
         OutputFile_t* opf = outputfile + i ;
       
         OutputFile_Delete(opf) ;
       }
     
-      free(outputfile) ;
+      Mry_Free(outputfile) ;
     }
   }
   
@@ -179,7 +173,7 @@ void   (OutputFiles_Delete)(void* self)
     
     if(results) {
       Results_Delete(results) ;
-      free(results) ;
+      Mry_Free(results) ;
     }
   }
   
@@ -187,7 +181,7 @@ void   (OutputFiles_Delete)(void* self)
     char* line = OutputFiles_GetTextLine(outputfiles) ;
     
     if(line) {
-      free(line) ;
+      Mry_Free(line) ;
     }
   }
 }
@@ -234,7 +228,7 @@ void (OutputFiles_BackupSolutionAtTime_)(OutputFiles_t* outputfiles,DataSet_t* d
   Element_t* el = Mesh_GetElement(mesh) ;
   Materials_t* materials = DataSet_GetMaterials(dataset) ;
   Models_t* usedmodels = Materials_GetUsedModels(materials) ;
-  int n_usedmodels = Models_GetNbOfModels(usedmodels) ;
+  size_t n_usedmodels = Models_GetNbOfModels(usedmodels) ;
   
   OutputFile_t* outputfile = OutputFiles_GetDateOutputFile(outputfiles) ;
   
@@ -278,7 +272,7 @@ void (OutputFiles_BackupSolutionAtTime_)(OutputFiles_t* outputfiles,DataSet_t* d
       Element_t* elt = el + ie ;
       Material_t* mat = Element_GetMaterial(elt) ;
       char*  codename = (mat) ? Material_GetCodeNameOfModel(mat) : NULL ;
-      int usedmodelindex = Models_FindModelIndex(usedmodels,codename) ;
+      size_t usedmodelindex = Models_FindModelIndex(usedmodels,codename) ;
       unsigned int entete = headings[usedmodelindex] ;
       
       /* if(!strcmp(codename,ucodename)) { */
@@ -367,12 +361,9 @@ void (OutputFiles_BackupSolutionAtPoint_)(OutputFiles_t* outputfiles,DataSet_t* 
   Mesh_t* mesh = DataSet_GetMesh(dataset) ;
   Points_t* points = DataSet_GetPoints(dataset) ;
   int dim = Mesh_GetDimension(mesh) ;
-  int npt = Points_GetNbOfPoints(points) ;
-  
+  size_t npt = Points_GetNbOfPoints(points) ;
   OutputFile_t* outputfile = OutputFiles_GetPointOutputFile(outputfiles) ;
-  
   Result_t* r_s = Results_GetResult(OutputFiles_GetResults(outputfiles)) ;
-  int    p ;
   
   OutputFile_TypeOfCurrentFile = 'p' ;
   
@@ -382,11 +373,17 @@ void (OutputFiles_BackupSolutionAtPoint_)(OutputFiles_t* outputfiles,DataSet_t* 
   /* Open point files for writing */
   //if(t == t_0) {
   if(String_Is(mode,"o")) {
-    for(p = 0 ; p < npt ; p++) {
+    for(size_t p = 0 ; p < npt ; p++) {
       TextFile_t* textfile = OutputFile_GetTextFile(outputfile + p) ;
       Point_t* point = Points_GetPoint(points) + p ;
       double *xp = Point_GetCoordinate(point) ;
       Element_t* elt = Point_GetEnclosingElement(point) ;
+
+      if(!elt) {
+        Point_EnclosingElement(point,mesh) ;
+        elt = Point_GetEnclosingElement(point) ;
+      }
+
       int rankofelt = Element_RankOfSupportingProcessor(elt) ;
       
       if(rank == rankofelt) TextFile_OpenFile(textfile,"w") ;
@@ -394,7 +391,7 @@ void (OutputFiles_BackupSolutionAtPoint_)(OutputFiles_t* outputfiles,DataSet_t* 
   }
   
   
-  for(p = 0 ; p < npt ; p++) {
+  for(size_t p = 0 ; p < npt ; p++) {
     TextFile_t* textfile = OutputFile_GetTextFile(outputfile + p) ;
     Point_t* point = Points_GetPoint(points) + p ;
     double *xp = Point_GetCoordinate(point) ;
@@ -494,7 +491,7 @@ Views_t* (OutputFiles_CreateGlobalViews)(OutputFiles_t* outputfiles,Models_t* us
  */
 {
   Model_t*  usedmodel  = Models_GetModel(usedmodels) ;
-  int n_usedmodels = Models_GetNbOfModels(usedmodels) ;
+  size_t n_usedmodels = Models_GetNbOfModels(usedmodels) ;
   
   int    nbofviews ;
   char   nameofview[OutputFiles_MaxNbOfViews][OutputFiles_MaxLengthOfViewName] ;

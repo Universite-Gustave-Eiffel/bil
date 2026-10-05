@@ -16,7 +16,7 @@
 #define TITLE "Barcelona Basic Model for unsaturated soils with gas (2025)"
 #define AUTHORS "Eizaguirre-Dangla"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 
 /* Nb of equations */
@@ -391,7 +391,7 @@ int SetModelProp(Model_t* model)
   char name_unk[3][4] = {"u_1","u_2","u_3"} ;
   
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */
   Model_CopyNameOfEquation(model,E_MASS,"mass") ;
@@ -407,8 +407,8 @@ int SetModelProp(Model_t* model)
     Model_CopyNameOfUnknown(model,U_DIS + i,name_unk[i]) ;
   }
   
-  Model_GetComputePropertyIndex(model) = &pm ;
-  Model_GetComputeMaterialProperties(model) = &GetProperties;
+  Model_SetComputePropertyIndex(model,&pm);
+  Model_SetComputeMaterialProperties(model,&GetProperties);
     
   return(0) ;
 }
@@ -546,7 +546,6 @@ int  ComputeLoads(Element_t* el,double t,double dt,Load_t* cg,double* r)
   int neq = Element_GetNbOfEquations(el) ;
   int ndof = nn*neq ;
   Geometry_t* geom = Element_GetGeometry(el) ;
-  Symmetry_t sym = Geometry_GetSymmetry(geom) ;
   FEM_t* fem = FEM_GetInstance(el) ;
   double* vi_n = Element_GetPreviousImplicitTerm(el) ;
   Node_t** no = Element_GetPointerToNode(el) ;
@@ -570,8 +569,8 @@ int  ComputeLoads(Element_t* el,double t,double dt,Load_t* cg,double* r)
       
         r[ieq] = ft*w[0] ;
       
-        if(Symmetry_IsCylindrical(sym)) r[ieq] *= 2*M_PI*radius ;
-        else if(Symmetry_IsSpherical(sym)) r[ieq] *= 4*M_PI*radius*radius ;
+        if(Geometry_HasCylindricalSymmetry(geom)) r[ieq] *= 2*M_PI*radius ;
+        else if(Geometry_HasSphericalSymmetry(geom)) r[ieq] *= 4*M_PI*radius*radius ;
         
         return(0) ;
       }

@@ -21,7 +21,7 @@ Results_t* (Results_Create)(int n)
       Result_t* rs = Result_Create() ;
   
       result[i] = rs[0] ;
-      free(rs) ;
+      Mry_Free(rs) ;
     }
   
     Results_GetResult(results) = result ;
@@ -45,6 +45,6 @@ void (Results_Delete)(void* self)
       Result_Delete(result + i) ;
     }
 
-    free(result) ;
+    Mry_Free(result) ;
   }
 }

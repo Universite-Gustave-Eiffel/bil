@@ -46,7 +46,7 @@ extern int       (Curves_CreateInverse)(Curves_t*,Curve_t*,const char) ;
           do { \
             Curve_t* dcv = Curve_CreateDerivative(CV) ; \
             Curves_i = Curves_Append(CVS,dcv) ; \
-            free(dcv) ; \
+            Mry_Free(dcv) ; \
           } while(0) ; \
           Curves_i ; \
         })
@@ -57,7 +57,7 @@ extern int       (Curves_CreateInverse)(Curves_t*,Curve_t*,const char) ;
           do { \
             Curve_t* icv = Curve_CreateIntegral(CV) ; \
             Curves_i = Curves_Append(CVS,icv) ; \
-            free(icv) ; \
+            Mry_Free(icv) ; \
           } while(0) ; \
           Curves_i ; \
         })
@@ -68,7 +68,7 @@ extern int       (Curves_CreateInverse)(Curves_t*,Curve_t*,const char) ;
           do { \
             Curve_t* icv = Curve_CreateInverse(CV,SCALE) ; \
             Curves_i = Curves_Append(CVS,icv) ; \
-            free(icv) ; \
+            Mry_Free(icv) ; \
           } while(0) ; \
           Curves_i ; \
         })

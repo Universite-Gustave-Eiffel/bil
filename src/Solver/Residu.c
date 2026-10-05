@@ -66,7 +66,7 @@ Residu_t*   (Residu_Create)(Mesh_t* mesh,Options_t* options,unsigned short int c
     {
       Context_t* ctx = Options_GetContext(options) ;
       CommandLine_t* cmd = Context_GetCommandLine(ctx) ;
-      int argc = CommandLine_GetNbOfArg(cmd) ;
+      int argc = CommandLine_GetNbOfArgs(cmd) ;
       char** argv = CommandLine_GetArg(cmd) ;
       const char help[] = "Vector storage format\n\n" ;
       
@@ -134,7 +134,7 @@ void (Residu_Delete)(void* self)
         
         if(B) {
           VecDestroy(B) ;
-          free(B) ;
+          Mry_Free(B) ;
         }
       }
 
@@ -143,7 +143,7 @@ void (Residu_Delete)(void* self)
         
         if(X) {
           VecDestroy(X) ;
-          free(X) ;
+          Mry_Free(X) ;
         }
       }
     }
@@ -154,7 +154,7 @@ void (Residu_Delete)(void* self)
     void* rhs = Residu_GetRHS(residu) ;
     
     if(rhs) {
-      free(rhs) ;
+      Mry_Free(rhs) ;
       Residu_GetRHS(residu) = NULL ;
     }
   }
@@ -163,7 +163,7 @@ void (Residu_Delete)(void* self)
     void* sol = Residu_GetSolution(residu) ;
     
     if(sol) {
-      free(sol) ;
+      Mry_Free(sol) ;
       Residu_GetSolution(residu) = NULL ;
     }
   }

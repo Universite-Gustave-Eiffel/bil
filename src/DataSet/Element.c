@@ -48,19 +48,16 @@ void (Element_CreateMore)(Element_t* el,Buffers_t* buffers,ShapeFcts_t* shapefct
 {
   int imat = Element_GetMaterialIndex(el) ;
   unsigned short int nn  = Element_GetNbOfNodes(el) ;
-  unsigned short int neq = Element_GetNbOfEquations(el) ;
-  unsigned short int dim = Element_GetDimension(el) ;
-  int ndof = nn*neq ;
-  
+  int ndof = Element_GetNbOfDOF(el) ;
+  unsigned short int dim = Element_GetDimension(el) ;  
 
   /* Memory space allocation for the pointers to unknowns and 
    * equations positions at nodes with initialization to 0 */
   if(imat >= 0) {
     short int* upos = (short int* ) Mry_New(short int,2*ndof) ;
     short int* epos = upos + ndof ;
-    int i ;
       
-    for(i = 0 ; i < 2*ndof ; i++) upos[i] = 0 ;
+    for(int i = 0 ; i < 2*ndof ; i++) upos[i] = 0 ;
 
     Element_GetUnknownPosition(el)  = upos ;
     Element_GetEquationPosition(el) = epos ;
@@ -152,7 +149,7 @@ void (Element_Delete)(void* self)
     short int* upos = Element_GetUnknownPosition(el) ;
     
     if(upos) {
-      free(upos) ;
+      Mry_Free(upos) ;
     }
       
     Element_GetUnknownPosition(el) = NULL ;
@@ -162,7 +159,7 @@ void (Element_Delete)(void* self)
     double* matrix = Element_GetMatrix(el) ;
     
     if(matrix) {
-      free(matrix) ;
+      Mry_Free(matrix) ;
     }
     
     Element_GetMatrix(el) = NULL ;
@@ -172,7 +169,7 @@ void (Element_Delete)(void* self)
     double* residu = Element_GetResidu(el) ;
     
     if(residu) {
-      free(residu) ;
+      Mry_Free(residu) ;
     }
     
     Element_GetResidu(el) = NULL ;
@@ -203,7 +200,7 @@ void (Element_AllocateMicrostructureSolutions)(Element_t const* el,Mesh_t* mesh,
             Solutions_t* solsi = Solutions_Create(mesh,nsol) ;
               
             sols[i] = solsi[0] ;
-            free(solsi) ;
+            Mry_Free(solsi) ;
           }
         }
           
@@ -1527,7 +1524,7 @@ double* (Element_ComputeDiscreteGradientOperator)(Element_t const* element,IntFc
   
 
   {
-    Symmetry_t sym = Element_GetSymmetry(element) ;
+    Geometry_t* geom = Element_GetGeometry(element) ;
     int dim_h  = IntFct_GetDimension(intfct) ;
     int np = IntFct_GetNbOfPoints(intfct) ;
     double* weight = IntFct_GetWeight(intfct) ;
@@ -1548,13 +1545,13 @@ double* (Element_ComputeDiscreteGradientOperator)(Element_t const* element,IntFc
       double* caj = Element_ComputeInverseJacobianMatrix(element,dh,nf,dim_h) ;
     
       /* axisymetrical or spherical cases */
-      if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+      if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
         double radius = 0 ;
         int i ;
         
         for(i = 0 ; i < nf ; i++) radius += h[i]*x[i][0] ;
         a *= 2*M_PI*radius ;
-        if(Symmetry_IsSpherical(sym)) a *= 2*radius ;
+        if(Geometry_HasSphericalSymmetry(geom)) a *= 2*radius ;
       }
     
   
@@ -1638,7 +1635,7 @@ double* (Element_ComputeLumpedMass)(Element_t const* element,IntFct_t* intfct)
   
 
   {
-    Symmetry_t sym = Element_GetSymmetry(element) ;
+    Geometry_t* geom = Element_GetGeometry(element) ;
     int dim_h  = IntFct_GetDimension(intfct) ;
     int np = IntFct_GetNbOfPoints(intfct) ;
     double* weight = IntFct_GetWeight(intfct) ;
@@ -1651,13 +1648,13 @@ double* (Element_ComputeLumpedMass)(Element_t const* element,IntFct_t* intfct)
       double a   = weight[p]*d ;
     
       /* axisymetrical or spherical cases */
-      if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+      if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
         double radius = 0 ;
         int i ;
         
         for(i = 0 ; i < nf ; i++) radius += h[i]*x[i][0] ;
         a *= 2*M_PI*radius ;
-        if(Symmetry_IsSpherical(sym)) a *= 2*radius ;
+        if(Geometry_HasSphericalSymmetry(geom)) a *= 2*radius ;
       }
     
   
@@ -1750,7 +1747,7 @@ double   (Element_IntegrateOverElement)(Element_t const* el,IntFct_t* intfct,dou
 {
   int nn = IntFct_GetNbOfFunctions(intfct) ;
   int dim_h = IntFct_GetDimension(intfct) ;
-  Symmetry_t sym = Element_GetSymmetry(el) ;
+  Geometry_t* geom = Element_GetGeometry(el) ;
   double* x[Element_MaxNbOfNodes] ;
   double sum = 0 ;
   int    i ;
@@ -1766,8 +1763,8 @@ double   (Element_IntegrateOverElement)(Element_t const* el,IntFct_t* intfct,dou
       
       sum = f[0] ;
       
-      if(Symmetry_IsCylindrical(sym)) sum *= 2*M_PI*radius ;
-      else if(Symmetry_IsSpherical(sym)) sum *= 4*M_PI*radius*radius ;
+      if(Geometry_HasCylindricalSymmetry(geom)) sum *= 2*M_PI*radius ;
+      else if(Geometry_HasSphericalSymmetry(geom)) sum *= 4*M_PI*radius*radius ;
       
     } else {
       arret("FEM_IntegrateOverElement: impossible") ;
@@ -1788,14 +1785,14 @@ double   (Element_IntegrateOverElement)(Element_t const* el,IntFct_t* intfct,dou
       double a   = weight[p]*d ;
     
       /* Axisymmetrical or spherical case */
-      if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+      if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
         double* h  = IntFct_GetFunctionAtPoint(intfct,p) ;
         double radius = 0 ;
       
         for(i = 0 ; i < nn ; i++) radius += h[i]*x[i][0] ;
         
         a *= 2*M_PI*radius ;
-        if(Symmetry_IsSpherical(sym)) a *= 2*radius ;
+        if(Geometry_HasSphericalSymmetry(geom)) a *= 2*radius ;
       }
     
       sum += a*f[p*shift] ;
@@ -1995,7 +1992,7 @@ double* (Element_ComputeLinearStrainTensor)(Element_t const* el,double const* co
 //#define DH(n,i)  (dh[(n)*dim_h + (i)])
 #define STRAIN(i,j) (strain[(i)*3 + (j)])
 #define CJ(i,j)  (cj[(i)*3 + (j)])
-  Symmetry_t sym = Element_GetSymmetry(el) ;
+  Geometry_t* geom = Element_GetGeometry(el) ;
   int dim = Element_GetDimensionOfSpace(el) ;
   int dim_e = Element_GetDimension(el) ;
   int dim_h = IntFct_GetDimension(intfct) ;
@@ -2110,7 +2107,7 @@ double* (Element_ComputeLinearStrainTensor)(Element_t const* el,double const* co
       }
   
       /* symmetric cases: axisymmetrical or spherical */
-      if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+      if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
         
         if(Element_HasZeroThickness(el)) {
           /* No additif terms */
@@ -2128,7 +2125,7 @@ double* (Element_ComputeLinearStrainTensor)(Element_t const* el,double const* co
           if(radius > 0) {
             STRAIN(2,2) += u_r/radius ;
           
-            if(Symmetry_IsSpherical(sym)) STRAIN(1,1) += u_r/radius ;
+            if(Geometry_HasSphericalSymmetry(geom)) STRAIN(1,1) += u_r/radius ;
           }
         }
       }

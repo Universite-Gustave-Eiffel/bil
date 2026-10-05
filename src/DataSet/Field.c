@@ -11,8 +11,8 @@
 static void   lit_grille(FieldGrid_t* ,int,char*) ;
 */
 //static void           Field_ReadGrid(FieldGrid_t*,int,char*) ;
-static double   champaffine(double*,int,FieldAffine_t) ;
-static double   champgrille(double*,int,FieldGrid_t) ;
+//static double   champaffine(double*,int,FieldAffine_t) ;
+//static double   champgrille(double*,int,FieldGrid_t) ;
 
 
 
@@ -22,17 +22,15 @@ Field_t* (Field_New)(void)
 {
   Field_t* field = (Field_t*) Mry_New(Field_t) ;
 
-
   /* Allocation of space for the type of field */
   {
     char* type = (char*) Mry_New(char,Field_MaxLengthOfKeyWord) ;
     
-    {
-      Field_GetType(field) = type ;
-      /* Default type */
-      strcpy(Field_GetType(field),"affine") ;
-    }
+    Field_SetType(field,type) ;
+    strcpy(Field_GetType(field),"none") ;
   }
+
+  Field_SetFieldFormat(field,NULL) ;
   
   return(field) ;
 }
@@ -43,22 +41,24 @@ void (Field_Delete)(void* self)
 {
   Field_t* field = (Field_t*) self ;
   
-  {
+  if(field) {
     void* fieldfmt = Field_GetFieldFormat(field) ;
     char* type = Field_GetType(field) ;
     
     if(fieldfmt) {
-      if(String_Is(type,"affine")) {
-        FieldAffine_Delete(fieldfmt) ;
-      } else if(String_Is(type,"grid")) {
+      if(String_Is(type,"grid")) {
         FieldGrid_Delete(fieldfmt) ;
       }
       
-      free(fieldfmt) ;
+      Mry_Free(fieldfmt) ;
+      Field_SetFieldFormat(field,NULL) ;
+    }
+
+    if(type) {
+      Mry_Free(type) ;
+      Field_SetType(field,NULL) ;
     }
   }
-  
-  free(Field_GetType(field)) ;
 }
 
 
@@ -66,32 +66,36 @@ void (Field_Delete)(void* self)
 void (Field_Scan)(Field_t* field,DataFile_t* datafile)
 {
   char* line = DataFile_ReadLineFromCurrentFilePositionInString(datafile) ;
+  char type[DataFile_MaxLengthOfTextLine] ;
 
+  /* The type (if given )*/
   {
-    char*   type = Field_GetType(field) ;
-      
-      
-    /* Type (if given )*/
-    {
-      String_FindAndScanExp(line,"Type",","," = %s",type) ;
+    int n = String_FindAndScanExp(line,"Type",","," = %s",type) ;
+
+    if(n) {
+      if(strlen(type) > Field_MaxLengthOfKeyWord - 1) {
+        arret("Field_Scan: too long type") ;
+      }
+    } else {
+      /* Default type */
+      strcpy(type,"affine");
     }
-
-
+  }
+  
+  /* The field data */
+  {
     /* Affine field
      * ------------ */
     if(String_Is(type,"affine")) {
-      FieldAffine_t* affine = FieldAffine_Create() ;
-      
-      Field_GetFieldFormat(field) = affine ;
+      double v;
+      std::vector<double> g = {0.,0.,0.};
+      std::vector<double> x = {0.,0.,0.};
       
       /* Value */
       {
-        double v ;
         int n = String_FindAndScanExp(line,"Val",","," = %lf",&v) ;
         
-        if(n) {
-          FieldAffine_GetValue(affine) = v ;
-        } else {
+        if(!n) {
           arret("Field_Scan: no value") ;
         }
       }
@@ -102,12 +106,10 @@ void (Field_Scan)(Field_t* field,DataFile_t* datafile)
         
         if(n) {
           char* pline = String_GetAdvancedPosition ;
-          double* grd = FieldAffine_GetGradient(affine) ;
-          int   j ;
           
           /* If no conversion can be made, strtod return 0 */
-          for(j = 0 ; j < 3 ; j++) {
-            grd[j] = strtod(pline,&pline) ;
+          for(int j = 0 ; j < 3 ; j++) {
+            g[j] = strtod(pline,&pline) ;
           }
         } else {
           arret("Field_Scan: no gradient") ;
@@ -120,15 +122,19 @@ void (Field_Scan)(Field_t* field,DataFile_t* datafile)
         
         if(n) {
           char* pline = String_GetAdvancedPosition ;
-          double* x = FieldAffine_GetCoordinate(affine) ;
-          int   j ;
         
-          for(j = 0 ; j < 3 ; j++) {
+          for(int j = 0 ; j < 3 ; j++) {
             x[j] = strtod(pline,&pline) ;
           }
         } else {
           arret("Field_Scan: no point") ;
         }
+      }
+
+      {
+        std::string type_str = "affine";
+
+        Field_Set(field,type_str,v,g,x) ;
       }
       
       return ;
@@ -139,20 +145,26 @@ void (Field_Scan)(Field_t* field,DataFile_t* datafile)
     /* Grid field
      * ---------- */
     if(String_Is(type,"grid")) {
-      char name[Field_MaxLengthOfFileName] ;
-      int n = String_FindAndScanExp(line,"File",","," = %s",name) ;
-        
-      if(strlen(name) > Field_MaxLengthOfFileName - 1) {
-        arret("Field_Scan: too long file name") ;
-      }
-      
+      char name[DataFile_MaxLengthOfTextLine] ;
+
       /* File */
-      if(n) {
-        FieldGrid_t* grid = FieldGrid_Create(name) ;
+      {
+        int n = String_FindAndScanExp(line,"File",","," = %s",name) ;
+      
+        if(!n) {
+          arret("Field_Scan: no file") ;
+        }
         
-        Field_GetFieldFormat(field) = grid ;
-      } else {
-        arret("Field_Scan: no file") ;
+        if(strlen(name) > Field_MaxLengthOfFileName - 1) {
+          arret("Field_Scan: too long file name") ;
+        }
+      }
+
+      {
+        std::string type_str = "grid";
+        std::string name_str = name;
+
+        Field_Set(field,type_str,name_str);
       }
       
       return ;
@@ -163,33 +175,32 @@ void (Field_Scan)(Field_t* field,DataFile_t* datafile)
     /* Random field
      * ------------ */
     if(String_Is(type,"random")) {
-      FieldRandom_t* cst = (FieldRandom_t*) Mry_New(FieldRandom_t) ;
-      
-      Field_GetFieldFormat(field) = cst ;
+        double v, ranlen;
       
       /* Value */
       {
-        double v ;
         int n = String_FindAndScanExp(line,"Val",","," = %lf",&v) ;
         
-        if(n) {
-          FieldConstant_GetValue(cst) = v ;
-        } else {
+        if(!n) {
           arret("Field_Scan: no value") ;
         }
       }
       
       /* Random range length */
       {
-        double v ;
-        int n = String_FindAndScanExp(line,"Ran",","," = %lf",&v) ;
+        int n = String_FindAndScanExp(line,"Ran",","," = %lf",&ranlen) ;
         
-        if(n) {
-          srand(time(NULL)) ;
-          FieldConstant_GetRandomRangeLength(cst) = v ;
+        if(!n) {
+          ranlen = 0 ;
         } else {
-          FieldConstant_GetRandomRangeLength(cst) = 0 ;
+          srand(time(0)) ;
         }
+      }
+
+      {
+        std::string type_str = "random";
+
+        Field_Set(field,type_str,v,ranlen);
       }
       
       return ;
@@ -207,16 +218,24 @@ void (Field_Scan)(Field_t* field,DataFile_t* datafile)
 
 
 
-#if 1
-FieldGrid_t* (FieldGrid_Create)(char* filename)
+FieldGrid_t* (FieldGrid_Create)(char const* filename)
 {
   FieldGrid_t* grid = (FieldGrid_t*) Mry_New(FieldGrid_t) ;
-  unsigned long int n_x = 1,n_y = 1,n_z = 1 ;
+  size_t n_x = 1,n_y = 1,n_z = 1 ;
+
+  /* Allocation of memory space for the file name */
+  {
+    char* name = (char*) Mry_New(char,strlen(filename)+1) ;
+    
+    FieldGrid_GetFileName(grid) = name ;
+    
+    strcpy(name,filename) ;
+  }
 
 
   /* Read the numbers */
   {
-    DataFile_t* dfile = DataFile_Create(filename) ;
+    DataFile_t* dfile = DataFile_New(filename) ;
     char*   line = DataFile_ReadLineFromCurrentFilePositionInString(dfile) ;
     
     {
@@ -228,25 +247,11 @@ FieldGrid_t* (FieldGrid_Create)(char* filename)
     }
   
     DataFile_Delete(dfile) ;
-    free(dfile) ;
-  }
+    Mry_Free(dfile) ;
 
-  FieldGrid_GetNbOfPointsAlongX(grid) = n_x ;
-  FieldGrid_GetNbOfPointsAlongY(grid) = n_y ;
-  FieldGrid_GetNbOfPointsAlongZ(grid) = n_z ;
-
-
-  /* Allocation of memory space for the file name */
-  {
-    char* name = (char*) Mry_New(char,Field_MaxLengthOfFileName) ;
-    
-    FieldGrid_GetFileName(grid) = name ;
-        
-    if(strlen(filename) > Field_MaxLengthOfFileName) {
-      arret("FieldGrid_Create: too long file name") ;
-    }
-    
-    strcpy(name,filename) ;
+    FieldGrid_SetNbOfPointsAlongX(grid,n_x);
+    FieldGrid_SetNbOfPointsAlongY(grid,n_y);
+    FieldGrid_SetNbOfPointsAlongZ(grid,n_z);
   }
   
   
@@ -256,14 +261,14 @@ FieldGrid_t* (FieldGrid_Create)(char* filename)
     double* y = x + n_x ;
     double* z = y + n_y ;
 
-    FieldGrid_GetCoordinateAlongX(grid) = x ;
-    FieldGrid_GetCoordinateAlongY(grid) = y ;
-    FieldGrid_GetCoordinateAlongZ(grid) = z ;
-
     /* Initialization of the coordinate */
-    if(n_x > 0) FieldGrid_GetCoordinateAlongX(grid)[0] = 0. ;
-    if(n_y > 0) FieldGrid_GetCoordinateAlongY(grid)[0] = 0. ;
-    if(n_z > 0) FieldGrid_GetCoordinateAlongZ(grid)[0] = 0. ;
+    if(n_x > 0) x[0] = 0. ;
+    if(n_y > 0) y[0] = 0. ;
+    if(n_z > 0) z[0] = 0. ;
+
+    FieldGrid_SetCoordinateAlongX(grid,x) ;
+    FieldGrid_SetCoordinateAlongY(grid,y) ;
+    FieldGrid_SetCoordinateAlongZ(grid,z) ;
   }
 
 
@@ -271,13 +276,13 @@ FieldGrid_t* (FieldGrid_Create)(char* filename)
   {
     double* v = (double*) Mry_New(double,n_x*n_y*n_z) ;
     
-    FieldGrid_GetValue(grid) = v ;
+    FieldGrid_SetValue(grid,v) ;
   }
 
   
   /* Read the grid */
   {
-    DataFile_t* dfile = DataFile_Create(filename) ;
+    DataFile_t* dfile = DataFile_New(filename) ;
     char*   line = DataFile_ReadLineFromCurrentFilePositionInString(dfile) ;
     
     line = DataFile_GetCurrentPositionInFileContent(dfile) ;
@@ -308,53 +313,52 @@ FieldGrid_t* (FieldGrid_Create)(char* filename)
     }
   
     DataFile_Delete(dfile) ;
-    free(dfile) ;
+    Mry_Free(dfile) ;
   }
 
   return(grid) ;
+}
+
+
+#if 0
+void (FieldGrid_Delete)(void* self)
+{
+  FieldGrid_t* field = (FieldGrid_t*) self ;
+  
+  if(field) {
+    {
+      char* name = FieldGrid_GetFileName(field);
+
+      if(name) {
+        Mry_Free(name);
+        FieldGrid_SetFileName(field,NULL);
+      }
+    }
+
+    {
+      double* x = FieldGrid_GetCoordinateAlongX(field);
+      
+      if(x) {
+        Mry_Free(x);
+        FieldGrid_SetCoordinateAlongX(field,NULL);
+      }
+    }
+
+    {
+      double* v = FieldGrid_GetValue(field);
+
+      if(v) {
+        Mry_Free(v);
+        FieldGrid_SetValue(field,NULL);
+      }
+    }
+  }
 }
 #endif
 
 
 
-void (FieldGrid_Delete)(void* self)
-{
-  FieldGrid_t* field = (FieldGrid_t*) self ;
-  
-  free(FieldGrid_GetFileName(field)) ;
-  free(FieldGrid_GetCoordinateAlongX(field)) ;
-  free(FieldGrid_GetValue(field)) ;
-}
-
-
-
-FieldAffine_t* (FieldAffine_Create)(void)
-{
-  FieldAffine_t* affine = (FieldAffine_t*) Mry_New(FieldAffine_t) ;
-
-  /* Allocation of memory space for the gradient and the coordinate */
-  {
-    double* grd = (double*) Mry_New(double,6) ;
-    
-    FieldAffine_GetGradient(affine)   = grd ;
-    FieldAffine_GetCoordinate(affine) = grd + 3 ;
-  }
-  
-  return(affine) ;
-}
-
-
-
-void (FieldAffine_Delete)(void* self)
-{
-  FieldAffine_t* field = (FieldAffine_t*) self ;
-  
-  free(FieldAffine_GetGradient(field)) ;
-}
-
-
-
-
+#if 0
 double (Field_ComputeValueAtPoint)(Field_t* ch,double* x,int dim)
 {
   char*   type = Field_GetType(ch) ;
@@ -388,7 +392,7 @@ double (Field_ComputeValueAtPoint)(Field_t* ch,double* x,int dim)
 
 double champaffine(double* x,int dim,FieldAffine_t ch)
 {
-  double v = ch.v,*x0 = ch.x,*grd = ch.g ;
+  double v = ch._v,*x0 = ch._x,*grd = ch._g ;
   int    i ;
   
   for(i=0;i<dim;i++) v += grd[i]*(x[i] - x0[i]) ;
@@ -399,9 +403,9 @@ double champaffine(double* x,int dim,FieldAffine_t ch)
 
 double champgrille(double* p,int dim,FieldGrid_t ch)
 {
-#define V(i,j,k) (ch.v[(i) + (j)*n_x + (k)*n_x*n_y])
-  unsigned long int n_x = ch.n_x,n_y = ch.n_y,n_z = ch.n_z ;
-  double* x = ch.x,*y = ch.y,*z = ch.z ;
+#define V(i,j,k) (ch._v[(i) + (j)*n_x + (k)*n_x*n_y])
+  unsigned long int n_x = ch._n_x,n_y = ch._n_y,n_z = ch._n_z ;
+  double* x = ch._x,*y = ch._y,*z = ch._z ;
   double x0 = p[0],y0 = p[1],z0 = p[2] ;
   double v ;
   unsigned long int ix1,iy1,iz1,ix2,iy2,iz2 ;
@@ -497,3 +501,4 @@ double champgrille(double* p,int dim,FieldGrid_t ch)
   return(v) ;
 #undef V
 }
+#endif

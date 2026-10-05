@@ -14,24 +14,24 @@
 #include "Solution.h"
 
 
-static TimeStep_t*  TimeStep_New(void) ;
 
 
 
-TimeStep_t*  (TimeStep_New)(void)
+TimeStep_t*  (TimeStep_New)(ObVals_t* obvals,DataFile_t* datafile)
 {
   TimeStep_t* timestep = (TimeStep_t*) Mry_New(TimeStep_t) ;
 
+  TimeStep_SetObVals(timestep,obvals) ;
+  TimeStep_SetDataFile(timestep,datafile) ;
+
   /* default values */
-  TimeStep_GetInitialTimeStep(timestep)    = 0 ;
-  TimeStep_GetMaximumTimeStep(timestep)    = 0 ;
-  TimeStep_GetMinimumTimeStep(timestep)    = 0 ;
-  TimeStep_GetReductionFactor(timestep)    = 0.5 ;
-  TimeStep_GetMaximumCommonRatio(timestep) = 1.5 ;
-  TimeStep_GetObVals(timestep)             = NULL ;
-  TimeStep_GetLocation(timestep)           = 0 ;
+  TimeStep_SetInitialTimeStep(timestep,0) ;
+  TimeStep_SetMaximumTimeStep(timestep,0) ;
+  TimeStep_SetMinimumTimeStep(timestep,0) ;
+  TimeStep_SetReductionFactor(timestep,0.5) ;
+  TimeStep_SetMaximumCommonRatio(timestep,1.5) ;
+  TimeStep_SetLocation(timestep,0) ;
   TimeStep_SetLocationAtBegin(timestep) ;
-  //TimeStep_GetSequentialIndex(timestep)    = 0 ;
 
   return(timestep) ;
 }
@@ -45,13 +45,18 @@ void  (TimeStep_Delete)(void* self)
 
 
 
-#if 1
-TimeStep_t*  (TimeStep_Create)(DataFile_t* datafile,ObVals_t* obvals)
+#if 0
+TimeStep_t*  (TimeStep_Create)(ObVals_t* obvals,DataFile_t* datafile)
 {
-  TimeStep_t* timestep = TimeStep_New() ;
+  TimeStep_t* timestep = TimeStep_New(obvals,datafile) ;
+  double dtini ;
+  double dtmax ;
+  double dtmin ;
+  double rfac ;
+  double ratio ;
   
-  TimeStep_GetDataFile(timestep) = datafile ;
-  TimeStep_GetObVals(timestep) = obvals ;
+  TimeStep_SetDataFile(timestep,datafile) ;
+  TimeStep_SetObVals(timestep,obvals) ;
 
   {
     char* filecontent = DataFile_GetFileContent(datafile) ;
@@ -78,55 +83,50 @@ TimeStep_t*  (TimeStep_Create)(DataFile_t* datafile,ObVals_t* obvals)
     
       /* Dtini */
       {
-        double dtini ;
         int n = String_FindAndScanExp(line,"Dtini",","," = %lf",&dtini) ;
         
         if(n) {
-          TimeStep_GetInitialTimeStep(timestep) = dtini ;
+          TimeStep_SetInitialTimeStep(timestep,dtini) ;
           continue ;
         }
       }
     
       /* Dtmax */
       {
-        double dtmax ;
         int n = String_FindAndScanExp(line,"Dtmax",","," = %lf",&dtmax) ;
         
         if(n) {
-          TimeStep_GetMaximumTimeStep(timestep) = dtmax ;
+          TimeStep_SetMaximumTimeStep(timestep,dtmax) ;
           continue ;
         }
       }
     
       /* Dtmin */
       {
-        double dtmin ;
         int n = String_FindAndScanExp(line,"Dtmin",","," = %lf",&dtmin) ;
         
         if(n) {
-          TimeStep_GetMinimumTimeStep(timestep) = dtmin ;
+          TimeStep_SetMinimumTimeStep(timestep,dtmin) ;
           continue ;
         }
       }
     
       /* Reduction factor */
       {
-        double rfac ;
         int n = String_FindAndScanExp(line,"Reduction Factor",","," = %lf",&rfac) ;
         
         if(n) {
-          TimeStep_GetReductionFactor(timestep) = rfac ;
+          TimeStep_SetReductionFactor(timestep,rfac) ;
           continue ;
         }
       }
     
       /* Common ratio */
       {
-        double ratio ;
         int n = String_FindAndScanExp(line,"Common Ratio",","," = %lf",&ratio) ;
         
         if(n) {
-          TimeStep_GetMaximumCommonRatio(timestep) = ratio ;
+          TimeStep_SetMaximumCommonRatio(timestep,ratio) ;
           continue ;
         }
       }
@@ -146,8 +146,190 @@ TimeStep_t*  (TimeStep_Create)(DataFile_t* datafile,ObVals_t* obvals)
   
   return(timestep) ;
 }
+#elseif 0
+TimeStep_t*  (TimeStep_Create)(ObVals_t* obvals,DataFile_t* datafile)
+{
+  TimeStep_t* timestep = TimeStep_New(obvals,datafile) ;
+  double dtini ;
+  double dtmax ;
+  double dtmin = 0 ;
+  double rfac = 0.5 ;
+  double ratio = 1.5 ;
+
+  {
+    char* filecontent = DataFile_GetFileContent(datafile) ;
+    char* c  = String_FindToken(filecontent,"ALGO,TIME,Time Steps",",") ;
+    
+    if(!c) {
+      Message_FatalError("TimeStep_Create: no Time Steps") ;
+    }
+
+    c = String_SkipLine(c) ;
+      
+    DataFile_SetCurrentPositionInFileContent(datafile,c) ;
+  
+    Message_Direct("Enter in %s","Time Steps") ;
+    Message_Direct("\n") ;
+  }
+  
+  
+  {
+    int cont = 1 ;
+    
+    do {
+      char* line = DataFile_ReadLineFromCurrentFilePositionInString(datafile) ;
+    
+      /* Dtini */
+      {
+        int n = String_FindAndScanExp(line,"Dtini",","," = %lf",&dtini) ;
+        
+        if(n) {
+          continue ;
+        }
+      }
+    
+      /* Dtmax */
+      {
+        int n = String_FindAndScanExp(line,"Dtmax",","," = %lf",&dtmax) ;
+        
+        if(n) {
+          continue ;
+        }
+      }
+    
+      /* Dtmin */
+      {
+        int n = String_FindAndScanExp(line,"Dtmin",","," = %lf",&dtmin) ;
+        
+        if(n) {
+          continue ;
+        }
+      }
+    
+      /* Reduction factor */
+      {
+        int n = String_FindAndScanExp(line,"Reduction Factor",","," = %lf",&rfac) ;
+        
+        if(n) {
+          continue ;
+        }
+      }
+    
+      /* Common ratio */
+      {
+        int n = String_FindAndScanExp(line,"Common Ratio",","," = %lf",&ratio) ;
+        
+        if(n) {
+          continue ;
+        }
+      }
+      
+      cont = 0 ;
+    } while(cont) ;
+
+    TimeStep_Set(timestep,dtini,dtmax,dtmin,rfac,ratio);
+  }
+  
+  return(timestep) ;
+}
+#else
+TimeStep_t*  (TimeStep_Create)(ObVals_t* obvals,DataFile_t* datafile)
+{
+  TimeStep_t* timestep = TimeStep_New(obvals,datafile) ;
+
+  TimeStep_Scan(timestep,datafile);
+  
+  return(timestep) ;
+}
 #endif
 
+
+
+
+void  (TimeStep_Scan)(TimeStep_t* timestep,DataFile_t* datafile)
+{
+  double dtini ;
+  double dtmax ;
+  double dtmin = 0 ;
+  double rfac = 0.5 ;
+  double ratio = 1.5 ;
+
+  {
+    char* filecontent = DataFile_GetFileContent(datafile) ;
+    char* c  = String_FindToken(filecontent,"ALGO,TIME,Time Steps",",") ;
+    
+    if(!c) {
+      Message_FatalError("TimeStep_Create: no Time Steps") ;
+    }
+
+    c = String_SkipLine(c) ;
+      
+    DataFile_SetCurrentPositionInFileContent(datafile,c) ;
+  
+    Message_Direct("Enter in %s","Time Steps") ;
+    Message_Direct("\n") ;
+  }
+  
+  
+  {
+    int cont = 1 ;
+    
+    do {
+      char* line = DataFile_ReadLineFromCurrentFilePositionInString(datafile) ;
+    
+      /* Dtini */
+      {
+        int n = String_FindAndScanExp(line,"Dtini",","," = %lf",&dtini) ;
+        
+        if(n) {
+          continue ;
+        }
+      }
+    
+      /* Dtmax */
+      {
+        int n = String_FindAndScanExp(line,"Dtmax",","," = %lf",&dtmax) ;
+        
+        if(n) {
+          continue ;
+        }
+      }
+    
+      /* Dtmin */
+      {
+        int n = String_FindAndScanExp(line,"Dtmin",","," = %lf",&dtmin) ;
+        
+        if(n) {
+          continue ;
+        }
+      }
+    
+      /* Reduction factor */
+      {
+        int n = String_FindAndScanExp(line,"Reduction Factor",","," = %lf",&rfac) ;
+        
+        if(n) {
+          continue ;
+        }
+      }
+    
+      /* Common ratio */
+      {
+        int n = String_FindAndScanExp(line,"Common Ratio",","," = %lf",&ratio) ;
+        
+        if(n) {
+          continue ;
+        }
+      }
+      
+      cont = 0 ;
+    } while(cont) ;
+
+    TimeStep_Set(timestep,dtini,dtmax,dtmin,rfac,ratio);
+  }
+  
+  return ;
+}
 
 
 

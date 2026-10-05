@@ -83,7 +83,7 @@ void (GenericObject_Dtor)(void* self)
     self = Class_GetDtor(*cp)(self) ;
   }
 
-  free(self);
+  Mry_Free(self);
 }
 
 

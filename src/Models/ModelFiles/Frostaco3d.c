@@ -11,7 +11,7 @@
 #define TITLE "Frost actions in (3D) concrete"
 #define AUTHORS "Tahiri-Dangla"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 
 /* Nb of equations of the model */
@@ -278,21 +278,21 @@ static void    GetProperties(Element_t*) ;
 void GetProperties(Element_t* el)
 {
 /* To retrieve the material properties */
-#define GetProperty(a)   (Element_GetProperty(el)[pm(a)])
-  phi     = GetProperty("porosity") ;
-  k_int   = GetProperty("k_int") ;
-  C_s     = GetProperty("C_s") ;
-  lam_s   = GetProperty("lam_s") ;
-  alpha_s = GetProperty("alpha_s") ;
-  p0      = GetProperty("p0") ;
-  T0      = GetProperty("T0") ;
-  young   = GetProperty("Young") ;
-  poisson = GetProperty("Poisson") ;
-  biot    = GetProperty("Biot") ;
+#define GetMaterialProperty(a)   (Element_GetProperty(el)[pm(a)])
+  phi     = GetMaterialProperty("porosity") ;
+  k_int   = GetMaterialProperty("k_int") ;
+  C_s     = GetMaterialProperty("C_s") ;
+  lam_s   = GetMaterialProperty("lam_s") ;
+  alpha_s = GetMaterialProperty("alpha_s") ;
+  p0      = GetMaterialProperty("p0") ;
+  T0      = GetMaterialProperty("T0") ;
+  young   = GetMaterialProperty("Young") ;
+  poisson = GetMaterialProperty("Poisson") ;
+  biot    = GetMaterialProperty("Biot") ;
   
   elasty  = Element_FindMaterialData(el,"Elasticity") ;
   cijkl   = Elasticity_GetStiffnessTensor(elasty) ;
-#undef GetProperty
+#undef GetMaterialProperty
 }
 
 
@@ -425,7 +425,7 @@ int SetModelProp(Model_t* model)
   int i ;
 
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */
   Model_CopyNameOfEquation(model,E_Mass,"mass") ;
@@ -447,7 +447,7 @@ int SetModelProp(Model_t* model)
     Model_CopyNameOfUnknown(model,U_Mech + i,name_unk[i]) ;
   }
   
-  Model_GetComputePropertyIndex(model) = pm ;
+  Model_SetComputePropertyIndex(model,pm) ;
   
   Model_GetSequentialIndexOfUnknown(model)[E_The] = 0 ;
   Model_GetSequentialIndexOfUnknown(model)[E_Mass] = 1 ;

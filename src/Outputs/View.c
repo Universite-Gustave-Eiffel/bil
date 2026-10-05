@@ -25,5 +25,5 @@ void (View_Delete)(void* self)
 {
   View_t* view = (View_t*) self ;
   
-  free(View_GetNameOfView(view)) ;
+  Mry_Free(View_GetNameOfView(view)) ;
 }

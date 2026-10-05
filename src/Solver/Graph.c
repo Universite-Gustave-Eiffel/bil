@@ -45,7 +45,7 @@ void (Graph_Delete)(void* self)
     
     if(adj) {
       AdjacencyList_Delete(adj) ;
-      free(adj) ;
+      Mry_Free(adj) ;
       Graph_GetAdjacencyList(graph) = NULL ;
     }
   }

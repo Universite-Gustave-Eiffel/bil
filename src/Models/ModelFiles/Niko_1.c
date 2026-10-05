@@ -9,7 +9,7 @@
 #define TITLE   "Dual Porosity for Coal Seam"
 #define AUTHORS "Nikoosokhan"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 /* Macros */
 #define NEQ     (1+dim)
@@ -78,7 +78,7 @@ static int    pressure_ads = 2 ;
 static int    coeff = 3 ;
 static int    tangent_biot ;
 
-#define GetProperty(a)   (Element_GetProperty(el)[pm(a)]) 
+#define GetMaterialProperty(a)   (Element_GetProperty(el)[pm(a)]) 
 
 int pm(const char *s)
 {
@@ -99,18 +99,18 @@ int pm(const char *s)
 
 void GetProperties(Element_t *el)
 {
-  gravite = GetProperty("gravite") ;
-  young   = GetProperty("young") ;
-  K_m     = GetProperty("K_m") ;
-  poisson = GetProperty("poisson") ;
-  phi0_1  = GetProperty("phi0_1") ;
-  k_int   = GetProperty("k_int") ;
-  mu_co2  = GetProperty("mu_co2") ;
-  rho_s   = GetProperty("rho_s") ;
-  p0_co2  = GetProperty("p0_co2") ;
-  sig0_11 = GetProperty("sig0_11") ;
-  sig0_22 = GetProperty("sig0_22") ;
-  sig0_33 = GetProperty("sig0_33") ;
+  gravite = GetMaterialProperty("gravite") ;
+  young   = GetMaterialProperty("young") ;
+  K_m     = GetMaterialProperty("K_m") ;
+  poisson = GetMaterialProperty("poisson") ;
+  phi0_1  = GetMaterialProperty("phi0_1") ;
+  k_int   = GetMaterialProperty("k_int") ;
+  mu_co2  = GetMaterialProperty("mu_co2") ;
+  rho_s   = GetMaterialProperty("rho_s") ;
+  p0_co2  = GetMaterialProperty("p0_co2") ;
+  sig0_11 = GetMaterialProperty("sig0_11") ;
+  sig0_22 = GetMaterialProperty("sig0_22") ;
+  sig0_33 = GetMaterialProperty("sig0_33") ;
 }
 
 
@@ -120,7 +120,7 @@ int SetModelProp(Model_t *model)
   int dim = Model_GetDimension(model) ;
   int i ;
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */
   Model_CopyNameOfEquation(model,E_co2,"co2") ;
@@ -804,11 +804,11 @@ int c69(FEM_t *fem,double *c)
   /*
     Donnees
   */
-  young   = GetProperty("young") ;
-  K_m     = GetProperty("K_m") ;
-  poisson = GetProperty("poisson") ;
-  phi0_1  = GetProperty("phi0_1") ;
-  p0_co2  = GetProperty("p0_co2") ;
+  young   = GetMaterialProperty("young") ;
+  K_m     = GetMaterialProperty("K_m") ;
+  poisson = GetMaterialProperty("poisson") ;
+  phi0_1  = GetMaterialProperty("phi0_1") ;
+  p0_co2  = GetMaterialProperty("p0_co2") ;
   
   dmu     = young/(1 + poisson) ;
   mu      = dmu/2 ;

@@ -88,7 +88,7 @@ CurvesFile_t*   (CurvesFile_Create)(void)
 
   /* Memory space for textfile */
   {
-    TextFile_t* textfile = TextFile_Create(NULL) ;
+    TextFile_t* textfile = TextFile_New() ;
     
     CurvesFile_GetTextFile(curvesfile) = textfile ;
   }
@@ -123,10 +123,10 @@ void (CurvesFile_Delete)(void* self)
     TextFile_t* textfile = CurvesFile_GetTextFile(curvesfile) ;
     
     TextFile_Delete(textfile) ;
-    free(textfile) ;
+    Mry_Free(textfile) ;
   }
   
-  free(CurvesFile_GetTextLine(curvesfile)) ;
+  Mry_Free(CurvesFile_GetTextLine(curvesfile)) ;
 }
 
 
@@ -481,7 +481,7 @@ int   (CurvesFile_WriteCurves)(CurvesFile_t* curvesfile)
         
         /* Free memory */
         Curve_Delete(crvj) ;
-        free(crvj) ;
+        Mry_Free(crvj) ;
       }
       
     } else if(String_Is(YMODEL,"Evaluate")){

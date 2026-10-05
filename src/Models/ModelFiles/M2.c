@@ -8,7 +8,7 @@
 #define TITLE   "Two-phase flow (Liquid-Gas)"
 #define AUTHORS "Dangla"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 
 /* Nb of equations */
@@ -65,7 +65,7 @@
 
 
 /* To retrieve the material properties */
-#define GetProperty(a)   (Element_GetProperty(el)[pm(a)])
+#define GetMaterialProperty(a)   (Element_GetProperty(el)[pm(a)])
 
 
 /* Functions */
@@ -131,17 +131,17 @@ int pm(const char *s)
 
 void GetProperties(Element_t *el)
 {
-  gravite = GetProperty("gravite") ;
-  phi     = GetProperty("phi") ;
-  rho_l   = GetProperty("rho_l") ;
-  k_int   = GetProperty("k_int") ;
-  mu_l    = GetProperty("mu_l") ;
-  mu_g    = GetProperty("mu_g") ;
-  p_c3    = GetProperty("p_c3") ;
+  gravite = GetMaterialProperty("gravite") ;
+  phi     = GetMaterialProperty("phi") ;
+  rho_l   = GetMaterialProperty("rho_l") ;
+  k_int   = GetMaterialProperty("k_int") ;
+  mu_l    = GetMaterialProperty("mu_l") ;
+  mu_g    = GetMaterialProperty("mu_g") ;
+  p_c3    = GetMaterialProperty("p_c3") ;
   
   {
-    double M_g   = GetProperty("M_g") ;
-    double RT    = GetProperty("RT") ;
+    double M_g   = GetMaterialProperty("M_g") ;
+    double RT    = GetMaterialProperty("RT") ;
     
     MgsRT   = M_g/RT ;
   }
@@ -150,7 +150,7 @@ void GetProperties(Element_t *el)
 
 int SetModelProp(Model_t *model)
 {
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   Model_CopyNameOfEquation(model,E_Liq,"liq") ;
   Model_CopyNameOfEquation(model,E_Gas,"gas") ;

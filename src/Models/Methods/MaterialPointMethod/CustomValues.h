@@ -2,15 +2,16 @@
 #define CUSTOMVALUES_H
 
 #include <type_traits>
-#include "Message.h"
 
 
 /* Primary template */
 template<typename T,template<typename> class... C>
 struct alignas(T) CustomValues_t: C<T>... {
   using Value_type = T;
-  
-  #include "CustomValues_MemberOperations.h.in"
+
+  #define CUSTOMVALUES_MEMBEROPERATIONS_IN_H
+  #include "CustomValues_MemberOperations.in.h"
+  #undef CUSTOMVALUES_MEMBEROPERATIONS_IN_H
 };
 
 
@@ -21,8 +22,10 @@ struct alignas(T) CustomValues_t<T,IM,EX,CO,OT...>: IM<T>,EX<T>,CO<T>,OT<T>... {
   using ExplicitValues_type = EX<T>;
   using ConstantValues_type = CO<T>;
   using Value_type = T;
-  
-  #include "CustomValues_MemberOperations.h.in"
+
+  #define CUSTOMVALUES_MEMBEROPERATIONS_IN_H
+  #include "CustomValues_MemberOperations.in.h"
+  #undef CUSTOMVALUES_MEMBEROPERATIONS_IN_H
 };
 
 
@@ -67,13 +70,17 @@ struct alignas(T) CustomValues_t<T,IM,EX,CO,OT...>: IM<T>,EX<T>,CO<T>,OT<T>... {
 //----------------------------------------------------------------------
 #define CLASSDEF  typename U,template<typename> class... A
 #define CLASSLIST U,A...
-#include "CustomValues_Non-MemberOperations.h.in"
+#define CUSTOMVALUES_NONMEMBEROPERATIONS_IN_H
+#include "CustomValues_Non-MemberOperations.in.h"
+#undef CUSTOMVALUES_NONMEMBEROPERATIONS_IN_H
 #undef CLASSDEF
 #undef CLASSLIST
 
 #define CLASSDEF  typename U,template<typename> class A,template<typename> class B,template<typename> class C,template<typename> class... D
 #define CLASSLIST U,A,B,C,D...
-#include "CustomValues_Non-MemberOperations.h.in"
+#define CUSTOMVALUES_NONMEMBEROPERATIONS_IN_H
+#include "CustomValues_Non-MemberOperations.in.h"
+#undef CUSTOMVALUES_NONMEMBEROPERATIONS_IN_H
 #undef CLASSDEF
 #undef CLASSLIST
 

@@ -1,0 +1,83 @@
+
+#if defined (CUSTOMVALUES_NONMEMBEROPERATIONS_IN_H) && defined (CLASSDEF) && defined (CLASSLIST)
+/* Addition */
+template<CLASSDEF>
+inline CustomValues_t<CLASSLIST> operator + (CustomValues_t<CLASSLIST> const& a)
+{  
+  return(a);
+}
+
+template<CLASSDEF>
+inline CustomValues_t<CLASSLIST> operator + (CustomValues_t<CLASSLIST> const& a, CustomValues_t<CLASSLIST> const& b)
+{
+  CustomValues_t<CLASSLIST> ret = a ;
+        
+  return(ret += b);
+}
+
+/* Substraction */
+template<CLASSDEF>
+inline CustomValues_t<CLASSLIST> operator - (CustomValues_t<CLASSLIST> const& a)
+{
+  return(-1.*a);
+}
+
+template<CLASSDEF>
+inline CustomValues_t<CLASSLIST> operator - (CustomValues_t<CLASSLIST> const& a, CustomValues_t<CLASSLIST> const& b)
+{
+  CustomValues_t<CLASSLIST> ret = a ;
+        
+  return(ret -= b);
+}
+
+
+/* Multiplication */
+template<CLASSDEF>
+inline CustomValues_t<CLASSLIST> operator * (CustomValues_t<CLASSLIST> const& a, CustomValues_t<CLASSLIST> const& b)
+{
+  CustomValues_t<CLASSLIST> ret = a ;
+        
+  return(ret *= b);
+}
+
+template<typename T,CLASSDEF>
+inline CustomValues_t<CLASSLIST> operator * (CustomValues_t<CLASSLIST> const& a, T const& b)
+{
+  CustomValues_t<CLASSLIST> ret = a ;
+        
+  return(ret *= b);
+}
+
+template<typename T,CLASSDEF>
+inline CustomValues_t<CLASSLIST> operator * (T const& b, CustomValues_t<CLASSLIST> const& a)
+{
+  CustomValues_t<CLASSLIST> ret = a ;
+        
+  return(ret *= b);
+}
+
+/* Division */
+template<CLASSDEF>
+inline CustomValues_t<CLASSLIST> operator / (CustomValues_t<CLASSLIST> const& a, CustomValues_t<CLASSLIST> const& b)
+{
+  CustomValues_t<CLASSLIST> ret = a ;
+        
+  return(ret /= b);
+}
+
+template<typename T,CLASSDEF>
+inline CustomValues_t<CLASSLIST> operator / (CustomValues_t<CLASSLIST> const& a, T const& b)
+{
+  CustomValues_t<CLASSLIST> ret = a ;
+        
+  return(ret /= b);
+}
+
+template<typename T,CLASSDEF>
+inline CustomValues_t<CLASSLIST> operator / (T const& b, CustomValues_t<CLASSLIST> const& a)
+{
+  CustomValues_t<CLASSLIST> ret = a ;
+        
+  return(ret /= b);
+}
+#endif

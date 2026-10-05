@@ -33,7 +33,7 @@
 #define AUTHORS  "Dangla"
 #define TITLE    "Sequential non-iterative approach"
 
-#include "PredefinedModuleMethods.h"
+#include "PredeclaredModuleMethods.h.in"
 
 static Module_ComputeProblem_t   calcul ;
 static Module_SolveProblem_t     Algorithm ;
@@ -106,7 +106,7 @@ int   (SNIA_Increment)(DataSet_t* dataset,Solutions_t* sols,Solver_t* solver,Out
      */
     do {
       
-      DataSet_GetSequentialIndex(dataset) = sequentialindex ;
+      DataSet_SetSequentialIndex(dataset, sequentialindex) ;
       //TimeStep_GetSequentialIndex(timestep) = sequentialindex ;
       
       /*
@@ -539,9 +539,9 @@ int calcul(DataSet_t* dataset)
     {
       char*   filename = DataFile_GetFileName(datafile) ;
       Dates_t*  dates    = DataSet_GetDates(dataset) ;
-      int     nbofdates  = Dates_GetNbOfDates(dates) ;
+      size_t    nbofdates  = Dates_GetNbOfDates(dates) ;
       Points_t* points   = DataSet_GetPoints(dataset) ;
-      int     n_points   = Points_GetNbOfPoints(points) ;
+      size_t    n_points   = Points_GetNbOfPoints(points) ;
       OutputFiles_t* outputfiles = OutputFiles_Create(filename,nbofdates,n_points) ;
       Options_t* options = DataSet_GetOptions(dataset) ;
       Solvers_t* solvers = Solvers_Create(mesh,options,1) ;
@@ -550,9 +550,9 @@ int calcul(DataSet_t* dataset)
       i = Algorithm(dataset,sols,solver,outputfiles) ;
       
       Solvers_Delete(solvers) ;
-      free(solvers) ;
+      Mry_Free(solvers) ;
       OutputFiles_Delete(outputfiles) ;
-      free(outputfiles) ;
+      Mry_Free(outputfiles) ;
     }
       
   /* 3. Store for future resumption */
@@ -564,7 +564,7 @@ int calcul(DataSet_t* dataset)
     }
 
     Solutions_Delete(sols) ;
-    free(sols) ;
+    Mry_Free(sols) ;
     return(i) ;
   }
 }
@@ -586,7 +586,7 @@ int   Algorithm(DataSet_t* dataset,Solutions_t* sols,Solver_t* solver,OutputFile
   Dates_t*       dates       = DataSet_GetDates(dataset) ;
   IterProcess_t* iterprocess = DataSet_GetIterProcess(dataset) ;
   
-  int            nbofdates   = Dates_GetNbOfDates(dates) ;
+  size_t         nbofdates   = Dates_GetNbOfDates(dates) ;
   Date_t*        date        = Dates_GetDate(dates) ;
 
   int            idate = Initialize(dataset,sols) ;

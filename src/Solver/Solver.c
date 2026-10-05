@@ -202,13 +202,8 @@ Solver_t*  (Solver_Create)(Mesh_t* mesh,Options_t* options,unsigned short int co
           int npcol = nprocs/nprow ;
           //Context_t* ctx = Options_GetContext(options) ;
           //CommandLine_t* cmd = Context_GetCommandLine(ctx) ;
-          //int argc = CommandLine_GetNbOfArg(cmd) ;
+          //int argc = CommandLine_GetNbOfArgs(cmd) ;
           //char** argv = CommandLine_GetArg(cmd) ;
-        
-        
-          /* Initialize MPI environment */
-          //MPI_Init(&argc,&argv);
-          //MPI_Init(NULL,NULL);
         
           /* Initialize the superlu process grid */
           superlu_gridinit(MPI_COMM_WORLD,nprow,npcol,grid);
@@ -267,7 +262,7 @@ Solver_t*  (Solver_Create)(Mesh_t* mesh,Options_t* options,unsigned short int co
       {
         Context_t* ctx = Options_GetContext(options) ;
         CommandLine_t* cmd = Context_GetCommandLine(ctx) ;
-        int argc = CommandLine_GetNbOfArg(cmd) ;
+        int argc = CommandLine_GetNbOfArgs(cmd) ;
         char** argv = CommandLine_GetArg(cmd) ;
         const char help[] = "Solver KSP\n\n" ;
         
@@ -345,7 +340,7 @@ void  (Solver_Delete)(void* self)
     
     if(a) {
       Matrix_Delete(a) ;
-      free(a) ;
+      Mry_Free(a) ;
       Solver_GetMatrix(solver) = NULL ;
     }
   }
@@ -355,7 +350,7 @@ void  (Solver_Delete)(void* self)
 
     if(rs) {
       Residu_Delete(rs) ;
-      free(rs) ;
+      Mry_Free(rs) ;
       Solver_GetResidu(solver) = NULL ;
     }
   }
@@ -365,7 +360,7 @@ void  (Solver_Delete)(void* self)
     
     if(genericwork) {
       GenericData_Delete(genericwork) ;
-      free(genericwork) ;
+      Mry_Free(genericwork) ;
       Solver_GetGenericWorkSpace(solver) = NULL ;
     }
   }
@@ -390,7 +385,7 @@ void  (Solver_Delete)(void* self)
     
     if(rm) {
       ResolutionMethod_Delete(rm) ;
-      free(rm) ;
+      Mry_Free(rm) ;
       Solver_GetResolutionMethod(solver) = NULL ;
     }
   }

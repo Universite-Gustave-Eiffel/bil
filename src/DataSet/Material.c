@@ -16,9 +16,11 @@
 /* Extern functions */
 
 
-Material_t* (Material_New)(void)
+Material_t* (Material_New)(Materials_t* materials)
 {
   Material_t* material   = (Material_t*) Mry_New(Material_t) ;
+
+  Material_SetParentMaterials(material,materials) ;
   
     
   /* Allocation of memory space for the material */
@@ -30,27 +32,29 @@ Material_t* (Material_New)(void)
     {
       char* name = (char*) Mry_New(char,Material_MaxLengthOfKeyWord) ;
       
-      Material_GetCodeNameOfModel(mat) = name ;
+      Material_SetCodeNameOfModel(mat,name) ;
     }
     
     /* The generic data */
     {
-      Material_GetGenericData(mat) = NULL ;
+      Material_SetGenericData(mat,NULL) ;
     }
     
     /* The properties (also part of the generic data) */
     {
       double* pr = (double*) Mry_New(double,Material_MaxNbOfProperties) ;
     
-      Material_GetNbOfProperties(mat) = 0 ;
-      Material_GetProperty(mat) = pr ;
+      Material_SetNbOfProperties(mat,0) ;
+      Material_SetProperty(mat,pr) ;
       
       Material_AppendData(mat,Material_MaxNbOfProperties,pr,"Parameters") ;
     }
 
     /* Curves */
     {
-      Material_GetCurves(mat) = Curves_Create(Material_MaxNbOfCurves) ;
+      Curves_t* curves = Curves_Create(Material_MaxNbOfCurves) ;
+      
+      Material_SetCurves(mat,curves) ;
     }
     
     /* for compatibility with former coding of Material_t structure */
@@ -61,7 +65,7 @@ Material_t* (Material_New)(void)
     {
       char* meth = (char*) Mry_New(char,Material_MaxLengthOfKeyWord) ;
       
-      Material_GetMethod(mat) = meth ;
+      Material_SetMethod(mat,meth) ;
     }
   }
   
@@ -78,8 +82,8 @@ void (Material_Delete)(void* self)
     char* name = Material_GetCodeNameOfModel(material) ;
     
     if(name) {
-      free(name) ;
-      Material_GetCodeNameOfModel(material) = NULL ;
+      Mry_Free(name) ;
+      Material_SetCodeNameOfModel(material,NULL) ;
     }
   }
   
@@ -88,8 +92,8 @@ void (Material_Delete)(void* self)
     
     if(curves) {
       Curves_Delete(curves) ;
-      free(curves) ;
-      Material_GetCurves(material) = NULL ;
+      Mry_Free(curves) ;
+      Material_SetCurves(material,NULL) ;
     }
   }
   
@@ -98,8 +102,8 @@ void (Material_Delete)(void* self)
     
     if(gdat) {
       GenericData_Delete(gdat) ;
-      free(gdat) ;
-      Material_GetGenericData(material) = NULL ;
+      Mry_Free(gdat) ;
+      Material_SetGenericData(material,NULL) ;
     }
   }
   
@@ -107,21 +111,22 @@ void (Material_Delete)(void* self)
     char* meth = Material_GetMethod(material) ;
 
     if(meth) {
-      free(meth) ;
-      Material_GetMethod(material) = NULL ;
+      Mry_Free(meth) ;
+      Material_SetMethod(material,NULL) ;
     }
   }
 }
 
 
-
-void (Material_Scan)(Material_t* mat,DataFile_t* datafile,Geometry_t* geom)
+#if 0
+void (Material_Scan)(Material_t* mat,DataFile_t* datafile)
 {
   char* line = DataFile_ReadLineFromCurrentFilePositionInString(datafile) ;
+  char  modelname[Material_MaxLengthOfKeyWord] ;
         
   /* Read and store the code name of the model */
   {
-    char   codename[Material_MaxLengthOfKeyWord] ;
+    char  codename[Material_MaxLengthOfKeyWord] ;
     char*  code = codename + 1 ;
     //int n = String_FindAndScanExp(line,"Model =,",","," %s",codename+1) ;
       
@@ -140,6 +145,7 @@ void (Material_Scan)(Material_t* mat,DataFile_t* datafile,Geometry_t* geom)
     }
       
     /* Code name of the model */
+    strcpy(modelname,code) ;
     strcpy(Material_GetCodeNameOfModel(mat),code) ;
   }
       
@@ -148,11 +154,11 @@ void (Material_Scan)(Material_t* mat,DataFile_t* datafile,Geometry_t* geom)
   {
     char*  code = Material_GetCodeNameOfModel(mat) ;
     Models_t* usedmodels = Material_GetUsedModels(mat) ;
-    Model_t* matmodel = Models_FindOrAppendModel(usedmodels,code,geom,datafile) ;
-    int modind  = Models_FindModelIndex(usedmodels,code) ;
+    Model_t* matmodel = Models_FindOrAppendModel(usedmodels,code) ;
+    size_t modind  = Models_FindModelIndex(usedmodels,code) ;
         
-    Material_GetModel(mat) = matmodel ;
-    Material_GetModelIndex(mat) = modind ;
+    Material_SetModel(mat,matmodel) ;
+    Material_SetModelIndex(mat,modind) ;
   }
       
       
@@ -162,10 +168,10 @@ void (Material_Scan)(Material_t* mat,DataFile_t* datafile,Geometry_t* geom)
         
     if(c) {
       Model_t* matmodel = Material_GetModel(mat) ;
-      int neq = Model_GetNbOfEquations(matmodel) ;
+      size_t neq = Model_GetNbOfEquations(matmodel) ;
           
       c[0] = ' ' ;
-      for(int i = 0 ; i < neq ; i++) {
+      for(size_t i = 0 ; i < neq ; i++) {
         char name[Material_MaxLengthOfKeyWord] ;
         char* c1 = String_FindAnyChar(c,",)\n") ;
             
@@ -187,10 +193,10 @@ void (Material_Scan)(Material_t* mat,DataFile_t* datafile,Geometry_t* geom)
         
     if(c) {
       Model_t* matmodel = Material_GetModel(mat) ;
-      int neq = Model_GetNbOfEquations(matmodel) ;
+      size_t neq = Model_GetNbOfEquations(matmodel) ;
           
       c[0] = ' ' ;
-      for(int i = 0 ; i < neq ; i++) {
+      for(size_t i = 0 ; i < neq ; i++) {
         char name[Material_MaxLengthOfKeyWord] ;
         char* c1 = String_FindAnyChar(c,",)\n") ;
             
@@ -219,7 +225,9 @@ void (Material_Scan)(Material_t* mat,DataFile_t* datafile,Geometry_t* geom)
   /* Input material data */
   /* A model pointing to a null pointer serves to build curves only */
   {
-    Material_GetNbOfProperties(mat) = Material_ReadProperties(mat,datafile) ;
+    int n = Material_ReadProperties(mat,datafile) ;
+    
+    Material_SetNbOfProperties(mat,n) ;
   }
     
     
@@ -227,7 +235,7 @@ void (Material_Scan)(Material_t* mat,DataFile_t* datafile,Geometry_t* geom)
   {
     if(Material_GetModel(mat)) {
       if(Material_GetNbOfEquations(mat) == 0) {
-        Material_GetNbOfEquations(mat) = mat->neq ;
+        Material_SetNbOfEquations(mat,mat->neq) ;
       }
     }
   }
@@ -235,10 +243,83 @@ void (Material_Scan)(Material_t* mat,DataFile_t* datafile,Geometry_t* geom)
     
     
   if(!Material_GetModel(mat)) {
-    //Message_Warning("Material_Scan: Model not known") ;
     Message_FatalError("Material_Scan: Model not known") ;
   }
 }
+#else
+void (Material_Scan)(Material_t* mat,DataFile_t* datafile)
+{
+  char* line = DataFile_ReadLineFromCurrentFilePositionInString(datafile) ;
+  char  modelname[Material_MaxLengthOfKeyWord] ;
+  Model_t* matmodel ;
+  int modind ;
+        
+  /* Read and store the code name of the model */
+  {
+    char  codename[Material_MaxLengthOfKeyWord] ;
+    char*  code = codename + 1 ;
+      
+    if(String_Is(line,"Model",5)) {
+      char* c = String_FindAndSkipToken(line,"=") ;
+          
+      String_ScanStringUntil(c,codename + 1,"(" String_SpaceChars) ;
+      //String_Scan(line,"%*[^= ] = %s",codename + 1) ;
+    } else {
+      String_Scan(line,"%s",codename + 1) ;
+    }
+      
+    if(isdigit(codename[1])) {
+      codename[0] = 'm' ;
+      code = codename ;
+    }
+      
+    /* Code name of the model */
+    strcpy(modelname,code) ;
+  }
+
+  /* Find or append a model and point to it */
+  {
+    Models_t* usedmodels = Material_GetUsedModels(mat) ;
+    
+    matmodel = Models_FindOrAppendModel(usedmodels,modelname) ;
+    modind  = Models_FindModelIndex(usedmodels,modelname) ;
+  }
+
+  strcpy(Material_GetCodeNameOfModel(mat),modelname) ;
+  Material_SetModel(mat,matmodel) ;
+  Material_SetModelIndex(mat,modind) ;
+
+
+  /* for compatibility with old version */
+  if(Material_GetModel(mat)) {
+    mat->eqn = Material_GetNameOfEquation(mat) ;
+    mat->inc = Material_GetNameOfUnknown(mat) ;
+  }
+
+
+  /* Input material data */
+  /* A model pointing to a null pointer serves to build curves only */
+  {
+    int n = Material_ReadProperties(mat,datafile) ;
+    
+    Material_SetNbOfProperties(mat,n) ;
+  }
+    
+    
+  /* for compatibility with old version */
+  if(Material_GetModel(mat)) {
+    if(Material_GetNbOfEquations(mat) == 0) {
+      Material_SetNbOfEquations(mat,mat->neq) ;
+    }
+  }
+  mat->nc = Material_GetNbOfCurves(mat) ;
+    
+    
+  if(!Material_GetModel(mat)) {
+    Message_FatalError("Material_Scan: Model not known") ;
+  }
+}
+#endif
 
 
 
@@ -267,13 +348,13 @@ int  (Material_ReadProperties)(Material_t* material,DataFile_t* datafile)
 
 
 
-#if 1
 void (Material_ScanProperties)(Material_t* mat,DataFile_t* datafile,int (*pm)(const char*))
 /** Read the material properties in the string of the file content */
 {
   int    nd = Material_GetNbOfProperties(mat) ;
   short int    cont = 1 ;
   
+  if(!datafile) return;
 
   while(cont) {
     char   mot[Material_MaxLengthOfKeyWord] = {'\n'} ;
@@ -350,133 +431,6 @@ void (Material_ScanProperties)(Material_t* mat,DataFile_t* datafile,int (*pm)(co
     
   }
 
-  Material_GetNbOfProperties(mat) = nd ;
+  Material_SetNbOfProperties(mat,nd) ;
   return ;
 }
-#endif
-
-
-
-#if 0
-void (Material_ScanProperties1)(Material_t* mat,FILE *ficd,int (*pm)(const char*),int nd)
-/** Read the material properties in the stream file ficd */
-{
-  int    id = 0,ic = 0 ;
-  
-  if(!ficd) return ;
-  
-  Material_GetNbOfProperties(mat)  += nd ;
-  /* mat->nc = 0 ; */
-
-  while(id < nd) {
-    char   mot[Material_MaxLengthOfKeyWord] ;
-    char   line[Material_MaxLengthOfTextLine] ;
-    int long pos = ftell(ficd) ;
-
-    if(!fgets(line,sizeof(line),ficd)) arret("Material_ScanProperties1 (1) : erreur ou fin de fichier") ;
-    sscanf(line," %[^= ] =",mot) ;
-
-    if(!strncasecmp(mot,"courbes",6)) {
-      do { /* pour lire plusieurs fois "Courbes" */
-        Curves_t* curves = Material_GetCurves(mat) ;
-        int i = Curves_ReadCurves(curves,line) ;
-      
-        if(Curves_GetNbOfCurves(curves) > Material_MaxNbOfCurves) {
-          arret("Material_ScanProperties1 (2) : trop de courbes") ;
-        }
-
-        /* Material_GetNbOfCurves(mat) += i ; */
-        ic      += i ;
-        if(ic == i) id++ ; /* on incremente qu'une fois id */
-        /* position dans le fichier */
-        pos = ftell(ficd) ;
-        if(!fgets(line,sizeof(line),ficd)) arret("Material_ScanProperties1 (2) : erreur ou fin de fichier") ;
-        sscanf(line," %[^= ] =",mot) ;
-      } while(!strncasecmp(mot,"courbes",6)) ;
-      /* on retourne a la ligne precedente */
-      fseek(ficd,pos,SEEK_SET) ;
-
-    } else if(!strncasecmp(mot,"Method",6)) {
-      char   *p = strchr(line,'=') + 1 ;
-      sscanf(p,"%s",Material_GetMethod(mat)) ;
-  
-    } else {
-      char   *p = strchr(line,'=') + 1 ;
-      int    i = (*pm)(mot) ;
-
-      if(i >= 0 && i < nd) {
-        sscanf(p,"%lf",Material_GetProperty(mat) + i) ;
-      } else if(i >= nd) {
-        sprintf(line,"Material_ScanProperties1 (3) : \"%s\" ne peut etre stockee",mot) ; 
-        arret(line) ;
-      } else {
-        /* on retourne a la ligne precedente */
-        fseek(ficd,pos,SEEK_SET) ;
-        return ;
-      }
-      id++ ;
-    }
-  }
-}
-
-
-
-void (Material_ScanProperties2)(Material_t* mat,FILE *ficd,int (*pm)(const char*),int nd,int nc)
-/** Read the material properties in the stream file ficd */
-{
-  int    ic = 0,id = 0 ;
-  
-  if(!ficd) return ;
-  
-  Material_GetNbOfProperties(mat) += nd ;
-  /* mat->nc = 0 ; */
-
-  while(id < nd || ic < nc) {
-    char   mot[Material_MaxLengthOfKeyWord] ;
-    char   line[Material_MaxLengthOfTextLine] ;
-    int long pos = ftell(ficd) ;
-
-    if(!fgets(line,sizeof(line),ficd)) arret("Material_ScanProperties2 (1) : erreur ou fin de fichier") ;
-    sscanf(line," %[^= ] =",mot) ;
-
-    if(!strncasecmp(mot,"Courbes",6)) {
-      Curves_t* curves = Material_GetCurves(mat) ;
-      int i = Curves_ReadCurves(curves,line) ;
-      
-      if(Curves_GetNbOfCurves(curves) > Material_MaxNbOfCurves) {
-        arret("Material_ScanProperties2 (2) : trop de courbes") ;
-      }
-
-      if(ic >= nc) arret("Material_ScanProperties2 (2) : trop de courbe donnees") ;
-
-      /* Material_GetNbOfCurves(mat) += i ; */
-      ic      += i ;
-
-    } else if(!strncasecmp(mot,"Method",6)) {
-      char   *p = strchr(line,'=') + 1 ;
-      sscanf(p,"%s",Material_GetMethod(mat)) ;
-      
-    } else {
-      char   *p = strchr(line,'=') + 1 ;
-      int    i = (*pm)(mot) ;
-
-      if(id >= nd) arret("Material_ScanProperties2 (3) : trop de proprietes donnees") ;
-
-      if(i >= 0 && i < nd) sscanf(p,"%lf",Material_GetProperty(mat) + i) ;
-      else if(i >= nd) {
-        sprintf(line,"Material_ScanProperties2 (4) : \"%s\" ne peut etre stockee",mot) ; 
-        arret(line) ;
-      } else {
-        if(ic < nc - 1) {
-          sprintf(line,"Material_ScanProperties2 (5) : il y a des courbes non lues") ; 
-          arret(line) ;
-        }
-        /* on retourne a la ligne precedente */
-        fseek(ficd,pos,SEEK_SET) ;
-        return ;
-      }
-      id++ ;
-    }
-  }
-}
-#endif

@@ -20,6 +20,7 @@
 
 #if defined (HAVE_SUPERLU) || defined (HAVE_SUPERLUMT) || defined (HAVE_SUPERLUDIST)
   #define SUPERLU
+  #include "superlu.h"
   #include "SuperLUFormat.h"
 #else
   #undef SUPERLU
@@ -120,7 +121,7 @@ Matrix_t*   (Matrix_Create)(Mesh_t* mesh,Options_t* options,unsigned short int c
       {
         Context_t* ctx = Options_GetContext(options) ;
         CommandLine_t* cmd = Context_GetCommandLine(ctx) ;
-        int argc = CommandLine_GetNbOfArg(cmd) ;
+        int argc = CommandLine_GetNbOfArgs(cmd) ;
         char** argv = CommandLine_GetArg(cmd) ;
         const char help[] = "Matrix storage format\n\n" ;
         
@@ -165,7 +166,7 @@ void (Matrix_Delete)(void* self)
     int* rowperm = Matrix_GetRowPermutation(a) ;
     
     if(rowperm) {
-      free(rowperm) ;
+      Mry_Free(rowperm) ;
     }
   }
   
@@ -173,7 +174,7 @@ void (Matrix_Delete)(void* self)
     int* colperm = Matrix_GetColumnPermutation(a) ;
     
     if(colperm) {
-      free(colperm) ;
+      Mry_Free(colperm) ;
     }
   }
 
@@ -187,7 +188,7 @@ void (Matrix_Delete)(void* self)
     
       if(askl) {
         LDUSKLFormat_Delete(askl) ;
-        free(askl) ;
+        Mry_Free(askl) ;
       }
     
     /* SuperLU format */
@@ -197,7 +198,7 @@ void (Matrix_Delete)(void* self)
     
       if(aslu) {
         SuperLUFormat_Delete(aslu) ;
-        free(aslu) ;
+        Mry_Free(aslu) ;
       }
     #endif
   
@@ -206,7 +207,7 @@ void (Matrix_Delete)(void* self)
     
       if(ac) {
         CoordinateFormat_Delete(ac) ;
-        free(ac) ;
+        Mry_Free(ac) ;
       }
 
     #ifdef HAVE_PETSC
@@ -215,7 +216,7 @@ void (Matrix_Delete)(void* self)
     
       if(petscaij) {
         PetscAIJFormat_Delete(petscaij) ;
-        free(petscaij) ;
+        Mry_Free(petscaij) ;
       }
     #endif
 
@@ -230,7 +231,7 @@ void (Matrix_Delete)(void* self)
 
     if(msf) {
       MatrixStorageFormat_Delete(msf) ;
-      free(msf) ;
+      Mry_Free(msf) ;
     }
   }
   
@@ -239,7 +240,7 @@ void (Matrix_Delete)(void* self)
     
     if(genericwork) {
       GenericData_Delete(genericwork) ;
-      free(genericwork) ;
+      Mry_Free(genericwork) ;
       Matrix_GetGenericWorkSpace(a) = NULL ;
     }
   }

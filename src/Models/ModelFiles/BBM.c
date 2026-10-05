@@ -11,7 +11,7 @@
 #define TITLE "Barcelona Basic Model for unsaturated soils (2023)"
 #define AUTHORS "Eizaguirre-Dangla"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 
 /* Nb of equations */
@@ -233,7 +233,7 @@ int SetModelProp(Model_t* model)
   int i ;
   
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */
   Model_CopyNameOfEquation(model,E_liq,"liq") ;
@@ -247,7 +247,7 @@ int SetModelProp(Model_t* model)
     Model_CopyNameOfUnknown(model,U_u + i,name_unk[i]) ;
   }
   
-  Model_GetComputePropertyIndex(model) = pm ;
+  Model_SetComputePropertyIndex(model,pm) ;
     
   return(0) ;
 }

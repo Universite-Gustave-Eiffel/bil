@@ -8,6 +8,8 @@
 #include <assert.h>
 #include <math.h>
 
+#include "superlu.h"
+
 #include "Solver.h"
 #include "Message.h"
 #include "Matrix.h"
@@ -15,8 +17,6 @@
 
 #include "SuperLUMethod.h"
 #include "SuperLUFormat.h"
-
-#include "superlu.h"
 
 
 int   SuperLUMethod_Solve(Solver_t* solver)

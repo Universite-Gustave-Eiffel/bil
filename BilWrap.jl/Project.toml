@@ -1,0 +1,11 @@
+name = "BilWrap"
+uuid = "3629d3ef-4bc6-4fd8-817e-ad85c743e085"
+version = "0.1.0"
+authors = ["Patrick Dangla <patrick.dangla@univ-eiffel.fr>"]
+
+[deps]
+CxxWrap = "1f15a43c-97ca-5a2a-ae31-89f07a497df4"
+
+[compat]
+julia = "1.6, 1"
+CxxWrap = "0.14, 0.15"

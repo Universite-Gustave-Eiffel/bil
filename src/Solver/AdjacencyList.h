@@ -10,6 +10,8 @@ extern "C" {
 struct AdjacencyList_t; //typedef struct AdjacencyList_t AdjacencyList_t ;
 
 
+#include <stdio.h>
+
 extern AdjacencyList_t* (AdjacencyList_Create)(size_t,unsigned short int*) ;
 extern void             (AdjacencyList_Delete)(void*) ;
 
@@ -35,7 +37,6 @@ extern void             (AdjacencyList_Delete)(void*) ;
         (AdjacencyList_GetNbOfNeighbors(A) < AdjacencyList_GetMaxNbOfNeighbors(A))
 
 
-#include <stdio.h>
 
 struct AdjacencyList_t {
   unsigned short int  MaxNbOfNeighbors;

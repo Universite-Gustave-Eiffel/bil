@@ -14,14 +14,14 @@
 #include "TextFile.h"
 
 
-TextFile_t*   (TextFile_Create)(const char* filename)
+TextFile_t*   (TextFile_New)(const char* filename)
 {
   TextFile_t* textfile   = (TextFile_t*) Mry_New(TextFile_t) ;
   
 
   /* Initialization */
   {
-    TextFile_GetFileStream(textfile) = NULL ;
+    TextFile_SetFileStream(textfile,NULL) ;
   }
   
 
@@ -29,14 +29,15 @@ TextFile_t*   (TextFile_Create)(const char* filename)
   {
     char* name = (char*) Mry_New(char,TextFile_MaxLengthOfFileName) ;
     
+    TextFile_SetFileName(textfile,name) ;
+    strcpy(name,"\0") ;
+    
     if(filename) {
       if(strlen(filename) > TextFile_MaxLengthOfFileName) {
-        arret("TextFile_Create(3)") ;
+        arret("TextFile_New(3)") ;
       }
       strcpy(name,filename) ;
     }
-    
-    TextFile_GetFileName(textfile) = name ;
   }
   
   
@@ -44,17 +45,13 @@ TextFile_t*   (TextFile_Create)(const char* filename)
   {
     fpos_t* pos = (fpos_t*) Mry_New(fpos_t) ;
     
-    TextFile_GetFilePosition(textfile) = pos ;
+    TextFile_SetFilePosition(textfile,pos) ;
   }
   
   
   /* The pointer to the file content, intialized to NULL by default. */
   {
     TextFile_SetFileContent(textfile,NULL) ;
-    //TextFile_GetPreviousPositionInString(textfile) = 0 ;
-    //TextFile_GetCurrentPositionInString(textfile) = 0 ;
-    //TextFile_GetPreviousPositionInFileContent(textfile) = NULL ;
-    //TextFile_GetCurrentPositionInFileContent(textfile) = NULL ;
   }
   
   return(textfile) ;
@@ -65,36 +62,35 @@ void (TextFile_Delete)(void* self)
 {
   TextFile_t* textfile = (TextFile_t*) self ;
   
-  TextFile_CloseFile(textfile) ;
+  if(textfile) {
+    TextFile_CloseFile(textfile) ;
   
-  {
-    char* name = TextFile_GetFileName(textfile) ;
+    {
+      char* name = TextFile_GetFileName(textfile) ;
     
-    if(name) {
-      free(name) ;
+      if(name) {
+        Mry_Free(name) ;
+        TextFile_SetFileName(textfile,NULL) ;
+      }
     }
-    
-    TextFile_GetFileName(textfile) = NULL ;
-  }
   
-  {
-    fpos_t* pos = TextFile_GetFilePosition(textfile) ;
+    {
+      fpos_t* pos = TextFile_GetFilePosition(textfile) ;
     
-    if(pos) {
-      free(pos) ;
+      if(pos) {
+        Mry_Free(pos) ;
+        TextFile_SetFilePosition(textfile,NULL) ;
+      }
     }
-    
-    TextFile_GetFilePosition(textfile) = NULL ;
-  }
   
-  {
-    char* c = TextFile_GetFileContent(textfile) ;
+    {
+      char* c = TextFile_GetFileContent(textfile) ;
     
-    if(c) {
-      free(c) ;
+      if(c) {
+        Mry_Free(c) ;
+        TextFile_SetFileContent(textfile,NULL) ;
+      }
     }
-    
-    TextFile_SetFileContent(textfile,NULL) ;
   }
 }
 
@@ -129,7 +125,7 @@ FILE* (TextFile_OpenFile)(TextFile_t* textfile,const char* mode)
   
   str = fopen(filename,mode) ;
   
-  TextFile_GetFileStream(textfile) = str ;
+  TextFile_SetFileStream(textfile,str) ;
     
   if(!str) {
     Message_RuntimeError("TextFile_OpenFile: failed to open %s\n",filename) ;
@@ -147,7 +143,7 @@ void (TextFile_CloseFile)(TextFile_t* textfile)
   
   fclose(str) ;
   
-  TextFile_GetFileStream(textfile) = NULL ;
+  TextFile_SetFileStream(textfile,NULL) ;
 }
 
 
@@ -172,8 +168,7 @@ void (TextFile_StoreFilePosition)(TextFile_t* textfile)
     arret("TextFile_StoreFilePosition") ;
   }
   
-  //TextFile_GetPreviousPositionInString(textfile) = TextFile_GetCurrentPositionInString(textfile) ;
-  TextFile_GetPreviousPositionInFileContent(textfile) = TextFile_GetCurrentPositionInFileContent(textfile) ;
+  TextFile_SetPreviousPositionInFileContent(textfile,TextFile_GetCurrentPositionInFileContent(textfile)) ;
 }
 
 
@@ -189,8 +184,7 @@ void (TextFile_MoveToStoredFilePosition)(TextFile_t* textfile)
     arret("TextFile_MoveToStoredFilePosition") ;
   }
   
-  //TextFile_GetCurrentPositionInString(textfile) = TextFile_GetPreviousPositionInString(textfile) ;
-  TextFile_GetCurrentPositionInFileContent(textfile) = TextFile_GetPreviousPositionInFileContent(textfile) ;
+  TextFile_SetCurrentPositionInFileContent(textfile,TextFile_GetPreviousPositionInFileContent(textfile)) ;
 }
 
 
@@ -214,7 +208,6 @@ char* (TextFile_ReadLineFromCurrentFilePositionInString)(TextFile_t* textfile,ch
   /* Reads a non empty line from the current position of the string */
   do {
     char* cur = TextFile_GetCurrentPositionInFileContent(textfile) ;
-    //char* cur = beg + TextFile_GetCurrentPositionInString(textfile) ;
     char* eol = String_FindEndOfLine(cur) ;
     char* nex = (eol) ? eol + 1 : end ;
     ptrdiff_t ndif = nex - cur;
@@ -232,9 +225,7 @@ char* (TextFile_ReadLineFromCurrentFilePositionInString)(TextFile_t* textfile,ch
       c = line ;
       line[n1] = '\0' ;
     
-      //TextFile_GetCurrentPositionInString(textfile) = cur1 - beg ;
-      //TextFile_GetCurrentPositionInString(textfile) += n1 ;
-      TextFile_GetCurrentPositionInFileContent(textfile) += n1 ;
+      TextFile_SetCurrentPositionInFileContent(textfile,TextFile_GetCurrentPositionInFileContent(textfile) + n1) ;
     }
     
     /* Eliminate the first blank characters */
@@ -407,7 +398,7 @@ char* (TextFile_StoreFileContent)(TextFile_t* textfile)
   {
     char* content = TextFile_GetFileContent(textfile) ;
     
-    free(content) ;
+    Mry_Free(content) ;
     
     TextFile_SetFileContent(textfile,NULL) ;
   }

@@ -11,7 +11,7 @@
 #define TITLE "Plasticity with hardening (2017)"
 #define AUTHORS "Dangla"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 
 /* Nb of equations */
@@ -97,7 +97,7 @@ static int     plasticmodel ;
          } while(0)
 
 
-#define GetProperty(a)      Element_GetPropertyValue(el,a)
+#define GetMaterialProperty(a)      Element_GetPropertyValue(el,a)
 
 #define ItIsPeriodic  (Geometry_IsPeriodic(Element_GetGeometry(el)))
 
@@ -209,8 +209,8 @@ double* MacroGradient(Element_t* el,double t)
   {
     Functions_t* fcts = Material_GetFunctions(Element_GetMaterial(el)) ;
     Function_t*  fct = Functions_GetFunction(fcts) ;
-    int nf = Functions_GetNbOfFunctions(fcts) ;
-    double* fctindex = &GetProperty("macro-fctindex") ;
+    size_t nf = Functions_GetNbOfFunctions(fcts) ;
+    double* fctindex = &GetMaterialProperty("macro-fctindex") ;
     int i ;
     
     for(i = 0 ; i < 9 ; i++) {
@@ -225,7 +225,7 @@ double* MacroGradient(Element_t* el,double t)
   }
   
   {
-    double* g = &GetProperty("macro-gradient") ;
+    double* g = &GetMaterialProperty("macro-gradient") ;
     int i ;
     
     for(i = 0 ; i < 9 ; i++) {
@@ -259,10 +259,10 @@ double* MacroStrain(Element_t* el,double t)
 
 void GetProperties(Element_t* el,double t)
 {
-  gravity = GetProperty("gravity") ;
-  rho_s   = GetProperty("rho_s") ;
-  sig0    = &GetProperty("sig0") ;
-  //hardv0  = GetProperty("hardv0") ;
+  gravity = GetMaterialProperty("gravity") ;
+  rho_s   = GetMaterialProperty("rho_s") ;
+  sig0    = &GetMaterialProperty("sig0") ;
+  //hardv0  = GetMaterialProperty("hardv0") ;
   
   {
     int id = SharedMS_CurrentThreadId ;
@@ -294,7 +294,7 @@ int SetModelProp(Model_t* model)
   int i ;
   
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */
   for(i = 0 ; i < dim ; i++) {
@@ -310,7 +310,7 @@ int SetModelProp(Model_t* model)
     Model_CopyNameOfUnknown(model,U_DISP + i,name_unk) ;
   }
   
-  Model_GetComputePropertyIndex(model) = pm ;
+  Model_SetComputePropertyIndex(model,pm) ;
   
   //Model_GetNbOfVariables(model) = NbOfVariables ;
   //Model_GetComputeSecondaryVariables(model) = ComputeSecondaryVariables ;

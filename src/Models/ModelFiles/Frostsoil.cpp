@@ -16,7 +16,7 @@
 #define TITLE "Frost actions in soil"
 #define AUTHORS "Li-Dangla"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 
 /* Nb of equations of the model */
@@ -421,27 +421,27 @@ static void    GetProperties(Element_t*,double) ;
 void GetProperties(Element_t* el,double t)
 {
 /* To retrieve the material properties */
-#define GetProperty(a)   (Element_GetProperty(el)[pm(a)])
-  param.Gravity                    = GetProperty("gravity") ;
-  param.SolidSkeletonMassDensity   = GetProperty("rho_s") ;
-  param.Porosity                   = GetProperty("porosity") ;
-  param.IntrinsicPermeability      = GetProperty("k_int") ;
-  param.SolidVolumetricHeat        = GetProperty("C_s") ;
-  param.SolidThermalConductivity   = GetProperty("lam_s") ;
-  param.SolidMatrixThermalDilation = GetProperty("alpha_s") ;
-  param.ReferencePressure          = GetProperty("p0") ;
-  param.ReferenceTemperature       = GetProperty("T0") ;
-  param.YoungModulus               = GetProperty("Young") ;
-  param.PoissonRatio               = GetProperty("Poisson") ;
-  param.BiotCoefficient            = GetProperty("Biot") ;
+#define GetMaterialProperty(a)   (Element_GetProperty(el)[pm(a)])
+  param.Gravity                    = GetMaterialProperty("gravity") ;
+  param.SolidSkeletonMassDensity   = GetMaterialProperty("rho_s") ;
+  param.Porosity                   = GetMaterialProperty("porosity") ;
+  param.IntrinsicPermeability      = GetMaterialProperty("k_int") ;
+  param.SolidVolumetricHeat        = GetMaterialProperty("C_s") ;
+  param.SolidThermalConductivity   = GetMaterialProperty("lam_s") ;
+  param.SolidMatrixThermalDilation = GetMaterialProperty("alpha_s") ;
+  param.ReferencePressure          = GetMaterialProperty("p0") ;
+  param.ReferenceTemperature       = GetMaterialProperty("T0") ;
+  param.YoungModulus               = GetMaterialProperty("Young") ;
+  param.PoissonRatio               = GetMaterialProperty("Poisson") ;
+  param.BiotCoefficient            = GetMaterialProperty("Biot") ;
   
   param.Thickness = 1 ;
   param.YoungFraction  = 1 ;
   param.CapillaryPressureFraction = 1 ;
   
   if(Element_HasZeroThickness(el)) {
-    param.Thickness                 = GetProperty("thickness") ;
-    param.YoungFraction             = GetProperty("YoungFraction") ;
+    param.Thickness                 = GetMaterialProperty("thickness") ;
+    param.YoungFraction             = GetMaterialProperty("YoungFraction") ;
     param.CapillaryPressureFraction = 10 ;
 
     param.YoungModulus               /= param.Thickness ;
@@ -452,7 +452,7 @@ void GetProperties(Element_t* el,double t)
   
   elasty  = Element_FindMaterialData(el,"Elasticity") ;
   cijkl   = Elasticity_GetStiffnessTensor(elasty) ;
-#undef GetProperty
+#undef GetMaterialProperty
 }
 
 
@@ -543,7 +543,7 @@ int SetModelProp(Model_t* model)
   int i ;
 
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */
   Model_CopyNameOfEquation(model,E_MASS,"mass") ;
@@ -565,8 +565,8 @@ int SetModelProp(Model_t* model)
     Model_CopyNameOfUnknown(model,U_MECH + i,name_unk[i]) ;
   }
   
-  Model_GetComputePropertyIndex(model) = &pm ;
-  Model_GetComputeMaterialProperties(model) = &GetProperties;
+  Model_SetComputePropertyIndex(model,&pm);
+  Model_SetComputeMaterialProperties(model,&GetProperties);
   
   Model_GetSequentialIndexOfUnknown(model)[E_THER] = 0 ;
   Model_GetSequentialIndexOfUnknown(model)[E_MASS] = 1 ;

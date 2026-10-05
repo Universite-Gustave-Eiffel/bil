@@ -13,7 +13,7 @@ struct TextFile_t; //typedef struct TextFile_t       TextFile_t ;
 
 #include <stdio.h>
 
-extern TextFile_t*     (TextFile_Create)(const char*) ;
+extern TextFile_t*     (TextFile_New)(const char* = nullptr) ;
 extern void            (TextFile_Delete)(void*) ;
 extern FILE*           (TextFile_OpenFile)(TextFile_t*,const char*) ;
 extern void            (TextFile_CloseFile)(TextFile_t*) ;
@@ -38,11 +38,9 @@ extern char*           (TextFile_StoreFileContent)(TextFile_t*) ;
 #define TextFile_Rewind(TF) \
         do { \
           rewind(TextFile_GetFileStream(TF)) ; \
-          TextFile_GetPreviousPositionInFileContent(TF) = TextFile_GetFileContent(TF);\
-          TextFile_GetCurrentPositionInFileContent(TF) = TextFile_GetFileContent(TF);\
+          TextFile_SetPreviousPositionInFileContent(TF,TextFile_GetFileContent(TF));\
+          TextFile_SetCurrentPositionInFileContent(TF,TextFile_GetFileContent(TF));\
         } while(0)
-        
-          //TextFile_GetCurrentPositionInString(TF) = 0 ;
 
 
 #define TextFile_DoesNotExist(TF) \
@@ -78,58 +76,32 @@ extern char*           (TextFile_StoreFileContent)(TextFile_t*) ;
 
 
 
-#define TextFile_GetFileName(TF)          ((TF)->filename)
-#define TextFile_GetFileStream(TF)        ((TF)->stream)
-#define TextFile_GetFilePosition(TF)      ((TF)->pos)
-#define TextFile_GetFileContent(TF)       ((TF)->filecontent)
-#define TextFile_GetPreviousPositionInString(TF)   ((TF)->prestrpos)
-#define TextFile_GetCurrentPositionInString(TF)    ((TF)->curstrpos)
-#define TextFile_GetPreviousPositionInFileContent(TF)   ((TF)->prepos)
-#define TextFile_GetCurrentPositionInFileContent(TF)    ((TF)->curpos)
+#define TextFile_GetFileName(TF)          ((TF)->GetFileName())
+#define TextFile_GetFileStream(TF)        ((TF)->GetFileStream())
+#define TextFile_GetFilePosition(TF)      ((TF)->GetFilePosition())
+#define TextFile_GetFileContent(TF)       ((TF)->GetFileContent())
+#define TextFile_GetPreviousPositionInFileContent(TF)   ((TF)->GetPreviousPositionInFileContent())
+#define TextFile_GetCurrentPositionInFileContent(TF)    ((TF)->GetCurrentPositionInFileContent())
 
 
-/*
-#define TextFile_GetCurrentPositionInFileContent(TF) \
-        (TextFile_GetFileContent(TF) + TextFile_GetCurrentPositionInString(TF))
-*/
+#define TextFile_SetFileName(TF,A)          ((TF)->SetFileName(A))
+#define TextFile_SetFileStream(TF,A)        ((TF)->SetFileStream(A))
+#define TextFile_SetFilePosition(TF,A)      ((TF)->SetFilePosition(A))
+#define TextFile_SetFileContent(TF,A)       ((TF)->SetFileContent(A))
+#define TextFile_SetPreviousPositionInFileContent(TF,A)   ((TF)->SetPreviousPositionInFileContent(A))
+#define TextFile_SetCurrentPositionInFileContent(TF,A)    ((TF)->SetCurrentPositionInFileContent(A))
 
-#define TextFile_SetCurrentPositionInFileContent(TF,C) \
-        do { \
-          TextFile_GetCurrentPositionInFileContent(TF) = (char*) C;\
-        } while(0)
-
-
-#define TextFile_SetFileContent(TF,C) \
-        do { \
-          TextFile_GetFileContent(TF) = (char*) C;\
-          TextFile_GetPreviousPositionInFileContent(TF) = (char*) C;\
-          TextFile_GetCurrentPositionInFileContent(TF) = (char*) C;\
-        } while(0)
-
-/*
-          ptrdiff_t TextFile_d = C - TextFile_GetFileContent(TF);\
-          TextFile_GetCurrentPositionInString(TF) = size_t ((TextFile_d > 0) ?  TextFile_d : 0);\
-*/
+#define TextFile_Set(TF,...)    ((TF)->Set(__VA_ARGS__))
 
 
-/*
-#define TextFile_SetCurrentPositionInString(TF,N) \
-        do { \
-          TextFile_GetCurrentPositionInString(TF) = N;\
-        } while(0)
-*/
+#include <stdexcept>
 
-
-
-
-
-//#include "Buffer.h"
-
-struct TextFile_t {           /* File */
-  char*     filename ;        /* Name of the file */
-  char*     filecontent ;
-  FILE*     stream ;          /* Current file stream if any */
-  fpos_t*   pos ;             /* Previous stored file position of the stream */
+struct TextFile_t {
+  private:
+  char*     _filename ;
+  char*     _filecontent ;
+  FILE*     _stream ;          /* Current file stream if any */
+  fpos_t*   _pos ;             /* Previous stored file position of the stream */
   //size_t    prestrpos ;       /* Previous position in the string file content */
   //size_t    curstrpos ;       /* Current position in the string file content */
   /* char*     line ;            *//* memory space for a line */
@@ -138,8 +110,34 @@ struct TextFile_t {           /* File */
   /* long int wcount ;           *//* Nb of words in file */
   /* long int lcount ;           *//* Nb of lines in file */
   /* int linelength ;            *//* Length of the longest line */
-  char*    prepos ;       /* Previous position in the file content */
-  char*    curpos ;       /* Current position in the file content */
+  char*    _prepos ;       /* Previous position in the file content */
+  char*    _curpos ;       /* Current position in the file content */
+
+  public:
+  char*    GetFileName(){return _filename ;}
+  char*    GetFileContent(){return _filecontent ;}
+  FILE*    GetFileStream(){return _stream ;}
+  fpos_t*  GetFilePosition(){return _pos ;}
+  char*    GetPreviousPositionInFileContent(){return _prepos ;}
+  char*    GetCurrentPositionInFileContent(){return _curpos ;}
+
+  void SetFileName(char* a){_filename = a;}
+  void SetFileContent(char* a){
+    _filecontent = a;
+    _prepos = a;
+    _curpos = a;
+  }
+  void SetFileStream(FILE* a){_stream = a;}
+  void SetFilePosition(fpos_t* a){_pos = a;}
+  void SetPreviousPositionInFileContent(char* a){_prepos = a;}
+  void SetCurrentPositionInFileContent(char* a){_curpos = a;}
+
+  void Set(char const* filename){
+    if(strlen(filename) > TextFile_MaxLengthOfFileName) {
+      throw std::length_error("TextFile_t::Set") ;
+    }
+    strcpy(GetFileName(),filename) ;
+  }
 } ;
 
 

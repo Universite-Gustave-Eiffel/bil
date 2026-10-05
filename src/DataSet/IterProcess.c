@@ -19,10 +19,12 @@
 
 
 
-IterProcess_t*  (IterProcess_New)(void)
+IterProcess_t*  (IterProcess_New)(ObVals_t* obvals)
 {
   IterProcess_t* iterprocess = (IterProcess_t*) Mry_New(IterProcess_t) ;
   
+  IterProcess_SetObVals(iterprocess,obvals) ;
+
   /* Iterations */
   {
     IterProcess_SetNbOfIterations(iterprocess,5) ;
@@ -45,10 +47,10 @@ IterProcess_t*  (IterProcess_New)(void)
 }
 
 
-
+#if 0
 IterProcess_t*  (IterProcess_Create)(DataFile_t* datafile,ObVals_t* obvals)
 {
-  IterProcess_t* iterprocess = IterProcess_New() ;
+  IterProcess_t* iterprocess = IterProcess_New(obvals) ;
   char* filecontent = DataFile_GetFileContent(datafile) ;
   char* c  = String_FindToken(filecontent,"ALGO,ITER,Iterative Process",",") ;
   
@@ -60,11 +62,6 @@ IterProcess_t*  (IterProcess_Create)(DataFile_t* datafile,ObVals_t* obvals)
   
   Message_Direct("Enter in %s","Iterative Process") ;
   Message_Direct("\n") ;
-
-
-
-  /* Objective variations */
-  IterProcess_SetObVals(iterprocess,obvals) ;
 
 
 
@@ -109,6 +106,120 @@ IterProcess_t*  (IterProcess_Create)(DataFile_t* datafile,ObVals_t* obvals)
 
 
   return(iterprocess) ;
+}
+#elseif 0
+IterProcess_t*  (IterProcess_Create)(DataFile_t* datafile,ObVals_t* obvals)
+{
+  IterProcess_t* iterprocess = IterProcess_New(obvals) ;
+  char* filecontent = DataFile_GetFileContent(datafile) ;
+  char* c  = String_FindToken(filecontent,"ALGO,ITER,Iterative Process",",") ;
+  int iter ;
+  double tol ;
+  int rep = 0 ;
+  
+  
+  if(!c) {
+    Message_FatalError("No Iterative Process") ;
+  }
+  
+  
+  Message_Direct("Enter in %s","Iterative Process") ;
+  Message_Direct("\n") ;
+
+
+  c = String_SkipLine(c) ;
+      
+  //DataFile_SetCurrentPositionInFileContent(datafile,c) ;
+  
+
+  /* Iterations */
+  {
+    int n = String_FindAndScanExp(c,"Iter",","," = %d",&iter) ;
+    
+    if(!n) {
+      arret("IterProcess_Create: no Iterations") ;
+    }
+  }
+    
+  /* Tolerance */
+  {
+    int n = String_FindAndScanExp(c,"Tol",","," = %lf",&tol) ;
+    
+    if(!n) {
+      arret("IterProcess_Create: no Tolerance") ;
+    }
+  }
+    
+  /* Repetition */
+  {
+    int n = String_FindAndScanExp(c,"Rep,Rec",","," = %d",&rep) ;
+  }
+
+  IterProcess_Set(iterprocess,iter,tol,rep);
+
+  return(iterprocess) ;
+}
+#else
+IterProcess_t*  (IterProcess_Create)(DataFile_t* datafile,ObVals_t* obvals)
+{
+  IterProcess_t* iterprocess = IterProcess_New(obvals) ;
+
+  IterProcess_Scan(iterprocess,datafile);
+
+  return(iterprocess) ;
+}
+#endif
+
+
+void  (IterProcess_Scan)(IterProcess_t* iterprocess,DataFile_t* datafile)
+{
+  char* filecontent = DataFile_GetFileContent(datafile) ;
+  char* c  = String_FindToken(filecontent,"ALGO,ITER,Iterative Process",",") ;
+  int iter ;
+  double tol ;
+  int rep = 0 ;
+  
+  
+  if(!c) {
+    Message_FatalError("No Iterative Process") ;
+  }
+  
+  
+  Message_Direct("Enter in %s","Iterative Process") ;
+  Message_Direct("\n") ;
+
+
+  c = String_SkipLine(c) ;
+      
+  //DataFile_SetCurrentPositionInFileContent(datafile,c) ;
+  
+
+  /* Iterations */
+  {
+    int n = String_FindAndScanExp(c,"Iter",","," = %d",&iter) ;
+    
+    if(!n) {
+      arret("IterProcess_Create: no Iterations") ;
+    }
+  }
+    
+  /* Tolerance */
+  {
+    int n = String_FindAndScanExp(c,"Tol",","," = %lf",&tol) ;
+    
+    if(!n) {
+      arret("IterProcess_Create: no Tolerance") ;
+    }
+  }
+    
+  /* Repetition */
+  {
+    int n = String_FindAndScanExp(c,"Rep,Rec",","," = %d",&rep) ;
+  }
+
+  IterProcess_Set(iterprocess,iter,tol,rep);
+
+  return ;
 }
 
 

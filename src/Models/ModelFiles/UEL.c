@@ -10,7 +10,7 @@
 #define TITLE   "Arbitrary Abaqus UEL model"
 #define AUTHORS "S.P.D."
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 /*
  * The numbers below are arbitrary and serve only as example
@@ -26,7 +26,7 @@
 
 
 /* To retrieve the material properties */
-#define GetProperty(a)   (Element_GetProperty(el)[pm(a)]) 
+#define GetMaterialProperty(a)   (Element_GetProperty(el)[pm(a)]) 
 
 
 /* Intern Functions */
@@ -74,26 +74,24 @@ int SetModelProp(Model_t* model)
   
   /** Names of these equations */
   {
-    int neq = Model_GetNbOfEquations(model) ;
-    int i ;
+    size_t neq = Model_GetNbOfEquations(model) ;
     
-    for(i = 0 ; i < neq ; i++) {
+    for(size_t i = 0 ; i < neq ; i++) {
       char name[100] ;
       
-      sprintf(name,"Equation_%d",i+1);
+      sprintf(name,"Equation_%lu",i+1);
       Model_CopyNameOfEquation(model,i,name) ;
     }
   }
   
   /** Names of the main (nodal) unknowns */
   {
-    int neq = Model_GetNbOfEquations(model) ;
-    int i ;
+    size_t neq = Model_GetNbOfEquations(model) ;
     
-    for(i = 0 ; i < neq ; i++) {
+    for(size_t i = 0 ; i < neq ; i++) {
       char name[100] ;
       
-      sprintf(name,"Unknown_%d",i+1);
+      sprintf(name,"Unknown_%lu",i+1);
       Model_CopyNameOfUnknown(model,i,name) ;
     }
   }
@@ -115,11 +113,11 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
     int neq = floor(Material_GetProperty(mat)[pm("neq")] + 0.5) ;
     
     if(neq) {
-      Material_GetNbOfEquations(mat) = neq ;
+      Material_SetNbOfEquations(mat,neq) ;
     } else {
       int dim = Material_GetDimension(mat) ;
       
-      Material_GetNbOfEquations(mat) = dim ;
+      Material_SetNbOfEquations(mat,dim) ;
     }
     
     SetModelProp(Material_GetModel(mat)) ;
@@ -142,7 +140,7 @@ int PrintModelProp(Model_t* model,FILE *ficd)
 /** Print the model properties 
  *  Return the nb of equations */
 {
-  int neq = Model_GetNbOfEquations(model) ;
+  size_t neq = Model_GetNbOfEquations(model) ;
   
   printf(TITLE) ;
   printf("\n") ;
@@ -181,12 +179,12 @@ int DefineElementProp(Element_t* el,IntFcts_t* intfcts)
 
   /** Define the length of tables */
   {
-    int nvi = GetProperty("nvi") ;
+    int nvi = GetMaterialProperty("nvi") ;
     
     Element_GetNbOfImplicitTerms(el) = nvi*NbOfIntPoints ;
   }
-  Element_GetNbOfExplicitTerms(el) = NVE*NbOfIntPoints ;
-  Element_GetNbOfConstantTerms(el) = NV0*NbOfIntPoints ;
+  Element_SetNbOfExplicitTerms(el,NVE*NbOfIntPoints) ;
+  Element_SetNbOfConstantTerms(el,NV0*NbOfIntPoints) ;
   
   return(0) ;
 }
@@ -433,7 +431,7 @@ int  ComputeOutputs(Element_t* el,double t,double* s,Result_t* r)
  *  Return the nb of views (scalar, vector or tensor) */
 {
   int neq          = Element_GetNbOfEquations(el) ;
-  int nvi          = GetProperty("nvi") ;
+  int nvi          = GetMaterialProperty("nvi") ;
   int NbOfOutputs  = neq + nvi ;
 
 

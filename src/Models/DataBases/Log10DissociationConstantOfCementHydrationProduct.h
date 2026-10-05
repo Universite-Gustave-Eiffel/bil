@@ -20,16 +20,17 @@ extern void Log10DissociationConstantOfCementHydrationProduct_PrintCEMDATA(doubl
         (Log10DissociationConstantOfCementHydrationProduct_##R(T))
 
 
-//#include "Log10DissociationConstantOfCementHydrationProduct_DEFAULT.h.in"
-//#include "Log10DissociationConstantOfCementHydrationProduct298_Cemdata18.h.in"
-#include "RefThermoDataBases/CEMDATA/Log10DissociationConstantOfCementHydrationProduct_CEMDATA18.h.in"
+#define LOG10DISSOCIATIONCONSTANTOFCEMENTHYDRATIONPRODUCT_CEMDATA18_IN_H
+#include "Log10DissociationConstantOfCementHydrationProduct_CEMDATA18.in.h"
+#undef LOG10DISSOCIATIONCONSTANTOFCEMENTHYDRATIONPRODUCT_CEMDATA18_IN_H
 
 
 #if 1
 /* Reactions written in a different way
  * ==================================== */
 
-#include "RefThermoDataBases/CEMDATA/Log10EquilibriumConstantOfHomogeneousReactionInWater_CEMDATA18.h.in"
+//#include "RefThermoDataBases/CEMDATA/Log10EquilibriumConstantOfHomogeneousReactionInWater_CEMDATA18.h.in"
+#include "Log10EquilibriumConstantOfHomogeneousReactionInWater_CEMDATA18.in.h"
 
 
 #define Log10DissociationConstantOfCementHydrationProduct_M075SH_3H__1d5Mg_2SiO2_4H2O(T)\

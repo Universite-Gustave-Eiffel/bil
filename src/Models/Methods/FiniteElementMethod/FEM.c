@@ -85,18 +85,18 @@ _INLINE_ void (FEM_Delete)(void* self)
 {
   FEM_t* fem = (FEM_t*) self ;
   
-  free(FEM_GetOutput(fem)) ;
+  Mry_Free(FEM_GetOutput(fem)) ;
   
-  free(FEM_GetInput(fem)) ;
+  Mry_Free(FEM_GetInput(fem)) ;
   
-  free(FEM_GetPointerToIntFct(fem)) ;
+  Mry_Free(FEM_GetPointerToIntFct(fem)) ;
   
   {
     Buffers_t* buf = FEM_GetBuffers(fem) ;
 
     if(buf) {
       Buffers_Delete(buf)  ;
-      free(buf) ;
+      Mry_Free(buf) ;
       FEM_SetBuffers(fem,NULL) ;
     }
   }
@@ -194,7 +194,7 @@ _INLINE_ double*  (FEM_ComputeStiffnessMatrix)(FEM_t* fem,IntFct_t* fi,const dou
   auto dim_h = IntFct_GetDimension(fi) ;
   size_t ndof = nn*dim ;
   double* weight = IntFct_GetWeight(fi) ;
-  Symmetry_t sym = Element_GetSymmetry(el) ;
+  Geometry_t* geom = Element_GetGeometry(el) ;
   size_t SizeNeeded = (sizeof(double))*ndof*ndof ;
   double* kr = (double*) FEM_AllocateInBuffer(fem,SizeNeeded) ;
   double* x[Element_MaxNbOfNodes] ;
@@ -245,14 +245,14 @@ _INLINE_ double*  (FEM_ComputeStiffnessMatrix)(FEM_t* fem,IntFct_t* fi,const dou
           double r[9] = {0,0,0,0,0,0,0,0,0} ;
           int i,j,k,l ;
 
-          if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+          if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
             double radius = zero ;
         
             for(i = 0 ; i < nf ; i++) radius += h[i]*x[i][0] ;
         
             a *= 2*M_PI*radius ;
         
-            if(Symmetry_IsSpherical(sym)) a *= 2*radius ;
+            if(Geometry_HasSphericalSymmetry(geom)) a *= 2*radius ;
           }
       
           /* */
@@ -311,14 +311,14 @@ _INLINE_ double*  (FEM_ComputeStiffnessMatrix)(FEM_t* fem,IntFct_t* fi,const dou
       int    i,j,k,l,r,s ;
     
       /* The radius in axisymmetrical or spherical case */
-      if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+      if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
         radius = zero ;
         
         for(i = 0 ; i < nf ; i++) radius += h[i]*x[i][0] ;
         
         a *= 2*M_PI*radius ;
         
-        if(Symmetry_IsSpherical(sym)) a *= 2*radius ;
+        if(Geometry_HasSphericalSymmetry(geom)) a *= 2*radius ;
       }
     
       /* JCJ(r,i,k,s) = J(r,j) * C(i,j,k,l) * J(s,l) */
@@ -337,7 +337,7 @@ _INLINE_ double*  (FEM_ComputeStiffnessMatrix)(FEM_t* fem,IntFct_t* fi,const dou
       }
     
       /* Axisymmmetrical case: 3 terms */
-      if(Symmetry_IsCylindrical(sym)) {
+      if(Geometry_HasCylindricalSymmetry(geom)) {
         /* 1.a JC(r,i) = J(r,j) * C(i,j,theta,theta) */
         for(r = 0 ; r < dim_h ; r++) for(i = 0 ; i < dim ; i++) {
           jc[r][i] = zero ;
@@ -366,7 +366,7 @@ _INLINE_ double*  (FEM_ComputeStiffnessMatrix)(FEM_t* fem,IntFct_t* fi,const dou
         }
       
       /* Spherical case: 3 terms */
-      } else if(Symmetry_IsSpherical(sym)) {
+      } else if(Geometry_HasSphericalSymmetry(geom)) {
         
         /* 1.a JC(r,i) = J(r,j) * (C(i,j,theta,theta) + C(i,j,phi,phi)) */
         for(r = 0 ; r < dim_h ; r++) for(i = 0 ; i < dim ; i++) {
@@ -428,7 +428,7 @@ _INLINE_ double*  (FEM_ComputeBiotMatrix)(FEM_t* fem,IntFct_t* fi,const double* 
   int np  = IntFct_GetNbOfPoints(fi) ;
   int nf  = IntFct_GetNbOfFunctions(fi) ;
   double* weight = IntFct_GetWeight(fi) ;
-  Symmetry_t sym = Element_GetSymmetry(el) ;
+  Geometry_t* geom = Element_GetGeometry(el) ;
   size_t nrow = nn*dim ;
   size_t ncol = nn ;
   size_t SizeNeeded = nrow*ncol*(sizeof(double)) ;
@@ -478,14 +478,14 @@ _INLINE_ double*  (FEM_ComputeBiotMatrix)(FEM_t* fem,IntFct_t* fi,const double* 
           double r[3] = {0,0,0} ;
           int i,j,l ;
 
-          if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+          if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
             double radius = zero ;
             
             for(i = 0 ; i < nf ; i++) radius += h[i]*x[i][0] ;
             
             a *= 2*M_PI*radius ;
             
-            if(Symmetry_IsSpherical(sym)) a *= 2*radius ;
+            if(Geometry_HasSphericalSymmetry(geom)) a *= 2*radius ;
           }
       
           /* 
@@ -545,11 +545,11 @@ _INLINE_ double*  (FEM_ComputeBiotMatrix)(FEM_t* fem,IntFct_t* fi,const double* 
       int    i,j,k,l ;
     
       /* cas axisymetrique ou spherique */
-      if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+      if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
         radius = zero ;
         for(i = 0 ; i < nf ; i++) radius += h[i]*x[i][0] ;
         a *= 2*M_PI*radius ;
-        if(Symmetry_IsSpherical(sym)) a *= 2*radius ;
+        if(Geometry_HasSphericalSymmetry(geom)) a *= 2*radius ;
       }
     
       /* JC(k,i) = J(k,j)*C(j,i) */
@@ -562,13 +562,13 @@ _INLINE_ double*  (FEM_ComputeBiotMatrix)(FEM_t* fem,IntFct_t* fi,const double* 
         KC(j*dim+i,l) += a*DH(j,k)*jc[k][i]*h[l] ;
       }
       /* cas axisymetrique: (r,z,theta) */
-      if(Symmetry_IsCylindrical(sym)) {
+      if(Geometry_HasCylindricalSymmetry(geom)) {
         /* KC(j,0,l) = H(j)/r*C(theta,theta)*H(l) */
         for(j = 0 ; j < nf ; j++) for(l = 0 ; l < nf ; l++) {
           KC(j*dim,l) += a*h[j]/radius*C(2,2)*h[l] ;
         }
       /* cas spherique: (r,theta,phi) */
-      } else if(Symmetry_IsSpherical(sym)) {
+      } else if(Geometry_HasSphericalSymmetry(geom)) {
         /* KC(j,0,l) = H(j)/r*(C(theta,theta)+C(phi,phi))*H(l) */
         for(j = 0 ; j < nf ; j++) for(l = 0 ; l < nf ; l++) {
           KC(j*dim,l) += a*h[j]/radius*(C(1,1)+C(2,2))*h[l] ;
@@ -601,7 +601,7 @@ _INLINE_ double* (FEM_ComputeMassMatrix)(FEM_t* fem,IntFct_t* fi,const double* c
   int nf  = IntFct_GetNbOfFunctions(fi) ;
   int dim_h = IntFct_GetDimension(fi) ;
   double* weight = IntFct_GetWeight(fi) ;
-  Symmetry_t sym = Element_GetSymmetry(el) ;
+  Geometry_t* geom = Element_GetGeometry(el) ;
   size_t SizeNeeded = nn*nn*(sizeof(double)) ;
   double* km = (double*) FEM_AllocateInBuffer(fem,SizeNeeded) ;
   double* x[Element_MaxNbOfNodes] ;
@@ -646,13 +646,13 @@ _INLINE_ double* (FEM_ComputeMassMatrix)(FEM_t* fem,IntFct_t* fi,const double* c
           int    i ;
     
           /* axisymetrical or spherical cases */
-          if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+          if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
             double radius = 0 ;
         
             for(i = 0 ; i < nf ; i++) radius += h[i]*x[i][0] ;
             
             a *= 2*M_PI*radius ;
-            if(Symmetry_IsSpherical(sym)) a *= 2*radius ;
+            if(Geometry_HasSphericalSymmetry(geom)) a *= 2*radius ;
           }
     
           for(i = 0 ; i < nf ; i++) {
@@ -689,8 +689,8 @@ _INLINE_ double* (FEM_ComputeMassMatrix)(FEM_t* fem,IntFct_t* fi,const double* c
       
       KM(0,0) = c[0] ;
       
-      if(Symmetry_IsCylindrical(sym)) KM(0,0) *= 2*M_PI*radius ;
-      else if(Symmetry_IsSpherical(sym)) KM(0,0) *= 4*M_PI*radius*radius ;
+      if(Geometry_HasCylindricalSymmetry(geom)) KM(0,0) *= 2*M_PI*radius ;
+      else if(Geometry_HasSphericalSymmetry(geom)) KM(0,0) *= 4*M_PI*radius*radius ;
     } else {
       arret("FEM_ComputeMassMatrix: impossible") ;
     }
@@ -707,13 +707,13 @@ _INLINE_ double* (FEM_ComputeMassMatrix)(FEM_t* fem,IntFct_t* fi,const double* c
       int    i ;
     
       /* axisymetrical or spherical cases */
-      if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+      if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
         double radius = 0 ;
         
         for(i = 0 ; i < nf ; i++) radius += h[i]*x[i][0] ;
         
         a *= 2*M_PI*radius ;
-        if(Symmetry_IsSpherical(sym)) a *= 2*radius ;
+        if(Geometry_HasSphericalSymmetry(geom)) a *= 2*radius ;
       }
     
       for(i = 0 ; i < nf ; i++) {
@@ -785,7 +785,7 @@ _INLINE_ double*  (FEM_ComputeConductionMatrix)(FEM_t* fem,IntFct_t* fi,const do
   int nf  = IntFct_GetNbOfFunctions(fi) ;
   int dim_h = IntFct_GetDimension(fi) ;
   double* weight = IntFct_GetWeight(fi) ;
-  Symmetry_t sym = Element_GetSymmetry(el) ;
+  Geometry_t* geom = Element_GetGeometry(el) ;
   size_t SizeNeeded = nn*nn*(sizeof(double)) ;
   double* kc = (double*) FEM_AllocateInBuffer(fem,SizeNeeded) ;
   double* x[Element_MaxNbOfNodes] ;
@@ -840,14 +840,14 @@ _INLINE_ double*  (FEM_ComputeConductionMatrix)(FEM_t* fem,IntFct_t* fi,const do
           int    i,j,k,l ;
     
           /* axisymetrical or spherical cases */
-          if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+          if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
             double radius = 0 ;
         
             for(i = 0 ; i < nf ; i++) radius += h[i]*x[i][0] ;
             
             a *= 2*M_PI*radius ;
             
-            if(Symmetry_IsSpherical(sym)) a *= 2*radius ;
+            if(Geometry_HasSphericalSymmetry(geom)) a *= 2*radius ;
           }
     
           /* jcj = J(i,k)*C(k,l)*J(j,l) */
@@ -896,13 +896,13 @@ _INLINE_ double*  (FEM_ComputeConductionMatrix)(FEM_t* fem,IntFct_t* fi,const do
       int    i,j,k,l ;
     
       /* axisymetrical or spherical cases */
-      if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+      if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
         double radius = 0 ;
         
         for(i = 0 ; i < nf ; i++) radius += h[i]*x[i][0] ;
         
         a *= 2*M_PI*radius ;
-        if(Symmetry_IsSpherical(sym)) a *= 2*radius ;
+        if(Geometry_HasSphericalSymmetry(geom)) a *= 2*radius ;
       }
     
       /* jcj = J(i,k)*C(k,l)*J(j,l) */
@@ -1442,7 +1442,7 @@ _INLINE_ double*   (FEM_ComputeBodyForceResidu)(FEM_t* fem,IntFct_t* intfct,cons
   int np = IntFct_GetNbOfPoints(intfct) ;
   int dim_h = IntFct_GetDimension(intfct) ;
   double* weight = IntFct_GetWeight(intfct) ;
-  Symmetry_t sym = Element_GetSymmetry(el) ;
+  Geometry_t* geom = Element_GetGeometry(el) ;
   size_t SizeNeeded = nn*(sizeof(double)) ;
   double* r = (double*) FEM_AllocateInBuffer(fem,SizeNeeded) ;
   double* x[Element_MaxNbOfNodes] ;
@@ -1491,14 +1491,14 @@ _INLINE_ double*   (FEM_ComputeBodyForceResidu)(FEM_t* fem,IntFct_t* intfct,cons
           int i ;
     
           /* cas axisymetrique ou shperique */
-          if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+          if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
             double radius = zero ;
       
             for(i = 0 ; i < nf ; i++) radius += h[i]*x[i][0] ;
             
             a *= 2*M_PI*radius ;
             
-            if(Symmetry_IsSpherical(sym)) a *= 2*radius ;
+            if(Geometry_HasSphericalSymmetry(geom)) a *= 2*radius ;
           }
     
           /* R(i) = F*H(i) */
@@ -1524,8 +1524,8 @@ _INLINE_ double*   (FEM_ComputeBodyForceResidu)(FEM_t* fem,IntFct_t* intfct,cons
       
       r[0] = f[0] ;
       
-      if(Symmetry_IsCylindrical(sym)) r[0] *= 2*M_PI*radius ;
-      else if(Symmetry_IsSpherical(sym)) r[0] *= 4*M_PI*radius*radius ;
+      if(Geometry_HasCylindricalSymmetry(geom)) r[0] *= 2*M_PI*radius ;
+      else if(Geometry_HasSphericalSymmetry(geom)) r[0] *= 4*M_PI*radius*radius ;
       
     } else {
       arret("FEM_ComputeBodyForceResidu: impossible") ;
@@ -1546,13 +1546,13 @@ _INLINE_ double*   (FEM_ComputeBodyForceResidu)(FEM_t* fem,IntFct_t* intfct,cons
       int i ;
     
       /* cas axisymetrique ou shperique */
-      if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+      if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
         double radius = zero ;
       
         for(i = 0 ; i < nf ; i++) radius += h[i]*x[i][0] ;
         
         a *= 2*M_PI*radius ;
-        if(Symmetry_IsSpherical(sym)) a *= 2*radius ;
+        if(Geometry_HasSphericalSymmetry(geom)) a *= 2*radius ;
       }
     
       /* R(i) = F*H(i) */
@@ -1584,7 +1584,7 @@ _INLINE_ double*   (FEM_ComputeStrainWorkResidu)(FEM_t* fem,IntFct_t* intfct,con
   int dim_h = IntFct_GetDimension(intfct) ;
   int ndof = nn*dim ;
   double* weight = IntFct_GetWeight(intfct) ;
-  Symmetry_t sym = Element_GetSymmetry(el) ;
+  Geometry_t* geom = Element_GetGeometry(el) ;
   size_t SizeNeeded = ndof*(sizeof(double)) ;
   double* r = (double*) FEM_AllocateInBuffer(fem,SizeNeeded) ;
   double* x[Element_MaxNbOfNodes] ;
@@ -1637,14 +1637,14 @@ _INLINE_ double*   (FEM_ComputeStrainWorkResidu)(FEM_t* fem,IntFct_t* intfct,con
           double sign[3] = {0,0,0} ;
           int i,j ;
 
-          if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+          if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
             double radius = 0. ;
         
             for(i = 0 ; i < nf ; i++) radius += h[i]*x[i][0] ;
         
             a *= 2*M_PI*radius ;
         
-            if(Symmetry_IsSpherical(sym)) a *= 2*radius ;
+            if(Geometry_HasSphericalSymmetry(geom)) a *= 2*radius ;
           }
 
           /* Compute the vector stress: SIG.N 
@@ -1689,14 +1689,14 @@ _INLINE_ double*   (FEM_ComputeStrainWorkResidu)(FEM_t* fem,IntFct_t* intfct,con
       int i,j ;
     
       /* The radius in axisymmetrical or spherical case */
-      if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+      if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
         radius = 0. ;
         
         for(i = 0 ; i < nf ; i++) radius += h[i]*x[i][0] ;
         
         a *= 2*M_PI*radius ;
         
-        if(Symmetry_IsSpherical(sym)) a *= 2*radius ;
+        if(Geometry_HasSphericalSymmetry(geom)) a *= 2*radius ;
       }
     
       /* R(i,j) = DH(i,k) * J(k,l) * S(l,j) */
@@ -1709,12 +1709,12 @@ _INLINE_ double*   (FEM_ComputeStrainWorkResidu)(FEM_t* fem,IntFct_t* intfct,con
       }
     
       /* Axisymmetrical or spherical case */
-      if(Symmetry_IsCylindrical(sym)) {
+      if(Geometry_HasCylindricalSymmetry(geom)) {
         /* R(i,0) = H(i)/r * S(theta,theta) */
         for(i = 0 ; i < nf ; i++) {
           R(i,0) += a * h[i]/radius * SIG(2,2) ;
         }
-      } else if(Symmetry_IsSpherical(sym)) {
+      } else if(Geometry_HasSphericalSymmetry(geom)) {
         /* R(i,0) = H(i)/r * (SIG(theta,theta) + SIG(phi,phi)) */
         for(i = 0 ; i < nf ; i++) {
           R(i,0) += a * h[i]/radius * (SIG(1,1) + SIG(2,2)) ;
@@ -1747,7 +1747,7 @@ _INLINE_ double*   (FEM_ComputeFluxResidu)(FEM_t* fem,IntFct_t* intfct,const dou
   int np = IntFct_GetNbOfPoints(intfct) ;
   int dim_h = IntFct_GetDimension(intfct) ;
   double* weight = IntFct_GetWeight(intfct) ;
-  Symmetry_t sym = Element_GetSymmetry(el) ;
+  Geometry_t* geom = Element_GetGeometry(el) ;
   size_t SizeNeeded = nn*(sizeof(double)) ;
   double* r = (double*) FEM_AllocateInBuffer(fem,SizeNeeded) ;
   double* x[Element_MaxNbOfNodes] ;
@@ -1796,13 +1796,13 @@ _INLINE_ double*   (FEM_ComputeFluxResidu)(FEM_t* fem,IntFct_t* intfct,const dou
           int i ;
     
           /* cas axisymetrique ou shperique */
-          if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+          if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
             double radius = 0. ;
             
             for(i = 0 ; i < nf ; i++) radius += h[i]*x[i][0] ;
             
             a *= 2*M_PI*radius ;
-            if(Symmetry_IsSpherical(sym)) a *= 2*radius ;
+            if(Geometry_HasSphericalSymmetry(geom)) a *= 2*radius ;
           }
     
           /* R(i) = DH(i,k)*J(k,j)*F(j) */
@@ -1841,13 +1841,13 @@ _INLINE_ double*   (FEM_ComputeFluxResidu)(FEM_t* fem,IntFct_t* intfct,const dou
       int i ;
     
       /* cas axisymetrique ou shperique */
-      if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+      if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
         double radius = 0. ;
         
         for(i = 0 ; i < nf ; i++) radius += h[i]*x[i][0] ;
         
         a *= 2*M_PI*radius ;
-        if(Symmetry_IsSpherical(sym)) a *= 2*radius ;
+        if(Geometry_HasSphericalSymmetry(geom)) a *= 2*radius ;
       }
     
       /* R(i) = DH(i,k)*J(k,j)*F(j) */
@@ -1919,7 +1919,6 @@ _INLINE_ double* (FEM_ComputeSurfaceLoadResidu)(FEM_t* fem,IntFct_t* intfct,Load
   int nn  = Element_GetNbOfNodes(el) ;
   int dim = Geometry_GetDimension(geom) ;
   int dim_e = Element_GetDimension(el) ;
-  Symmetry_t sym = Geometry_GetSymmetry(geom) ;
   Node_t** no = Element_GetPointerToNode(el) ;
   Field_t* field = Load_GetField(load) ;
   char*    load_eqn = Load_GetNameOfEquation(load) ;
@@ -1973,8 +1972,8 @@ _INLINE_ double* (FEM_ComputeSurfaceLoadResidu)(FEM_t* fem,IntFct_t* intfct,Load
       
       r[ieq] = ft*Field_ComputeValueAtPoint(field,x[0],dim) ;
       
-      if(Symmetry_IsCylindrical(sym)) r[ieq] *= 2*M_PI*radius ;
-      else if(Symmetry_IsSpherical(sym)) r[ieq] *= 4*M_PI*radius*radius ;
+      if(Geometry_HasCylindricalSymmetry(geom)) r[ieq] *= 2*M_PI*radius ;
+      else if(Geometry_HasSphericalSymmetry(geom)) r[ieq] *= 4*M_PI*radius*radius ;
       return(r) ;
     }
     
@@ -2019,8 +2018,8 @@ _INLINE_ double* (FEM_ComputeSurfaceLoadResidu)(FEM_t* fem,IntFct_t* intfct,Load
       
       r[ieq] = Field_ComputeValueAtPoint(field,x[0],dim)*fv;
       
-      if(Symmetry_IsCylindrical(sym)) r[ieq] *= 2*M_PI*radius ;
-      else if(Symmetry_IsSpherical(sym)) r[ieq] *= 4*M_PI*radius*radius ;
+      if(Geometry_HasCylindricalSymmetry(geom)) r[ieq] *= 2*M_PI*radius ;
+      else if(Geometry_HasSphericalSymmetry(geom)) r[ieq] *= 4*M_PI*radius*radius ;
       return(r) ;
     }
     
@@ -2071,8 +2070,8 @@ _INLINE_ double* (FEM_ComputeSurfaceLoadResidu)(FEM_t* fem,IntFct_t* intfct,Load
       
       r[ieq] = Field_ComputeValueAtPoint(field,x[0],dim)*fv;
       
-      if(Symmetry_IsCylindrical(sym)) r[ieq] *= 2*M_PI*radius ;
-      else if(Symmetry_IsSpherical(sym)) r[ieq] *= 4*M_PI*radius*radius ;
+      if(Geometry_HasCylindricalSymmetry(geom)) r[ieq] *= 2*M_PI*radius ;
+      else if(Geometry_HasSphericalSymmetry(geom)) r[ieq] *= 4*M_PI*radius*radius ;
       return(r) ;
     }
     
@@ -2120,8 +2119,8 @@ _INLINE_ double* (FEM_ComputeSurfaceLoadResidu)(FEM_t* fem,IntFct_t* intfct,Load
       
       r[ieq] = ft*Field_ComputeValueAtPoint(field,x[0],dim) ;
       
-      if(Symmetry_IsCylindrical(sym)) r[ieq] *= 2*M_PI*radius ;
-      else if(Symmetry_IsSpherical(sym)) r[ieq] *= 4*M_PI*radius*radius ;
+      if(Geometry_HasCylindricalSymmetry(geom)) r[ieq] *= 2*M_PI*radius ;
+      else if(Geometry_HasSphericalSymmetry(geom)) r[ieq] *= 4*M_PI*radius*radius ;
       return(r) ;
     }
     
@@ -2717,7 +2716,7 @@ _INLINE_ double* (FEM_ComputeLinearStrainTensor)(FEM_t* fem,double const* const*
 #define STRAIN(i,j) (strain[(i)*3 + (j)])
 #define CJ(i,j)  (cj[(i)*3 + (j)])
   Element_t* el = FEM_GetElement(fem) ;
-  Symmetry_t sym = Element_GetSymmetry(el) ;
+  Geometry_t* geom = Element_GetGeometry(el) ;
   int dim = Element_GetDimensionOfSpace(el) ;
   int dim_e = Element_GetDimension(el) ;
   int dim_h = IntFct_GetDimension(intfct) ;
@@ -2830,7 +2829,7 @@ _INLINE_ double* (FEM_ComputeLinearStrainTensor)(FEM_t* fem,double const* const*
       }
   
       /* symmetric cases: axisymmetrical or spherical */
-      if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+      if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
         
         if(Element_HasZeroThickness(el)) {
           /* No additif terms */
@@ -2848,7 +2847,7 @@ _INLINE_ double* (FEM_ComputeLinearStrainTensor)(FEM_t* fem,double const* const*
           if(radius > 0) {
             STRAIN(2,2) += u_r/radius ;
           
-            if(Symmetry_IsSpherical(sym)) STRAIN(1,1) += u_r/radius ;
+            if(Geometry_HasSphericalSymmetry(geom)) STRAIN(1,1) += u_r/radius ;
           }
         }
       }
@@ -3035,7 +3034,7 @@ _INLINE_ double* (FEM_ComputeCurrentLinearStrainTensor)(FEM_t* fem,double* h,dou
   Element_t* el = FEM_GetElement(fem) ;
   size_t SizeNeeded = 9*sizeof(double) ;
   double* eps = (double*) Element_AllocateInBuffer(el,SizeNeeded) ;
-  Symmetry_t sym = Element_GetSymmetry(el) ;
+  Geometry_t* geom = Element_GetGeometry(el) ;
   int    dim_h  = Element_GetDimension(el) ;
   int dim = Element_GetDimensionOfSpace(el) ;
   int    i,j ;
@@ -3062,7 +3061,7 @@ _INLINE_ double* (FEM_ComputeCurrentLinearStrainTensor)(FEM_t* fem,double* h,dou
   }
   
   /* symmetric cases: axisymmetrical or spherical */
-  if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+  if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
     double radius = 0. ;
     double u_r   = 0. ;
     
@@ -3075,7 +3074,7 @@ _INLINE_ double* (FEM_ComputeCurrentLinearStrainTensor)(FEM_t* fem,double* h,dou
     
     EPS(2,2) += u_r/radius ;
     
-    if(Symmetry_IsSpherical(sym)) EPS(1,1) += u_r/radius ;
+    if(Geometry_HasSphericalSymmetry(geom)) EPS(1,1) += u_r/radius ;
   }
   
   return(eps) ;
@@ -3100,7 +3099,7 @@ _INLINE_ double* (FEM_ComputeIncrementalLinearStrainTensor)(FEM_t* fem,double* h
   Element_t* el = FEM_GetElement(fem) ;
   size_t SizeNeeded = 9*sizeof(double) ;
   double* eps = (double*) Element_AllocateInBuffer(el,SizeNeeded) ;
-  Symmetry_t sym = Element_GetSymmetry(el) ;
+  Geometry_t* geom = Element_GetGeometry(el) ;
   int    dim_h  = Element_GetDimension(el) ;
   int dim = Element_GetDimensionOfSpace(el) ;
   int    i,j ;
@@ -3127,7 +3126,7 @@ _INLINE_ double* (FEM_ComputeIncrementalLinearStrainTensor)(FEM_t* fem,double* h
   }
   
   /* symmetric cases: axisymmetrical or spherical */
-  if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+  if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
     double radius = 0. ;
     double u_r   = 0. ;
     
@@ -3139,7 +3138,7 @@ _INLINE_ double* (FEM_ComputeIncrementalLinearStrainTensor)(FEM_t* fem,double* h
     }
     
     EPS(2,2) += u_r/radius ;
-    if(Symmetry_IsSpherical(sym)) EPS(1,1) += u_r/radius ;
+    if(Geometry_HasSphericalSymmetry(geom)) EPS(1,1) += u_r/radius ;
   }
   
   return(eps) ;
@@ -3164,7 +3163,7 @@ _INLINE_ double* (FEM_ComputePreviousLinearStrainTensor)(FEM_t* fem,double* h,do
   Element_t* el = FEM_GetElement(fem) ;
   size_t SizeNeeded = 9*sizeof(double) ;
   double* eps = (double*) Element_AllocateInBuffer(el,SizeNeeded) ;
-  Symmetry_t sym = Element_GetSymmetry(el) ;
+  Geometry_t* geom = Element_GetGeometry(el) ;
   int    dim_h  = Element_GetDimension(el) ;
   int dim = Element_GetDimensionOfSpace(el) ;
   int    i,j ;
@@ -3190,7 +3189,7 @@ _INLINE_ double* (FEM_ComputePreviousLinearStrainTensor)(FEM_t* fem,double* h,do
   }
   
   /* symmetric cases: axisymmetrical or spherical */
-  if(Symmetry_IsCylindrical(sym) || Symmetry_IsSpherical(sym)) {
+  if(Geometry_HasCylindricalSymmetry(geom) || Geometry_HasSphericalSymmetry(geom)) {
     double radius = 0. ;
     double u_r   = 0. ;
     
@@ -3202,7 +3201,7 @@ _INLINE_ double* (FEM_ComputePreviousLinearStrainTensor)(FEM_t* fem,double* h,do
     }
     
     EPS(2,2) += u_r/radius ;
-    if(Symmetry_IsSpherical(sym)) EPS(1,1) += u_r/radius ;
+    if(Geometry_HasSphericalSymmetry(geom)) EPS(1,1) += u_r/radius ;
   }
   
   return(eps) ;

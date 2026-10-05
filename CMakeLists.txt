@@ -69,6 +69,9 @@ add_subdirectory(src)
 # the documentations
 add_subdirectory(doc)
 
+# the wrappers
+add_subdirectory(jlwrap)
+
 
 
 # Custom targets

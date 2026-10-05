@@ -11,7 +11,7 @@
 #define TITLE   "Drying-Wetting with Salt (1D case)"
 #define AUTHORS "Dangla"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 
 /* Nb of equations */
@@ -182,7 +182,7 @@
 
 
 /* To retrieve the material properties */
-#define GetProperty(a)   (Element_GetProperty(el)[pm(a)])
+#define GetMaterialProperty(a)   (Element_GetProperty(el)[pm(a)])
 
 /* Fonctions */
 static int     pm(const char *s) ;
@@ -300,18 +300,18 @@ int pm(const char *s)
 
 void GetProperties(Element_t *el)
 {
-  phi0    = GetProperty("porosite") ;
-  r_d     = GetProperty("r_d") ;
-  k_int   = GetProperty("k_int") ;
-  d_cl    = GetProperty("D_Cl") ;
-  lna_w0  = GetProperty("lna_w0") ;
-  lna_s0  = GetProperty("lna_s0") ;
+  phi0    = GetMaterialProperty("porosite") ;
+  r_d     = GetMaterialProperty("r_d") ;
+  k_int   = GetMaterialProperty("k_int") ;
+  d_cl    = GetMaterialProperty("D_Cl") ;
+  lna_w0  = GetMaterialProperty("lna_w0") ;
+  lna_s0  = GetMaterialProperty("lna_s0") ;
 }
 
 
 int SetModelProp(Model_t *model)
 {
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   Model_CopyNameOfEquation(model,E_eau,"mass") ;
   Model_CopyNameOfEquation(model,E_salt,"air") ;
@@ -371,7 +371,7 @@ int ReadMatProp(Material_t *mat,DataFile_t *datafile)
         y_lnaw[i] = ACTIVITE_W(c_s) ;
         y_lnas[i] = ACTIVITE_S(c_s) ;
       }
-      free(x) ;
+      Mry_Free(x) ;
     }
 
     /* on met a jour le nb de proprietes */

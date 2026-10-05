@@ -4,6 +4,7 @@
 #include <string.h>
 #include <time.h>
 #include <assert.h>
+#include <vector>
 #include "DataSet.h"
 #include "Message.h"
 #include "Context.h"
@@ -26,29 +27,28 @@
 #include "DistributedMS.h"
 #include "Options.h"
 #include "Curve.h"
+#include "BConds.h"
+#include "Loads.h"
+#include "IConds.h"
+#include "Dates.h"
+#include "Points.h"
+#include "Fields.h"
+#include "Functions.h"
 
 
 
-static void   (Entry_PrintUsage)(char*) ;
+static void   (Entry_PrintUsage)(char const*) ;
 static void   (Entry_PrintInfo)(void) ;
 static void   (Entry_CLI)(Entry_t*) ;
 
 
 int (Entry_Main)(int argc,char** argv)
 {
-  #if DistributedMS_APIis(MPI)
-    MPI_Init(&argc,&argv) ;
-  #endif
-  {
-    Entry_t* entry = Entry_Create(argc,argv) ;
+  Entry_t* entry = Entry_Create(argc,argv) ;
   
-    Entry_Execute(entry) ;
+  Entry_Execute(entry) ;
   
-    Entry_Delete(entry) ;
-  }
-  #if DistributedMS_APIis(MPI)
-    MPI_Finalize() ;
-  #endif
+  Entry_Delete(entry) ;
   
   return(0) ;
 }
@@ -62,9 +62,15 @@ Entry_t*    (Entry_Create)(int argc,char** argv)
   Session_Open() ;
   
   {
-    Context_t* ctx = Context_Create(argc,argv) ;
+    Context_t* ctx = Context_New() ;
     
     Entry_GetContext(entry) = ctx ;
+
+    if(argc == 1) {
+      Context_SetPrintUsage(ctx,(char**) argv) ;
+    } else {
+      Context_Set(ctx,argc-1,argv+1);
+    }
   }
     
   Session_Close() ;
@@ -83,7 +89,7 @@ void (Entry_Delete)(void* self)
     
     if(ctx) {
       Context_Delete(ctx) ;
-      free(ctx) ;
+      Mry_Free(ctx) ;
       Entry_GetContext(entry) = NULL ;
     }
   }
@@ -156,13 +162,13 @@ void Entry_CLI(Entry_t* entry)
     /* The standard requires that argv[argc] be a null pointer */
     if(argv[1]) {
       if(!strncmp(argv[1],"all",strlen(argv[1]))) {
-        Models_Print(NULL,stdout) ;
+        Models_PrintAll(NULL,stdout) ;
       } else {
         char* codename = argv[1] ;
-        Models_Print(codename,stdout) ;
+        Models_PrintAll(codename,stdout) ;
       }
     } else {
-      Models_Print(NULL,NULL) ;
+      Models_PrintAll(NULL,NULL) ;
     }
     return ;
   }
@@ -173,22 +179,21 @@ void Entry_CLI(Entry_t* entry)
     /* The standard requires that argv[argc] be a null pointer */
     if(argv[1]) {
       if(!strncmp(argv[1],"all",strlen(argv[1]))) {
-        Modules_Print(NULL) ;
+        Modules_PrintAll(NULL) ;
       } else {
         char* codename = argv[1] ;
-        Modules_Print(codename) ;
+        Modules_PrintAll(codename) ;
       }
-    } else Modules_Print(NULL) ;
+    } else Modules_PrintAll(NULL) ;
     return ;
   }
   
   if(Context_IsReadOnly(ctx)) {
     char* filename = ((char**) Context_GetInputFileName(ctx))[0] ;
-    Options_t* options = Context_GetOptions(ctx) ;
-    DataSet_t* dataset = DataSet_Create(filename,options) ;
+    DataSet_t* dataset = DataSet_Create(filename,ctx) ;
     
     DataSet_Delete(dataset) ;
-    free(dataset) ;
+    Mry_Free(dataset) ;
     return ;
   }
   
@@ -210,64 +215,63 @@ void Entry_CLI(Entry_t* entry)
   
   if(Context_IsGraph(ctx)) {
     char* filename = ((char**) Context_GetInputFileName(ctx))[0] ;
-    Options_t* options = Context_GetOptions(ctx) ;
-    DataSet_t* dataset =  DataSet_Create(filename,options) ;
+    DataSet_t* dataset = DataSet_Create(filename,ctx) ;
+    Options_t* options = DataSet_GetOptions(dataset) ;
     Mesh_t* mesh = DataSet_GetMesh(dataset) ;
     char* method = Options_GetGraphMethod(options) ;
       
     Message_Direct("Graph (method %s)\n",method) ;
     Mesh_WriteGraph(mesh,filename,method) ;
     DataSet_Delete(dataset) ;
-    free(dataset) ;
+    Mry_Free(dataset) ;
     return ;
   }
   
   if(Context_IsInversePermutation(ctx)) {
     char* filename = ((char**) Context_GetInputFileName(ctx))[0] ;
-    Options_t* options = Context_GetOptions(ctx) ;
-    DataSet_t* dataset =  DataSet_Create(filename,options) ;
+    DataSet_t* dataset = DataSet_Create(filename,ctx) ;
     Mesh_t* mesh = DataSet_GetMesh(dataset) ;
     char method[] = "hsl" ;
       
     Message_Direct("Inverse permutations (method %s)\n",method) ;
     Mesh_WriteInversePermutation(mesh,filename,method) ;
     DataSet_Delete(dataset) ;
-    free(dataset) ;
+    Mry_Free(dataset) ;
     return ;
   }
   
   if(Context_IsNodalOrdering(ctx)) {
     char* filename = ((char**) Context_GetInputFileName(ctx))[0] ;
-    Options_t* options = Context_GetOptions(ctx) ;
-    DataSet_t* dataset =  DataSet_Create(filename,options) ;
+    DataSet_t* dataset = DataSet_Create(filename,ctx) ;
+    Options_t* options = DataSet_GetOptions(dataset) ;
     Mesh_t* mesh = DataSet_GetMesh(dataset) ;
     char* method = Options_GetNodalOrderingMethod(options) ;
       
     Message_Direct("Nodal ordering (method %s)\n",method) ;
     Mesh_WriteInversePermutation(mesh,filename,method) ;
     DataSet_Delete(dataset) ;
-    free(dataset) ;
+    Mry_Free(dataset) ;
     return ;
   }
   
   if(Context_IsElementOrdering(ctx)) {
     char* filename = ((char**) Context_GetInputFileName(ctx))[0] ;
-    Options_t* options = Context_GetOptions(ctx) ;
-    DataSet_t* dataset =  DataSet_Create(filename,options) ;
+    DataSet_t* dataset = DataSet_Create(filename,ctx) ;
+    Options_t* options = DataSet_GetOptions(dataset) ;
     Mesh_t* mesh = DataSet_GetMesh(dataset) ;
     char* method = Options_GetElementOrderingMethod(options) ;
       
     Message_Direct("Element ordering (method %s)\n",method) ;
     Mesh_WriteInversePermutation(mesh,filename,method) ;
     DataSet_Delete(dataset) ;
-    free(dataset) ;
+    Mry_Free(dataset) ;
     return ;
   }
   
   if(Context_IsPostProcessing(ctx)) {
     char* filename = ((char**) Context_GetInputFileName(ctx))[0] ;
-    Options_t* options = Context_GetOptions(ctx) ;
-    DataSet_t* dataset =  DataSet_Create(filename,options) ;
+    DataSet_t* dataset = DataSet_Create(filename,ctx) ;
+    Options_t* options = DataSet_GetOptions(dataset) ;
     char* method = Options_GetPostProcessingMethod(options) ;
       
     Message_Direct("Post-processing\n") ;
@@ -288,14 +292,14 @@ void Entry_CLI(Entry_t* entry)
       }
       
       PosFilesForGMSH_Delete(pf4gmsh) ;
-      free(pf4gmsh) ;
+      Mry_Free(pf4gmsh) ;
       
     } else {
       Message_FatalError("Format not available") ;
     }
 
     DataSet_Delete(dataset) ;
-    free(dataset) ;
+    Mry_Free(dataset) ;
     return ;
   }
   
@@ -326,11 +330,10 @@ void Entry_CLI(Entry_t* entry)
     #if 0
     {
       char* filename = ((char**) Context_GetInputFileName(ctx))[0] ;
-      Options_t* options = Context_GetOptions(ctx) ;
-      DataSet_t* dataset = DataSet_Create1(filename,options) ;
+      DataSet_t* dataset = DataSet_Create1(filename,ctx) ;
       
       DataSet_Delete(dataset) ;
-      free(dataset) ;
+      Mry_Free(dataset) ;
       return ;
     }
     #endif
@@ -340,12 +343,12 @@ void Entry_CLI(Entry_t* entry)
   
   if(1) {
     char* filename = ((char**) Context_GetInputFileName(ctx))[0] ;
-    Options_t* options = Context_GetOptions(ctx) ;
-    DataSet_t* dataset =  DataSet_Create(filename,options) ;
+    DataSet_t* dataset = DataSet_Create(filename,ctx) ;
     Module_t* module = DataSet_GetModule(dataset) ;
 
     #if SharedMS_APIisNot(None)
     {
+      Options_t* options = DataSet_GetOptions(dataset) ;
       int nthreads = Options_NbOfThreads(options) ;
       
       SharedMS_SetTheNbOfThreads(nthreads) ;
@@ -369,7 +372,7 @@ void Entry_CLI(Entry_t* entry)
     Message_Direct("End of calculation\n") ;
     
     DataSet_Delete(dataset) ;
-    free(dataset) ;
+    Mry_Free(dataset) ;
     
     Message_Info("CPU time %g seconds\n",Message_CPUTime()) ;
     return ;
@@ -381,7 +384,7 @@ void Entry_CLI(Entry_t* entry)
 
 
 
-void Entry_PrintUsage(char* path)
+void Entry_PrintUsage(char const* path)
 {
   Message_Direct("Usage: %s [options] file\n",path) ;
   Message_Direct("\n") ;

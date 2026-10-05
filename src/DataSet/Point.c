@@ -18,19 +18,11 @@ Point_t*  (Point_New)(void)
   Point_t* point = (Point_t*) Mry_New(Point_t) ;
   
   
-  /* Memory space for coordinates */
-  {
-    double* coor = (double*) Mry_New(double,3) ;
-
-    Point_GetCoordinate(point) = coor ;
-  }
-  
-  
   /* Allocation of space for the region name */
   {
     char* name = (char*) Mry_New(char,Point_MaxLengthOfRegionName) ;
     
-    Point_GetRegionName(point) = name ;
+    Point_SetRegionName(point,name) ;
   }
   
   strcpy(Point_GetRegionName(point),"\0") ;
@@ -44,19 +36,14 @@ void (Point_Delete)(void* self)
 {
   Point_t* point = (Point_t*) self ;
   
-  {
-    double* coor Point_GetCoordinate(point) ;
+  if(point) {
+    {
+      char* name = Point_GetRegionName(point) ;
     
-    if(coor) {
-      free(coor) ;
-    }
-  }
-  
-  {
-    char* name = Point_GetRegionName(point) ;
-    
-    if(name) {
-      free(name) ;
+      if(name) {
+        Mry_Free(name) ;
+        Point_SetRegionName(point,NULL);
+      }
     }
   }
 }
@@ -65,39 +52,43 @@ void (Point_Delete)(void* self)
 
 void (Point_Scan)(Point_t* point,char* line)
 {
+  char name[Point_MaxLengthOfRegionName] ;
+  char* region;
+  double coor[3] = {0,0,0} ;
+  
+  /* Region */
+  {
+    int n = String_FindAndScanExp(line,"Reg",","," = %s",name) ;
+    
+    if(n) {
+      region = name;
+    } else {
+      region = nullptr;
+    }
+  }
 
   /* Coordinates */
   {
     int n = String_FindAndScanExp(line,"Coor",","," = ") ;
+    char* c;
     
     if(n) {
-      double* coor = Point_GetCoordinate(point) ;
-      char* c = String_GetAdvancedPosition ;
-    
-      String_ScanArray(c,3," %lf",coor) ;
+      c = String_GetAdvancedPosition ;
+    } else if(!region) {
+      c = line;
     } else {
       arret("Point_Scan: no coordinates") ;
     }
-  }
-  
-  /* Region */
-  {
-    char name[Point_MaxLengthOfRegionName] ;
-    int n = String_FindAndScanExp(line,"Reg",","," = %s",name) ;
-    //int i ;
-    //int n = String_FindAndScanExp(line,"Reg",","," = %d",&i) ;
     
-    if(n) {
-      strncpy(Point_GetRegionName(point),name,Point_MaxLengthOfRegionName)  ;
-    } else {
-      arret("Point_Scan: no region") ;
-    }
+    String_ScanArray(c,3," %lf",coor) ;
   }
+
+  Point_Set(point,coor,region);
 }
 
 
 
-void (Point_SetEnclosingElement)(Point_t* point,Mesh_t* mesh)
+void (Point_EnclosingElement)(Point_t* point,Mesh_t* mesh)
 /** Set a pointer to the element which encloses the point */
 {
   int dim = Mesh_GetDimension(mesh) ;
@@ -110,23 +101,16 @@ void (Point_SetEnclosingElement)(Point_t* point,Mesh_t* mesh)
 
   for(size_t i = 0 ; i < n_el ; i++) {
     int  nn = Element_GetNbOfNodes(el + i) ;
-    Material_t* mat = Element_GetMaterial(el + i) ;
     char* reg_el = Element_GetRegionName(el + i) ;
     double x_s[3] = {0.,0.,0.} ;
     double d = 0. ;
     
-    if(!mat) continue ;
-    
     /* Select the element whose center is the closest to the point */
-    if(String_Is(reg,"\0") || String_Is(reg,reg_el)) {
-      int    j ;
-      
-      for(j = 0 ; j < dim ; j++) {
-        int in ;
-      
+    if(String_Is(reg,"\0") || String_Is(reg,reg_el)) {      
+      for(int j = 0 ; j < dim ; j++) {      
         x_s[j] = 0. ;
       
-        for(in = 0 ; in < nn ; in++) {
+        for(int in = 0 ; in < nn ; in++) {
           x_s[j] += Element_GetNodeCoordinate(el + i,in)[j] ;
         }
       
@@ -134,7 +118,7 @@ void (Point_SetEnclosingElement)(Point_t* point,Mesh_t* mesh)
         x_s[j] -= pt[j] ;
       }
     
-      for(j = 0 ; j < dim ; j++) {
+      for(int j = 0 ; j < dim ; j++) {
         d += x_s[j]*x_s[j] ;
       }
     
@@ -145,7 +129,5 @@ void (Point_SetEnclosingElement)(Point_t* point,Mesh_t* mesh)
     }
   }
   
-  Point_GetEnclosingElement(point) = enclosel;
-    
-  return ;
+  Point_SetEnclosingElement(point,enclosel);
 }

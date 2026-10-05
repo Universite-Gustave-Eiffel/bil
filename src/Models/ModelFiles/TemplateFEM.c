@@ -13,7 +13,7 @@
 #define TITLE "Short title of my model"
 #define AUTHORS "Authors"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 /*
  * The numbers below are arbitrary and serve only as example
@@ -212,15 +212,15 @@ int pm(const char* s)
 static void   GetProperties(Element_t*) ;
 void GetProperties(Element_t* el)
 {
-#define GetProperty(a)   (Element_GetProperty(el)[pm(a)]) 
-  coef1  = GetProperty("prop1") ;
-  coef2  = GetProperty("prop2") ;
-  coef3  = GetProperty("prop3") ;
-  sig0   = &GetProperty("sig0") ;
+#define GetMaterialProperty(a)   (Element_GetProperty(el)[pm(a)]) 
+  coef1  = GetMaterialProperty("prop1") ;
+  coef2  = GetMaterialProperty("prop2") ;
+  coef3  = GetMaterialProperty("prop3") ;
+  sig0   = &GetMaterialProperty("sig0") ;
   
   curve1   = Element_FindCurve(el,"y1-axis") ;
   curve2   = Element_FindCurve(el,"y2-axis") ;
-#undef GetProperty
+#undef GetMaterialProperty
 }
 
 
@@ -238,7 +238,7 @@ int SetModelProp(Model_t* model)
   int i ;
   
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */ 
   for(i = 0 ; i < dim ; i++) {
@@ -324,9 +324,9 @@ int DefineElementProp(Element_t* el,IntFcts_t* intfcts)
   int NbOfIntPoints = IntFct_GetNbOfPoints(intfct) + 1 ;
 
   /** Define the length of tables */
-  Element_GetNbOfImplicitTerms(el) = NVI*NbOfIntPoints ;
-  Element_GetNbOfExplicitTerms(el) = NVE*NbOfIntPoints ;
-  Element_GetNbOfConstantTerms(el) = NV0*NbOfIntPoints ;
+  Element_SetNbOfImplicitTerms(el,NVI*NbOfIntPoints) ;
+  Element_SetNbOfExplicitTerms(el,NVE*NbOfIntPoints) ;
+  Element_SetNbOfConstantTerms(el,NV0*NbOfIntPoints) ;
   
   /* Skip the rest of code for basic development.
    * For advanced developments find below 
@@ -357,9 +357,9 @@ int DefineElementProp(Element_t* el,IntFcts_t* intfcts)
     NbOfIntPoints = IntFct_GetNbOfPoints(intfct) ;
 
     /** Re-define the length of tables */
-    Element_GetNbOfImplicitTerms(el) = NVI*NbOfIntPoints ;
-    Element_GetNbOfExplicitTerms(el) = NVE*NbOfIntPoints ;
-    Element_GetNbOfConstantTerms(el) = NV0*NbOfIntPoints ;
+    Element_SetNbOfImplicitTerms(el,NVI*NbOfIntPoints) ;
+    Element_SetNbOfExplicitTerms(el,NVE*NbOfIntPoints) ;
+    Element_SetNbOfConstantTerms(el,NV0*NbOfIntPoints) ;
   }
   #endif
   

@@ -18,7 +18,7 @@
 #define TITLE "Chlorures dans les betons non satures"
 #define AUTHORS "Nguyen"
 
-#include "OldMethods.h"
+#include "PredeclaredOldModelMethods.h.in"
 
 /* Macros */
 
@@ -806,9 +806,9 @@ int mx44(double **x,double **u,double **u_n,double *f,double *f_n,double *va,dou
   xm = (x[1][0] + x[0][0])/deux ;
   for(i=0;i<2;i++) {
     volume[i] = fabs(dx)/deux ; 
-    if(geom == AXIS) volume[i] *= M_PI*(x[i][0] + xm) ; 
+    if(Geometry_HasCylindricalSymmetry(geom)) volume[i] *= M_PI*(x[i][0] + xm) ; 
   }
-  if(geom == AXIS) surf = deux*M_PI*xm ; else surf = un ;
+  if(Geometry_HasCylindricalSymmetry(geom)) surf = deux*M_PI*xm ; else surf = un ;
 
   /* termes d'accumulation */
   for(i=0;i<2;i++) {
@@ -1243,9 +1243,9 @@ void rs44(double **x,double **u,double **u_n,double *f,double *f_n,double *va,do
   xm = (x[1][0] + x[0][0])/deux ;
   for(i=0;i<2;i++) {
     volume[i] = fabs(dx)/deux ; 
-    if(geom == AXIS) volume[i] *= M_PI*(x[i][0] + xm) ; 
+    if(Geometry_HasCylindricalSymmetry(geom)) volume[i] *= M_PI*(x[i][0] + xm) ; 
   }
-  if(geom == AXIS) surf = deux*M_PI*xm ; else surf = un ;
+  if(Geometry_HasCylindricalSymmetry(geom)) surf = deux*M_PI*xm ; else surf = un ;
   /*
     Conservation de Cl (chlore) : (n_Cl1 - n_Cln) + dt * div(w_Cl) = 0
   */

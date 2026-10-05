@@ -87,8 +87,6 @@ struct Message_t;
 #include <stdlib.h>
 #include <ctype.h>
 #include <strings.h>
-#include "Mry.h"
-#include "DistributedMS.h"
 
 struct Message_t {
   private:
@@ -125,33 +123,8 @@ struct Message_t {
   void SetSavedClock(clock_t x){_savedclock = x;}
 
   public:
-  static Message_t* Create(void){
-    Message_t* msg = (Message_t*) Mry_New(Message_t);
-    char* date = (char*) Mry_New(char,26);
-    time_t* now = (time_t*) Mry_New(time_t);
-    clock_t start = clock();
-    
-    time(now);
-    strcpy(date,ctime(now));
-
-    msg->SetLaunchDate(date);
-    msg->SetLaunchTime(now);
-    msg->SetLaunchClock(start);
-    msg->SetSavedClock(start);
-    msg->SetVerbosity(4);
-    
-    //msg->SetDelete(&Delete);
-    
-    return(msg);
-  }
-  
-  static void Delete(void* self){
-    Message_t* msg = (Message_t*) self;
-    
-    Mry_Free(msg->GetLaunchDate());
-    Mry_Free(msg->GetLaunchTime());
-    //msg->SetDelete(NULL);
-  }
+  static Message_t* Create(void);
+  static void Delete(void* self);
   
   static void FatalError(const char* fmt, ...){
     fflush(stdout);
@@ -214,67 +187,9 @@ struct Message_t {
     exit(EXIT_SUCCESS);
   }
 
-  void Warning(const char* fmt, ...){
-    if(DistributedMS_RankOfCallingProcess) return;
-    
-    if(GetVerbosity() < 2) return;
-    
-    fflush(stdout);
-    
-    fprintf(stderr,"\n");
-    fprintf(stderr,"Warning: ");
-    
-    {
-      va_list args;
-      va_start(args,fmt);
-      vfprintf(stderr,fmt,args);
-      va_end(args);
-    }
-    
-    fprintf(stderr,"\n");
-    fflush(stderr);
-  }
-
-  void Info(const char* fmt, ...){
-    if(DistributedMS_RankOfCallingProcess) return;
-    
-    if(GetVerbosity() < 3) return;
-    
-    fflush(stdout);
-    
-    fprintf(stdout,"\n");
-    fprintf(stdout,"Info: ");
-    
-    {
-      va_list args;
-      va_start(args,fmt);
-      vfprintf(stdout,fmt,args);
-      va_end(args);
-    }
-    
-    fprintf(stdout,"\n");
-    fflush(stdout);
-  }
-
-  int Direct(const char* fmt, ...){
-    int n;
-    
-    if(DistributedMS_RankOfCallingProcess) return(0);
-    
-    if(GetVerbosity() < 4) return(0);
-    
-    fflush(stdout);
-    
-    {
-      va_list args;
-      va_start(args,fmt);
-      n = vfprintf(stdout,fmt,args);
-      va_end(args);
-    }
-    
-    fflush(stdout);
-    return(n);
-  }
+  void Warning(const char*, ...);
+  void Info(const char*, ...);
+  int Direct(const char*, ...);
   
   double CPUTime(void){
     double start = (double) GetLaunchClock();
@@ -304,16 +219,108 @@ struct Message_t {
     return(oldverb);
   }
   
-  inline static Message_t* GetInstance(void);
+  static Message_t* GetInstance(void);
 };
 
 
 #include <assert.h>
 #include "Session.h"
 #include "GenericData.h"
+#include "DistributedMS.h"
+#include "Mry.h"
+
+  inline Message_t* Message_t::Create(void){
+    Message_t* msg = (Message_t*) Mry_New(Message_t);
+    char* date = (char*) Mry_New(char,26);
+    time_t* now = (time_t*) Mry_New(time_t);
+    clock_t start = clock();
+    
+    time(now);
+    strcpy(date,ctime(now));
+
+    msg->SetLaunchDate(date);
+    msg->SetLaunchTime(now);
+    msg->SetLaunchClock(start);
+    msg->SetSavedClock(start);
+    msg->SetVerbosity(4);
+    
+    //msg->SetDelete(&Delete);
+    
+    return(msg);
+  }
+
+  inline void Message_t::Delete(void* self){
+    Message_t* msg = (Message_t*) self;
+    
+    Mry_Free(msg->GetLaunchDate());
+    Mry_Free(msg->GetLaunchTime());
+    //msg->SetDelete(NULL);
+  }
+
+  inline void Message_t::Warning(const char* fmt, ...){
+    if(DistributedMS_RankOfCallingProcess) return;
+    
+    if(GetVerbosity() < 2) return;
+    
+    fflush(stdout);
+    
+    fprintf(stderr,"\n");
+    fprintf(stderr,"Warning: ");
+    
+    {
+      va_list args;
+      va_start(args,fmt);
+      vfprintf(stderr,fmt,args);
+      va_end(args);
+    }
+    
+    fprintf(stderr,"\n");
+    fflush(stderr);
+  }
+
+  inline void Message_t::Info(const char* fmt, ...){
+    if(DistributedMS_RankOfCallingProcess) return;
+    
+    if(GetVerbosity() < 3) return;
+    
+    fflush(stdout);
+    
+    fprintf(stdout,"\n");
+    fprintf(stdout,"Info: ");
+    
+    {
+      va_list args;
+      va_start(args,fmt);
+      vfprintf(stdout,fmt,args);
+      va_end(args);
+    }
+    
+    fprintf(stdout,"\n");
+    fflush(stdout);
+  }
+
+  inline int Message_t::Direct(const char* fmt, ...){
+    int n;
+    
+    if(DistributedMS_RankOfCallingProcess) return(0);
+    
+    if(GetVerbosity() < 4) return(0);
+    
+    fflush(stdout);
+    
+    {
+      va_list args;
+      va_start(args,fmt);
+      n = vfprintf(stdout,fmt,args);
+      va_end(args);
+    }
+    
+    fflush(stdout);
+    return(n);
+  }
 
 
-Message_t* Message_t::GetInstance(void){
+  inline Message_t* Message_t::GetInstance(void){
     GenericData_t* gdat = Session_FindGenericData(Message_t,"Message");
     
     if(!gdat) {
@@ -327,6 +334,6 @@ Message_t* Message_t::GetInstance(void){
     }
     
     return((Message_t*) GenericData_GetData(gdat));
-}
+  }
 
 #endif

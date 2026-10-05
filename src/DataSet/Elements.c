@@ -117,7 +117,7 @@ void (Elements_Delete)(void* self)
     Node_t** pnode = Elements_GetPointerToNode(elements) ;
     
     if(pnode) {
-      free(pnode) ;
+      Mry_Free(pnode) ;
     }
   }
 
@@ -126,7 +126,7 @@ void (Elements_Delete)(void* self)
     Element_t* el = Elements_GetElement(elements) ;
       
     Mry_Delete(el,nel,Element_Delete) ;
-    free(el) ;
+    Mry_Free(el) ;
   }
 
   {
@@ -134,7 +134,7 @@ void (Elements_Delete)(void* self)
     
     if(regions) {
       Regions_Delete(regions) ;
-      free(regions) ;
+      Mry_Free(regions) ;
     }
   }
     
@@ -143,7 +143,7 @@ void (Elements_Delete)(void* self)
     
     if(buf) {
       Buffers_Delete(buf) ;
-      free(buf) ;
+      Mry_Free(buf) ;
     }
   }
 
@@ -153,7 +153,7 @@ void (Elements_Delete)(void* self)
     
     if(shapefcts) {
       ShapeFcts_Delete(shapefcts) ;
-      free(shapefcts) ;
+      Mry_Free(shapefcts) ;
     }
   }
   
@@ -162,24 +162,24 @@ void (Elements_Delete)(void* self)
     
     if(intfcts) {
       IntFcts_Delete(intfcts) ;
-      free(intfcts) ;
+      Mry_Free(intfcts) ;
     }
   }
 }
 
 
 
-void (Elements_LinkUp)(Elements_t* elements,Materials_t* materials)
+void (Elements_LinkUpToMaterials)(Elements_t* elements,Materials_t* materials)
 {
   size_t n_el = Elements_GetNbOfElements(elements) ;
   Element_t* el = Elements_GetElement(elements) ;
-  int n_mat = Materials_GetNbOfMaterials(materials) ;
+  size_t n_mat = Materials_GetNbOfMaterials(materials) ;
   
   
   /* Link up element and material */
   {    
     for(size_t ie = 0 ; ie < n_el ; ie++) {
-      int imat = Element_GetMaterialIndex(el + ie) ;
+      size_t imat = Element_GetMaterialIndex(el + ie) ;
     
       if(imat >= 0 && imat < n_mat) {
         Element_GetMaterial(el + ie) = Materials_GetMaterial(materials) + imat ;

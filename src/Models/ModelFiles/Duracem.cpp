@@ -57,7 +57,7 @@
 #define TITLE   "Mother model of durability of CBM (2024)"
 #define AUTHORS "Dangla and many others"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 
 
@@ -813,7 +813,7 @@ void GetProperties(Element_t* el,double t)
 
 int SetModelProp(Model_t* model)
 {
-  Model_GetNbOfEquations(model) = NEQ;
+  Model_SetNbOfEquations(model,NEQ);
   
   /* The name of equations */
   #ifdef E_CARBON
@@ -920,8 +920,8 @@ int SetModelProp(Model_t* model)
     }
   #endif
   
-  //Model_GetComputePropertyIndex(model) = &pm ;
-  Model_GetComputeMaterialProperties(model) = &GetProperties;
+  Model_SetComputePropertyIndex(model,&pm);
+  Model_SetComputeMaterialProperties(model,&GetProperties);
   
   return(0) ;
 }
@@ -937,8 +937,10 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
   InternationalSystemOfUnits_UseAsLength("decimeter") ;
   InternationalSystemOfUnits_UseAsMass("hectogram") ;
 
-  Material_SetPropertiesToZero(mat,NbOfProp);
-  Material_ScanProperties(mat,datafile,pm) ;
+  if(datafile) {
+    Material_SetPropertiesToZero(mat,NbOfProp);
+    Material_ScanProperties(mat,datafile,pm) ;
+  }
   
     
   /* Default initialization */

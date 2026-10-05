@@ -3,6 +3,7 @@
 #include <string.h>
 #include <assert.h>
 #include <math.h>
+#include <string>
 #include "Math_.h"
 #include "DataFile.h"
 #include "Mesh.h"
@@ -22,42 +23,36 @@ static Graph_t*  (Periodicities_ComputeGraph)(Mesh_t*) ;
 
 
 
-Periodicities_t* (Periodicities_New)(const int n)
+Periodicities_t* (Periodicities_New)(void)
 {
   Periodicities_t* periodicities = (Periodicities_t*) Mry_New(Periodicities_t) ;
   
-  Periodicities_GetNbOfPeriodicities(periodicities) = 0 ;
-  Periodicities_GetPeriodicity(periodicities) = NULL ;
+  Periodicities_SetNbOfPeriodicities(periodicities,0) ;
 
-  if(n > 0) {
-    Periodicity_t* periodicity = (Periodicity_t*) Mry_New(Periodicity_t,n) ;
-    int i ;
-    
-    for(i = 0 ; i < n ; i++) {
-      Periodicity_t* period = Periodicity_New() ;
-      
-      periodicity[i] = period[0] ;
-      free(period) ;
-    }
-    
-    Periodicities_GetNbOfPeriodicities(periodicities) = n ;
-    Periodicities_GetPeriodicity(periodicities) = periodicity ;
+  {
+    size_t n = Periodicities_MaxNbOfPeriodicities;
+    Periodicity_t* periodicity = Mry_Create(Periodicity_t,n,Periodicity_New()) ;
+
+    Periodicities_SetPeriodicity(periodicities,periodicity) ;
+    Periodicities_SetNbOfPeriodicities(periodicities,n) ;
   }
   
   return(periodicities) ;
 }
 
 
-
+#if 0
 Periodicities_t* (Periodicities_Create)(DataFile_t* datafile)
 {
   char* filecontent = DataFile_GetFileContent(datafile) ;
   char* c = String_FindToken(filecontent,"PERIODICITIES,Periodicities",",") ;
-  int   n_per = (c = String_SkipLine(c)) ? atoi(c) : 0 ;
-  Periodicities_t* periodicities = Periodicities_New(n_per) ;
+  size_t   n_per = (c = String_SkipLine(c)) ? String_ToSize_t(c) : 0 ;
+  Periodicities_t* periodicities = Periodicities_New() ;
   
-  if(n_per <= 0) {
-    return(periodicities) ;
+  {
+    int i = String_ToInt(c) ;
+
+    if(i <= 0) return(periodicities) ;
   }
   
   Message_Direct("Enter in %s","Periodicities") ;
@@ -65,14 +60,13 @@ Periodicities_t* (Periodicities_Create)(DataFile_t* datafile)
 
 
   /* Scan the datafile */
-  {
-    int i ;
-    
+  {    
     c = String_SkipLine(c) ;
       
     DataFile_SetCurrentPositionInFileContent(datafile,c) ;
     
-    for(i = 0 ; i < n_per ; i++) {
+    Periodicities_SetNbOfPeriodicities(periodicities,n_per) ;
+    for(size_t i = 0 ; i < n_per ; i++) {
       Periodicity_t* periodicity = Periodicities_GetPeriodicity(periodicities) + i ;
       
       Message_Direct("Enter in %s %d","Periodicity",i+1) ;
@@ -84,6 +78,54 @@ Periodicities_t* (Periodicities_Create)(DataFile_t* datafile)
   
   return(periodicities) ;
 }
+#else
+Periodicities_t* (Periodicities_Create)(DataFile_t* datafile)
+{
+  Periodicities_t* periodicities = Periodicities_New() ;
+  
+  Periodicities_Scan(periodicities,datafile);
+
+  return(periodicities) ;
+}
+#endif
+
+
+
+void (Periodicities_Scan)(Periodicities_t* periodicities,DataFile_t* datafile)
+{
+  char* filecontent = DataFile_GetFileContent(datafile) ;
+  char* c = String_FindToken(filecontent,"PERIODICITIES,Periodicities",",") ;
+  size_t   n_per = (c = String_SkipLine(c)) ? String_ToSize_t(c) : 0 ;
+  
+  {
+    int i = String_ToInt(c) ;
+
+    if(i <= 0) return ;
+  }
+  
+  Message_Direct("Enter in %s","Periodicities") ;
+  Message_Direct("\n") ;
+
+
+  /* Scan the datafile */
+  {    
+    c = String_SkipLine(c) ;
+      
+    DataFile_SetCurrentPositionInFileContent(datafile,c) ;
+    
+    Periodicities_SetNbOfPeriodicities(periodicities,n_per) ;
+    for(size_t i = 0 ; i < n_per ; i++) {
+      Periodicity_t* periodicity = Periodicities_GetPeriodicity(periodicities) + i ;
+      
+      Message_Direct("Enter in %s %d","Periodicity",i+1) ;
+      Message_Direct("\n") ;
+
+      Periodicity_Scan(periodicity,datafile) ;
+    }
+  }
+  
+  return ;
+}
 
 
 
@@ -93,20 +135,15 @@ void (Periodicities_Delete)(void* self)
 {
   Periodicities_t* periodicities = (Periodicities_t*) self ;
   
-  {
-    int n = Periodicities_GetNbOfPeriodicities(periodicities) ;
+  if(periodicities) {
+    Periodicity_t* periodicity = Periodicities_GetPeriodicity(periodicities) ;
     
-    if(n > 0) {
-      Periodicity_t* periodicity = Periodicities_GetPeriodicity(periodicities) ;
-      int i ;
-      
-      for(i = 0 ; i < n ; i++) {
-        Periodicity_t* period = periodicity + i ;
-        
-        Periodicity_Delete(period) ;
-      }
-      
-      free(periodicity) ;
+    if(periodicity) {
+      size_t n = Periodicities_MaxNbOfPeriodicities;
+
+      Mry_Delete(periodicity,n,Periodicity_Delete);
+      Mry_Free(periodicity) ;
+      Periodicities_SetPeriodicity(periodicities,nullptr) ;
     }
   }
 }
@@ -127,7 +164,7 @@ Graph_t*  (Periodicities_ComputeGraph)(Mesh_t* mesh)
   {
     size_t  n_no = Mesh_GetNbOfNodes(mesh) ;
     /* Nb of connections per node (useful to size graph) */
-    unsigned short int* nnz_no = (unsigned short int*) calloc(n_no,sizeof(unsigned short int)) ;
+    unsigned short int* nnz_no = (unsigned short int*) Mry_New(unsigned short int,n_no) ;
   
     if(!nnz_no) {
       arret("Periodicities_ComputeGraph(1): impossible d\'allouer la memoire") ;
@@ -138,9 +175,9 @@ Graph_t*  (Periodicities_ComputeGraph)(Mesh_t* mesh)
     {
       Element_t* elt = Mesh_GetElement(mesh) ;
       size_t n_elts  = Mesh_GetNbOfElements(mesh) ;
-      int n_per   = Periodicities_GetNbOfPeriodicities(periodicities) ;
+      size_t n_per   = Periodicities_GetNbOfPeriodicities(periodicities) ;
     
-      for(int i_per = 0 ; i_per < n_per ; i_per++) {
+      for(size_t i_per = 0 ; i_per < n_per ; i_per++) {
         Periodicity_t* periodicity = Periodicities_GetPeriodicity(periodicities) + i_per ;
         //int masterreg = Periodicity_GetMasterRegion(periodicity) ;
         //int slavereg  = Periodicity_GetSlaveRegion(periodicity) ;
@@ -167,7 +204,7 @@ Graph_t*  (Periodicities_ComputeGraph)(Mesh_t* mesh)
     
     graph = Graph_Create(n_no,nnz_no) ;
 
-    free(nnz_no) ;
+    Mry_Free(nnz_no) ;
   }
   
   
@@ -177,12 +214,12 @@ Graph_t*  (Periodicities_ComputeGraph)(Mesh_t* mesh)
     Elements_t* elts = Mesh_GetElements(mesh) ;
     Element_t* elt = Mesh_GetElement(mesh) ;
     size_t n_elts  = Mesh_GetNbOfElements(mesh) ;
-    int n_per   = Periodicities_GetNbOfPeriodicities(periodicities) ;
+    size_t n_per   = Periodicities_GetNbOfPeriodicities(periodicities) ;
     double hmin = Elements_GetMinimumSizeOfElements(elts) ;
     double tol = 0.01*fabs(hmin) ;
     
     
-    for(int i_per = 0 ; i_per < n_per ; i_per++) {
+    for(size_t i_per = 0 ; i_per < n_per ; i_per++) {
       Periodicity_t* periodicity = Periodicities_GetPeriodicity(periodicities) + i_per ;
       //int masterreg = Periodicity_GetMasterRegion(periodicity) ;
       //int slavereg  = Periodicity_GetSlaveRegion(periodicity) ;
@@ -374,7 +411,7 @@ void  (Periodicities_UpdateGraph)(Mesh_t* mesh,Graph_t* graph)
   }
   
   Graph_Delete(pgraph) ;
-  free(pgraph) ;
+  Mry_Free(pgraph) ;
   
   
   /* Nb of edges */
@@ -435,7 +472,7 @@ void  (Periodicities_UpdateMatrixRowColumnIndexes)(Mesh_t* mesh)
     }
   
     Graph_Delete(graph) ;
-    free(graph) ;
+    Mry_Free(graph) ;
   }
   
 }
@@ -453,9 +490,9 @@ void  (Periodicities_EliminateMatrixRowColumnIndexes)(Mesh_t* mesh)
   {
     Element_t* elt = Mesh_GetElement(mesh) ;
     size_t n_elts  = Mesh_GetNbOfElements(mesh) ;
-    int n_per   = Periodicities_GetNbOfPeriodicities(periodicities) ;    
+    size_t n_per   = Periodicities_GetNbOfPeriodicities(periodicities) ;    
     
-    for(int i_per = 0 ; i_per < n_per ; i_per++) {
+    for(size_t i_per = 0 ; i_per < n_per ; i_per++) {
       Periodicity_t* periodicity = Periodicities_GetPeriodicity(periodicities) + i_per ;
       //int slavereg  = Periodicity_GetSlaveRegion(periodicity) ;
       char* slavereg  = Periodicity_GetSlaveRegionName(periodicity) ;

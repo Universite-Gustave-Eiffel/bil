@@ -12,7 +12,7 @@
 #define TITLE   "Crystallization in porous media"
 #define AUTHORS "Dangla"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 
 
@@ -238,7 +238,7 @@ enum {
 
 
 /* To retrieve the material properties */
-#define GetProperty(a)      Element_GetPropertyValue(el,a)
+#define GetMaterialProperty(a)      Element_GetPropertyValue(el,a)
 
 
 /* Fonctions */
@@ -386,16 +386,16 @@ int pm(const char *s)
 
 void GetProperties(Element_t* el)
 {
-  gravity = GetProperty("gravity") ;
-  phi0    = GetProperty("porosity") ;
-  kl_int  = GetProperty("kl_int") ;
-  mu_l    = GetProperty("mu_l") ;
-  //k_l     = GetProperty("k_l") ;
-  //rho_s   = GetProperty("rho_s") ;
-  p_l0    = GetProperty("p_l0") ;
-  //b       = GetProperty("biot") ;
-  N       = GetProperty("N") ;
-  sig0    = &GetProperty("sig0") ;
+  gravity = GetMaterialProperty("gravity") ;
+  phi0    = GetMaterialProperty("porosity") ;
+  kl_int  = GetMaterialProperty("kl_int") ;
+  mu_l    = GetMaterialProperty("mu_l") ;
+  //k_l     = GetMaterialProperty("k_l") ;
+  //rho_s   = GetMaterialProperty("rho_s") ;
+  p_l0    = GetMaterialProperty("p_l0") ;
+  //b       = GetMaterialProperty("biot") ;
+  N       = GetMaterialProperty("N") ;
+  sig0    = &GetMaterialProperty("sig0") ;
   
   elasty  = (Elasticity_t*) Element_FindMaterialData(el,"Elasticity") ;
   cijkl   = Elasticity_GetStiffnessTensor(elasty) ;
@@ -411,7 +411,7 @@ int SetModelProp(Model_t *model)
   
 
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   
   
@@ -496,7 +496,7 @@ int ReadMatProp(Material_t *mat,DataFile_t *datafile)
         y_lnaw[i] = LogActivityOfWater(c_s) ;
         y_lnas[i] = LogActivityOfSalt(c_s) ;
       }
-      free(x) ;
+      Mry_Free(x) ;
     }
 
     /* on met a jour le nb de proprietes */

@@ -9,7 +9,7 @@
 #define TITLE   "Nano Double Porosity model"
 #define AUTHORS "Nikoosokhan"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 /* Macros */
 #define NEQ     (1+dim)
@@ -71,7 +71,7 @@ static double k_int,mu_co2 ;
 static double phi0_1,rho_s ;
 static double p0_co2,sig0_11,sig0_22,sig0_33 ;
 
-#define GetProperty(a)   (Element_GetProperty(el)[pm(a)]) 
+#define GetMaterialProperty(a)   (Element_GetProperty(el)[pm(a)]) 
 
 int pm(const char *s)
 {
@@ -97,7 +97,7 @@ int SetModelProp(Model_t *model)
   int dim = Model_GetDimension(model) ;
   int i ;
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */
   Model_CopyNameOfEquation(model,E_co2,"co2") ;
@@ -245,18 +245,18 @@ int ComputeInitialState(Element_t *el)
   /*
     Input Data
   */
-  gravite = GetProperty("gravite") ;
-  young   = GetProperty("young") ;
-  K_m     = GetProperty("K_m") ;
-  poisson = GetProperty("poisson") ;
-  phi0_1  = GetProperty("phi0_1") ;
-  k_int   = GetProperty("k_int") ;
-  mu_co2  = GetProperty("mu_co2") ;
-  rho_s   = GetProperty("rho_s") ;
-  p0_co2  = GetProperty("p0_co2") ;
-  sig0_11 = GetProperty("sig0_11") ;
-  sig0_22 = GetProperty("sig0_22") ;
-  sig0_33 = GetProperty("sig0_33") ;
+  gravite = GetMaterialProperty("gravite") ;
+  young   = GetMaterialProperty("young") ;
+  K_m     = GetMaterialProperty("K_m") ;
+  poisson = GetMaterialProperty("poisson") ;
+  phi0_1  = GetMaterialProperty("phi0_1") ;
+  k_int   = GetMaterialProperty("k_int") ;
+  mu_co2  = GetMaterialProperty("mu_co2") ;
+  rho_s   = GetMaterialProperty("rho_s") ;
+  p0_co2  = GetMaterialProperty("p0_co2") ;
+  sig0_11 = GetMaterialProperty("sig0_11") ;
+  sig0_22 = GetMaterialProperty("sig0_22") ;
+  sig0_33 = GetMaterialProperty("sig0_33") ;
 
   dmu     = young/(1 + poisson) ;
   lame    = dmu*poisson/(1 - 2*poisson) ;
@@ -363,18 +363,18 @@ int  ComputeExplicitTerms(Element_t *el,double t)
   /*
     Input data
   */
-  gravite = GetProperty("gravite") ;
-  young   = GetProperty("young") ;
-  K_m     = GetProperty("K_m") ;
-  poisson = GetProperty("poisson") ;
-  phi0_1  = GetProperty("phi0_1") ;
-  k_int   = GetProperty("k_int") ;
-  mu_co2  = GetProperty("mu_co2") ;
-  rho_s   = GetProperty("rho_s") ;
-  p0_co2  = GetProperty("p0_co2") ;
-  sig0_11 = GetProperty("sig0_11") ;
-  sig0_22 = GetProperty("sig0_22") ;
-  sig0_33 = GetProperty("sig0_33") ;
+  gravite = GetMaterialProperty("gravite") ;
+  young   = GetMaterialProperty("young") ;
+  K_m     = GetMaterialProperty("K_m") ;
+  poisson = GetMaterialProperty("poisson") ;
+  phi0_1  = GetMaterialProperty("phi0_1") ;
+  k_int   = GetMaterialProperty("k_int") ;
+  mu_co2  = GetMaterialProperty("mu_co2") ;
+  rho_s   = GetMaterialProperty("rho_s") ;
+  p0_co2  = GetMaterialProperty("p0_co2") ;
+  sig0_11 = GetMaterialProperty("sig0_11") ;
+  sig0_22 = GetMaterialProperty("sig0_22") ;
+  sig0_33 = GetMaterialProperty("sig0_33") ;
   
   K = young/(3-6*poisson) ;
   b  = 1 - K/K_m ;
@@ -429,18 +429,18 @@ int  ComputeImplicitTerms(Element_t *el,double t,double dt)
   /*
     Input data
   */
-  gravite = GetProperty("gravite") ;
-  young   = GetProperty("young") ;
-  K_m     = GetProperty("K_m") ;
-  poisson = GetProperty("poisson") ;
-  phi0_1  = GetProperty("phi0_1") ;
-  k_int   = GetProperty("k_int") ;
-  mu_co2  = GetProperty("mu_co2") ;
-  rho_s   = GetProperty("rho_s") ;
-  p0_co2  = GetProperty("p0_co2") ;
-  sig0_11 = GetProperty("sig0_11") ;
-  sig0_22 = GetProperty("sig0_22") ;
-  sig0_33 = GetProperty("sig0_33") ;
+  gravite = GetMaterialProperty("gravite") ;
+  young   = GetMaterialProperty("young") ;
+  K_m     = GetMaterialProperty("K_m") ;
+  poisson = GetMaterialProperty("poisson") ;
+  phi0_1  = GetMaterialProperty("phi0_1") ;
+  k_int   = GetMaterialProperty("k_int") ;
+  mu_co2  = GetMaterialProperty("mu_co2") ;
+  rho_s   = GetMaterialProperty("rho_s") ;
+  p0_co2  = GetMaterialProperty("p0_co2") ;
+  sig0_11 = GetMaterialProperty("sig0_11") ;
+  sig0_22 = GetMaterialProperty("sig0_22") ;
+  sig0_33 = GetMaterialProperty("sig0_33") ;
 
   dmu     = young/(1 + poisson) ;
   lame    = dmu*poisson/(1 - 2*poisson) ;
@@ -734,11 +734,11 @@ int c69(FEM_t *fem,double *c)
   /*
     Donnees
   */
-  young   = GetProperty("young") ;
-  K_m     = GetProperty("K_m") ;
-  poisson = GetProperty("poisson") ;
-  phi0_1  = GetProperty("phi0_1") ;
-  p0_co2  = GetProperty("p0_co2") ;
+  young   = GetMaterialProperty("young") ;
+  K_m     = GetMaterialProperty("K_m") ;
+  poisson = GetMaterialProperty("poisson") ;
+  phi0_1  = GetMaterialProperty("phi0_1") ;
+  p0_co2  = GetMaterialProperty("p0_co2") ;
   
   dmu     = young/(1 + poisson) ;
   mu      = dmu/2 ;

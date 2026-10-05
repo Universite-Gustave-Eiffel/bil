@@ -27,7 +27,7 @@ Solvers_t*  (Solvers_Create)(Mesh_t* mesh,Options_t* options,unsigned short int 
       Solver_t* solver_i = Solver_Create(mesh,options,n,i) ;
       
       solver[i] = solver_i[0] ;
-      free(solver_i) ;
+      Mry_Free(solver_i) ;
     }
     
     Solvers_GetSolver(solvers) = solver ;
@@ -48,7 +48,7 @@ void  (Solvers_Delete)(void* self)
     
     if(solver) {
       Mry_Delete(solver,n,Solver_Delete) ;
-      free(solver) ;
+      Mry_Free(solver) ;
       Solvers_GetSolver(solvers) = NULL ;
     }
   }

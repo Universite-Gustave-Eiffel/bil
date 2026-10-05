@@ -14,7 +14,7 @@
 #define TITLE   "Hydrogen Sulfide attack of concrete (Jan. 2015)" 
 #define AUTHORS "Yuan-Dangla"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 /* Macros */ 
 #define NEQ     (6)
@@ -267,7 +267,7 @@
 
 
 /* To retrieve the material properties */
-#define GetProperty(a)   (Element_GetProperty(el)[pm(a)])
+#define GetMaterialProperty(a)   (Element_GetProperty(el)[pm(a)])
 
 
 
@@ -422,7 +422,7 @@ int pm(const char *s)
 
 int SetModelProp(Model_t *model)
 {
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */
   Model_CopyNameOfEquation(model,E_S, "sulfur"   ) ;
@@ -595,10 +595,10 @@ int ComputeInitialState(Element_t *el)
   /*
     Donnees
   */
-  phi0      = GetProperty("porosite") ;
-  n_ca_ref  = GetProperty("N_CH") ;
-  n_si_ref  = GetProperty("N_Si") ;
-  c_h2s_eq  = GetProperty("C_H2S_eq") ;
+  phi0      = GetMaterialProperty("porosite") ;
+  n_ca_ref  = GetMaterialProperty("N_CH") ;
+  n_si_ref  = GetMaterialProperty("N_Si") ;
+  c_h2s_eq  = GetMaterialProperty("C_H2S_eq") ;
   
   
   /* Pre-initialization */
@@ -698,12 +698,12 @@ int  ComputeImplicitTerms(Element_t *el,double t,double dt)
   /*
     Donnees
   */
-  phi0      = GetProperty("porosite") ;
-  n_ca_ref  = GetProperty("N_CH") ;
-  n_si_ref  = GetProperty("N_Si") ;
-  c_h2s_eq  = GetProperty("C_H2S_eq") ;
-  t_ch      = GetProperty("T_CH") ;
-  t_cas     = GetProperty("T_CaS") ;
+  phi0      = GetMaterialProperty("porosite") ;
+  n_ca_ref  = GetMaterialProperty("N_CH") ;
+  n_si_ref  = GetMaterialProperty("N_Si") ;
+  c_h2s_eq  = GetMaterialProperty("C_H2S_eq") ;
+  t_ch      = GetMaterialProperty("T_CH") ;
+  t_cas     = GetMaterialProperty("T_CaS") ;
   
   
   /* Contenus molaires */
@@ -799,12 +799,12 @@ int  ComputeMatrix(Element_t *el,double t,double dt,double *k)
   /*
     Input data 
   */
-  phi0      = GetProperty("porosite") ;
-  n_ca_ref  = GetProperty("N_CH") ;
-  n_si_ref  = GetProperty("N_Si") ;
-  c_h2s_eq = GetProperty("C_H2S_eq") ;
-  t_ch      = GetProperty("T_CH") ;
-  t_cas     = GetProperty("T_CaS") ;
+  phi0      = GetMaterialProperty("porosite") ;
+  n_ca_ref  = GetMaterialProperty("N_CH") ;
+  n_si_ref  = GetMaterialProperty("N_Si") ;
+  c_h2s_eq = GetMaterialProperty("C_H2S_eq") ;
+  t_ch      = GetMaterialProperty("T_CH") ;
+  t_cas     = GetMaterialProperty("T_CaS") ;
   
   TangentCoefficients(el,dt,c) ;
   {
@@ -835,7 +835,7 @@ int  ComputeResidu(Element_t *el,double t,double dt,double *r)
 /* Residu (r) */
 {
 #define R(n,i)    (r[(n)*NEQ+(i)])
-  Symmetry_t sym = Element_GetSymmetry(el) ;
+  Geometry_t* geom = Element_GetGeometry(el) ;
   double *f = Element_GetCurrentImplicitTerm(el) ;
   double *f_n = Element_GetPreviousImplicitTerm(el) ;
   int nn = Element_GetNbOfNodes(el) ;
@@ -862,9 +862,9 @@ int  ComputeResidu(Element_t *el,double t,double dt,double *r)
   for(i=0;i<nn;i++) {
     double x = Element_GetNodeCoordinate(el,i)[0] ;
     volume[i] = fabs(dx)/deux ; 
-    if(sym == AXIS) volume[i] *= M_PI*(x + xm) ; 
+    if(Geometry_HasCylindricalSymmetry(geom)) volume[i] *= M_PI*(x + xm) ; 
   }
-  if(sym == AXIS) surf = deux*M_PI*xm ; else surf = un ;
+  if(Geometry_HasCylindricalSymmetry(geom)) surf = deux*M_PI*xm ; else surf = un ;
   /*
     Conservation de S (sulfur)
   */
@@ -919,7 +919,7 @@ int  ComputeOutputs(Element_t *el,double t,double *s,Result_t *r)
   /*
     Input data
   */
-  c_h2s_eq  = GetProperty("C_H2S_eq") ;
+  c_h2s_eq  = GetMaterialProperty("C_H2S_eq") ;
 
   /* Initialization */
   for(i = 0 ; i < nso ; i++) {
@@ -1019,9 +1019,9 @@ void ComputeTransferCoefficients(Element_t *el,double **u,double *f)
   /*
     Donnees
   */
-  phi0      = GetProperty("porosite") ;
-  c_h2s_eq = GetProperty("C_H2S_eq") ;
-  /*k_int     = GetProperty("k_int") ;*/
+  phi0      = GetMaterialProperty("porosite") ;
+  c_h2s_eq = GetMaterialProperty("C_H2S_eq") ;
+  /*k_int     = GetMaterialProperty("k_int") ;*/
   
   /* initialisation */
   for(i = 0 ; i < NVE ; i++) va[i] = 0. ;

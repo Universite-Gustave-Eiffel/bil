@@ -3,7 +3,7 @@
 
 
 /* Forward declarations */
-struct GenericData_t; //typedef struct GenericData_t     GenericData_t ;
+struct GenericData_t;
 struct TypeId_t;
 
 
@@ -203,10 +203,10 @@ struct GenericData_t {
   #if 1
   template<typename T>
   void Initialize(size_t,T*,const char*);
-  inline static GenericData_t* New(void);
+  static GenericData_t* New(void);
   template<typename T>
-  inline static GenericData_t* Create(size_t,T*,const char*);
-  inline static void Delete(void*);
+  static GenericData_t* Create(size_t,T*,const char*);
+  static void Delete(void*);
   #endif
 } ;
 
@@ -218,9 +218,9 @@ struct GenericData_t {
 #include "TypeId.h"
 #include "Mry.h"
 
-#if 1
+
 template<typename T>
-void GenericData_t::Initialize(size_t n,T* data,const char* name){
+inline void GenericData_t::Initialize(size_t n,T* data,const char* name){
     TypeId_Set(GetTypeId(),data);
     SetNbOfData(n);
     
@@ -235,7 +235,7 @@ void GenericData_t::Initialize(size_t n,T* data,const char* name){
 }
 
 
-GenericData_t* GenericData_t::New(void)
+inline GenericData_t* GenericData_t::New(void)
 {
   GenericData_t* gdat = (GenericData_t*) Mry_New(GenericData_t) ;
   
@@ -266,7 +266,7 @@ GenericData_t* GenericData_t::New(void)
 
 
 template<typename T>
-GenericData_t* GenericData_t::Create(size_t n,T* data,const char* name)
+inline GenericData_t* GenericData_t::Create(size_t n,T* data,const char* name)
 {
   GenericData_t* gdat = New();
   
@@ -276,7 +276,7 @@ GenericData_t* GenericData_t::Create(size_t n,T* data,const char* name)
 }
 
 
-void GenericData_t::Delete(void* self)
+inline void GenericData_t::Delete(void* self)
 {
   GenericData_t* gdat = (GenericData_t*) self;
   
@@ -339,27 +339,6 @@ void GenericData_t::Delete(void* self)
     }
   }
 }
-#endif
-
-
-
-#if 0
-inline GenericData_t* (GenericData_New)       (void) ;
-template<typename T>
-inline GenericData_t* (GenericData_Create)    (size_t,T*,const char*) ;
-template<typename T>
-inline void           (GenericData_Initialize)(GenericData_t*,size_t,T*,const char*) ;
-inline GenericData_t* (GenericData_Append)    (GenericData_t*,GenericData_t*) ;
-inline GenericData_t* (GenericData_First)     (GenericData_t*) ;
-inline GenericData_t* (GenericData_Last)      (GenericData_t*) ;
-inline GenericData_t* (GenericData_Find)      (GenericData_t*,const char*) ;
-
-//inline void           (GenericData_DeleteData)   (TypeId_t*,void*) ;
-inline void           (GenericData_Delete)       (void*) ;
-
-
-#include "GenericData.h.in"
-#endif
 
 /* For the macros */
 #include "TypeId.h"

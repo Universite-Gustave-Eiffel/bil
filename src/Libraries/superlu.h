@@ -1,13 +1,13 @@
 #include "BilConfig.h"
 
 #ifdef HAVE_SUPERLU
-#include "superluseq.h.in"
+#include <superlu/slu_ddefs.h>
 #endif
 
 #ifdef HAVE_SUPERLUMT
-#include "superlumt.h.in"
+#error "Multithreaded SuperLU method not available"
 #endif
 
 #ifdef HAVE_SUPERLUDIST
-#include "superludist.h.in"
+#include <superlu_ddefs.h>
 #endif

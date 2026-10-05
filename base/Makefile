@@ -260,9 +260,7 @@ work1:
 
 grep:
 	for i in ${BASE_DIRS}; do (\
-	cd $$i && \
-	echo "$$i" && \
-	grep "Geometry" $$i \
+	grep -H -n "${OPT}" $$i/$$i \
 	); done
 
 

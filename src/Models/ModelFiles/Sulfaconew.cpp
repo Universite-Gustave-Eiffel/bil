@@ -19,7 +19,7 @@
 #define TITLE   "Internal/External sulfate attack of concrete (2017)" 
 #define AUTHORS "Gu-Dangla"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 
 
@@ -510,7 +510,7 @@ static double dp_AFt;
 
 
 /* To retrieve the material properties */
-#define GetProperty(a) \
+#define GetMaterialProperty(a) \
         (pm(a) < 0) ? 0 : Element_GetProperty(el)[pm(a)]
 
 
@@ -645,7 +645,7 @@ void GetProperties(Element_t* el,double t)
 
 int SetModelProp(Model_t* model)
 {
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   Model_CopyNameOfEquation(model,E_SULFUR, "sulfur") ;
   Model_CopyNameOfEquation(model,E_CALCIUM,"calcium") ;
@@ -685,7 +685,7 @@ int SetModelProp(Model_t* model)
   #endif
 #endif
 
-  Model_GetComputeMaterialProperties(model) = &GetProperties;
+  Model_SetComputeMaterialProperties(model,&GetProperties);
   
   return(0) ;
 }

@@ -3,6 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include <ctype.h>
+#include <iostream>
 #include "Message.h"
 #include "Mry.h"
 #include "String_.h"
@@ -17,16 +18,18 @@
 
 
 
-BCond_t* BCond_New(void)
+BCond_t* (BCond_New)(Fields_t* fields,Functions_t* functions)
 {
   BCond_t* bcond = (BCond_t*) Mry_New(BCond_t) ;
-    
-    
+      
+  BCond_SetFields(bcond,fields) ;
+  BCond_SetFunctions(bcond,functions) ;
+
   /* Allocation of space for the name of unknown */
   {
     char* name = (char*) Mry_New(char,BCond_MaxLengthOfKeyWord) ;
   
-    BCond_GetNameOfUnknown(bcond) = name ;
+    BCond_SetNameOfUnknown(bcond,name) ;
   }
     
     
@@ -34,7 +37,7 @@ BCond_t* BCond_New(void)
   {
     char* name = (char*) Mry_New(char,BCond_MaxLengthOfKeyWord) ;
     
-    BCond_GetNameOfEquation(bcond) = name ;
+    BCond_SetNameOfEquation(bcond,name) ;
   }
   
   
@@ -42,7 +45,7 @@ BCond_t* BCond_New(void)
   {
     char* name = (char*) Mry_New(char,BCond_MaxLengthOfRegionName) ;
     
-    BCond_GetRegionName(bcond) = name ;
+    BCond_SetRegionName(bcond,name) ;
   }
 
   return(bcond) ;
@@ -58,7 +61,7 @@ void (BCond_Delete)(void* self)
     char* name = BCond_GetNameOfUnknown(bcond) ;
     
     if(name) {
-      free(name) ;
+      Mry_Free(name) ;
     }
   }
   
@@ -66,7 +69,7 @@ void (BCond_Delete)(void* self)
     char* name = BCond_GetNameOfEquation(bcond) ;
     
     if(name) {
-      free(name) ;
+      Mry_Free(name) ;
     }
   }
   
@@ -74,13 +77,13 @@ void (BCond_Delete)(void* self)
     char* name = BCond_GetRegionName(bcond) ;
     
     if(name) {
-      free(name) ;
+      Mry_Free(name) ;
     }
   }
 }
 
 
-
+#if 0
 void BCond_Scan(BCond_t* bcond,DataFile_t* datafile)
 {
   char* line = DataFile_ReadLineFromCurrentFilePositionInString(datafile) ;
@@ -128,24 +131,24 @@ void BCond_Scan(BCond_t* bcond,DataFile_t* datafile)
     int i ;
     int n = String_FindAndScanExp(line,"Field,Champ",","," = %d",&i) ;
     
-    BCond_GetFieldIndex(bcond) = -1 ;
-    BCond_GetField(bcond) = NULL ;
+    //BCond_SetFieldIndex(bcond,-1) ;
+    BCond_SetField(bcond,NULL) ;
         
     if(n) {
       Fields_t* fields = BCond_GetFields(bcond) ;
-      int n_fields = Fields_GetNbOfFields(fields) ;
+      size_t n_fields = Fields_GetNbOfFields(fields) ;
       int ifld = i - 1 ;
       
-      BCond_GetFieldIndex(bcond) = ifld ;
+      //BCond_SetFieldIndex(bcond,ifld) ;
       
       if(ifld < 0) {
         
-        BCond_GetField(bcond) = NULL ;
+        BCond_SetField(bcond,NULL) ;
         
       } else if(ifld < n_fields) {
         Field_t* field = Fields_GetField(fields) ;
         
-        BCond_GetField(bcond) = field + ifld ;
+        BCond_SetField(bcond,field + ifld) ;
         
       } else {
         
@@ -161,24 +164,22 @@ void BCond_Scan(BCond_t* bcond,DataFile_t* datafile)
     int i ;
     int n = String_FindAndScanExp(line,"Func,Fonc",","," = %d",&i) ;
     
-    BCond_GetFunctionIndex(bcond) = -1 ;
-    BCond_GetFunction(bcond) = NULL ;
+    BCond_SetFunction(bcond,NULL) ;
         
     if(n) {
       Functions_t* functions = BCond_GetFunctions(bcond) ;
-      int n_functions = Functions_GetNbOfFunctions(functions) ;
+      size_t n_functions = Functions_GetNbOfFunctions(functions) ;
       int ifct = i - 1 ;
       
-      BCond_GetFunctionIndex(bcond) = ifct ;
       
       if(ifct < 0) {
         
-        BCond_GetFunction(bcond) = NULL ;
+        BCond_SetFunction(bcond,NULL) ;
         
       } else if(ifct < n_functions) {
         Function_t* fct = Functions_GetFunction(functions) ;
         
-        BCond_GetFunction(bcond) = fct + ifct ;
+        BCond_SetFunction(bcond,fct + ifct) ;
         
       } else {
         
@@ -211,6 +212,73 @@ void BCond_Scan(BCond_t* bcond,DataFile_t* datafile)
     }
   }
 }
+#else
+void BCond_Scan(BCond_t* bcond,DataFile_t* datafile)
+{
+  char* line = DataFile_ReadLineFromCurrentFilePositionInString(datafile) ;
+  char region[BCond_MaxLengthOfRegionName] ;
+  char unknown[BCond_MaxLengthOfKeyWord] ;
+  char equation[BCond_MaxLengthOfKeyWord] ;
+  size_t ifld ;
+  size_t ifct ;
+  
+  /* Region */
+  {
+    int n = String_FindAndScanExp(line,"Reg",","," = %s",region) ;
+    
+    if(!n) {
+      arret("BCond_Scan: no region") ;
+    }
+  }
+    
+    
+  /* Unknown */
+  {
+    int n = String_FindAndScanExp(line,"Unk,Inc",","," = %s",unknown) ;
+        
+    if(!n) {
+      arret("BCond_Scan: no unknown") ;
+    }
+  }
+    
+    
+  /* Field */
+  {
+    int n = String_FindAndScanExp(line,"Field,Champ",","," = %lu",&ifld) ;
+    
+    BCond_SetField(bcond,NULL) ;
+        
+    if(!n) {
+      arret("BCond_Scan: no field") ;
+    }
+  }
+    
+    
+  /* Function */
+  {
+    int n = String_FindAndScanExp(line,"Func,Fonc",","," = %lu",&ifct) ;
+    
+    BCond_SetFunction(bcond,NULL) ;
+        
+    if(!n) {
+      arret("BCond_Scan: no function") ;
+    }
+  }
+    
+    
+  /* Equation (not mandatory) */
+  {
+    int n = String_FindAndScanExp(line,"Equ",","," = %s",equation) ;
+      
+    if(!n) {
+      strcpy(equation," ") ;
+    }
+  }
+
+  //std::cout << "equation = " << equation << std::endl ;
+  BCond_Set(bcond,region,equation,unknown,ifld,ifct);
+}
+#endif
 
 
 

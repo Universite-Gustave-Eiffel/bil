@@ -3,10 +3,10 @@
 # This program executes similarly to bin/bil-X.Y.Z.exe
 # The implementation is similar to main.c in the C version of bil
 
-macro LIBBIL(); return :("libbil-2.8.8-Debug"); end;
+macro LIBBIL(); return :("/usr/local/lib/libbil-2.13-Release"); end;
 
 macro Entry_Main(A,B);
-  return :(ccall((:Entry_Main, @LIBBIL), Ptr{Cvoid}, (Cint,Ptr{Ptr{Cchar}}), $A, $B));
+  return :(ccall((:Entry_Main, @LIBBIL), Cint, (Cint,Ptr{Ptr{Cchar}}), $A, $B));
 end;
 
 macro Entry_Create(A,B);
@@ -14,7 +14,7 @@ macro Entry_Create(A,B);
 end;
 
 macro Entry_Execute(A);
-  return :(ccall((:Entry_Execute, @LIBBIL), Cvoid, (Ref{Cvoid},), $A));
+  return :(ccall((:Entry_Execute, @LIBBIL), Cint, (Ref{Cvoid},), $A));
 end;
 
 macro Entry_Delete(A);

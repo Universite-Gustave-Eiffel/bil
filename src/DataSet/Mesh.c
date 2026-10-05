@@ -51,7 +51,6 @@ extern void   mc43ad_(int*,int*,int*,int*,int*,int*,int*,int*,int*,int*,int*) ;
 static int*      (Mesh_ComputeInversePermutationOfNodes)(Mesh_t*,const char*) ;
 static int*      (Mesh_ComputeInversePermutationOfElements)(Mesh_t*,const char*) ;
 static Graph_t*  (Mesh_CreateGraph)(Mesh_t*) ;
-static void      (Mesh_SetNodeConnectivities)(Mesh_t*) ;
 
 
 static void   Mesh_OneNode(Mesh_t*) ;
@@ -81,89 +80,135 @@ static void     (Mesh_BroadcastElementaryResidus)(Mesh_t*) ;
 
 
 
-
 /* Extern functions */
 
-
-#if 0
-Mesh_t*  (Mesh_New)(void)
+Mesh_t*  (Mesh_New)(Geometry_t* geometry,DataFile_t* datafile)
 {
   Mesh_t* mesh = (Mesh_t*) Mry_New(Mesh_t) ;
-  
-  Mesh_GetElements(mesh) = (Elements_t*) Mry_New(Elements_t) ;
-  
-  Mesh_GetNodes(mesh) = (Nodes_t*) Mry_New(Nodes_t) ;
+
+  Mesh_SetGeometry(mesh,geometry);
+  Mesh_SetDataFile(mesh,datafile);
   
   return(mesh) ;
 }
-#endif
 
 
-
-Mesh_t*  (Mesh_Create)(DataFile_t* datafile,Materials_t* materials,Geometry_t* geometry)
+Mesh_t*  (Mesh_Create)(DataFile_t* datafile,Geometry_t* geometry,Materials_t* materials)
 {
-  Mesh_t* mesh = (Mesh_t*) Mry_New(Mesh_t) ;
-  
-  {
-    char* filecontent = DataFile_GetFileContent(datafile) ;
-    char* c = String_FindToken(filecontent,"MAIL,MESH,Mesh",",") ;
-    
-    if(c) {
-      c = String_SkipLine(c) ;
-    } else {
-      arret("Mesh_Create: Mesh not found") ;
-    }
-      
-    DataFile_SetCurrentPositionInFileContent(datafile,c) ;
+  Mesh_t* mesh = Mesh_New(geometry,datafile);
+
+  Mesh_Scan(mesh,datafile);
+
+  if(materials) {
+    Mesh_CreateMore(mesh,materials) ;
   }
+
+  return(mesh) ;
+}
+
+
+void  (Mesh_Scan)(Mesh_t* mesh,DataFile_t* datafile)
+{
+  char* filecontent = DataFile_GetFileContent(datafile) ;
+  char* c = String_FindToken(filecontent,"MAIL,MESH,Mesh",",") ;
+    
+  if(c) {
+    c = String_SkipLine(c) ;
+  } else {
+    arret("Mesh_Create: Mesh not found") ;
+  }
+      
+  DataFile_SetCurrentPositionInFileContent(datafile,c) ;
    
    
   Message_Direct("Enter in %s","Mesh") ;
   Message_Direct("\n") ;
-  
-  Mesh_GetGeometry(mesh) = geometry ;
-  Mesh_GetDataFile(mesh) = datafile ;
-
 
   {
     char* line = DataFile_GetCurrentPositionInFileContent(datafile) ;
 
-    /* 1. Allocation memory for the mesh i.e. 
-     *    node, coordinates, element and connectivity
-     * ----------------------------------------------*/
-  
-    if(!Mesh_Scan(mesh,line)) {
-      Message_FatalError("Mesh_Create: No such file name") ;
-    }
-    
-    /* Set the node connectivities */
-    //Mesh_CreateMore(mesh) ;
-    Mesh_SetNodeConnectivities(mesh) ;
+    Mesh_Set(mesh,line);
   }
-  
-  
-  /* 1. Link up elements and materials (no allocation)
-   * -------------------------------------------------*/
-  Elements_LinkUp(Mesh_GetElements(mesh),materials) ;
 
-  /* 2. Allocation memory space in elements for 
+  return;
+}
+
+
+
+void  (Mesh_Set)(Mesh_t* mesh,std::string const& filestr){
+  Mesh_Set(mesh,filestr.c_str());
+}
+void  (Mesh_Set)(Mesh_t* mesh,char const* filename)
+{
+  char*  nom_mail = String_CopyLine(filename) ;
+
+  if(strlen(filename) > strlen(nom_mail)) {
+    Message_Direct("Mesh_Scan: name too long!\n") ;
+  }
+
+  /* Mesh file ? */
+  sscanf(filename,"%s",nom_mail) ;
+  
+  /* 1. Allocation memory for the mesh i.e. 
+   *    node, coordinates, element and connectivity
+   *    (treatment after filename extension)
+   * ----------------------------------------------*/
+  if(strstr(nom_mail,".msh")) {
+    
+    Mesh_ReadFormatGmsh(mesh,nom_mail) ;
+    
+  } else if(strstr(nom_mail,".m1d")) {
+    
+    Mesh_Readm1d(mesh,nom_mail) ;
+    
+  } else if(strstr(nom_mail,".ces")) {
+    
+    Mesh_ReadFormatCesar(mesh,nom_mail) ;
+    
+  } else {
+    int dim = Mesh_GetDimension(mesh) ;
+      
+    if(dim == 1) {
+      
+      Mesh_ReadInline1d(mesh,filename) ;
+      
+    } else {
+      
+      Mesh_OneNode(mesh) ;
+      Message_Direct("Mesh_Scan: a mesh with only one node is created!\n") ;
+            
+    }
+  }
+    
+  /* 2. Set the node connectivities (no allocation) */
+  Mesh_SetNodeConnectivities(mesh) ;
+  
+  return ;
+}
+
+
+
+void (Mesh_CreateMore)(Mesh_t* mesh,Materials_t* materials)
+{
+  /* 3. Link up elements and materials (no allocation)
+   * -------------------------------------------------*/
+  Elements_LinkUpToMaterials(Mesh_GetElements(mesh),materials) ;
+
+  /* 4. Allocation memory space in elements for 
    *   - unknown and equation positions
    * -------------------------------------------*/
   Elements_CreateMore(Mesh_GetElements(mesh)) ;
   
-  /* 3. Allocation memory space in nodes for 
+  /* 5. Allocation memory space in nodes for 
    *   - the names of equations and unknowns
    *   - the indexes of matrix rows, matrix columns
    *   - the indexes of objective values
    * -----------------------------------------------*/
   Nodes_CreateMore(Mesh_GetNodes(mesh)) ;
 
-  /* 4. Set the continuity of equations at nodes (no allocation)
+  /* 6. Set the continuity of equations at nodes (no allocation)
    * -----------------------------------------------------------*/
   Mesh_SetEquationContinuity(mesh) ;
-
-
-  return(mesh) ;
 }
 
 
@@ -173,8 +218,8 @@ void (Mesh_Delete)(void* self)
   Mesh_t* mesh = (Mesh_t*) self ;
   
   {
-    Mesh_GetDataFile(mesh) = NULL ;
-    Mesh_GetGeometry(mesh) = NULL ;
+    Mesh_SetDataFile(mesh,NULL) ;
+    Mesh_SetGeometry(mesh,NULL) ;
   }
   
   {
@@ -185,7 +230,7 @@ void (Mesh_Delete)(void* self)
       Mry_Free(elts) ;
     }
     
-    Mesh_GetElements(mesh) = NULL ;
+    Mesh_SetElements(mesh,NULL) ;
   }
   
   {
@@ -196,55 +241,8 @@ void (Mesh_Delete)(void* self)
       Mry_Free(nodes) ;
     }
     
-    Mesh_GetNodes(mesh) = NULL ;
+    Mesh_SetNodes(mesh,NULL) ;
   }
-}
-
-
-
-char*  (Mesh_Scan)(Mesh_t* mesh,char* line)
-{
-  char  nom_mail[Mesh_MaxLengthOfFileName] ;
-
-  /* Mesh file ? */
-  sscanf(line,"%s",nom_mail) ;
-  
-  /* Treatment after filename extension */
-  if(strstr(nom_mail,".msh")) {
-    
-    Mesh_ReadFormatGmsh(mesh,nom_mail) ;
-    //lit_mail_gmsh(mesh,nom_mail) ;
-    
-  } else if(strstr(nom_mail,".m1d")) {
-    
-    Mesh_Readm1d(mesh,nom_mail) ;
-    //lit_mail_m1d(mesh,nom_mail) ;
-    
-  } else if(strstr(nom_mail,".ces")) {
-    
-    Mesh_ReadFormatCesar(mesh,nom_mail) ;
-    //lit_mail_cesar(mesh,nom_mail) ;
-    
-  } else {
-    int dim = Mesh_GetDimension(mesh) ;
-      
-    if(dim == 1) {
-      
-      /* Read directly in the data file */
-      Mesh_ReadInline1d(mesh,line) ;
-      //mail1d(mesh,line) ;
-      
-    } else {
-      
-      Mesh_OneNode(mesh) ;
-      Message_Direct("Mesh_Scan: a mesh with only one node is created!\n") ;
-      
-      //return(NULL) ;
-      
-    }
-  }
-  
-  return(line) ;
 }
 
 
@@ -345,12 +343,7 @@ Graph_t* (Mesh_CreateGraph)(Mesh_t* mesh)
   {
     size_t    n_no = Mesh_GetNbOfNodes(mesh) ;
     /* Nb of connections per node (useful to size graph) */
-    unsigned short int*   nnz_no = (unsigned short int*) calloc(n_no,sizeof(unsigned short int)) ;
-  
-    if(!nnz_no) {
-      arret("Mesh_CreateGraph(1): impossible d\'allouer la memoire") ;
-    }
-  
+    unsigned short int*   nnz_no = (unsigned short int*) Mry_New(unsigned short int,n_no) ;
   
     /* An overestimation of nnz_no */
     {
@@ -373,7 +366,7 @@ Graph_t* (Mesh_CreateGraph)(Mesh_t* mesh)
     
     graph = Graph_Create(n_no,nnz_no) ;
 
-    free(nnz_no) ;
+    Mry_Free(nnz_no) ;
   }
 
 
@@ -657,7 +650,7 @@ void   (Mesh_WriteInversePermutation)(Mesh_t* mesh,const char* nom,const char* f
         fprintf(fic_iperm,"%d\n",iperm[i] - 1) ;
       }
         
-      free(iperm) ;
+      Mry_Free(iperm) ;
     } else if(String_Is(format,"hsl_mc43")) {
       size_t    nelt = Mesh_GetNbOfNodes(mesh) ;
       int*   norder = Mesh_ComputeInversePermutationOfElements(mesh,format) ;
@@ -666,7 +659,7 @@ void   (Mesh_WriteInversePermutation)(Mesh_t* mesh,const char* nom,const char* f
         fprintf(fic_iperm,"%d\n",norder[i] - 1) ;
       }
       
-      free(norder) ;
+      Mry_Free(norder) ;
     }
   
     fclose(fic_iperm) ;
@@ -687,8 +680,8 @@ int*   (Mesh_ComputeInversePermutationOfNodes)(Mesh_t* mesh,const char* format)
   if(String_Is(format,"hsl") || String_Is(format,"hsl_mc40")) {
     Graph_t*  graph = Mesh_CreateGraph(mesh) ;
     size_t    nnz  = Graph_GetNbOfEdges(graph) ;
-    int*   irn = (int*) malloc(2*nnz*sizeof(int)) ;
-    int*   jcn = (int*) malloc(nnz*sizeof(int)) ;
+    int*   irn = (int*) Mry_New(int,2*nnz);
+    int*   jcn = (int*) Mry_New(int,nnz);
   
     if(!irn || !jcn) {
       arret("Mesh_ComputeInversePermutationOfNodes(2): not enough memory") ;
@@ -722,8 +715,8 @@ int*   (Mesh_ComputeInversePermutationOfNodes)(Mesh_t* mesh,const char* format)
       int   iflag ;
       int   itype = 1 ;
       int   iprof[2] ;
-      int*  icptr = (int*) malloc((n_no + 1)*sizeof(int)) ;
-      int*  iw = (int*) malloc((3*n_no + 2)*sizeof(int)) ;
+      int*  icptr = (int*) Mry_New(int,(n_no + 1)) ;
+      int*  iw = (int*) Mry_New(int,(3*n_no + 2)) ;
     
       if(!icptr || !iw) {
         arret("Mesh_ComputeInversePermutationOfNodes(4): not enough memory") ;
@@ -745,12 +738,12 @@ int*   (Mesh_ComputeInversePermutationOfNodes)(Mesh_t* mesh,const char* format)
       Message_Direct("entry in its row is excluded.\n") ;
       */
     
-      free(icptr) ;
-      free(iw) ;
+      Mry_Free(icptr) ;
+      Mry_Free(iw) ;
     }
   
-    free(irn) ;
-    free(jcn) ;
+    Mry_Free(irn) ;
+    Mry_Free(jcn) ;
   } else {
     arret("Mesh_ComputeInversePermutationOfNodes(5): format %s unknown",format) ;
   }
@@ -788,11 +781,7 @@ int*   (Mesh_ComputeInversePermutationOfElements)(Mesh_t* mesh,const char* forma
       int  mxwave[2] ;
       int  iflag ;
       
-      eltptr = (int*) malloc((nelt + 1)*sizeof(int)) ;
-      
-      if(!eltptr) {
-        arret("Mesh_ComputeInversePermutationOfElements(4): not enough memory") ;
-      }
+      eltptr = (int*) Mry_New(int,(nelt + 1)) ;
       
       {        
         eltptr[0] = 1 ;
@@ -805,11 +794,7 @@ int*   (Mesh_ComputeInversePermutationOfElements)(Mesh_t* mesh,const char* forma
       
       nz = eltptr[nelt] - 1 ;
       
-      eltvar = (int*) malloc(nz*sizeof(int)) ;
-      
-      if(!eltvar) {
-        arret("Mesh_ComputeInversePermutationOfElements(4): not enough memory") ;
-      }
+      eltvar = (int*) Mry_New(int,nz) ;
       
       {
         int k = 0 ;
@@ -848,11 +833,7 @@ int*   (Mesh_ComputeInversePermutationOfElements)(Mesh_t* mesh,const char* forma
           if(liw < 2*nno) liw = 2*nno ;
         }
         
-        iw = (int*) malloc(liw*sizeof(int)) ;
-        
-        if(!iw) {
-          arret("Mesh_ComputeInversePermutationOfElements(4): not enough memory") ;
-        }
+        iw = (int*) Mry_New(int,liw) ;
       }
       
       {
@@ -871,9 +852,9 @@ int*   (Mesh_ComputeInversePermutationOfElements)(Mesh_t* mesh,const char* forma
       Message_Direct("    original ordering  %d\n",mxwave[0]) ;
       Message_Direct("    new ordering       %d\n",mxwave[1]) ;
       
-      free(eltptr) ;
-      free(eltvar) ;
-      free(iw) ;
+      Mry_Free(eltptr) ;
+      Mry_Free(eltvar) ;
+      Mry_Free(iw) ;
     }
   } else {
     arret("Mesh_ComputeInversePermutationOfElements(5): format %s unknown",format) ;
@@ -1518,13 +1499,11 @@ void (Mesh_ComputeResidu)(Mesh_t* mesh,Residu_t* r,Loads_t* loads,double t,doubl
   
   /* Loads */
   {
-    int n_cg = Loads_GetNbOfLoads(loads) ;
+    size_t n_cg = Loads_GetNbOfLoads(loads) ;
     Load_t* cg = Loads_GetLoad(loads) ;
     
-    {
-      int i_cg ;
-    
-      for(i_cg = 0 ; i_cg < n_cg ; i_cg++) {
+    {    
+      for(size_t i_cg = 0 ; i_cg < n_cg ; i_cg++) {
         char* reg_cg = Load_GetRegionName(cg + i_cg) ;
     
         #if SharedMS_APIis(OpenMP)
@@ -1825,9 +1804,11 @@ void (Mesh_OneNode)(Mesh_t* mesh)
   {
     int dim = 3 ;
     size_t n_c = 1 ;
+    Nodes_t* nodes = Nodes_New(n_no,dim,n_c) ;
+    Elements_t* elements = Elements_New(n_el,n_c) ;
     
-    Mesh_GetNodes(mesh) = Nodes_New(n_no,dim,n_c) ;
-    Mesh_GetElements(mesh) = Elements_New(n_el,n_c) ;
+    Mesh_SetNodes(mesh,nodes) ;
+    Mesh_SetElements(mesh,elements) ;
   }
 
   {
@@ -1901,8 +1882,13 @@ void (Mesh_ReadInline1d)(Mesh_t* mesh,char* str)
     
     n_c = 2*n_el ;
     
-    Mesh_GetNodes(mesh) = Nodes_New(n_no,dim,n_c) ;
-    Mesh_GetElements(mesh) = Elements_New(n_el,n_c) ;
+    {
+      Nodes_t* nodes = Nodes_New(n_no,dim,n_c) ;
+      Elements_t* elements = Elements_New(n_el,n_c) ;
+
+      Mesh_SetNodes(mesh,nodes) ;
+      Mesh_SetElements(mesh,elements) ;
+    }
   }
 
   /* The region and material indexes */
@@ -1933,8 +1919,8 @@ void (Mesh_ReadInline1d)(Mesh_t* mesh,char* str)
     maillage(pt,ne,dx_ini,npt,no) ;
   }
 
-  free(pt) ;
-  free(ne) ;
+  Mry_Free(pt) ;
+  Mry_Free(ne) ;
 
 
   /* Set the remaining attributes of elements and nodes */
@@ -2022,7 +2008,7 @@ void (Mesh_ReadFormatGmsh)(Mesh_t* mesh,const char* nom_msh)
 void (Mesh_ReadFormatGmsh_1)(Mesh_t* mesh,const char* name)
 /* Read a mesh in a file under the format GMSH version 1.0 */
 {
-  TextFile_t* textfile = TextFile_Create(name) ;
+  TextFile_t* textfile = TextFile_New(name) ;
   FILE*  strfile = TextFile_OpenFile(textfile,"r") ;
   char   mot[Mesh_MaxLengthOfKeyWord] ;
   char   line[Mesh_MaxLengthOfTextLine] ;
@@ -2056,8 +2042,6 @@ void (Mesh_ReadFormatGmsh_1)(Mesh_t* mesh,const char* name)
         fprintf(stdout,"erreur ou fin de fichier\n") ;
       }
     }
-    
-    //Mesh_GetNbOfNodes(mesh) = n_no ;
   }
   
   fscanf(strfile,"%s",mot) ;
@@ -2099,9 +2083,6 @@ void (Mesh_ReadFormatGmsh_1)(Mesh_t* mesh,const char* name)
       sscanf(line,"%*d %*d %*d %lu",&nn) ;
       n_c += nn ;
     }
-    
-    //Mesh_GetNbOfElements(mesh) = n_el ;
-    //Mesh_GetNbOfConnectivities(mesh) = n_c ;
   }
   
   fscanf(strfile,"%s",mot) ;
@@ -2114,15 +2095,12 @@ void (Mesh_ReadFormatGmsh_1)(Mesh_t* mesh,const char* name)
   
   /* Allocation of space for "nodes" and "elements" */
   {
-    //int n_no = Mesh_GetNbOfNodes(mesh) ;
-    //int n_el = Mesh_GetNbOfElements(mesh) ;
-    //int n_c  = Mesh_GetNbOfConnectivities(mesh) ;
     unsigned short int dim  = Mesh_GetDimension(mesh) ;
     Nodes_t* nodes = Nodes_New(n_no,dim,n_c) ;
     Elements_t* elements = Elements_New(n_el,n_c) ;
   
-    Mesh_GetNodes(mesh) = nodes ;
-    Mesh_GetElements(mesh) = elements ;
+    Mesh_SetNodes(mesh,nodes) ;
+    Mesh_SetElements(mesh,elements) ;
   }
 
 
@@ -2221,7 +2199,7 @@ void (Mesh_ReadFormatGmsh_1)(Mesh_t* mesh,const char* name)
   }
   
   TextFile_Delete(textfile) ;
-  free(textfile) ;
+  Mry_Free(textfile) ;
 }
 
 
@@ -2230,7 +2208,7 @@ void (Mesh_ReadFormatGmsh_1)(Mesh_t* mesh,const char* name)
 void (Mesh_ReadFormatGmsh_2)(Mesh_t* mesh,const char* nom_msh)
 /* Read a mesh in a file under the format GMSH version 2.0 */
 {
-  TextFile_t* textfile = TextFile_Create(nom_msh) ;
+  TextFile_t* textfile = TextFile_New(nom_msh) ;
   FILE*  fic_msh = TextFile_OpenFile(textfile,"r") ;
   double version ;
   int    file_type,data_size ;
@@ -2275,8 +2253,6 @@ void (Mesh_ReadFormatGmsh_2)(Mesh_t* mesh,const char* nom_msh)
         arret("lit_mail_gmsh_2 (3) : erreur ou fin de fichier") ;
       }
     }
-    
-    //Mesh_GetNbOfNodes(mesh) = n_no ;
   }
 
   fscanf(fic_msh,"%s",mot) ;
@@ -2318,9 +2294,6 @@ void (Mesh_ReadFormatGmsh_2)(Mesh_t* mesh,const char* nom_msh)
       
       n_c += gmsh_NbNodes(elm_type) ;
     }
-    
-    //Mesh_GetNbOfElements(mesh) = n_el ;
-    //Mesh_GetNbOfConnectivities(mesh) = n_c ;
   }
   
   fscanf(fic_msh,"%s",mot) ;
@@ -2332,15 +2305,12 @@ void (Mesh_ReadFormatGmsh_2)(Mesh_t* mesh,const char* nom_msh)
   
   /* Allocation of space for "nodes" and "elements" */
   {
-    //int n_no = Mesh_GetNbOfNodes(mesh) ;
-    //int n_el = Mesh_GetNbOfElements(mesh) ;
-    //int n_c  = Mesh_GetNbOfConnectivities(mesh) ;
     int dim  = Mesh_GetDimension(mesh) ;
     Nodes_t* nodes = Nodes_New(n_no,dim,n_c) ;
     Elements_t* elements = Elements_New(n_el,n_c) ;
   
-    Mesh_GetNodes(mesh) = nodes ;
-    Mesh_GetElements(mesh) = elements ;
+    Mesh_SetNodes(mesh,nodes) ;
+    Mesh_SetElements(mesh,elements) ;
   }
   
 
@@ -2469,7 +2439,7 @@ void (Mesh_ReadFormatGmsh_2)(Mesh_t* mesh,const char* nom_msh)
   }
   
   TextFile_Delete(textfile) ;
-  free(textfile) ;
+  Mry_Free(textfile) ;
 }
 
 
@@ -2477,7 +2447,7 @@ void (Mesh_ReadFormatGmsh_2)(Mesh_t* mesh,const char* nom_msh)
 void (Mesh_Readm1d)(Mesh_t* mesh,const char* nom_m1d)
 /* Read a 1D mesh under the format m1d */
 {
-  TextFile_t* textfile = TextFile_Create(nom_m1d) ;
+  TextFile_t* textfile = TextFile_New(nom_m1d) ;
   FILE*  fic_m1d = TextFile_OpenFile(textfile,"r") ;
   int    nreg ;
   double* pt ;
@@ -2509,9 +2479,11 @@ void (Mesh_Readm1d)(Mesh_t* mesh,const char* nom_m1d)
     size_t n_el = mesh1dnew(pt,lc,nreg,NULL) ;
     size_t n_no = n_el + 1 ;
     size_t n_c  = 2*n_el ;
+    Nodes_t* nodes = Nodes_New(n_no,dim,n_c) ;
+    Elements_t* elements = Elements_New(n_el,n_c) ;
     
-    Mesh_GetNodes(mesh) = Nodes_New(n_no,dim,n_c) ;
-    Mesh_GetElements(mesh) = Elements_New(n_el,n_c) ;
+    Mesh_SetNodes(mesh,nodes) ;
+    Mesh_SetElements(mesh,elements) ;
   }
   
 
@@ -2546,7 +2518,7 @@ void (Mesh_Readm1d)(Mesh_t* mesh,const char* nom_m1d)
     }
   }
 
-  free(pt) ;
+  Mry_Free(pt) ;
   
   /* Set the remaining attributes of element */
   {
@@ -2594,7 +2566,7 @@ void (Mesh_Readm1d)(Mesh_t* mesh,const char* nom_m1d)
   }
   
   TextFile_Delete(textfile) ;
-  free(textfile) ;
+  Mry_Free(textfile) ;
 }
 
 
@@ -2602,7 +2574,7 @@ void (Mesh_Readm1d)(Mesh_t* mesh,const char* nom_m1d)
 void (Mesh_ReadFormatCesar)(Mesh_t* mesh,const char* nom)
 /* Read a mesh in a file under the format CESAR */
 {
-  TextFile_t* textfile = TextFile_Create(nom) ;
+  TextFile_t* textfile = TextFile_New(nom) ;
   FILE*  fic_ces = TextFile_OpenFile(textfile,"r") ;
   int    dim_el[3][8]  = {{0,1,1,-1,-1,-1,-1,-1},{0,1,2,2,-1,2,-1,2},{0,1,2,3,-1,-1,-1,3}} ;
   /*
@@ -2669,8 +2641,8 @@ void (Mesh_ReadFormatCesar)(Mesh_t* mesh,const char* nom)
     Nodes_t* nodes = Nodes_New(n_no,dim,n_c) ;
     Elements_t* elements = Elements_New(n_el,n_c) ;
   
-    Mesh_GetNodes(mesh) = nodes ;
-    Mesh_GetElements(mesh) = elements ;
+    Mesh_SetNodes(mesh,nodes) ;
+    Mesh_SetElements(mesh,elements) ;
   }
   
   
@@ -2797,7 +2769,7 @@ void (Mesh_ReadFormatCesar)(Mesh_t* mesh,const char* nom)
       Element_SetDefaultRegion(el + i,regions,10*reg_i[i] + imat) ;
     }
     
-    free(reg_i) ;
+    Mry_Free(reg_i) ;
   }
     
   {
@@ -2807,7 +2779,7 @@ void (Mesh_ReadFormatCesar)(Mesh_t* mesh,const char* nom)
   }
 
   TextFile_Delete(textfile) ;
-  free(textfile) ;
+  Mry_Free(textfile) ;
 }
 
 
@@ -3180,7 +3152,7 @@ void Mesh_PrintData(Mesh_t* mesh,char* mot)
    * -------- */
   if(Mesh_GetGeometry(mesh) && (String_Is(mot,"geometry",4) || String_Is(mot,"all",3))) {
     int dim = Mesh_GetDimension(mesh) ;
-    Symmetry_t sym = Mesh_GetSymmetry(mesh) ;
+    Geometry_t* geom = Mesh_GetGeometry(mesh) ;
     
     PRINT("\n") ;
     PRINT("Geometry:\n") ;
@@ -3190,13 +3162,13 @@ void Mesh_PrintData(Mesh_t* mesh,char* mot)
     
     if(0) {
       
-    } else if(Symmetry_IsCylindrical(sym)) {
+    } else if(Geometry_HasCylindricalSymmetry(geom)) {
       PRINT("Axisymmetrical\n") ;
       
-    } else if(Symmetry_IsSpherical(sym)) {
+    } else if(Geometry_HasSphericalSymmetry(geom)) {
       PRINT("Spherical\n") ;
 
-    } else if(Symmetry_IsPlane(sym)) {
+    } else if(Geometry_HasPlaneSymmetry(geom)) {
       PRINT("Plane\n") ;
 
     } else {

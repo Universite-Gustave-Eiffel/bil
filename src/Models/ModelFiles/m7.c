@@ -9,7 +9,7 @@
 #define TITLE   "Poroelasticite non sature"
 #define AUTHORS "Dangla"
 
-#include "OldMethods.h"
+#include "PredeclaredOldModelMethods.h.in"
 
 /* Macros */
 #define NEQ   (1+dim)

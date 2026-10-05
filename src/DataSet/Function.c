@@ -11,26 +11,22 @@
 
 
 
-static int Function_ReadInFile(Function_t*,char*) ;
+static int FunctionPiecewiseAffine_ReadInFile(FunctionPiecewiseAffine_t*,char*) ;
 
 
-Function_t*  (Function_New)(const int n)
+Function_t*  (Function_New)(void)
 {
   Function_t* function = (Function_t*) Mry_New(Function_t) ;
-    
-  Function_GetNbOfPoints(function) = n ;
 
+  /* Allocation of space for the type of function */
   {
-    double* x = (double*) Mry_New(double,n) ;
+    char* type = (char*) Mry_New(char,Function_MaxLengthOfKeyWord) ;
     
-    Function_GetXValue(function) = x ;
+    Function_SetType(function,type) ;
+    strcpy(Field_GetType(function),"none") ;
   }
 
-  {
-    double* f = (double*) Mry_New(double,n) ;
-    
-    Function_GetFValue(function) = f ;
-  }
+  Function_SetFunctionFormat(function,NULL) ;
   
   return(function) ;
 }
@@ -41,53 +37,118 @@ void (Function_Delete)(void* self)
 {
   Function_t* function = (Function_t*) self ;
   
-  {
-    double* x = Function_GetXValue(function) ;
+  if(function) {
+    void* functionfmt = Function_GetFunctionFormat(function) ;
+    char* type = Function_GetType(function) ;
     
-    if(x) {
-      free(x) ;
-      Function_GetXValue(function) = NULL ;
+    if(functionfmt) {
+      if(String_Is(type,"piecewiseaffine")) {
+        FunctionPiecewiseAffine_Delete(functionfmt) ;
+      }
+      
+      Mry_Free(functionfmt) ;
+      Function_SetFunctionFormat(function,NULL) ;
     }
-  }
-  
-  {
-    double* f = Function_GetFValue(function) ;
-    
-    if(f) {
-      free(f) ;
-      Function_GetFValue(function) = NULL ;
+
+    if(type) {
+      Mry_Free(type) ;
+      Function_SetType(function,NULL) ;
     }
   }
 }
 
 
+FunctionPiecewiseAffine_t*  (FunctionPiecewiseAffine_New)(const size_t n)
+{
+  FunctionPiecewiseAffine_t* function = (FunctionPiecewiseAffine_t*) Mry_New(FunctionPiecewiseAffine_t) ;
+    
+  FunctionPiecewiseAffine_SetNbOfPoints(function,n) ;
 
-int (Function_Scan)(Function_t* function,DataFile_t* datafile)
+  {
+    double* x = (double*) Mry_New(double,n) ;
+    
+    FunctionPiecewiseAffine_SetXValue(function,x) ;
+  }
+
+  {
+    double* f = (double*) Mry_New(double,n) ;
+    
+    FunctionPiecewiseAffine_SetFValue(function,f) ;
+  }
+  
+  return(function) ;
+}
+
+
+#if 0
+void (FunctionPiecewiseAffine_Delete)(void* self)
+{
+  FunctionPiecewiseAffine_t* function = (FunctionPiecewiseAffine_t*) self ;
+  
+  {
+    double* x = FunctionPiecewiseAffine_GetXValue(function) ;
+    
+    if(x) {
+      Mry_Free(x) ;
+      FunctionPiecewiseAffine_SetXValue(function,NULL) ;
+    }
+  }
+  
+  {
+    double* f = FunctionPiecewiseAffine_GetFValue(function) ;
+    
+    if(f) {
+      Mry_Free(f) ;
+      FunctionPiecewiseAffine_SetFValue(function,NULL) ;
+    }
+  }
+}
+#endif
+
+
+
+void (Function_Scan)(Function_t* function,DataFile_t* datafile)
 {
   char* cur = DataFile_GetCurrentPositionInFileContent(datafile) ;
   char* line = DataFile_ReadLineFromCurrentFilePositionInString(datafile) ;
+  char type[DataFile_MaxLengthOfTextLine] ;
 
   line = String_SkipBlankChars(line) ;
-  
-  
-    /* Read direct */
-    if(String_Is(line,"Ntimes",1)) {
-      int n_tm = 0 ;
-      int n = String_FindAndScanExp(line,"N",","," = %d",&n_tm) ;
-      
-      if(n) {
-        Function_t* fct = Function_New(n_tm) ;
-        
-        function[0] = fct[0] ;
-        free(fct) ;
+
+  /* The type (if given )*/
+  {
+    int n = String_FindAndScanExp(line,"Type",","," = %s",type) ;
+
+    if(n) {
+      if(strlen(type) > Function_MaxLengthOfKeyWord - 1) {
+        arret("Function_Scan: too long type") ;
       }
-      
+    } else {
+      /* Default type */
+      strcpy(type,"piecewiseaffine");
+    }
+  }
+  
+  
+  /* PiecewiseAffine function
+   * ------------------------ */
+  if(String_Is(type,"piecewiseaffine")) {
+    std::string type_str = "piecewiseaffine";
+    char* pline = String_FindToken(line,"N");
+
+    if(!pline) pline = String_FindToken(line,"F");
+
+    /* Read direct */
+    if(String_Is(pline,"Ntimes",1)) {
+      size_t n_tm = 0 ;
+      int n = String_FindAndScanExp(line,"N",","," = %lu",&n_tm) ;
+      std::vector<double> t_vec(n_tm);
+      std::vector<double> f_vec(n_tm);
       
       /* Read the F(T) */
       if(n_tm > 0) {
-        double* t = Function_GetXValue(function) ;
-        double* f = Function_GetFValue(function) ;
-        //char* c = line ;
+        double* t = t_vec.data();
+        double* f = f_vec.data();
         char* c = cur ;
         
         c = String_FindToken(c,"F") ;
@@ -101,44 +162,17 @@ int (Function_Scan)(Function_t* function,DataFile_t* datafile)
           DataFile_SetCurrentPositionInFileContent(datafile,c) ;
           
         } else {
-          
           arret("Function_Scan: no key F() found") ;
-          
         }
-        
-        #if 0
-        {
-          int j ;
-        
-          for(j = 0 ; j < n_tm ; j++) {
-          
-            do {
-              n = String_FindAndScanExp(c,"F",",","(%lf)",t + j) ;
-              String_FindAndScanExp(c," =",","," %lf",f + j) ;
-            
-              if(!n) {
-                c = DataFile_ReadLineFromCurrentFilePositionInString(datafile) ;
-              }
-            } while(!n && c) ;
-          
-            if(!c) {
-              arret("Function_Scan: not enough data") ;
-            }
-          
-          }
-        }
-        #endif
       }
-      
-      return(1) ;
+
+      Function_Set(function,type_str,t_vec,f_vec) ;
+      return;
     }
 
-
-
     /* Read in a file */
-    if(String_Is(line,"File",2)) {
+    if(String_Is(pline,"File",2)) {
       char name[Function_MaxLengthOfFileName] ;
-      int n_fn ;
       
       String_FindAndScanExp(line,"Fi",","," = %s",name) ;
       
@@ -148,98 +182,22 @@ int (Function_Scan)(Function_t* function,DataFile_t* datafile)
       
       {
         char* c = String_FindAndSkipToken(line,"=") ;
-        
-        n_fn = Function_ReadInFile(function,c) ;
+
+        Function_Set(function,type_str,c) ;
       }
-      
-      return(n_fn) ;
+      return ;
     }
 
-
-
-    {
-      arret("Function_Scan: keyword not known") ;
-    }
-    
-  return(0) ;
-}
-
-
-
-double (Function_ComputeValue)(Function_t* fn,double t)
-{
-  if(fn) {
-    int   nb_points = Function_GetNbOfPoints(fn) ;
-    double* tm = Function_GetXValue(fn) ;
-    double* ft = Function_GetFValue(fn) ;
-    
-    /*
-      Cas t < t[0] 
-    */
-    if(t <= tm[0]) {
-      return(ft[0]) ;
-      
-    /*
-      Cas t > t[n-1] 
-    */
-    } else if(t >= tm[nb_points - 1]) {
-      return(ft[nb_points - 1]) ;
-      
-    /*
-      Cas t[i1] <= t <= t[i2]
-      Calcul des deux points i1=Min(i) et i2=Max(i) du tableau fn
-      correspondant au plus petit intervalle de temps [t1;t2]
-      contenant t. Deux cas de figure se presentent:
-      1) t2 > t1 et i2 = i1+1;
-      2) t2 = t1 et i2 >= i1 avec i2-i1 maximum.
-    */
-    } else {
-      int    i1 = 0, i2 = nb_points - 1 ;
-      double t1, t2, f1, f2 ;
-      int    i ;
-      
-      for(i = 0 ; i < nb_points ; i++) {
-        if(t >= tm[i]) i1 = i ;
-        if(t <= tm[i]) break  ;
-      }
-      
-      for(i = i1 ; i < nb_points ; i++) if(t < tm[i]) break ;
-      
-      for( ; i >= 0 ; i--) {
-        if(t <= tm[i]) i2 = i ;
-        if(t >= tm[i]) break  ;
-      }
-      
-      t1 = tm[i1] ;
-      f1 = ft[i1] ;
-      t2 = tm[i2] ;
-      f2 = ft[i2] ;
-      
-      /* 1) Intervalle non nul */
-      if(t2 > t1) {
-        return (f1 + (f2 - f1)*(t - t1)/(t2 - t1)) ;
-        
-      /* 2) Intervalle nul */
-      } else {
-        /* un seul point */
-        if(i1 == i2) {
-          return (f1) ;
-        /* plusieurs points */
-        } else {
-          arret("plusieurs pas de temps nuls (fonction)") ;
-          return(0.) ;
-        }
-      }
-    }
+    arret("Function_Scan: keyword not known") ;
   }
-  
-  return(0.) ;
+
+  arret("Function_Scan: type not known") ;
+  return;
 }
 
 
 
-
-int (Function_ReadInFile)(Function_t* fn,char* line1)
+int (FunctionPiecewiseAffine_ReadInFile)(FunctionPiecewiseAffine_t* fn,char* line1)
 /* Lecture des fonctions du temps dans le fichier "nom"
    retourne le nb de fonctions lues */
 {
@@ -252,7 +210,7 @@ int (Function_ReadInFile)(Function_t* fn,char* line1)
   String_Scan(line1," %s",nom) ;
       
   if(strlen(nom) > Function_MaxLengthOfFileName) {
-    arret("Function_ReadInFile: too long file name") ;
+    arret("FunctionPiecewiseAffine_ReadInFile: too long file name") ;
   }
 
   fict = fopen(nom,"r") ;
@@ -278,14 +236,12 @@ int (Function_ReadInFile)(Function_t* fn,char* line1)
     }
 
     /* reservation de la memoire */
-    {
-      int i ;
-    
-      for(i = 0 ; i < n_fonctions ;i++) {
-        Function_t* fct = Function_New(n_points) ;
+    {    
+      for(int i = 0 ; i < n_fonctions ;i++) {
+        FunctionPiecewiseAffine_t* fct = FunctionPiecewiseAffine_New(n_points) ;
         
         fn[i] = fct[0] ;
-        free(fct) ;
+        Mry_Free(fct) ;
       }
     }
   
@@ -314,8 +270,8 @@ int (Function_ReadInFile)(Function_t* fn,char* line1)
           fscanf(fict,"%le",&x) ;
     
           for(j = 0 ; j < n_fonctions ; j++) {
-            double* t = Function_GetXValue(fn + j) ;
-            double* f = Function_GetFValue(fn + j) ;
+            double* t = FunctionPiecewiseAffine_GetXValue(fn + j) ;
+            double* f = FunctionPiecewiseAffine_GetFValue(fn + j) ;
             
             t[i] = x ;
             fscanf(fict,"%le",f + i) ;
@@ -335,17 +291,17 @@ int (Function_ReadInFile)(Function_t* fn,char* line1)
     
     n_points = Curve_GetNbOfPoints(curve) ;
     
-    //arret("Function_ReadInFile: unable to open the file") ;
+    //arret("FunctionPiecewiseAffine_ReadInFile: unable to open the file") ;
 
     /* reservation de la memoire */
     {
       int i ;
     
       for(i = 0 ; i < n_fonctions ;i++) {
-        Function_t* fct = Function_New(n_points) ;
+        FunctionPiecewiseAffine_t* fct = FunctionPiecewiseAffine_New(n_points) ;
         
         fn[i] = fct[0] ;
-        free(fct) ;
+        Mry_Free(fct) ;
       }
     }
   
@@ -360,19 +316,19 @@ int (Function_ReadInFile)(Function_t* fn,char* line1)
         for(j = 0 ; j < n_fonctions ; j++) {
           Curve_t* curve_j = curve + j ;
           double* y = Curve_GetYValue(curve_j) ;
-          double* x = Function_GetXValue(fn + j) ;
-          double* f = Function_GetFValue(fn + j) ;
+          double* x = FunctionPiecewiseAffine_GetXValue(fn + j) ;
+          double* f = FunctionPiecewiseAffine_GetFValue(fn + j) ;
           
           x[i] = t[i] ;
           f[i] = y[i] ;
         }
       }
       
-      free(t) ;
+      Mry_Free(t) ;
     }
     
     Curves_Delete(curves) ;
-    free(curves) ;
+    Mry_Free(curves) ;
   }
 
   fclose(fict) ;

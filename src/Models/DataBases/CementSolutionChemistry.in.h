@@ -1,0 +1,2012 @@
+#ifdef CEMENTSOLUTIONCHEMISTRY_IN_H
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <assert.h>
+#include <limits.h>
+#include <array>
+#include <experimental/array>
+#include "Message.h"
+#include "Exception.h"
+#include "Math_.h"
+#include "Temperature.h"
+#include "Mry.h"
+#include "Session.h"
+#include "GenericData.h"
+#include "InternationalSystemOfUnits.h"
+#include "ElectricChargeOfIonInWater.h"
+#include "Log10EquilibriumConstantOfHomogeneousReactionInWater.h"
+#include "PartialMolarVolumeOfMoleculeInWater.h"
+#include "MolarMassOfMolecule.h"
+#include "Log10ActivityCoefficientOfAqueousSpecies.h"
+
+/* Shorthands of some units */
+#define Meter      (InternationalSystemOfUnits_OneMeter)
+#define CubicMeter (Meter*Meter*Meter)
+#define Liter      (0.001*CubicMeter)
+#define Mol        (InternationalSystemOfUnits_OneMole)
+#define C0_ref     (Mol / Liter)
+#define LogC0_ref  log10(C0_ref)
+
+#define Ln10      Math_Ln10
+
+
+#define _INLINE_ inline
+
+_INLINE_ double*  (CementSolutionChemistry_GetSpeciesProperties)(void)
+{
+  GenericData_t* gdat = Session_FindGenericData(double,"CementSolutionChemistry_SpeciesProperty") ;
+  
+  if(!gdat) {
+    double* v = CementSolutionChemistry_CreateSpeciesProperties() ;
+    
+    gdat = GenericData_Create(1,v,"CementSolutionChemistry_SpeciesProperty") ;
+    
+    Session_AddGenericData(gdat) ;
+    
+    assert(gdat == Session_FindGenericData(double,"CementSolutionChemistry_SpeciesProperty")) ;
+  }
+  
+  {
+    double* v = (double*) GenericData_GetData(gdat) ;
+  
+    return(v) ;
+  }
+}
+
+
+
+_INLINE_ double* (CementSolutionChemistry_CreateSpeciesProperties)(void)
+{
+  constexpr int unsigned n = CementSolutionChemistry_NbOfSpecies;
+  constexpr int unsigned np = CementSolutionChemistry_NbOfPrimaryVariables;
+  double* z = (double*) Mry_New(double,3*n+n*np);
+
+  #define AFFECT(A,B)   A=B
+  CementSolutionChemistry_SetProperties(AFFECT,z,ElectricChargeOfIonInWater);
+  CementSolutionChemistry_SetProperties(AFFECT,z+n,MolarMassOfMolecule);
+  CementSolutionChemistry_SetProperties(AFFECT,z+2*n,PartialMolarVolumeOfMoleculeInWater);
+  #undef AFFECT
+
+  #if 0
+  #define AFFECT(A,B) \
+  do {\
+    double tmp[] = B;\
+    for(int unsigned j = 0 ; j < np ; j++) {\
+      A[j] = tmp[j];\
+    }\
+  } while(0)
+  #define STOICHIO(A) {CementSolutionChemistry_GetStoichioOf(A)}
+  {
+    double** pz = new double*[n];
+    
+    for(int unsigned i = 0 ; i < n ; i++) {
+      pz[i] = z + 3*n + i*np;
+    }
+    
+    CementSolutionChemistry_SetProperties(AFFECT,pz,STOICHIO);
+    
+    delete pz;
+  }
+  #undef STOICHIO
+  #undef AFFECT
+  #endif
+
+  #if 1
+  #define AFFECT(A,B)   A=B
+  #define STOICHIO(A) std::experimental::make_array<double> CementSolutionChemistry_GetStoichioOf(A)
+  //#define STOICHIO(A) (std::array<double,np>){Tuple_SEQ(CementSolutionChemistry_GetStoichioOf(A))}
+  {
+    std::array<double,np>* a = new std::array<double,np>[n];
+    
+    CementSolutionChemistry_SetProperties(AFFECT,a,STOICHIO);
+  
+    for(int unsigned i = 0 ; i < n ; i++) {
+      double* zi = z + 3*n + i*np;
+
+      for(int unsigned j = 0 ; j < np ; j++) {
+        zi[j] = a[i][j];
+      }
+    }
+  
+    delete a;
+  }
+  #undef STOICHIO
+  #undef AFFECT
+  #endif
+  
+  return(z);
+}
+
+
+
+template<typename T>
+_INLINE_ CementSolutionChemistry_t<T>* (CementSolutionChemistry_Create)(void)
+{
+  CementSolutionChemistry_t<T>* csc = (CementSolutionChemistry_t<T>*) Mry_New(CementSolutionChemistry_t<T>) ;
+  
+  {
+    /* Memory allocation */
+    CementSolutionChemistry_AllocateMemory(csc) ;
+  
+    /* Initialize the equilibrium constants */
+    CementSolutionChemistry_UpdateChemicalConstantsCEMDATA(csc) ;
+  
+    /* Initialize primary variables and activities */
+    CementSolutionChemistry_Init(csc) ;
+  }
+  
+  return(csc) ;
+}
+
+
+
+template<typename T>
+_INLINE_ void (CementSolutionChemistry_Delete)(CementSolutionChemistry_t<T>* self)
+{
+  CementSolutionChemistry_t<T>* csc = (CementSolutionChemistry_t<T>*) self ;
+
+  {
+    Temperature_t* temp = CementSolutionChemistry_GetTemperature(csc) ;
+    
+    Temperature_Delete(temp) ;
+  }
+
+  {
+    int* ind = CementSolutionChemistry_GetPrimaryVariableIndex(csc) ;
+    
+    Mry_Free(ind) ;
+  }
+
+  {
+    T* var = CementSolutionChemistry_GetPrimaryVariable(csc) ;
+    
+    Mry_Free(var) ;
+  }
+
+  {
+    T* loga = CementSolutionChemistry_GetLogActivity(csc) ;
+    
+    Mry_Free(loga) ;
+  }
+
+  {
+    T* c = CementSolutionChemistry_GetConcentration(csc) ;
+    
+    Mry_Free(c) ;
+  }
+
+  {
+    T* ec = CementSolutionChemistry_GetElementConcentration(csc) ;
+    
+    Mry_Free(ec) ;
+  }
+
+  {
+    T* var = CementSolutionChemistry_GetOtherVariable(csc) ;
+    
+    Mry_Free(var) ;
+  }
+
+  {
+    double* keq = CementSolutionChemistry_GetLog10Keq(csc) ;
+    
+    Mry_Free(keq) ;
+  }
+}
+
+
+template<typename T>
+_INLINE_ void (CementSolutionChemistry_AllocateMemory)(CementSolutionChemistry_t<T>* csc)
+{
+  constexpr double min = std::numeric_limits<double>::min();
+  constexpr double logmin = 2*log10(min);
+
+  /* Allocation of space for the temperature */
+  {
+    Temperature_t* temp = Temperature_Create() ;
+    
+    CementSolutionChemistry_SetTemperature(csc,temp) ;
+  }
+  
+  
+  /* Allocation of space for the primary variable indexes */
+  {
+    int* ind = (int*) Mry_New(int,CementSolutionChemistry_NbOfPrimaryVariables) ;
+    
+    CementSolutionChemistry_SetPrimaryVariableIndex(csc,ind) ;
+
+    for(int i = 0 ; i < CementSolutionChemistry_NbOfPrimaryVariables ; i++) {
+      ind[i] = i;
+    }
+  }
+  
+  
+  /* Allocation of space for the primary variables */
+  {
+    T* var = (T*) Mry_New(T,CementSolutionChemistry_NbOfPrimaryVariables) ;
+    
+    CementSolutionChemistry_SetPrimaryVariable(csc,var) ;
+
+    for(int i = 0 ; i < CementSolutionChemistry_NbOfPrimaryVariables ; i++) {
+      var[i] = logmin;
+    }
+  }
+  
+  
+  /* Allocation of space for the log of activities */
+  {
+    T* loga = (T*) Mry_New(T,CementSolutionChemistry_NbOfSpecies) ;
+    
+    CementSolutionChemistry_SetLogActivity(csc,loga) ;
+
+    for(int i = 0 ; i < CementSolutionChemistry_NbOfSpecies ; i++) {
+      loga[i] = logmin;
+    }
+  }
+  
+  
+  /* Allocation of space for the concentrations */
+  {
+    T* c = (T*) Mry_New(T,CementSolutionChemistry_NbOfSpecies) ;
+    
+    CementSolutionChemistry_SetConcentration(csc,c) ;
+  }
+  
+  
+  /* Allocation of space for the element concentrations */
+  {
+    T* ec = (T*) Mry_New(T,CementSolutionChemistry_NbOfElementConcentrations) ;
+    
+    CementSolutionChemistry_SetElementConcentration(csc,ec) ;
+  }
+  
+  
+  /* Allocation of space for other variables */
+  {
+    T* var = (T*) Mry_New(T,CementSolutionChemistry_NbOfOtherVariables) ;
+    
+    CementSolutionChemistry_SetOtherVariable(csc,var) ;
+  }
+  
+  
+  /* Allocation of space for the equilibrium constants */
+  {
+    double* keq = (double*) Mry_New(double,CementSolutionChemistry_NbOfSpecies) ;
+    
+    CementSolutionChemistry_SetLog10Keq(csc,keq) ;
+  }
+}
+
+
+
+template<typename T>
+_INLINE_ void (CementSolutionChemistry_PrintChemicalConstants)(CementSolutionChemistry_t<T>* csc)
+{
+  double temp = CementSolutionChemistry_GetRoomTemperature(csc) ;
+  
+  Log10EquilibriumConstantOfHomogeneousReactionInWater_PrintCEMDATA(temp) ;
+  //Log10EquilibriumConstantOfHomogeneousReactionInWater_Print(temp) ;
+  
+  printf("\n") ;
+  
+  fflush(stdout) ;
+}
+
+
+
+
+template<typename T>
+_INLINE_ void (CementSolutionChemistry_CopyConcentrations)(CementSolutionChemistry_t<T>* csc,T* v)
+{
+  int n = CementSolutionChemistry_NbOfSpecies;
+  T* c = CementSolutionChemistry_GetConcentration(csc);
+
+  for(int i = 0 ; i < n ; i++) {
+    v[i] = c[i] ;
+  }
+}
+
+
+
+template<typename T>
+_INLINE_ void (CementSolutionChemistry_CopyChemicalPotential)(CementSolutionChemistry_t<T>* csc,T* v)
+{
+  //constexpr double min = std::numeric_limits<double>::min();
+  //constexpr double logmin = log(min);
+  int   n = CementSolutionChemistry_NbOfSpecies;
+  T* log10a = CementSolutionChemistry_GetLogActivity(csc);
+  //T* c    = CementSolutionChemistry_GetConcentration(csc);
+  T  epot = CementSolutionChemistry_GetElectricPotential(csc);
+  double* z = CementSolutionChemistry_GetValence();
+  
+  for(int i = 0 ; i < n ; i++) {
+    #if 0
+    if(c[i] > 0) {
+      v[i] = log(c[i]) + z[i] * epot;
+    } else {
+      v[i] = logmin;
+    }
+    #endif
+    v[i] = Ln10*log10a[i] + z[i] * epot;
+  }
+}
+
+
+
+template<typename T>
+_INLINE_ void (CementSolutionChemistry_UpdateSolution)(CementSolutionChemistry_t<T>* csc)
+{
+  /* Mass density and concentration of H2O */
+  {
+    T rho_l = CementSolutionChemistry_ComputeLiquidMassDensity(csc) ;
+    
+    CementSolutionChemistry_SetLiquidMassDensity(csc,rho_l) ;
+  }
+  
+  /* Charge density */
+  {
+    T q = CementSolutionChemistry_ComputeChargeDensity(csc) ;
+    
+    CementSolutionChemistry_SetChargeDensity(csc,q) ;
+  }
+  
+  /* Ionic strength */
+  {
+    T i = CementSolutionChemistry_ComputeIonicStrength(csc) ;
+    
+    CementSolutionChemistry_SetIonicStrength(csc,i) ;
+  }
+  
+  /* Water activity */
+  {
+    T log10a_w = CementSolutionChemistry_ComputeLog10IdealWaterActivity(csc) ;
+    
+    CementSolutionChemistry_SetLog10IdealWaterActivity(csc,log10a_w) ;
+  }
+  
+  /* Element concentrations */
+  CementSolutionChemistry_UpdateElementConcentrations(csc) ;
+}
+
+
+
+template<typename T>
+_INLINE_ void (CementSolutionChemistry_UpdateChemicalConstantsCEMDATA)(CementSolutionChemistry_t<T>* csc)
+{
+  double temp = CementSolutionChemistry_GetRoomTemperature(csc) ;
+  
+  #define LogKr(R) Log10EquilibriumConstantOfHomogeneousReactionInWater(R,temp)
+  #define SetLogKeq(CPD,V)  CementSolutionChemistry_SetLog10EquilibriumConstantOf(csc,CPD,V)
+  
+  /* Oxygen
+   * ------*/
+  SetLogKeq(H2O,LogKr(H2O__H_OH));
+  SetLogKeq(O2,LogKr(2H2O__O2_4e_4H));
+  
+  /* Hydrogen
+   * -------- */
+  SetLogKeq(H2,LogKr(2e_2H__H2));
+  
+  /* Chemical reactions involving compounds of type I
+   * ------------------------------------------------ */
+  /* Aluminium */
+  SetLogKeq(AlO,LogKr(AlO2_2H__AlO_H2O));
+  SetLogKeq(AlOH,LogKr(AlO2_3H__AlOH_H2O));
+  SetLogKeq(Al,LogKr(AlO2_4H__Al_2H2O));
+  SetLogKeq(AlO2H,LogKr(AlO2_H__AlO2H));
+  
+  /* Calcium */
+  SetLogKeq(CaOH,LogKr(Ca_H2O__CaOH_H));
+  
+  /* Carbon */
+  SetLogKeq(HCO3,LogKr(CO3_H__HCO3));
+  SetLogKeq(CH4,LogKr(CO3_8e_10H__CH4_3H2O));
+  SetLogKeq(CO2,LogKr(CO3_2H__CO2_H2O));
+  
+  /* Chlorine */
+  SetLogKeq(ClO4,LogKr(Cl_4H2O__ClO4_8e_8H));
+  
+  /* Iron */
+  SetLogKeq(FeO2H,LogKr(H_FeO2__FeO2H));
+  SetLogKeq(Fe,LogKr(e_4H_FeO2__Fe_2H2O));
+  SetLogKeq(FeOH,LogKr(e_3H_FeO2__FeOH_H2O));
+  SetLogKeq(Fe_p3,LogKr(4H_FeO2__Fe_2H2O));
+  SetLogKeq(FeOH_p2,LogKr(3H_FeO2__FeOH_H2O));
+  SetLogKeq(FeO,LogKr(2H_FeO2__FeO_H2O));
+  SetLogKeq(Fe2O2H2,LogKr(2FeO2_6H__Fe2OHOH_2H2O));
+  SetLogKeq(Fe3O4H4,LogKr(3FeO2_8H__Fe3OHOHOHOH_2H2O));
+
+  /* Magnesium */
+  SetLogKeq(MgOH,LogKr(Mg_H2O__MgOH_H));
+  
+  /* Nitrogen */
+  SetLogKeq(NH3,LogKr(NO3_8e_9H__NH3_3H2O));
+  SetLogKeq(NH4,LogKr(NO3_8e_10H__NH4_3H2O));
+  SetLogKeq(N2,LogKr(2NO3_10e_12H__N2_6H2O));
+  
+  /* Potassium */
+  SetLogKeq(KOH,LogKr(H2O_K__KOH_H));
+  
+  /* Silicon */
+  SetLogKeq(HSiO3,LogKr(H2O_SiO2__HSiO3_H));
+  SetLogKeq(SiO3,LogKr(H2O_SiO2__SiO3_2H));
+  SetLogKeq(Si4O10,LogKr(2H2O_4SiO2__Si4O10_4H));
+  
+  /* Sodium */
+  SetLogKeq(NaOH,LogKr(Na_H2O__NaOH_H));
+  
+  /* Strontium */
+  SetLogKeq(SrOH,LogKr(Sr_H2O__SrOH_H));
+  
+  /* Sulfur */
+  SetLogKeq(SO3,LogKr(SO4_2e_2H__SO3_H2O));
+  SetLogKeq(HSO4,LogKr(SO4_H__HSO4));
+  SetLogKeq(HSO3,LogKr(SO4_2e_3H__HSO3_H2O));
+  SetLogKeq(HS,LogKr(SO4_8e_9H__HS_4H2O));
+  SetLogKeq(H2S,LogKr(SO4_8e_10H__H2S_4H2O));
+  SetLogKeq(S2O3,LogKr(2SO4_8e_10H__S2O3_5H2O));
+  SetLogKeq(S,LogKr(SO4_8e_8H__S_4H2O));
+  SetLogKeq(H2SO4,LogKr(SO4_2H__H2SO4));
+  
+  /* Chemical reactions involving compounds of type II
+   * ------------------------------------------------- */
+  /* Aluminium-Silicon: */
+  SetLogKeq(AlSiO5,LogKr(AlO2_H2O_SiO2__AlSiO5_2H));
+  SetLogKeq(AlHSiO3,LogKr(AlO2_3H_SiO2__AlHSiO3_H2O));
+  
+  /* Aluminium-Sulfur: */
+  SetLogKeq(AlSO4,LogKr(SO4_AlO2_4H__AlSO4_2H2O));
+  SetLogKeq(AlS2O8,LogKr(2SO4_AlO2_4H__AlSO4SO4_2H2O));
+  
+  /* Calcium-Carbon: */
+  SetLogKeq(CaHCO3,LogKr(CO3_Ca_H__CaHCO3));
+  SetLogKeq(CaCO3,LogKr(CO3_Ca__CaCO3));
+  
+  /* Calcium-Silicon */
+  SetLogKeq(CaSiO3,LogKr(Ca_H2O_SiO2__CaSiO3_2H));
+  SetLogKeq(CaHSiO3,LogKr(Ca_H2O_SiO2__CaHSiO3_H));
+  
+  /* Calcium-Sulfur: */
+  SetLogKeq(CaSO4,LogKr(Ca_SO4__CaSO4));
+  
+  /* Iron-Carbon: */
+  SetLogKeq(FeCO3,LogKr(CO3_e_4H_FeO2__FeCO3_2H2O));
+  SetLogKeq(FeHCO3,LogKr(CO3_e_5H_FeO2__FeHCO3_2H2O));
+  
+  /* Iron-Chlorine: */
+  SetLogKeq(FeCl3,LogKr(3Cl_4H_FeO2__FeCl3_2H2O));
+  SetLogKeq(FeCl,LogKr(Cl_e_4H_FeO2__FeCl_2H2O));
+  SetLogKeq(FeCl_p2,LogKr(Cl_4H_FeO2__FeCl_2H2O));
+  SetLogKeq(FeCl2,LogKr(2Cl_4H_FeO2__FeCl2_2H2O));
+  
+  /* Iron-Silicon: */
+  SetLogKeq(FeHSiO3,LogKr(FeO2_3H_SiO2__FeHSiO3_H2O));
+  
+  /* Iron-Sulfur: */
+  SetLogKeq(FeHSO4,LogKr(SO4_e_5H_FeO2__FeHSO4_2H2O));
+  SetLogKeq(FeSO4,LogKr(SO4_e_4H_FeO2__FeSO4_2H2O));
+  SetLogKeq(FeSO4_p1,LogKr(SO4_4H_FeO2__FeSO4_2H2O));
+  SetLogKeq(FeHSO4_p2,LogKr(SO4_5H_FeO2__FeHSO4_2H2O));
+  SetLogKeq(FeS2O8,LogKr(2SO4_4H_FeO2__FeSO4SO4_2H2O));
+  
+  /* Magnesium-Carbon: */
+  SetLogKeq(MgHCO3,LogKr(CO3_Mg_H__MgHCO3));
+  SetLogKeq(MgCO3,LogKr(CO3_Mg__MgCO3));
+  
+  /* Magnesium-Silicon: */
+  SetLogKeq(MgHSiO3,LogKr(Mg_H2O_SiO2__MgHSiO3_H));
+  SetLogKeq(MgSiO3,LogKr(Mg_H2O_SiO2__MgSiO3_2H));
+  
+  /* Magnesium-Sulfur: */
+  SetLogKeq(MgSO4,LogKr(SO4_Mg__MgSO4));
+  
+  /* Nitrogen-Carbon */
+  SetLogKeq(HCN,LogKr(CO3_NO3_10e_13H__HCN_6H2O));
+  
+  /* Potassium-Sulfur: */
+  SetLogKeq(KSO4,LogKr(SO4_K__KSO4));
+  
+  /* Sodium-Carbon: */
+  SetLogKeq(NaHCO3,LogKr(CO3_Na_H__NaHCO3));
+  SetLogKeq(NaCO3,LogKr(CO3_Na__NaCO3));
+  
+  /* Sodium-Sulfur: */
+  SetLogKeq(NaSO4,LogKr(SO4_Na__NaSO4));
+  
+  /* Strontium-Carbon: */
+  SetLogKeq(SrCO3,LogKr(CO3_Sr__SrCO3));
+  SetLogKeq(SrHCO3,LogKr(CO3_Sr_H__SrHCO3));
+  
+  /* Strontium-Silicon: */
+  SetLogKeq(SrSiO3,LogKr(Sr_H2O_SiO2__SrSiO3_2H));
+  
+  /* Strontium-Sulfur: */
+  SetLogKeq(SrSO4,LogKr(SO4_Sr__SrSO4));
+  
+
+  /* Compound of type III
+   * -------------------- */
+  /* Sulfur-Carbon-Nitrogen: */
+  SetLogKeq(SCN,LogKr(CO3_NO3_SO4_16e_20H__SCN_10H2O));
+
+  #undef SetLogKeq
+  #undef LogKr
+}
+
+
+
+template<typename T>
+_INLINE_ void (CementSolutionChemistry_ComputeSystemCEMDATA)(CementSolutionChemistry_t<T>* csc,double ionicstrength)
+{
+  constexpr double min = std::numeric_limits<double>::min();
+  constexpr double logmin = log10(min);
+  
+  #define LogActivity(CPD)  CementSolutionChemistry_GetLogActivityOf(csc,CPD)
+  /* Inputs */
+  T loga_h2o  = LogActivity(H2O);
+  T loga_h    = LogActivity(H);
+  T loga_alo2 = LogActivity(AlO2);
+  T loga_ca   = LogActivity(Ca);
+  T loga_co3  = LogActivity(CO3);
+  T loga_cl   = LogActivity(Cl);
+  T loga_feo2 = LogActivity(FeO2);
+  T loga_mg   = LogActivity(Mg);
+  T loga_no3  = LogActivity(NO3);
+  T loga_k    = LogActivity(K);
+  T loga_sio2 = LogActivity(SiO2);
+  T loga_na   = LogActivity(Na);
+  T loga_sr   = LogActivity(Sr);
+  T loga_so4  = LogActivity(SO4);
+  T loga_e    = 0;
+  
+  
+  #define GetLogKeq(CPD)  CementSolutionChemistry_GetLog10EquilibriumConstantOf(csc,CPD)
+  /* Oxygen
+   * ------ */
+  {
+    /* Reaction: 2H2O = O2 + 4e- + 4H+ */
+    T logk_o2 = GetLogKeq(O2);
+    T loga_o2 = logk_o2 + 2*loga_h2o - 4*loga_e - 4*loga_h;
+    
+    LogActivity(H2O)       = loga_h2o;
+    LogActivity(O2)        = loga_o2;
+  }
+  
+  /* Hydrogen
+   * -------- */
+  {
+    /* Reaction: H2O = OH- + H+ */
+    T logk_h2o = GetLogKeq(H2O);
+    T loga_oh  = logk_h2o + loga_h2o - loga_h;
+    /* Reaction: 2e- + 2H+ = H2 */
+    T logk_h2 = GetLogKeq(H2);
+    T loga_h2 = logk_h2 + 2*loga_e + 2*loga_h;
+    
+    LogActivity(OH)        = loga_oh;
+    LogActivity(H)         = loga_h;
+    LogActivity(H2)        = loga_h2;
+  }
+  
+  /* Chemical reactions involving compounds of type I
+   * ------------------------------------------------ */
+  /* Aluminium */
+  if(loga_alo2 > logmin) {
+    /* Reaction: AlO2- + 2H+ = AlO+ + H2O */
+    T logk_alo = GetLogKeq(AlO);
+    T loga_alo = logk_alo + loga_alo2 + 2*loga_h - loga_h2o;
+    /* Reaction: AlO2- + 3H+ = Al(OH)+2 + H2O */
+    T logk_aloh = GetLogKeq(AlOH);
+    T loga_aloh = logk_aloh + loga_alo2 + 3*loga_h - loga_h2o;
+    /* Reaction: AlO2- + 4H+ = Al+3 + 2H2O */
+    T logk_al = GetLogKeq(Al);
+    T loga_al = logk_al + loga_alo2 + 4*loga_h - 2*loga_h2o;
+    /* Reaction: AlO2- + H+ = AlO2H */
+    T logk_alo2h = GetLogKeq(AlO2H);
+    T loga_alo2h = logk_alo2h + loga_alo2 + loga_h;
+    
+    LogActivity(Al)        = loga_al;
+    LogActivity(AlO2)      = loga_alo2;
+    LogActivity(AlO)       = loga_alo;
+    LogActivity(AlOH)      = loga_aloh;
+    LogActivity(AlO2H)     = loga_alo2h;
+  }
+  
+  /* Calcium */
+  if(loga_ca > logmin) {
+    /* Reaction: Ca+2 + H2O = Ca(OH)+ + H+ */
+    T logk_caoh = GetLogKeq(CaOH);
+    T loga_caoh = logk_caoh + loga_ca + loga_h2o - loga_h;
+    
+    LogActivity(Ca)        = loga_ca ;
+    LogActivity(CaOH)      = loga_caoh ;
+  }
+  
+  /* Carbon */
+  if(loga_co3 > logmin) {
+    /* Reaction: CO3-2 + H+ = HCO3- */
+    T logk_hco3 = GetLogKeq(HCO3);
+    T loga_hco3 = logk_hco3 + loga_co3 + loga_h;
+    /* Reaction: CO3-2 + 8e- + 10H+ = CH4 + 3H2O */
+    T logk_ch4 = GetLogKeq(CH4);
+    T loga_ch4 = logk_ch4 + loga_co3 + 8*loga_e + 10*loga_h - 3*loga_h2o;
+    /* Reaction: CO3-2 + 2H+ = CO2 + H2O */
+    T logk_co2 = GetLogKeq(CO2);
+    T loga_co2 = logk_co2 + loga_co3 + 2*loga_h - loga_h2o;
+    
+    LogActivity(HCO3)      = loga_hco3;
+    LogActivity(CO3)       = loga_co3;
+    LogActivity(CO2)       = loga_co2;
+    LogActivity(CH4)       = loga_ch4;
+  }
+  
+  /* Chlorine */
+  if(loga_cl > logmin) {
+    /* Reaction: Cl- + 4H2O = ClO4- + 8e- + 8H+ */
+    T logk_clo4 = GetLogKeq(ClO4);
+    T loga_clo4 = logk_clo4 + loga_cl + 4*loga_h2o - 8*loga_e - 8*loga_h;
+    
+    LogActivity(Cl)        = loga_cl;
+    LogActivity(ClO4)      = loga_clo4;
+  }
+  
+  /* Iron */
+  if(loga_feo2 > logmin) {
+    /* Reaction: H+ + FeO2- = FeO2H */
+    T logk_feo2h = GetLogKeq(FeO2H);
+    T loga_feo2h = logk_feo2h + loga_h + loga_feo2;
+    /* Reaction: e- + 4H+ + FeO2- = Fe+2 + 2H2O */
+    T logk_fe = GetLogKeq(Fe);
+    T loga_fe = logk_fe + loga_e + 4*loga_h + loga_feo2 - 2*loga_h2o;
+    /* Reaction: e- + 3H+ + FeO2- = FeOH+ + H2O */
+    T logk_feoh = GetLogKeq(FeOH);
+    T loga_feoh = logk_feoh + loga_e + 3*loga_h + loga_feo2 - loga_h2o;
+    /* Reaction: 4H+ + FeO2- = Fe+3 + 2H2O */
+    T logk_fe_p3 = GetLogKeq(Fe_p3);
+    T loga_fe_p3 = logk_fe_p3 + 4*loga_h + loga_feo2 - 2*loga_h2o;
+    /* Reaction: 3H+ + FeO2- = Fe(OH)+2 + H2O */
+    T logk_feoh_p2 = GetLogKeq(FeOH_p2);
+    T loga_feoh_p2 = logk_feoh_p2 + 3*loga_h + loga_feo2 - loga_h2o;
+    /* Reaction: 2H+ + FeO2- = FeO+ + H2O */
+    T logk_feo = GetLogKeq(FeO);
+    T loga_feo = logk_feo + 2*loga_h + loga_feo2 - loga_h2o;
+    /* Reaction: 2FeO2- + 6H+ = Fe2(OH)2+4 + 2H2O */
+    T logk_fe2o2h2 = GetLogKeq(Fe2O2H2);
+    T loga_fe2o2h2 = logk_fe2o2h2 + 2*loga_feo2 + 6*loga_h - 2*loga_h2o;
+    /* Reaction: 3FeO2- + 8H+ = Fe3(OH)4+5 + 2H2O */
+    T logk_fe3o4h4 = GetLogKeq(Fe3O4H4);
+    T loga_fe3o4h4 = logk_fe3o4h4 + 3*loga_feo2 + 8*loga_h - 2*loga_h2o;
+    
+    LogActivity(Fe)        = loga_fe;
+    LogActivity(FeO2)      = loga_feo2;
+    LogActivity(FeO)       = loga_feo;
+    LogActivity(FeO2H)     = loga_feo2h;
+    LogActivity(Fe2O2H2)   = loga_fe2o2h2;
+    LogActivity(FeOH)      = loga_feoh;
+    LogActivity(FeOH_p2)   = loga_feoh_p2;
+    LogActivity(Fe3O4H4)   = loga_fe3o4h4;
+    LogActivity(Fe_p3)     = loga_fe_p3;
+  }
+
+  /* Magnesium */
+  if(loga_mg > logmin) {
+    /* Reaction: Mg+2 + H2O = Mg(OH)+ + H+ */
+    T logk_mgoh = GetLogKeq(MgOH);
+    T loga_mgoh = logk_mgoh + loga_mg + loga_h2o - loga_h;
+    
+    LogActivity(Mg)        = loga_mg;
+    LogActivity(MgOH)      = loga_mgoh;
+  }
+  
+  /* Nitrogen */
+  if(loga_no3 > logmin) {
+    /* Reaction: NO3- + 8e- + 9H+ = NH3 + 3H2O */
+    T logk_nh3 = GetLogKeq(NH3);
+    T loga_nh3 = logk_nh3 + loga_no3 + 8*loga_e + 9*loga_h - 3*loga_h2o;
+    /* Reaction: NO3- + 8e- + 10H+ = NH4+ + 3H2O */
+    T logk_nh4 = GetLogKeq(NH4);
+    T loga_nh4 = logk_nh4 + loga_no3 + 8*loga_e + 10*loga_h - 3*loga_h2o;
+    /* Reaction: 2NO3- + 10e- + 12H+ = N2 + 6H2O */
+    T logk_n2 = GetLogKeq(N2);
+    T loga_n2 = logk_n2 + 2*loga_no3 + 10*loga_e + 12*loga_h - 6*loga_h2o;
+    
+    LogActivity(NO3)       = loga_no3;
+    LogActivity(N2)        = loga_n2;
+    LogActivity(NH3)       = loga_nh3;
+    LogActivity(NH4)       = loga_nh4;
+  }
+  
+  /* Potassium */
+  if(loga_k > logmin) {
+    /* Reaction: H2O + K+ = KOH + H+ */
+    T logk_koh = GetLogKeq(KOH);
+    T loga_koh = logk_koh + loga_h2o + loga_k - loga_h ;
+    
+    LogActivity(K)         = loga_k ;
+    LogActivity(KOH)       = loga_koh ;
+  }
+  
+  /* Silicon */
+  if(loga_sio2 > logmin) {
+    /* Reaction: H2O + SiO2 = HSiO3- + H+ */
+    T logk_hsio3 = GetLogKeq(HSiO3);
+    T loga_hsio3 = logk_hsio3 + loga_h2o + loga_sio2 - loga_h;
+    /* Reaction: H2O + SiO2 = SiO3-2 + 2H+ */
+    T logk_sio3 = GetLogKeq(SiO3);
+    T loga_sio3 = logk_sio3 + loga_h2o + loga_sio2 - 2*loga_h;
+    /* Reaction: 2H2O + 4SiO2 = Si4O10-4 + 4H+ */
+    T logk_si4o10 = GetLogKeq(Si4O10);
+    T loga_si4o10 = logk_si4o10 + 2*loga_h2o + 4*loga_sio2 - 4*loga_h;
+    
+    LogActivity(SiO3)      = loga_sio3;
+    LogActivity(HSiO3)     = loga_hsio3;
+    LogActivity(SiO2)      = loga_sio2;
+    LogActivity(Si4O10)    = loga_si4o10;
+  }
+  
+  /* Sodium */
+  if(loga_na > logmin) {
+    /* Reaction: Na+ + H2O = NaOH + H+ */
+    T logk_naoh = GetLogKeq(NaOH);
+    T loga_naoh = logk_naoh + loga_na + loga_h2o - loga_h;
+    
+    LogActivity(Na)        = loga_na ;
+    LogActivity(NaOH)      = loga_naoh ;
+  }
+  
+  /* Strontium */
+  if(loga_sr > logmin) {
+    /* Reaction: Sr+2 + H2O = Sr(OH)+ + H+ */
+    T logk_sroh = GetLogKeq(SrOH);
+    T loga_sroh = logk_sroh + loga_sr + loga_h2o - loga_h;
+    
+    LogActivity(Sr)        = loga_sr;
+    LogActivity(SrOH)      = loga_sroh;
+  }
+  
+  /* Sulfur */
+  if(loga_so4 > logmin) {
+    /* Reaction: SO4-2 + 2e- + 2H+ = SO3-2 + H2O */
+    T logk_so3 = GetLogKeq(SO3);
+    T loga_so3 = logk_so3 + loga_so4 + 2*loga_e + 2*loga_h - loga_h2o;
+    /* Reaction: SO4-2 + H+ = HSO4- */
+    T logk_hso4 = GetLogKeq(HSO4);
+    T loga_hso4 = logk_hso4 + loga_so4 + loga_h;
+    /* Reaction: SO4-2 + 2e- + 3H+ = HSO3- + H2O */
+    T logk_hso3 = GetLogKeq(HSO3);
+    T loga_hso3 = logk_hso3 + loga_so4 + 2*loga_e + 3*loga_h - loga_h2o;
+    /* Reaction: SO4-2 + 8e- + 9H+ = HS- + 4H2O */
+    T logk_hs = GetLogKeq(HS);
+    T loga_hs = logk_hs + loga_so4 + 8*loga_e + 9*loga_h - 4*loga_h2o;
+    /* Reaction: SO4-2 + 8e- + 10H+ = H2S + 4H2O */
+    T logk_h2s = GetLogKeq(H2S);
+    T loga_h2s = logk_h2s + loga_so4 + 8*loga_e + 10*loga_h - 4*loga_h2o;
+    /* Reaction: 2SO4-2 + 8e- + 10H+ = S2O3-2 + 5H2O */
+    T logk_s2o3 = GetLogKeq(S2O3);
+    T loga_s2o3 = logk_s2o3 + 2*loga_so4 + 8*loga_e + 10*loga_h - 5*loga_h2o;
+    /* Reaction: SO4-2 + 8e- + 8H+ = S-2 + 4H2O */
+    T logk_s = GetLogKeq(S);
+    T loga_s = logk_s + loga_so4 + 8*loga_e + 8*loga_h - 4*loga_h2o;
+    /* SO4-2 + 2H+ = H2SO4 */ // Added
+    T logk_h2so4 = GetLogKeq(H2SO4);
+    T loga_h2so4 = logk_h2so4 + loga_so4 + 2*loga_h;
+    
+    LogActivity(H2SO4)     = loga_h2so4;
+    LogActivity(HSO4)      = loga_hso4;
+    LogActivity(SO4)       = loga_so4;
+    LogActivity(S2O3)      = loga_s2o3;
+    LogActivity(HS)        = loga_hs;
+    LogActivity(S)         = loga_s;
+    LogActivity(SO3)       = loga_so3;
+    LogActivity(HSO3)      = loga_hso3;
+  }
+  
+  /* Chemical reactions involving compounds of type II
+   * ------------------------------------------------- */
+  /* Aluminium-Silicon: */
+  if(loga_alo2 > logmin) {
+    /* Reaction: AlO2- + H2O + SiO2 = AlSiO5-3 + 2H+ */
+    T logk_alsio5 = GetLogKeq(AlSiO5);
+    T loga_alsio5 = logk_alsio5 + loga_alo2 + loga_h2o + loga_sio2 - 2*loga_h;
+    /* Reaction: AlO2- + 3H+ + SiO2 = AlHSiO3+2 + H2O */
+    T logk_alhsio3 = GetLogKeq(AlHSiO3);
+    T loga_alhsio3 = logk_alhsio3 + loga_alo2 + 3*loga_h + loga_sio2 - loga_h2o;
+    
+    LogActivity(AlSiO5)    = loga_alsio5;
+    LogActivity(AlHSiO3)   = loga_alhsio3;
+  }
+  
+  /* Aluminium-Sulfur: */
+  if(loga_alo2 > logmin && loga_so4 > logmin) {
+    /* Reaction: SO4-2 + AlO2- + 4H+ = Al(SO4)+ + 2H2O */
+    T logk_also4 = GetLogKeq(AlSO4);
+    T loga_also4 = logk_also4 + loga_so4 + loga_alo2 + 4*loga_h - 2*loga_h2o;
+    /* Reaction: 2SO4-2 + AlO2- + 4H+ = Al(SO4)2- + 2H2O */
+    T logk_als2o8 = GetLogKeq(AlS2O8);
+    T loga_als2o8 = logk_als2o8 + 2*loga_so4 + loga_alo2 + 4*loga_h - 2*loga_h2o;
+    
+    LogActivity(AlSO4)     = loga_also4;
+    LogActivity(AlS2O8)    = loga_als2o8;
+  }
+  
+  /* Calcium-Carbon: */
+  if(loga_ca > logmin && loga_co3 > logmin) {
+    /* Reaction: CO3-2 + Ca+2 + H+ = Ca(HCO3)+ */
+    T logk_cahco3 = GetLogKeq(CaHCO3);
+    T loga_cahco3 = logk_cahco3 + loga_co3 + loga_ca + loga_h;
+    /* Reaction: CO3-2 + Ca+2 = CaCO3 */
+    T logk_caco3 = GetLogKeq(CaCO3);
+    T loga_caco3 = logk_caco3 + loga_co3 + loga_ca;
+    
+    LogActivity(CaHCO3)    = loga_cahco3;
+    LogActivity(CaCO3)     = loga_caco3;
+  }
+  
+  /* Calcium-Silicon */
+  if(loga_ca > logmin && loga_sio2 > logmin) {
+    /* Reaction: Ca+2 + H2O + SiO2 = CaSiO3 + 2H+ */
+    T logk_casio3 = GetLogKeq(CaSiO3) ;
+    T loga_casio3 = logk_casio3 + loga_ca + loga_h2o + loga_sio2 - 2*loga_h;
+    /* Reaction: Ca+2 + H2O + SiO2 = Ca(HSiO3)+ + H+ */
+    T logk_cahsio3 = GetLogKeq(CaHSiO3) ;
+    T loga_cahsio3 = logk_cahsio3 + loga_ca + loga_h2o + loga_sio2 - loga_h;
+    
+    LogActivity(CaSiO3)    = loga_casio3;
+    LogActivity(CaHSiO3)   = loga_cahsio3;
+  }
+  
+  /* Calcium-Sulfur: */
+  if(loga_ca > logmin && loga_so4 > logmin) {
+    /* Reaction: Ca+2 + SO4-2 = CaSO4 */
+    T logk_caso4 = GetLogKeq(CaSO4);
+    T loga_caso4 = logk_caso4 + loga_ca + loga_so4;
+    
+    LogActivity(CaSO4)     = loga_caso4;
+  }
+  
+  /* Iron-Carbon: */
+  if(loga_feo2 > logmin && loga_co3 > logmin) {
+    /* Reaction: CO3-2 + e- + 4H+ + FeO2- = FeCO3 + 2H2O */
+    T logk_feco3 = GetLogKeq(FeCO3);
+    T loga_feco3 = logk_feco3 + loga_co3 + loga_e + 4*loga_h + loga_feo2 - 2*loga_h2o;
+    /* Reaction: CO3-2 + e- + 5H+ + FeO2- = FeHCO3+ + 2H2O */
+    T logk_fehco3 = GetLogKeq(FeHCO3);
+    T loga_fehco3 = logk_fehco3 + loga_co3 + loga_e + 5*loga_h + loga_feo2 - 2*loga_h2o;
+    
+    LogActivity(FeCO3)     = loga_feco3;
+    LogActivity(FeHCO3)    = loga_fehco3;
+  }
+  
+  /* Iron-Chlorine: */
+  if(loga_feo2 > logmin && loga_cl > logmin) {
+    /* Reaction: 3Cl- + 4H+ + FeO2- = FeCl3 + 2H2O */
+    T logk_fecl3 = GetLogKeq(FeCl3);
+    T loga_fecl3 = logk_fecl3 + 3*loga_cl + 4*loga_h + loga_feo2 - 2*loga_h2o;
+    /* Reaction: Cl- + e- + 4H+ + FeO2- = FeCl+ + 2H2O */
+    T logk_fecl = GetLogKeq(FeCl);
+    T loga_fecl = logk_fecl + loga_cl + loga_e + 4*loga_h + loga_feo2 - 2*loga_h2o;
+    /* Reaction: Cl- + 4H+ + FeO2- = FeCl+2 + 2H2O */
+    T logk_fecl_p2 = GetLogKeq(FeCl_p2);
+    T loga_fecl_p2 = logk_fecl_p2 + loga_cl + 4*loga_h + loga_feo2 - 2*loga_h2o;
+    /* Reaction: 2Cl- + 4H+ + FeO2- = FeCl2+ + 2H2O */
+    T logk_fecl2 = GetLogKeq(FeCl2);
+    T loga_fecl2 = logk_fecl2 + 2*loga_cl + 4*loga_h + loga_feo2 - 2*loga_h2o;
+    
+    LogActivity(FeCl)      = loga_fecl;
+    LogActivity(FeCl_p2)   = loga_fecl_p2;
+    LogActivity(FeCl2)     = loga_fecl2;
+    LogActivity(FeCl3)     = loga_fecl3;
+  }
+  
+  /* Iron-Silicon: */
+  if(loga_feo2 > logmin && loga_sio2 > logmin) {
+    /* Reaction: FeO2- + 3H+ + SiO2 = FeHSiO3+2 + H2O */
+    T logk_fehsio3 = GetLogKeq(FeHSiO3);
+    T loga_fehsio3 = logk_fehsio3 + loga_feo2 + 3*loga_h + loga_sio2 - loga_h2o;
+    
+    LogActivity(FeHSiO3)   = loga_fehsio3;
+  }
+  
+  /* Iron-Sulfur: */
+  if(loga_feo2 > logmin && loga_so4 > logmin) {
+    /* Reaction: SO4-2 + e- + 5H+ + FeO2- = FeHSO4+ + 2H2O */
+    T logk_fehso4 = GetLogKeq(FeHSO4);
+    T loga_fehso4 = logk_fehso4 + loga_so4 + loga_e + 5*loga_h + loga_feo2 - 2*loga_h2o;
+    /* Reaction: SO4-2 + e- + 4H+ + FeO2- = Fe(SO4) + 2H2O */
+    T logk_feso4 = GetLogKeq(FeSO4);
+    T loga_feso4 = logk_feso4 + loga_so4 + loga_e + 4*loga_h + loga_feo2 - 2*loga_h2o;
+    /* Reaction: SO4-2 + 4H+ + FeO2- = Fe(SO4)+ + 2H2O */
+    T logk_feso4_p1 = GetLogKeq(FeSO4_p1);
+    T loga_feso4_p1 = logk_feso4_p1 + loga_so4 + 4*loga_h + loga_feo2 - 2*loga_h2o;
+    /* Reaction: SO4-2 + 5H+ + FeO2- = FeHSO4+2 + 2H2O */
+    T logk_fehso4_p2 = GetLogKeq(FeHSO4_p2);
+    T loga_fehso4_p2 = logk_fehso4_p2 + loga_so4 + 5*loga_h + loga_feo2 - 2*loga_h2o;
+    /* Reaction: 2SO4-2 + 4H+ + FeO2- = Fe(SO4)2- + 2H2O */
+    T logk_fes2o8 = GetLogKeq(FeS2O8);
+    T loga_fes2o8 = logk_fes2o8 + loga_so4 + 4*loga_h + loga_feo2 - 2*loga_h2o;
+    
+    LogActivity(FeHSO4)    = loga_fehso4;
+    LogActivity(FeSO4)     = loga_feso4;
+    LogActivity(FeSO4_p1)  = loga_feso4_p1;
+    LogActivity(FeS2O8)    = loga_fes2o8;
+    LogActivity(FeHSO4_p2) = loga_fehso4_p2;
+  }
+  
+  /* Magnesium-Carbon: */
+  if(loga_mg > logmin && loga_co3 > logmin) {
+    /* Reaction: CO3-2 + Mg+2 + H+ = Mg(HCO3)+ */
+    T logk_mghco3 = GetLogKeq(MgHCO3);
+    T loga_mghco3 = logk_mghco3 + loga_co3 + loga_mg + loga_h;
+    /* Reaction: CO3-2 + Mg+2 = Mg(CO3) */
+    T logk_mgco3 = GetLogKeq(MgCO3);
+    T loga_mgco3 = logk_mgco3 + loga_co3 + loga_mg;
+    
+    LogActivity(MgCO3)     = loga_mgco3;
+    LogActivity(MgHCO3)    = loga_mghco3;
+  }
+  
+  /* Magnesium-Silicon: */
+  if(loga_mg > logmin && loga_sio2 > logmin) {
+    /* Reaction: Mg+2 + H2O + SiO2 = Mg(HSiO3)+ + H+ */
+    T logk_mghsio3 = GetLogKeq(MgHSiO3);
+    T loga_mghsio3 = logk_mghsio3 + loga_mg + loga_h2o + loga_sio2 - loga_h;
+/* Reaction: Mg+2 + H2O + SiO2 = MgSiO3 + 2H+ */
+    T logk_mgsio3 = GetLogKeq(MgSiO3);
+    T loga_mgsio3 = logk_mgsio3 + loga_mg + loga_h2o + loga_sio2 - 2*loga_h;
+    
+    LogActivity(MgHSiO3)   = loga_mghsio3;
+    LogActivity(MgSiO3)    = loga_mgsio3;
+  }
+  
+  /* Magnesium-Sulfur: */
+  if(loga_mg > logmin && loga_so4 > logmin) {
+    /* Reaction: SO4-2 + Mg+2 = Mg(SO4) */
+    T logk_mgso4 = GetLogKeq(MgSO4);
+    T loga_mgso4 = logk_mgso4 + loga_so4 + loga_mg;
+    
+    LogActivity(MgSO4)     = loga_mgso4;
+  }
+  
+  /* Nitrogen-Carbon */
+  if(loga_no3 > logmin && loga_co3 > logmin) {
+    /* Reaction: CO3-2 + NO3- + 10e- + 13H+ = HCN + 6H2O */
+    T logk_hcn = GetLogKeq(HCN);
+    T loga_hcn = logk_hcn + loga_co3 + loga_no3 + 10*loga_e + 13*loga_h - 6*loga_h2o;
+    
+    LogActivity(HCN)     = loga_hcn;
+  }
+  
+  /* Potassium-Sulfur: */
+  if(loga_k > logmin && loga_so4 > logmin) {
+    /* Reaction: SO4-2 + K+ = KSO4- */
+    T logk_kso4 = GetLogKeq(KSO4);
+    T loga_kso4 = logk_kso4 + loga_so4 + loga_k;
+    
+    LogActivity(KSO4)      = loga_kso4;
+  }
+  
+  /* Sodium-Carbon: */
+  if(loga_na > logmin && loga_co3 > logmin) {
+    /* Reaction: CO3-2 + Na+ + H+ = NaHCO3 */
+    T logk_nahco3 = GetLogKeq(NaHCO3);
+    T loga_nahco3 = logk_nahco3 + loga_co3 + loga_na + loga_h;
+    /* Reaction: CO3-2 + Na+ = NaCO3- */
+    T logk_naco3 = GetLogKeq(NaCO3);
+    T loga_naco3 = logk_naco3 + loga_co3 + loga_na;
+    
+    LogActivity(NaHCO3)    = loga_nahco3;
+    LogActivity(NaCO3)     = loga_naco3;
+  }
+  
+  /* Sodium-Sulfur: */
+  if(loga_na > logmin && loga_so4 > logmin) {
+    /* Reaction: SO4-2 + Na+ = Na(SO4)- */
+    T logk_naso4 = GetLogKeq(NaSO4);
+    T loga_naso4 = logk_naso4 + loga_so4 + loga_na;
+    
+    LogActivity(NaSO4)     = loga_naso4;
+  }
+  
+  /* Strontium-Carbon: */
+  if(loga_sr > logmin && loga_co3 > logmin) {
+    /* Reaction: CO3-2 + Sr+2 = Sr(CO3) */
+    T logk_srco3 = GetLogKeq(SrCO3);
+    T loga_srco3 = logk_srco3 + loga_co3 + loga_sr;
+    /* Reaction: CO3-2 + Sr+2 + H+ = SrHCO3+ */
+    T logk_srhco3 = GetLogKeq(SrHCO3);
+    T loga_srhco3 = logk_srhco3 + loga_co3 + loga_sr + loga_h;
+    
+    LogActivity(SrCO3)     = loga_srco3;
+    LogActivity(SrHCO3)    = loga_srhco3;
+  }
+  
+  /* Strontium-Silicon: */
+  if(loga_sr > logmin && loga_sio2 > logmin) {
+    /* Reaction: Sr+2 + H2O + SiO2 = SrSiO3 + 2H+ */
+    T logk_srsio3 = GetLogKeq(SrSiO3);
+    T loga_srsio3 = logk_srsio3 + loga_sr + loga_h2o + loga_sio2 - 2*loga_h;
+    
+    LogActivity(SrSiO3)    = loga_srsio3;
+  }
+  
+  /* Strontium-Sulfur: */
+  if(loga_sr > logmin && loga_so4 > logmin) {
+    /* Reaction: SO4-2 + Sr+2 = Sr(SO4) */
+    T logk_srso4 = GetLogKeq(SrSO4);
+    T loga_srso4 = logk_srso4 + loga_so4 + loga_sr;
+    
+    LogActivity(SrSO4)     = loga_srso4;
+  }
+  
+
+  /* Compound of type III
+   * -------------------- */
+  /* Sulfur-Carbon-Nitrogen: */
+  if(loga_so4 > logmin && loga_co3 > logmin && loga_no3 > logmin) {
+    /* Reaction: CO3-2 + NO3- + SO4-2 + 16e- + 20H+ = SCN-  + 10H2O */
+    T logk_scn = GetLogKeq(SCN);
+    T loga_scn = logk_scn + loga_co3 + loga_no3 + loga_so4 + 16*loga_e + 20*loga_h - 10*loga_h2o ;
+    
+    LogActivity(SCN)       = loga_scn;
+  }
+  #undef GetLogKeq
+  #undef LogActivity
+  
+  /* Backup concentrations */
+  CementSolutionChemistry_TranslateActivitiesIntoConcentrations(csc,ionicstrength);
+}
+
+
+
+template<typename T>
+_INLINE_ void (CementSolutionChemistry_ComputeSystemDEFAULT)(CementSolutionChemistry_t<T>* csc,double ionicstrength)
+{
+  constexpr double min = std::numeric_limits<double>::min();
+  constexpr double logmin = log10(min);
+  
+  #define LogActivity(CPD)  CementSolutionChemistry_GetLogActivityOf(csc,CPD)
+  /* Inputs */
+  T loga_h2o  = LogActivity(H2O);
+  T loga_h    = LogActivity(H);
+  T loga_alo2 = LogActivity(AlO2);
+  T loga_ca   = LogActivity(Ca);
+  T loga_co3  = LogActivity(CO3);
+  T loga_cl   = LogActivity(Cl);
+  T loga_feo2 = LogActivity(FeO2);
+  T loga_mg   = LogActivity(Mg);
+  T loga_no3  = LogActivity(NO3);
+  T loga_k    = LogActivity(K);
+  T loga_sio2 = LogActivity(SiO2);
+  T loga_na   = LogActivity(Na);
+  T loga_sr   = LogActivity(Sr);
+  T loga_so4  = LogActivity(SO4);
+  T loga_e    = 0;
+  
+  
+  #define GetLogKeq(CPD)  CementSolutionChemistry_GetLog10EquilibriumConstantOf(csc,CPD)
+  /* Oxygen
+   * ------ */
+  {
+    /* Reaction: 2H2O = O2 + 4e- + 4H+ */
+    //T logk_o2 = GetLogKeq(O2);
+    //T loga_o2 = logk_o2 + 2*loga_h2o - 4*loga_e - 4*loga_h;
+    
+    LogActivity(H2O)       = loga_h2o;
+    //LogActivity(O2)        = loga_o2;
+  }
+  
+  /* Hydrogen
+   * -------- */
+  {
+    /* Reaction: H2O = OH- + H+ */
+    T logk_h2o = GetLogKeq(H2O);
+    T loga_oh  = logk_h2o + loga_h2o - loga_h;
+    /* Reaction: 2e- + 2H+ = H2 */
+    //T logk_h2 = GetLogKeq(H2);
+    //T loga_h2 = logk_h2 + 2*loga_e + 2*loga_h;
+    
+    LogActivity(OH)        = loga_oh;
+    LogActivity(H)         = loga_h;
+    //LogActivity(H2)        = loga_h2;
+  }
+  
+  /* Chemical reactions involving compounds of type I
+   * ------------------------------------------------ */
+  /* Aluminium */
+  if(loga_alo2 > logmin) {
+    /* Reaction: AlO2- + 2H+ = AlO+ + H2O */
+    //T logk_alo = GetLogKeq(AlO);
+    //T loga_alo = logk_alo + loga_alo2 + 2*loga_h - loga_h2o;
+    /* Reaction: AlO2- + 3H+ = Al(OH)+2 + H2O */
+    //T logk_aloh = GetLogKeq(AlOH);
+    //T loga_aloh = logk_aloh + loga_alo2 + 3*loga_h - loga_h2o;
+    /* Reaction: AlO2- + 4H+ = Al+3 + 2H2O */
+    T logk_al = GetLogKeq(Al);
+    T loga_al = logk_al + loga_alo2 + 4*loga_h - 2*loga_h2o;
+    /* Reaction: AlO2- + H+ = AlO2H */
+    //T logk_alo2h = GetLogKeq(AlO2H);
+    //T loga_alo2h = logk_alo2h + loga_alo2 + loga_h;
+    
+    LogActivity(Al)        = loga_al;
+    LogActivity(AlO2)      = loga_alo2;
+    //LogActivity(AlO)       = loga_alo;
+    //LogActivity(AlOH)      = loga_aloh;
+    //LogActivity(AlO2H)     = loga_alo2h;
+  }
+  
+  /* Calcium */
+  if(loga_ca > logmin) {
+    /* Reaction: Ca+2 + H2O = Ca(OH)+ + H+ */
+    T logk_caoh = GetLogKeq(CaOH);
+    T loga_caoh = logk_caoh + loga_ca + loga_h2o - loga_h;
+    
+    LogActivity(Ca)        = loga_ca ;
+    LogActivity(CaOH)      = loga_caoh ;
+  }
+  
+  /* Carbon */
+  if(loga_co3 > logmin) {
+    /* Reaction: CO3-2 + H+ = HCO3- */
+    T logk_hco3 = GetLogKeq(HCO3);
+    T loga_hco3 = logk_hco3 + loga_co3 + loga_h;
+    /* Reaction: CO3-2 + 8e- + 10H+ = CH4 + 3H2O */
+    //T logk_ch4 = GetLogKeq(CH4);
+    //T loga_ch4 = logk_ch4 + loga_co3 + 8*loga_e + 10*loga_h - 3*loga_h2o;
+    /* Reaction: CO3-2 + 2H+ = CO2 + H2O */
+    T logk_co2 = GetLogKeq(CO2);
+    T loga_co2 = logk_co2 + loga_co3 + 2*loga_h - loga_h2o;
+    
+    LogActivity(HCO3)      = loga_hco3;
+    LogActivity(CO3)       = loga_co3;
+    LogActivity(CO2)       = loga_co2;
+    //LogActivity(CH4)       = loga_ch4;
+  }
+  
+  /* Chlorine */
+  if(loga_cl > logmin) {
+    /* Reaction: Cl- + 4H2O = ClO4- + 8e- + 8H+ */
+    //T logk_clo4 = GetLogKeq(ClO4);
+    //T loga_clo4 = logk_clo4 + loga_cl + 4*loga_h2o - 8*loga_e - 8*loga_h;
+    
+    LogActivity(Cl)        = loga_cl;
+    //LogActivity(ClO4)      = loga_clo4;
+  }
+  
+  /* Iron */
+  #if 0
+  if(loga_feo2 > logmin) {
+    /* Reaction: H+ + FeO2- = FeO2H */
+    T logk_feo2h = GetLogKeq(FeO2H);
+    T loga_feo2h = logk_feo2h + loga_h + loga_feo2;
+    /* Reaction: e- + 4H+ + FeO2- = Fe+2 + 2H2O */
+    T logk_fe = GetLogKeq(Fe);
+    T loga_fe = logk_fe + loga_e + 4*loga_h + loga_feo2 - 2*loga_h2o;
+    /* Reaction: e- + 3H+ + FeO2- = FeOH+ + H2O */
+    T logk_feoh = GetLogKeq(FeOH);
+    T loga_feoh = logk_feoh + loga_e + 3*loga_h + loga_feo2 - loga_h2o;
+    /* Reaction: 4H+ + FeO2- = Fe+3 + 2H2O */
+    T logk_fe_p3 = GetLogKeq(Fe_p3);
+    T loga_fe_p3 = logk_fe_p3 + 4*loga_h + loga_feo2 - 2*loga_h2o;
+    /* Reaction: 3H+ + FeO2- = Fe(OH)+2 + H2O */
+    T logk_feoh_p2 = GetLogKeq(FeOH_p2);
+    T loga_feoh_p2 = logk_feoh_p2 + 3*loga_h + loga_feo2 - loga_h2o;
+    /* Reaction: 2H+ + FeO2- = FeO+ + H2O */
+    T logk_feo = GetLogKeq(FeO);
+    T loga_feo = logk_feo + 2*loga_h + loga_feo2 - loga_h2o;
+    /* Reaction: 2FeO2- + 6H+ = Fe2(OH)2+4 + 2H2O */
+    T logk_fe2o2h2 = GetLogKeq(Fe2O2H2);
+    T loga_fe2o2h2 = logk_fe2o2h2 + 2*loga_feo2 + 6*loga_h - 2*loga_h2o;
+    /* Reaction: 3FeO2- + 8H+ = Fe3(OH)4+5 + 2H2O */
+    T logk_fe3o4h4 = GetLogKeq(Fe3O4H4);
+    T loga_fe3o4h4 = logk_fe3o4h4 + 3*loga_feo2 + 8*loga_h - 2*loga_h2o;
+    
+    LogActivity(Fe)        = loga_fe;
+    LogActivity(FeO2)      = loga_feo2;
+    LogActivity(FeO)       = loga_feo;
+    LogActivity(FeO2H)     = loga_feo2h;
+    LogActivity(Fe2O2H2)   = loga_fe2o2h2;
+    LogActivity(FeOH)      = loga_feoh;
+    LogActivity(FeOH_p2)   = loga_feoh_p2;
+    LogActivity(Fe3O4H4)   = loga_fe3o4h4;
+    LogActivity(Fe_p3)     = loga_fe_p3;
+  }
+  #endif
+
+  /* Magnesium */
+  #if 0
+  if(loga_mg > logmin) {
+    /* Reaction: Mg+2 + H2O = Mg(OH)+ + H+ */
+    T logk_mgoh = GetLogKeq(MgOH);
+    T loga_mgoh = logk_mgoh + loga_mg + loga_h2o - loga_h;
+    
+    LogActivity(Mg)        = loga_mg;
+    LogActivity(MgOH)      = loga_mgoh;
+  }
+  #endif
+  
+  /* Nitrogen */
+  #if 0
+  if(loga_no3 > logmin) {
+    /* Reaction: NO3- + 8e- + 9H+ = NH3 + 3H2O */
+    T logk_nh3 = GetLogKeq(NH3);
+    T loga_nh3 = logk_nh3 + loga_no3 + 8*loga_e + 9*loga_h - 3*loga_h2o;
+    /* Reaction: NO3- + 8e- + 10H+ = NH4+ + 3H2O */
+    T logk_nh4 = GetLogKeq(NH4);
+    T loga_nh4 = logk_nh4 + loga_no3 + 8*loga_e + 10*loga_h - 3*loga_h2o;
+    /* Reaction: 2NO3- + 10e- + 12H+ = N2 + 6H2O */
+    T logk_n2 = GetLogKeq(N2);
+    T loga_n2 = logk_n2 + 2*loga_no3 + 10*loga_e + 12*loga_h - 6*loga_h2o;
+    
+    LogActivity(NO3)       = loga_no3;
+    LogActivity(N2)        = loga_n2;
+    LogActivity(NH3)       = loga_nh3;
+    LogActivity(NH4)       = loga_nh4;
+  }
+  #endif
+  
+  /* Potassium */
+  if(loga_k > logmin) {
+    /* Reaction: H2O + K+ = KOH + H+ */
+    T logk_koh = GetLogKeq(KOH);
+    T loga_koh = logk_koh + loga_h2o + loga_k - loga_h ;
+    
+    LogActivity(K)         = loga_k ;
+    LogActivity(KOH)       = loga_koh ;
+  }
+  
+  /* Silicon */
+  if(loga_sio2 > logmin) {
+    /* Reaction: H2O + SiO2 = HSiO3- + H+ */
+    T logk_hsio3 = GetLogKeq(HSiO3);
+    T loga_hsio3 = logk_hsio3 + loga_h2o + loga_sio2 - loga_h;
+    /* Reaction: H2O + SiO2 = SiO3-2 + 2H+ */
+    T logk_sio3 = GetLogKeq(SiO3);
+    T loga_sio3 = logk_sio3 + loga_h2o + loga_sio2 - 2*loga_h;
+    /* Reaction: 2H2O + 4SiO2 = Si4O10-4 + 4H+ */
+    //T logk_si4o10 = GetLogKeq(Si4O10);
+    //T loga_si4o10 = logk_si4o10 + 2*loga_h2o + 4*loga_sio2 - 4*loga_h;
+    
+    LogActivity(SiO3)      = loga_sio3;
+    LogActivity(HSiO3)     = loga_hsio3;
+    LogActivity(SiO2)      = loga_sio2;
+    //LogActivity(Si4O10)    = loga_si4o10;
+  }
+  
+  /* Sodium */
+  if(loga_na > logmin) {
+    /* Reaction: Na+ + H2O = NaOH + H+ */
+    T logk_naoh = GetLogKeq(NaOH);
+    T loga_naoh = logk_naoh + loga_na + loga_h2o - loga_h;
+    
+    LogActivity(Na)        = loga_na ;
+    LogActivity(NaOH)      = loga_naoh ;
+  }
+  
+  /* Strontium */
+  #if 0
+  if(loga_sr > logmin) {
+    /* Reaction: Sr+2 + H2O = Sr(OH)+ + H+ */
+    T logk_sroh = GetLogKeq(SrOH);
+    T loga_sroh = logk_sroh + loga_sr + loga_h2o - loga_h;
+    
+    LogActivity(Sr)        = loga_sr;
+    LogActivity(SrOH)      = loga_sroh;
+  }
+  #endif
+  
+  /* Sulfur */
+  if(loga_so4 > logmin) {
+    /* Reaction: SO4-2 + 2e- + 2H+ = SO3-2 + H2O */
+    T logk_so3 = GetLogKeq(SO3);
+    T loga_so3 = logk_so3 + loga_so4 + 2*loga_e + 2*loga_h - loga_h2o;
+    /* Reaction: SO4-2 + H+ = HSO4- */
+    T logk_hso4 = GetLogKeq(HSO4);
+    T loga_hso4 = logk_hso4 + loga_so4 + loga_h;
+    /* Reaction: SO4-2 + 2e- + 3H+ = HSO3- + H2O */
+    //T logk_hso3 = GetLogKeq(HSO3);
+    //T loga_hso3 = logk_hso3 + loga_so4 + 2*loga_e + 3*loga_h - loga_h2o;
+    /* Reaction: SO4-2 + 8e- + 9H+ = HS- + 4H2O */
+    //T logk_hs = GetLogKeq(HS);
+    //T loga_hs = logk_hs + loga_so4 + 8*loga_e + 9*loga_h - 4*loga_h2o;
+    /* Reaction: SO4-2 + 8e- + 10H+ = H2S + 4H2O */
+    //T logk_h2s = GetLogKeq(H2S);
+    //T loga_h2s = logk_h2s + loga_so4 + 8*loga_e + 10*loga_h - 4*loga_h2o;
+    /* Reaction: 2SO4-2 + 8e- + 10H+ = S2O3-2 + 5H2O */
+    //T logk_s2o3 = GetLogKeq(S2O3);
+    //T loga_s2o3 = logk_s2o3 + 2*loga_so4 + 8*loga_e + 10*loga_h - 5*loga_h2o;
+    /* Reaction: SO4-2 + 8e- + 8H+ = S-2 + 4H2O */
+    //T logk_s = GetLogKeq(S);
+    //T loga_s = logk_s + loga_so4 + 8*loga_e + 8*loga_h - 4*loga_h2o;
+    /* SO4-2 + 2H+ = H2SO4 */ // Added
+    T logk_h2so4 = GetLogKeq(H2SO4);
+    T loga_h2so4 = logk_h2so4 + loga_so4 + 2*loga_h;
+    
+    LogActivity(H2SO4)     = loga_h2so4;
+    LogActivity(HSO4)      = loga_hso4;
+    LogActivity(SO4)       = loga_so4;
+    //LogActivity(S2O3)      = loga_s2o3;
+    //LogActivity(HS)        = loga_hs;
+    //LogActivity(S)         = loga_s;
+    //LogActivity(SO3)       = loga_so3;
+    //LogActivity(HSO3)      = loga_hso3;
+  }
+  
+  /* Chemical reactions involving compounds of type II
+   * ------------------------------------------------- */
+  /* Aluminium-Silicon: */
+  #if 0
+  if(loga_alo2 > logmin) {
+    /* Reaction: AlO2- + H2O + SiO2 = AlSiO5-3 + 2H+ */
+    T logk_alsio5 = GetLogKeq(AlSiO5);
+    T loga_alsio5 = logk_alsio5 + loga_alo2 + loga_h2o + loga_sio2 - 2*loga_h;
+    /* Reaction: AlO2- + 3H+ + SiO2 = AlHSiO3+2 + H2O */
+    T logk_alhsio3 = GetLogKeq(AlHSiO3);
+    T loga_alhsio3 = logk_alhsio3 + loga_alo2 + 3*loga_h + loga_sio2 - loga_h2o;
+    
+    LogActivity(AlSiO5)    = loga_alsio5;
+    LogActivity(AlHSiO3)   = loga_alhsio3;
+  }
+  #endif
+  
+  /* Aluminium-Sulfur: */
+  #if 0
+  if(loga_alo2 > logmin && loga_so4 > logmin) {
+    /* Reaction: SO4-2 + AlO2- + 4H+ = Al(SO4)+ + 2H2O */
+    T logk_also4 = GetLogKeq(AlSO4);
+    T loga_also4 = logk_also4 + loga_so4 + loga_alo2 + 4*loga_h - 2*loga_h2o;
+    /* Reaction: 2SO4-2 + AlO2- + 4H+ = Al(SO4)2- + 2H2O */
+    T logk_als2o8 = GetLogKeq(AlS2O8);
+    T loga_als2o8 = logk_als2o8 + 2*loga_so4 + loga_alo2 + 4*loga_h - 2*loga_h2o;
+    
+    LogActivity(AlSO4)     = loga_also4;
+    LogActivity(AlS2O8)    = loga_als2o8;
+  }
+  #endif
+  
+  /* Calcium-Carbon: */
+  if(loga_ca > logmin && loga_co3 > logmin) {
+    /* Reaction: CO3-2 + Ca+2 + H+ = Ca(HCO3)+ */
+    T logk_cahco3 = GetLogKeq(CaHCO3);
+    T loga_cahco3 = logk_cahco3 + loga_co3 + loga_ca + loga_h;
+    /* Reaction: CO3-2 + Ca+2 = CaCO3 */
+    T logk_caco3 = GetLogKeq(CaCO3);
+    T loga_caco3 = logk_caco3 + loga_co3 + loga_ca;
+    
+    LogActivity(CaHCO3)    = loga_cahco3;
+    LogActivity(CaCO3)     = loga_caco3;
+  }
+  
+  /* Calcium-Silicon */
+  if(loga_ca > logmin && loga_sio2 > logmin) {
+    /* Reaction: Ca+2 + H2O + SiO2 = CaSiO3 + 2H+ */
+    T logk_casio3 = GetLogKeq(CaSiO3) ;
+    T loga_casio3 = logk_casio3 + loga_ca + loga_h2o + loga_sio2 - 2*loga_h;
+    /* Reaction: Ca+2 + H2O + SiO2 = Ca(HSiO3)+ + H+ */
+    T logk_cahsio3 = GetLogKeq(CaHSiO3) ;
+    T loga_cahsio3 = logk_cahsio3 + loga_ca + loga_h2o + loga_sio2 - loga_h;
+    
+    LogActivity(CaSiO3)    = loga_casio3;
+    LogActivity(CaHSiO3)   = loga_cahsio3;
+  }
+  
+  /* Calcium-Sulfur: */
+  if(loga_ca > logmin && loga_so4 > logmin) {
+    /* Reaction: Ca+2 + SO4-2 = CaSO4 */
+    T logk_caso4 = GetLogKeq(CaSO4);
+    T loga_caso4 = logk_caso4 + loga_ca + loga_so4;
+    
+    LogActivity(CaSO4)     = loga_caso4;
+  }
+  
+  /* Iron-Carbon: */
+  #if 0
+  if(loga_feo2 > logmin && loga_co3 > logmin) {
+    /* Reaction: CO3-2 + e- + 4H+ + FeO2- = FeCO3 + 2H2O */
+    T logk_feco3 = GetLogKeq(FeCO3);
+    T loga_feco3 = logk_feco3 + loga_co3 + loga_e + 4*loga_h + loga_feo2 - 2*loga_h2o;
+    /* Reaction: CO3-2 + e- + 5H+ + FeO2- = FeHCO3+ + 2H2O */
+    T logk_fehco3 = GetLogKeq(FeHCO3);
+    T loga_fehco3 = logk_fehco3 + loga_co3 + loga_e + 5*loga_h + loga_feo2 - 2*loga_h2o;
+    
+    LogActivity(FeCO3)     = loga_feco3;
+    LogActivity(FeHCO3)    = loga_fehco3;
+  }
+  
+  /* Iron-Chlorine: */
+  if(loga_feo2 > logmin && loga_cl > logmin) {
+    /* Reaction: 3Cl- + 4H+ + FeO2- = FeCl3 + 2H2O */
+    T logk_fecl3 = GetLogKeq(FeCl3);
+    T loga_fecl3 = logk_fecl3 + 3*loga_cl + 4*loga_h + loga_feo2 - 2*loga_h2o;
+    /* Reaction: Cl- + e- + 4H+ + FeO2- = FeCl+ + 2H2O */
+    T logk_fecl = GetLogKeq(FeCl);
+    T loga_fecl = logk_fecl + loga_cl + loga_e + 4*loga_h + loga_feo2 - 2*loga_h2o;
+    /* Reaction: Cl- + 4H+ + FeO2- = FeCl+2 + 2H2O */
+    T logk_fecl_p2 = GetLogKeq(FeCl_p2);
+    T loga_fecl_p2 = logk_fecl_p2 + loga_cl + 4*loga_h + loga_feo2 - 2*loga_h2o;
+    /* Reaction: 2Cl- + 4H+ + FeO2- = FeCl2+ + 2H2O */
+    T logk_fecl2 = GetLogKeq(FeCl2);
+    T loga_fecl2 = logk_fecl2 + 2*loga_cl + 4*loga_h + loga_feo2 - 2*loga_h2o;
+    
+    LogActivity(FeCl)      = loga_fecl;
+    LogActivity(FeCl_p2)   = loga_fecl_p2;
+    LogActivity(FeCl2)     = loga_fecl2;
+    LogActivity(FeCl3)     = loga_fecl3;
+  }
+  
+  /* Iron-Silicon: */
+  if(loga_feo2 > logmin && loga_sio2 > logmin) {
+    /* Reaction: FeO2- + 3H+ + SiO2 = FeHSiO3+2 + H2O */
+    T logk_fehsio3 = GetLogKeq(FeHSiO3);
+    T loga_fehsio3 = logk_fehsio3 + loga_feo2 + 3*loga_h + loga_sio2 - loga_h2o;
+    
+    LogActivity(FeHSiO3)   = loga_fehsio3;
+  }
+  
+  /* Iron-Sulfur: */
+  if(loga_feo2 > logmin && loga_so4 > logmin) {
+    /* Reaction: SO4-2 + e- + 5H+ + FeO2- = FeHSO4+ + 2H2O */
+    T logk_fehso4 = GetLogKeq(FeHSO4);
+    T loga_fehso4 = logk_fehso4 + loga_so4 + loga_e + 5*loga_h + loga_feo2 - 2*loga_h2o;
+    /* Reaction: SO4-2 + e- + 4H+ + FeO2- = Fe(SO4) + 2H2O */
+    T logk_feso4 = GetLogKeq(FeSO4);
+    T loga_feso4 = logk_feso4 + loga_so4 + loga_e + 4*loga_h + loga_feo2 - 2*loga_h2o;
+    /* Reaction: SO4-2 + 4H+ + FeO2- = Fe(SO4)+ + 2H2O */
+    T logk_feso4_p1 = GetLogKeq(FeSO4_p1);
+    T loga_feso4_p1 = logk_feso4_p1 + loga_so4 + 4*loga_h + loga_feo2 - 2*loga_h2o;
+    /* Reaction: SO4-2 + 5H+ + FeO2- = FeHSO4+2 + 2H2O */
+    T logk_fehso4_p2 = GetLogKeq(FeHSO4_p2);
+    T loga_fehso4_p2 = logk_fehso4_p2 + loga_so4 + 5*loga_h + loga_feo2 - 2*loga_h2o;
+    /* Reaction: 2SO4-2 + 4H+ + FeO2- = Fe(SO4)2- + 2H2O */
+    T logk_fes2o8 = GetLogKeq(FeS2O8);
+    T loga_fes2o8 = logk_fes2o8 + loga_so4 + 4*loga_h + loga_feo2 - 2*loga_h2o;
+    
+    LogActivity(FeHSO4)    = loga_fehso4;
+    LogActivity(FeSO4)     = loga_feso4;
+    LogActivity(FeSO4_p1)  = loga_feso4_p1;
+    LogActivity(FeS2O8)    = loga_fes2o8;
+    LogActivity(FeHSO4_p2) = loga_fehso4_p2;
+  }
+  #endif
+  
+  /* Magnesium-Carbon: */
+  #if 0
+  if(loga_mg > logmin && loga_co3 > logmin) {
+    /* Reaction: CO3-2 + Mg+2 + H+ = Mg(HCO3)+ */
+    T logk_mghco3 = GetLogKeq(MgHCO3);
+    T loga_mghco3 = logk_mghco3 + loga_co3 + loga_mg + loga_h;
+    /* Reaction: CO3-2 + Mg+2 = Mg(CO3) */
+    T logk_mgco3 = GetLogKeq(MgCO3);
+    T loga_mgco3 = logk_mgco3 + loga_co3 + loga_mg;
+    
+    LogActivity(MgCO3)     = loga_mgco3;
+    LogActivity(MgHCO3)    = loga_mghco3;
+  }
+  
+  /* Magnesium-Silicon: */
+  if(loga_mg > logmin && loga_sio2 > logmin) {
+    /* Reaction: Mg+2 + H2O + SiO2 = Mg(HSiO3)+ + H+ */
+    T logk_mghsio3 = GetLogKeq(MgHSiO3);
+    T loga_mghsio3 = logk_mghsio3 + loga_mg + loga_h2o + loga_sio2 - loga_h;
+/* Reaction: Mg+2 + H2O + SiO2 = MgSiO3 + 2H+ */
+    T logk_mgsio3 = GetLogKeq(MgSiO3);
+    T loga_mgsio3 = logk_mgsio3 + loga_mg + loga_h2o + loga_sio2 - 2*loga_h;
+    
+    LogActivity(MgHSiO3)   = loga_mghsio3;
+    LogActivity(MgSiO3)    = loga_mgsio3;
+  }
+  
+  /* Magnesium-Sulfur: */
+  if(loga_mg > logmin && loga_so4 > logmin) {
+    /* Reaction: SO4-2 + Mg+2 = Mg(SO4) */
+    T logk_mgso4 = GetLogKeq(MgSO4);
+    T loga_mgso4 = logk_mgso4 + loga_so4 + loga_mg;
+    
+    LogActivity(MgSO4)     = loga_mgso4;
+  }
+  #endif
+  
+  /* Nitrogen-Carbon */
+  #if 0
+  if(loga_no3 > logmin && loga_co3 > logmin) {
+    /* Reaction: CO3-2 + NO3- + 10e- + 13H+ = HCN + 6H2O */
+    T logk_hcn = GetLogKeq(HCN);
+    T loga_hcn = logk_hcn + loga_co3 + loga_no3 + 10*loga_e + 13*loga_h - 6*loga_h2o;
+    
+    LogActivity(HCN)     = loga_hcn;
+  }
+  #endif
+  
+  /* Potassium-Sulfur: */
+  #if 0
+  if(loga_k > logmin && loga_so4 > logmin) {
+    /* Reaction: SO4-2 + K+ = KSO4- */
+    T logk_kso4 = GetLogKeq(KSO4);
+    T loga_kso4 = logk_kso4 + loga_so4 + loga_k;
+    
+    LogActivity(KSO4)      = loga_kso4;
+  }
+  #endif
+  
+  /* Sodium-Carbon: */
+  if(loga_na > logmin && loga_co3 > logmin) {
+    /* Reaction: CO3-2 + Na+ + H+ = NaHCO3 */
+    T logk_nahco3 = GetLogKeq(NaHCO3);
+    T loga_nahco3 = logk_nahco3 + loga_co3 + loga_na + loga_h;
+    /* Reaction: CO3-2 + Na+ = NaCO3- */
+    T logk_naco3 = GetLogKeq(NaCO3);
+    T loga_naco3 = logk_naco3 + loga_co3 + loga_na;
+    
+    LogActivity(NaHCO3)    = loga_nahco3;
+    LogActivity(NaCO3)     = loga_naco3;
+  }
+  
+  /* Sodium-Sulfur: */
+  if(loga_na > logmin && loga_so4 > logmin) {
+    /* Reaction: SO4-2 + Na+ = Na(SO4)- */
+    T logk_naso4 = GetLogKeq(NaSO4);
+    T loga_naso4 = logk_naso4 + loga_so4 + loga_na;
+    
+    LogActivity(NaSO4)     = loga_naso4;
+  }
+  
+  /* Strontium-Carbon: */
+  #if 0
+  if(loga_sr > logmin && loga_co3 > logmin) {
+    /* Reaction: CO3-2 + Sr+2 = Sr(CO3) */
+    T logk_srco3 = GetLogKeq(SrCO3);
+    T loga_srco3 = logk_srco3 + loga_co3 + loga_sr;
+    /* Reaction: CO3-2 + Sr+2 + H+ = SrHCO3+ */
+    T logk_srhco3 = GetLogKeq(SrHCO3);
+    T loga_srhco3 = logk_srhco3 + loga_co3 + loga_sr + loga_h;
+    
+    LogActivity(SrCO3)     = loga_srco3;
+    LogActivity(SrHCO3)    = loga_srhco3;
+  }
+  
+  /* Strontium-Silicon: */
+  if(loga_sr > logmin && loga_sio2 > logmin) {
+    /* Reaction: Sr+2 + H2O + SiO2 = SrSiO3 + 2H+ */
+    T logk_srsio3 = GetLogKeq(SrSiO3);
+    T loga_srsio3 = logk_srsio3 + loga_sr + loga_h2o + loga_sio2 - 2*loga_h;
+    
+    LogActivity(SrSiO3)    = loga_srsio3;
+  }
+  
+  /* Strontium-Sulfur: */
+  if(loga_sr > logmin && loga_so4 > logmin) {
+    /* Reaction: SO4-2 + Sr+2 = Sr(SO4) */
+    T logk_srso4 = GetLogKeq(SrSO4);
+    T loga_srso4 = logk_srso4 + loga_so4 + loga_sr;
+    
+    LogActivity(SrSO4)     = loga_srso4;
+  }
+  #endif
+  
+
+  /* Compound of type III
+   * -------------------- */
+  /* Sulfur-Carbon-Nitrogen: */
+  #if 0
+  if(loga_so4 > logmin && loga_co3 > logmin && loga_no3 > logmin) {
+    /* Reaction: CO3-2 + NO3- + SO4-2 + 16e- + 20H+ = SCN-  + 10H2O */
+    T logk_scn = GetLogKeq(SCN);
+    T loga_scn = logk_scn + loga_co3 + loga_no3 + loga_so4 + 16*loga_e + 20*loga_h - 10*loga_h2o ;
+    
+    LogActivity(SCN)       = loga_scn;
+  }
+  #endif
+  #undef GetLogKeq
+  #undef LogActivity
+  
+  /* Backup concentrations */
+  CementSolutionChemistry_TranslateActivitiesIntoConcentrations(csc,ionicstrength);
+}
+
+
+
+
+template<typename T>
+_INLINE_ int (CementSolutionChemistry_SolveElectroneutralityCEMDATA)(CementSolutionChemistry_t<T>* csc)
+/** Solve the electroneutrality equation, SUM(z_i c_i) = 0,
+ ** as a root of a nth order polynomial.
+ **
+ ** We note that
+ ** c_i = A_i * (c_h)*(n_i) = c_iO * (x)**n_i
+ ** 
+ ** with x = c_h/c_h0 and c_i0 the concentration before updating.
+ ** 
+ ** When n_i = 0 the concentration c_i doesn't change.
+ **
+ ** So we solve SUM(z_i c_i0 * (x)**n_i) = 0 for x.
+ **
+ ** Below we:
+ **   1. compute the exponents n_i,
+ **   2. compute the coefficients of the polynomial,
+ **   3. find a root of the polynomial as the closest to 1,
+ **   4. update the concentrations.
+ **/
+{
+  /* The primary variables are considered as constant for:
+   * AlO2,Ca,CO3,Cl,FeO2,Mg,NO3,K,SiO2,Na,Sr,SO4
+   */
+  constexpr int n = CementSolutionChemistry_NbOfSpecies;
+  int expo[n];
+  
+  /* The exponents n_i */
+  #define Expo(CPD)  expo[CementSolutionChemistry_GetIndexOf(CPD)]
+  {
+    constexpr int np = CementSolutionChemistry_NbOfPrimaryVariables;
+    double* stoic = CementSolutionChemistry_GetStoichiometry();
+    
+    Expo(H2O)  = 0;
+    Expo(H)    = 1;
+    Expo(AlO2) = 0;
+    Expo(Ca)   = 0;
+    Expo(CO3)  = 0;
+    Expo(Cl)   = 0;
+    Expo(FeO2) = 0;
+    Expo(Mg)   = 0;
+    Expo(NO3)  = 0;
+    Expo(K)    = 0;
+    Expo(SiO2) = 0;
+    Expo(Na)   = 0;
+    Expo(Sr)   = 0;
+    Expo(SO4)  = 0;
+  
+    if(CementSolutionChemistry_InputIs(csc,Al,LogQ_AH3)) {
+      Expo(AlO2) = -1; // n_ah3 = 0
+    }
+    if(CementSolutionChemistry_InputIs(csc,Ca,LogQ_CH)) {
+      Expo(Ca) = 2; // n_ch = 0
+    }
+    if(CementSolutionChemistry_InputIs(csc,C,LogA_CO2)) {
+      Expo(CO3) = -2; // n_co2 = 0
+    }
+    if(CementSolutionChemistry_InputIs(csc,S,LogA_H2SO4)) {
+      Expo(SO4) = -2; // n_h2so4 = 0
+    }
+  
+    for(int i = 0; i < n ; i++) {
+      double* s = stoic + i*np;
+      double e = s[0]*Expo(H2O)  + s[1]*Expo(H)     + s[2]*Expo(AlO2)\
+               + s[3]*Expo(Ca)   + s[4]*Expo(CO3)   + s[5]*Expo(Cl)\
+               + s[6]*Expo(FeO2) + s[7]*Expo(Mg)    + s[8]*Expo(NO3)\
+               + s[9]*Expo(K)    + s[10]*Expo(SiO2) + s[11]*Expo(Na)\
+               + s[12]*Expo(Sr)  + s[13]*Expo(SO4);
+    
+      expo[i] = (int) e;
+    }
+  }
+  #undef Expo
+
+  /* The coefficients of the polynomial */
+  {
+    T* c = CementSolutionChemistry_GetConcentration(csc);
+    double* z = CementSolutionChemistry_GetValence();
+    constexpr int NMAX = 21;
+    T y[2*NMAX];
+    T* a = y + NMAX;
+    int e_max = 0;
+    int e_min = 0;
+    T x = 1;
+    
+    for(int i = 0 ; i < 2*NMAX ; i++) {
+      y[i] = 0;
+    }
+    
+    for(int i = 0 ; i < n ; i++) {
+      if(c[i] > 0) {
+        int e = - expo[i];
+      
+        if(e > e_max) e_max = e;
+        if(e < e_min) e_min = e;
+      
+        if(e < NMAX && e > -NMAX) {
+          a[e] += z[i]*c[i];
+        } else {
+          arret("CementSolutionChemistry_SolveElectroneutralityCEMDATA");
+        }
+      }
+    }
+    
+    /* Solve for x = (c_h/c_h0) as root of the 4th order polynomial */
+    x = CementSolutionChemistry_SolvePoly4(a[-2],a[-1],a[0],a[1],a[2]) ;
+  
+    if(e_max > 2 || e_min < -2) {
+        T tol = 1.e-4*fabs(x) ;
+        T* b = a + e_min;
+        int k = Math_PolishPolynomialEquationRoot(b,e_max-e_min,&x,tol,20) ;
+        
+        if(k < 0) return(-1) ;
+    }
+  
+   
+    if constexpr(std::is_same_v<T,double>) {
+      if(x < 0) {
+        /* Raise an interrupt signal instead of exit */
+        Message_Warning("CementSolutionChemistry_SolveElectroneutralityCEMDATA: c_h < 0") ;
+     
+        #define Concentration(CPD)    CementSolutionChemistry_GetConcentrationOf(csc,CPD)
+        printf("c_h   = %e\n",Concentration(H)*x) ;
+        printf("c_oh  = %e\n",Concentration(OH)/x) ;
+        #undef Concentration
+      
+        for(int i = 0 ; i < e_max ; i++) {
+          printf("a_%d    = %e\n",i,a[i]) ;
+        }
+        
+        for(int i = -1 ; i < e_min ; i--) {
+          printf("b_%d    = %e\n",i,a[i]) ;
+        }
+      
+        return(-1) ;
+      }
+    }
+  
+    /* Update the c_i */
+    for(int i = 0 ; i < n ; i++) {
+      int e = expo[i];
+      
+      if(e) c[i] *= pow(x,e);
+    }
+  }
+  
+  CementSolutionChemistry_UpdateSolution(csc) ;
+  
+  return(0) ;
+}
+
+
+
+
+
+template<typename T>
+_INLINE_ int (CementSolutionChemistry_SolveExplicitElectroneutrality)(CementSolutionChemistry_t<T>* csc)
+/** Solve the electroneutrality equation, SUM(z_i c_i) = 0,
+ ** for c_h or c_oh, as root of a 2th order polynomial:
+ ** ax^2 + bx + c = 0, keeping constant all other ion concentrations.
+ **/
+{
+  #define Concentration(CPD)    CementSolutionChemistry_GetConcentrationOf(csc,CPD)
+  T c_h  = Concentration(H) ;
+  T c_oh = Concentration(OH) ;
+  T q    = CementSolutionChemistry_GetChargeDensity(csc) ;
+  T q0   = 0.5 * (q - c_h + c_oh) ;
+  /* solve 2*q0 + c_h - c_oh = 0 */
+  /* with c_h*c_oh = c_h^0*c_oh^0 = kw */
+  double kw   = c_h*c_oh ;
+  
+  if(q0 > 0) {
+    c_oh =   q0 + sqrt(q0*q0 + kw) ;
+    c_h  = kw/c_oh ;
+  } else {
+    c_h  = - q0 + sqrt(q0*q0 + kw) ;
+    c_oh = kw/c_h ;
+  }
+  
+  Concentration(H)  = c_h ;
+  Concentration(OH) = c_oh ;
+  #undef Concentration
+  
+  return(0) ;
+}
+
+
+
+
+/* Intern functions */
+template<typename T>
+_INLINE_ T (CementSolutionChemistry_ComputeChargeDensity)(CementSolutionChemistry_t<T>* csc)
+/** Return the charge **/
+{
+  double* z = CementSolutionChemistry_GetValence();
+  T* c = CementSolutionChemistry_GetConcentration(csc);
+  int n = CementSolutionChemistry_NbOfSpecies;
+  T q = 0;
+  
+  /* The charge */
+  for(int i = 0 ; i < n ; i++) {
+    q += z[i]*c[i];
+  }
+          
+  return(q) ;
+}
+
+
+
+template<typename T>
+_INLINE_ T (CementSolutionChemistry_ComputeIonicStrength)(CementSolutionChemistry_t<T>* csc)
+/** Return the molal ionic strength **/
+{
+  double* z = CementSolutionChemistry_GetValence();
+  T* c = CementSolutionChemistry_GetConcentration(csc);
+  int n = CementSolutionChemistry_NbOfSpecies;
+  double c0 = C0_ref ;
+  T ionicstrength = 0;
+           
+  /* Ionic strength */
+  for(int i = 0 ; i < n ; i++) {
+    ionicstrength += z[i]*z[i]*c[i];
+  }
+    
+  /* The molar ionic strength */
+  ionicstrength *= 0.5/c0;
+  
+  /* The molal ionic strength */
+  #define Concentration(CPD)    CementSolutionChemistry_GetConcentrationOf(csc,CPD)
+  {
+    double* v = CementSolutionChemistry_GetPartialMolarVolume();
+    double c_h2o = Concentration(H2O);
+    double v_h2o = v[CementSolutionChemistry_GetIndexOf(H2O)];
+    
+    ionicstrength /= c_h2o*v_h2o;
+  }
+  #undef Concentration
+          
+  return(ionicstrength) ;
+}
+
+
+
+
+template<typename T>
+_INLINE_ T (CementSolutionChemistry_ComputeLiquidMassDensity)(CementSolutionChemistry_t<T>* csc)
+/** Return the liquid mass density **/
+{
+  int n = CementSolutionChemistry_NbOfSpecies;
+  T* c = CementSolutionChemistry_GetConcentration(csc);
+  T rho_l = 0;
+
+  /* The concentration of H2O */
+  #define Concentration(CPD)    CementSolutionChemistry_GetConcentrationOf(csc,CPD)
+  {
+    double* v = CementSolutionChemistry_GetPartialMolarVolume();
+    double v_h2o = v[CementSolutionChemistry_GetIndexOf(H2O)];
+    T v_all = 0;
+    
+    Concentration(H2O) = 0 ;
+    
+    for(int i = 0 ; i < n ; i++) {
+      v_all += c[i]*v[i];
+    }
+  
+    /* Update the water concentration */
+    Concentration(H2O) = (1 - v_all)/v_h2o ;
+  }
+  #undef Concentration
+  
+
+         
+  /* Liquid mass density of the solution */
+  {
+    double* m = CementSolutionChemistry_GetMolarMass();
+    
+    for(int i = 0 ; i < n ; i++) {
+      rho_l += c[i]*m[i];
+    }
+  }
+
+  return(rho_l) ;
+}
+
+
+
+template<typename T>
+_INLINE_ T (CementSolutionChemistry_ComputeLog10IdealWaterActivity)(CementSolutionChemistry_t<T>* csc)
+/** Return the water activity **/
+{
+  int n = CementSolutionChemistry_NbOfSpecies;
+  T* c = CementSolutionChemistry_GetConcentration(csc);
+  T c_w;
+  T c_ions = 0;
+  T log10a_w;
+
+  /* The total concentration of ions and neutral species */
+  #define Concentration(CPD)    CementSolutionChemistry_GetConcentrationOf(csc,CPD)
+  {
+    c_w = Concentration(H2O);
+    Concentration(H2O) = 0;
+    
+    for(int i = 0 ; i < n ; i++) {
+      c_ions += c[i];
+    }
+  
+    Concentration(H2O) = c_w;
+  }
+  #undef Concentration
+  
+  log10a_w = - 1/Ln10 * c_ions/c_w;
+
+  return(log10a_w) ;
+}
+
+
+
+
+template<typename T>
+_INLINE_ void (CementSolutionChemistry_UpdateElementConcentrations)(CementSolutionChemistry_t<T>* csc)
+/** Update the element concentrations **/
+{
+  CementSolutionChemistry_SetElementConcentrationOf(csc,Al);
+  CementSolutionChemistry_SetElementConcentrationOf(csc,Ca);
+  CementSolutionChemistry_SetElementConcentrationOf(csc,C);
+  CementSolutionChemistry_SetElementConcentrationOf(csc,Cl);
+  CementSolutionChemistry_SetElementConcentrationOf(csc,Fe);
+  CementSolutionChemistry_SetElementConcentrationOf(csc,Mg);
+  CementSolutionChemistry_SetElementConcentrationOf(csc,N);
+  CementSolutionChemistry_SetElementConcentrationOf(csc,K);
+  CementSolutionChemistry_SetElementConcentrationOf(csc,Si);
+  CementSolutionChemistry_SetElementConcentrationOf(csc,Na);
+  CementSolutionChemistry_SetElementConcentrationOf(csc,Sr);
+  CementSolutionChemistry_SetElementConcentrationOf(csc,S);
+}
+
+
+
+template<typename T>
+_INLINE_ void (CementSolutionChemistry_TranslateActivitiesIntoConcentrations)(CementSolutionChemistry_t<T>* csc,double ionicstrength)
+{
+  constexpr double min = std::numeric_limits<double>::min();
+  constexpr double logmin = log10(min);
+  T logc0 = LogC0_ref ;
+  int   n = CementSolutionChemistry_NbOfSpecies ;
+  T* c    = CementSolutionChemistry_GetConcentration(csc) ;
+  T* loga = CementSolutionChemistry_GetLogActivity(csc) ;
+  double* z = CementSolutionChemistry_GetValence();
+  
+  #define LogActivityCoefficient(Z) \
+          Log10ActivityCoefficientOfAqueousSpecies(DAVIES,Z,ionicstrength)
+
+  for(int i = 0 ; i < n ; i++) {
+    double zi = z[i];
+    T logc = loga[i] + logc0 - LogActivityCoefficient(zi);
+    
+    c[i] = (logc > logmin) ? pow(10,logc) : 0;
+  }
+  #undef LogActivityCoefficient
+}
+
+
+
+
+template<typename T>
+_INLINE_ T (CementSolutionChemistry_SolvePoly4)(T a,T b,T c,T d,T e)
+/* Solve ax^4 + bx^3 + cx^2 + dx + e = 0 for x.
+ * Return the solution which is the closest to 1. */
+{
+  T x ;
+  
+  {
+    T y[5] = {a,b,c,d,e} ;
+    int n = Math_ComputePolynomialEquationRoots(y,4) ;
+    
+    x = y[0] ;
+    for(int i = 1 ; i < n ; i++) {
+      T x1 = fabs(x - 1) ;
+      T y1 = fabs(y[i] - 1) ;
+      
+      if(y1 < x1) x = y[i] ;
+    }
+  }
+  
+  {
+    T y[5] = {a,b,c,d,e} ;
+    T tol = 1e-4*fabs(x) ;
+    int k = Math_PolishPolynomialEquationRoot(y,4,&x,tol,20) ;
+    
+    if(k < 0) return(-1) ;
+  }
+  
+  return(x) ;
+}
+
+#undef Meter
+#undef CubicMeter
+#undef Liter
+#undef Mol
+#undef C0_ref
+#undef LogC0_ref
+
+#undef _INLINE_
+#endif

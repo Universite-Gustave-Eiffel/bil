@@ -56,7 +56,7 @@
 #define TITLE   "Mother model of durability of CBM (2024)"
 #define AUTHORS "Dangla and many others"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 #define E_THERMAL E_THERMAL
 
@@ -921,7 +921,7 @@ void GetProperties(Element_t* el,double t)
 
 int SetModelProp(Model_t* model)
 {
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
 #ifdef E_CARBON
   Model_CopyNameOfEquation(model,E_CARBON   ,"carbon") ;
@@ -1016,8 +1016,8 @@ int SetModelProp(Model_t* model)
   Model_CopyNameOfUnknown(model,E_THERMAL, "temp") ;
 #endif
   
-  //Model_GetComputePropertyIndex(model) = &pm ;
-  Model_GetComputeMaterialProperties(model) = &GetProperties;
+  //Model_SetComputePropertyIndex(model,&pm);
+  Model_SetComputeMaterialProperties(model,&GetProperties);
   
   return(0) ;
 }

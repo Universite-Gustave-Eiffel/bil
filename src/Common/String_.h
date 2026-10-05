@@ -210,6 +210,16 @@
 
 
 
+/* Conversion */
+#define String_ToInt(STR) \
+        ((STR) ? std::atoi(STR) : 0)
+
+#define String_ToLong(STR) \
+        ((STR) ? std::atol(STR) : 0)
+
+#define String_ToSize_t(STR) \
+        ((STR) ? std::strtoull(STR,NULL,10) : 0)
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -554,7 +564,7 @@ struct String_t {
   int String_Test(int argc, char** argv)
   {
     char* filename = argv[1] ;
-    TextFile_t* textfile = TextFile_Create(filename) ;
+    TextFile_t* textfile = TextFile_New(filename) ;
     //char* str = String_Create(filename) ;
     char* str = TextFile_StoreFileContent(textfile) ;
     
@@ -614,4 +624,6 @@ struct String_t {
     return(String_Test(argc,argv)) ;
   }
 #endif
+
+#include <cstdlib>
 #endif

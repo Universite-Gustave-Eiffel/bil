@@ -5,16 +5,16 @@ include(SetCompilerFlags)
 
 # Options (disabled by default)
 # -----------------------------
-option(ENABLE_OPENMP   "Enable OpenMP parallelization"   OFF)
-option(ENABLE_PTHREADS "Enable Pthreads parallelization" OFF)
-option(ENABLE_MPI      "Enable MPI parallelization"      OFF)
-option(ENABLE_AUTODIFF "Enable autodiff interface"       OFF)
-option(ENABLE_FLTK     "Enable FLTK graphical user interface" OFF)
-option(ENABLE_PETSC    "Enable PETSc linear solvers"     OFF)
-option(ENABLE_BLAS     "Enable BLAS for linear algebra" OFF)
+option(ENABLE_OPENMP   "Enable OpenMP parallelization"    OFF)
+option(ENABLE_PTHREADS "Enable Pthreads parallelization"  OFF)
+option(ENABLE_MPI      "Enable MPI parallelization"       OFF)
+option(ENABLE_AUTODIFF "Enable autodiff interface"        OFF)
+option(ENABLE_FLTK     "Enable FLTK for GUI"              OFF)
+option(ENABLE_PETSC    "Enable PETSc linear solvers"      OFF)
+option(ENABLE_BLAS     "Enable BLAS for linear algebra"   OFF)
 option(ENABLE_LAPACK   "Enable Lapack for linear algebra" OFF)
-option(ENABLE_EIGEN    "Enable Eigen for linear algebra" OFF)
-option(ENABLE_SUPERLU  "Enable SuperLU solver" OFF)
+option(ENABLE_EIGEN    "Enable Eigen for linear algebra"  OFF)
+option(ENABLE_SUPERLU  "Enable SuperLU solver"            OFF)
 include(EnableBilOptions)
 
 
@@ -24,91 +24,17 @@ include(SetExtralibs)
 set_extralibs(BIL_EXTRALIBS BILEXTRALIBS_INSTALL_RPATH)
 
 
-# Bil source files
-# ----------------
-include(DirsAndSourcesOfBil)
-dirs_and_sources_of_bil(BIL_DIRSALL BIL_SRCALL BIL_SRCMAIN)
+# External-libraries (enabling options)
+# -------------------------------------
 
-
-#[[
-  Building the shared library target
-#]]
- 
-add_library(${BIL_LIB} SHARED ${BIL_SRCALL})
-
-target_include_directories(${BIL_LIB}
-    PRIVATE
-    "${BIL_DIRSALL}"
-    "${PROJECT_SOURCE_DIR}"
-)
-
-# autodiff requires a c++17 enabled compiler
-target_compile_features(${BIL_LIB}
-    PUBLIC c_std_11 cxx_std_17
-)
-
-set_target_properties(${BIL_LIB}
-  PROPERTIES 
-  INSTALL_RPATH "${BILEXTRALIBS_INSTALL_RPATH}"
-  LIBRARY_OUTPUT_DIRECTORY ${BIL_LIBDIR}
-)
-
-install(TARGETS ${BIL_LIB}
-  DESTINATION ${BIL_INSTALL_FULL_LIBDIR}
-  LIBRARY OPTIONAL)
-
-
-
-#[[
-  Install the headers
-#]]
-
-include(AppendBilFiles)
-append_bil_files("${BIL_DIRSALL}" "h" BIL_HDRALL)
-append_bil_files("${BIL_DIRSALL}" "hpp" BIL_HDRALL)
-install(FILES ${BIL_HDRALL} DESTINATION ${BIL_INSTALL_FULL_INCLUDEDIR})
-include(CreateBilHeader)
-create_bil_header("${BIL_HDRALL}" "${BIL_INCLUDEDIR}/bil.h")
-install(FILES "${BIL_INCLUDEDIR}/bil.h" DESTINATION ${BIL_INSTALL_FULL_INCLUDEDIR})
-
-
-#[[
-  Building the executable target
-#]]
-
-#add_executable(${BIL_EXE} Main/Main.c Main/Main.cpp)
-add_executable(${BIL_EXE} ${BIL_SRCMAIN})
-
-target_include_directories(${BIL_EXE}
-    PRIVATE
-    "${BIL_DIRSALL}"
-    "${PROJECT_SOURCE_DIR}"
-)
-
-target_compile_features(${BIL_EXE}
-    PUBLIC c_std_11 cxx_std_17
-)
-
-#target_compile_options(${BIL_EXE}
-#    PUBLIC
-#    -pedantic ${WFLAGS} ${OFLAGS}
-#)
-
-
-set_target_properties(${BIL_EXE}
-  PROPERTIES 
-  INSTALL_RPATH "${BIL_INSTALL_FULL_LIBDIR};${BILEXTRALIBS_INSTALL_RPATH}"
-  RUNTIME_OUTPUT_DIRECTORY ${BIL_BINDIR}
-)
-
-target_link_libraries(${BIL_EXE} ${BIL_LIB} ${BIL_EXTRALIBS})
-
+unset(BIL_EXTERNLIBS)
 if(ENABLE_OPENMP)
   find_package(OpenMP)
   if(OpenMP_FOUND)
     Message(STATUS "Compiler supports OpenMP.")
     set(HAVE_OPENMP TRUE)
-    target_link_libraries(${BIL_EXE} OpenMP::OpenMP_C)
+    #target_link_libraries(${BIL_EXE} OpenMP::OpenMP_C)
+    list(APPEND BIL_EXTERNLIBS OpenMP::OpenMP_C)
   else()
     Message(STATUS "Compiler doesn't support OpenMP.")
   endif()
@@ -120,7 +46,8 @@ if(ENABLE_PTHREAD)
   if(Threads_FOUND)
     Message(STATUS "Compiler supports Pthread.")
     set(HAVE_PTHREAD TRUE)
-    target_link_libraries(${BIL_EXE} Threads::Threads)
+    #target_link_libraries(${BIL_EXE} Threads::Threads)
+    list(APPEND BIL_EXTERNLIBS Threads::Threads)
   else()
     Message(STATUS "Compiler doesn't support Pthread.")
   endif()
@@ -132,7 +59,8 @@ if(ENABLE_MPI)
   if(MPI_FOUND)
     Message(STATUS "Compiler supports MPI.")
     set(HAVE_MPI TRUE)
-    target_link_libraries(${BIL_EXE} MPI::MPI_CXX)
+    #target_link_libraries(${BIL_EXE} MPI::MPI_CXX)
+    list(APPEND BIL_EXTERNLIBS MPI::MPI_CXX)
   else()
     Message(STATUS "Compiler doesn't support MPI.")
   endif()
@@ -222,7 +150,8 @@ if(ENABLE_PETSC)
   if(PETSC_LIBS AND PETSC_INC)
     Message(STATUS "Compiler supports PETSC.")
     set(HAVE_PETSC TRUE)
-    target_link_libraries(${BIL_EXE} ${PETSC_LIBS})
+    #target_link_libraries(${BIL_EXE} ${PETSC_LIBS})
+    list(APPEND BIL_EXTERNLIBS ${PETSC_LIBS})
     #list(APPEND EXTERNAL_LIBRARIES ${PETSC_LIBS})
     #list(APPEND EXTERNAL_INCLUDES ${PETSC_INC})
   else()
@@ -243,7 +172,8 @@ if(ENABLE_BLAS)
   if(BLAS_FOUND)
     Message(STATUS "Compiler supports Blas.")
     set(HAVE_BLAS TRUE)
-    target_link_libraries(${BIL_EXE} ${BLAS_LIBRARIES})
+    #target_link_libraries(${BIL_EXE} ${BLAS_LIBRARIES})
+    list(APPEND BIL_EXTERNLIBS ${BLAS_LIBRARIES})
   else()
     Message(STATUS "Compiler doesn't support Blas.")
   endif()
@@ -258,7 +188,8 @@ if(ENABLE_LAPACK)
   if(LAPACK_FOUND)
     Message(STATUS "Compiler supports Lapack.")
     set(HAVE_LAPACK TRUE)
-    target_link_libraries(${BIL_EXE} ${LAPACK_LIBRARIES})
+    #target_link_libraries(${BIL_EXE} ${LAPACK_LIBRARIES})
+    list(APPEND BIL_EXTERNLIBS ${LAPACK_LIBRARIES})
   else()
     Message(STATUS "Compiler doesn't support Lapack.")
   endif()
@@ -271,11 +202,103 @@ if(ENABLE_SUPERLU)
   if(SUPERLU_LIB AND SUPERLU_INC)
     Message(STATUS "Compiler supports SuperLU.")
     set(HAVE_SUPERLU TRUE)
-    target_link_libraries(${BIL_EXE} ${SUPERLU_LIB})
+    #target_link_libraries(${BIL_EXE} ${SUPERLU_LIB})
+    list(APPEND BIL_EXTERNLIBS ${SUPERLU_LIB})
   else()
     Message(STATUS "Compiler doesn't support SuperLU.")
   endif()
 endif()
+
+Message("External libraries (src) = ${BIL_EXTERNLIBS}")
+
+
+# Bil source files
+# ----------------
+include(DirsAndSourcesOfBil)
+dirs_and_sources_of_bil(BIL_DIRSALL BIL_SRCALL BIL_SRCMAIN)
+
+
+#[[
+  Building the shared library target
+#]]
+ 
+add_library(${BIL_LIB} SHARED ${BIL_SRCALL})
+
+target_include_directories(${BIL_LIB}
+    PRIVATE
+    "${BIL_DIRSALL}"
+    "${PROJECT_SOURCE_DIR}"
+)
+
+# autodiff requires a c++17 enabled compiler
+target_compile_features(${BIL_LIB}
+    PUBLIC c_std_11 cxx_std_17
+)
+
+set_target_properties(${BIL_LIB}
+  PROPERTIES 
+  INSTALL_RPATH "${BIL_INSTALL_FULL_LIBDIR};${BILEXTRALIBS_INSTALL_RPATH}"
+  LIBRARY_OUTPUT_DIRECTORY ${BIL_LIBDIR}
+)
+
+target_link_libraries(${BIL_LIB} PRIVATE ${BIL_EXTERNLIBS} ${BIL_EXTRALIBS})
+
+install(TARGETS ${BIL_LIB}
+  DESTINATION ${BIL_INSTALL_FULL_LIBDIR}
+  PERMISSIONS OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+  LIBRARY OPTIONAL)
+
+
+
+#[[
+  Install the headers
+#]]
+
+include(AppendBilFiles)
+set(BIL_HDRALL ${BIL_PATH}/BilConfig.h;${BIL_PATH}/BilInfo.h;${BIL_PATH}/BilPath.h;${BIL_PATH}/BilVersion.h)
+append_bil_files("${BIL_DIRSALL}" "h" BIL_HDRALL)
+append_bil_files("${BIL_DIRSALL}" "hpp" BIL_HDRALL)
+
+list(REMOVE_DUPLICATES BIL_HDRALL)
+list(SORT BIL_HDRALL COMPARE FILE_BASENAME CASE INSENSITIVE)
+
+install(FILES ${BIL_HDRALL} DESTINATION ${BIL_INSTALL_FULL_INCLUDEDIR})
+include(CreateBilHeader)
+create_bil_header("${BIL_HDRALL}" "${BIL_INCLUDEDIR}/bil.h")
+install(FILES "${BIL_INCLUDEDIR}/bil.h" DESTINATION ${BIL_INSTALL_FULL_INCLUDEDIR})
+
+
+#[[
+  Building the executable target
+#]]
+
+
+add_executable(${BIL_EXE} ${BIL_SRCMAIN})
+
+target_include_directories(${BIL_EXE}
+    PRIVATE
+    "${BIL_DIRSALL}"
+    "${PROJECT_SOURCE_DIR}"
+)
+
+target_compile_features(${BIL_EXE}
+    PUBLIC c_std_11 cxx_std_17
+)
+
+#target_compile_options(${BIL_EXE}
+#    PUBLIC
+#    -pedantic ${WFLAGS} ${OFLAGS}
+#)
+
+
+set_target_properties(${BIL_EXE}
+  PROPERTIES 
+  INSTALL_RPATH "${BIL_INSTALL_FULL_LIBDIR};${BILEXTRALIBS_INSTALL_RPATH}"
+  RUNTIME_OUTPUT_DIRECTORY ${BIL_BINDIR}
+)
+
+#target_link_libraries(${BIL_EXE} ${BIL_LIB} ${BIL_EXTRALIBS})
+target_link_libraries(${BIL_EXE} ${BIL_LIB})
 
 
 configure_file(${BIL_PATH}/BilConfig.h.in 
@@ -291,15 +314,23 @@ target_link_options(${BIL_EXE}
   PUBLIC "-O3 -g -gdwarf-3"
 )
 
-
-# add the automatically determined parts of the RPATH which point to
-# directories outside the build tree to the install RPATH
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-
 install(TARGETS ${BIL_EXE}
   DESTINATION ${BIL_INSTALL_FULL_BINDIR}
+  PERMISSIONS OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
   RUNTIME OPTIONAL)
 
+
+
+
+# Enable RPATH for installed binaries
+set(CMAKE_SKIP_INSTALL_RPATH FALSE)
+# Ensure RPATH is not cleared when installing
+set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+# Force the binary to always look in the relative "lib" directory where it's installed
+set(CMAKE_INSTALL_RPATH ${BIL_LIBDIR})
+# Automatically add directories outside the build tree to the install RPATH
+# (This ensures it finds /usr/local/lib without needing ldconfig)
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 
 install(CODE

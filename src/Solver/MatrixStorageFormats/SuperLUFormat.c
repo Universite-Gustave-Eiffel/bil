@@ -13,6 +13,7 @@
 
 #if defined (HAVE_SUPERLU) || defined (HAVE_SUPERLUMT) || defined (HAVE_SUPERLUDIST)
   #define SUPERLU
+  #include "superlu.h"
   #include "SuperLUFormat.h"
 #else
   #undef SUPERLU

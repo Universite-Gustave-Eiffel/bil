@@ -27,7 +27,6 @@ struct GenericData_t;
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "Mry.h"
 
 struct Session_t {
   private:
@@ -58,7 +57,18 @@ struct Session_t {
   #endif
   
   public:
-  static Session_t* Open(void) {
+  static Session_t* Open(void);
+  static Session_t* Close(void);
+  static GenericData_t* FindGenericData(char const*);
+  static void AddGenericData(GenericData_t*);
+};
+
+
+  
+#include "GenericData.h"
+#include "Mry.h"
+
+  inline Session_t* Session_t::Open(void) {
     Session_t* prev  = _cursession;
   
     _cursession = (Session_t*) Mry_New(Session_t);
@@ -76,47 +86,36 @@ struct Session_t {
     return(_cursession);
   }
 
-  inline static Session_t* Close(void);
-  inline static GenericData_t* FindGenericData(char const*);
-  inline static void AddGenericData(GenericData_t*);
-};
+  inline Session_t* Session_t::Close(void){
+    GenericData_t* gdat = _cursession->GetGenericData();
 
+    if(gdat) {
+      GenericData_Delete(gdat);
+      Mry_Free(gdat);
+      _cursession->SetGenericData(NULL);
+    }
 
-  
-#include "GenericData.h"
-#include "Mry.h"
+    {
+      Session_t* garbage = _cursession;
+    
+      _cursession = garbage->GetPreviousSession();
 
+      Mry_Free(garbage);
+    }
 
-Session_t* Session_t::Close(void){
-  GenericData_t* gdat = _cursession->GetGenericData();
-
-  if(gdat) {
-    GenericData_Delete(gdat);
-    Mry_Free(gdat);
-    _cursession->SetGenericData(NULL);
+    return(_cursession) ;
   }
 
-  {
-    Session_t* garbage = _cursession;
+  inline GenericData_t* Session_t::FindGenericData(char const* n){
+    GenericData_t* gdat = _cursession->GetGenericData();
     
-    _cursession = garbage->GetPreviousSession();
-
-    Mry_Free(garbage);
+    return(GenericData_Find(gdat,n));
   }
-
-  return(_cursession) ;
-}
-
-GenericData_t* Session_t::FindGenericData(char const* n){
-  GenericData_t* gdat = _cursession->GetGenericData();
-    
-  return(GenericData_Find(gdat,n));
-}
   
-void Session_t::AddGenericData(GenericData_t* gnew){
-  GenericData_t* gdat = _cursession->GetGenericData();
+  inline void Session_t::AddGenericData(GenericData_t* gnew){
+    GenericData_t* gdat = _cursession->GetGenericData();
 
-  _cursession->SetGenericData(GenericData_Append(gdat,gnew));
-}
+    _cursession->SetGenericData(GenericData_Append(gdat,gnew));
+  }
 
 #endif

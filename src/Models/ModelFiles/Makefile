@@ -140,7 +140,7 @@ work_10:
 
 work_11:
 	for file in ${ALLFILES}; do (\
-	sed 's/^#include "PredefinedMethods.h/#include "PredefinedModelMethods.h/g' $$file > $$file.bak \
+	sed 's/^#include "PredefinedModelMethods.h/#include "PredeclaredModelMethods.h.in/g' $$file > $$file.bak \
 	); done
 
 

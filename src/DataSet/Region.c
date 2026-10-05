@@ -31,7 +31,7 @@ void (Region_Delete)(void* self)
     char* name = Region_GetRegionName(region) ;
       
     if(name) {
-      free(name) ;
+      Mry_Free(name) ;
     }
   }
 }

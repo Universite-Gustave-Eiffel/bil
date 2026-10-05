@@ -743,6 +743,8 @@ inline int    (CementSolutionChemistry_SolveElectroneutralityDEFAULT)(CementSolu
 #include "Utils.h"
 #include "Tuple.h"
 
-#include "CementSolutionChemistry.h.in"
+#define CEMENTSOLUTIONCHEMISTRY_IN_H
+#include "CementSolutionChemistry.in.h"
+#undef CEMENTSOLUTIONCHEMISTRY_IN_H
 
 #endif

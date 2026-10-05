@@ -12,7 +12,7 @@
 #define TITLE   "Elasticity"
 #define AUTHORS " "
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 
 /* Nb of equations */
@@ -172,7 +172,7 @@ double* MacroGradient(Element_t* el,double t)
   {
     Functions_t* fcts = Material_GetFunctions(Element_GetMaterial(el)) ;
     Function_t*  fct = Functions_GetFunction(fcts) ;
-    int nf = Functions_GetNbOfFunctions(fcts) ;
+    size_t nf = Functions_GetNbOfFunctions(fcts) ;
     double* fctindex = &Element_GetPropertyValue(el,"macro-fctindex") ;
     
     for(int i = 0 ; i < 9 ; i++) {
@@ -224,7 +224,7 @@ int SetModelProp(Model_t* model)
   int dim = Model_GetDimension(model) ;
   
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */
   for(int i = 0 ; i < dim ; i++) {
@@ -240,7 +240,7 @@ int SetModelProp(Model_t* model)
     Model_CopyNameOfUnknown(model,U_DISP + i,name_unk) ;
   }
   
-  Model_GetComputePropertyIndex(model) = &pm ;
+  Model_SetComputePropertyIndex(model,&pm) ;
     
   return(0) ;
 }
@@ -253,8 +253,10 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
   int NbOfProp = ((int) sizeof(Parameters_t)/sizeof(double)) ;
 
   /* Par defaut tout a 0 */
-  Material_SetPropertiesToZero(mat,NbOfProp);
-  Material_ScanProperties(mat,datafile,pm) ;
+  if(datafile) {
+    Material_SetPropertiesToZero(mat,NbOfProp);
+    Material_ScanProperties(mat,datafile,pm) ;
+  }
   
   
   /* Elasticity */
@@ -273,8 +275,7 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
     if(!strncmp(method,"Microstructure",14)) {
       char* p = strstr(method," ") ;
       char* cellname = p + strspn(p," ") ;
-      Options_t* options = Options_Create(NULL) ;
-      DataSet_t* dataset = DataSet_Create(cellname,options) ;
+      DataSet_t* dataset = DataSet_Create(cellname) ;
       double* c = Elasticity_GetStiffnessTensor(elasty) ;
       
       CheckMicrostructureDataSet(dataset) ;
@@ -694,10 +695,9 @@ void ComputeMicrostructure(DataSet_t* dataset,double* macrograd,double* sig)
     /* Update the macro-gradient */
     {
       Materials_t* mats = DataSet_GetMaterials(dataset) ;
-      int nmats = Materials_GetNbOfMaterials(mats) ;
-      int j ;
+      size_t nmats = Materials_GetNbOfMaterials(mats) ;
     
-      for(j = 0 ; j < nmats ; j++) {
+      for(size_t j = 0 ; j < nmats ; j++) {
         Material_t* mat = Materials_GetMaterial(mats) + j ;
         Model_t* model = Material_GetModel(mat) ;
         Model_ComputePropertyIndex_t* pidx = Model_GetComputePropertyIndex(model) ;
@@ -739,10 +739,9 @@ void CheckMicrostructureDataSet(DataSet_t* dataset)
     /* Update the macro-fctindex */
     {
       Materials_t* mats = DataSet_GetMaterials(dataset) ;
-      int nmats = Materials_GetNbOfMaterials(mats) ;
-      int j ;
+      size_t nmats = Materials_GetNbOfMaterials(mats) ;
     
-      for(j = 0 ; j < nmats ; j++) {
+      for(size_t j = 0 ; j < nmats ; j++) {
         Material_t* mat = Materials_GetMaterial(mats) + j ;
         Model_t* model = Material_GetModel(mat) ;
         Model_ComputePropertyIndex_t* pidx = Model_GetComputePropertyIndex(model) ;
@@ -765,7 +764,7 @@ void CheckMicrostructureDataSet(DataSet_t* dataset)
     /* Check and update the function of time */
     {
       Functions_t* fcts = DataSet_GetFunctions(dataset) ;
-      int nfcts = Functions_GetNbOfFunctions(fcts) ;
+      size_t nfcts = Functions_GetNbOfFunctions(fcts) ;
       
       if(nfcts < 1) {
         arret("ComputeMicrostructure(1): the min nb of functions should be 1") ;
@@ -773,22 +772,10 @@ void CheckMicrostructureDataSet(DataSet_t* dataset)
         
       {
         Function_t* func = Functions_GetFunction(fcts) ;
-        int npts = Function_GetNbOfPoints(func) ;
-          
-        if(npts < 2) {
-          arret("ComputeMicrostructure(2): the min nb of points should be 2") ;
-        }
-          
-        {
-          double* t = Function_GetXValue(func) ;
-          double* f = Function_GetFValue(func) ;
+        std::vector<double> t_vec = {0,1};
+        std::vector<double> f_vec = {0,1};
             
-          Function_GetNbOfPoints(func) = 2 ;
-          t[0] = 0 ;
-          t[1] = 1 ;
-          f[0] = 0 ;
-          f[1] = 1 ;
-        }
+        Function_Set(func,"piecewiseaffine",t_vec,f_vec) ;
       }
     }
     
@@ -796,13 +783,13 @@ void CheckMicrostructureDataSet(DataSet_t* dataset)
     {
       {
         Dates_t* dates = DataSet_GetDates(dataset) ;
-        int     nbofdates  = Dates_GetNbOfDates(dates) ;
+        size_t   nbofdates  = Dates_GetNbOfDates(dates) ;
           
         if(nbofdates < 2) {
           arret("ComputeMicrostructure(3): the min nb of dates should be 2") ;
         }
       
-        Dates_GetNbOfDates(dates) = 2 ;
+        Dates_SetNbOfDates(dates, 2) ;
       }
     }
   }

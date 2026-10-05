@@ -10,7 +10,7 @@
 #define TITLE "Short title of my model"
 #define AUTHORS "Authors"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 /*
  * The numbers below are arbitrary and serve only as example
@@ -87,7 +87,7 @@
 
 
 /* To retrieve the material properties */
-#define GetProperty(a)   (Element_GetProperty(el)[pm(a)]) 
+#define GetMaterialProperty(a)   (Element_GetProperty(el)[pm(a)]) 
 
 
 /* Intern Functions */
@@ -141,9 +141,9 @@ int pm(const char* s)
 
 void GetProperties(Element_t* el)
 {
-  coef1  = GetProperty("prop1") ;
-  coef2  = GetProperty("prop2") ;
-  coef3  = GetProperty("prop3") ;
+  coef1  = GetMaterialProperty("prop1") ;
+  coef2  = GetMaterialProperty("prop2") ;
+  coef3  = GetMaterialProperty("prop3") ;
 }
 
 
@@ -155,7 +155,7 @@ int SetModelProp(Model_t* model)
  */
 {
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */
   Model_CopyNameOfEquation(model,IE_Eq1,"first") ;
@@ -216,9 +216,9 @@ int DefineElementProp(Element_t* el,IntFcts_t* intfcts)
  *  Return 0 */
 {
   /** Define the length of tables */
-  Element_GetNbOfImplicitTerms(el) = NVI ;
-  Element_GetNbOfExplicitTerms(el) = NVE ;
-  Element_GetNbOfConstantTerms(el) = NV0 ;
+  Element_SetNbOfImplicitTerms(el,NVI) ;
+  Element_SetNbOfExplicitTerms(el,NVE) ;
+  Element_SetNbOfConstantTerms(el,NV0) ;
   
   return(0) ;
 }

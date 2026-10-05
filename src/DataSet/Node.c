@@ -112,7 +112,7 @@ void (Node_Delete)(void* self)
     double* x = Node_GetCoordinate(node) ;
       
     if(x) {
-      free(x) ;
+      Mry_Free(x) ;
     }
   }
   
@@ -120,7 +120,7 @@ void (Node_Delete)(void* self)
     char** uname = Node_GetNameOfUnknown(node) ;
     
     if(uname) {
-      free(uname) ;
+      Mry_Free(uname) ;
     }
   }
   
@@ -128,7 +128,7 @@ void (Node_Delete)(void* self)
     int* index = Node_GetSequentialIndexOfUnknown(node) ;
     
     if(index) {
-      free(index) ;
+      Mry_Free(index) ;
     }
   }
   
@@ -136,7 +136,7 @@ void (Node_Delete)(void* self)
     int* colind = Node_GetMatrixColumnIndex(node) ;
     
     if(colind) {
-      free(colind) ;
+      Mry_Free(colind) ;
     }
   }
 
@@ -144,7 +144,7 @@ void (Node_Delete)(void* self)
     int* index = Node_GetObValIndex(node) ;
     
     if(index) {
-      free(index) ;
+      Mry_Free(index) ;
     }
   }
 }

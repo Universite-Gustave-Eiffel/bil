@@ -41,7 +41,7 @@ void (Periodicity_Delete)(void* self)
     double* vector = Periodicity_GetPeriodVector(periodicity) ;
     
     if(vector) {
-      free(vector) ;
+      Mry_Free(vector) ;
     }
   }
   
@@ -49,7 +49,7 @@ void (Periodicity_Delete)(void* self)
     char* name = Periodicity_GetMasterRegionName(periodicity) ;
     
     if(name) {
-      free(name) ;
+      Mry_Free(name) ;
     }
   }
 }

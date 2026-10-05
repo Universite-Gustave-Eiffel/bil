@@ -13,7 +13,7 @@
 #define TITLE   "Non linear Fick's second law (2015)"
 #define AUTHORS ""
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 
 
@@ -167,7 +167,7 @@ using namespace BaseName();
 
 
 /* To retrieve the material properties */
-#define GetProperty(a)                   (Element_GetProperty(el)[pm(a)])
+#define GetMaterialProperty(a)                   (Element_GetProperty(el)[pm(a)])
 
 
 
@@ -234,7 +234,7 @@ void GetProperties(Element_t* el,double t)
 
 int SetModelProp(Model_t* model)
 {
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   Model_CopyNameOfEquation(model,E_SOLUTE  ,"solute") ;
   
@@ -248,8 +248,8 @@ int SetModelProp(Model_t* model)
 #endif
 
 
-  Model_GetComputePropertyIndex(model) = &pm ;
-  Model_GetComputeMaterialProperties(model) = &GetProperties;
+  Model_SetComputePropertyIndex(model,&pm);
+  Model_SetComputeMaterialProperties(model,&GetProperties);
   
   ComputePhysicoChemicalProperties(TEMPERATURE) ;
   

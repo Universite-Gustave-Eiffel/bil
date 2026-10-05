@@ -136,7 +136,7 @@ static double  macrogradient[9] ;
 static double  macrostrain[9] ;
 
 
-#define GetProperty(a)   (Element_GetProperty(el)[pm(a)])
+#define GetMaterialProperty(a)   (Element_GetProperty(el)[pm(a)])
 
 #define ItIsPeriodic  (Geometry_IsPeriodic(Element_GetGeometry(el)))
 
@@ -178,7 +178,7 @@ double* MacroGradient(Element_t* el,double t)
     Functions_t* fcts = Material_GetFunctions(Element_GetMaterial(el)) ;
     Function_t*  fct = Functions_GetFunction(fcts) ;
     int nf = Functions_GetNbOfFunctions(fcts) ;
-    double* fctindex = &GetProperty("macro-fctindex") ;
+    double* fctindex = &GetMaterialProperty("macro-fctindex") ;
     int i ;
     
     for(i = 0 ; i < 9 ; i++) {
@@ -193,7 +193,7 @@ double* MacroGradient(Element_t* el,double t)
   }
   
   {
-    double* g = &GetProperty("macro-gradient") ;
+    double* g = &GetMaterialProperty("macro-gradient") ;
     int i ;
     
     for(i = 0 ; i < 9 ; i++) {
@@ -227,8 +227,8 @@ double* MacroStrain(Element_t* el,double t)
 
 void GetProperties(Element_t* el,double t)
 {
-  //gravity = GetProperty("gravity") ;
-  //rho_s   = GetProperty("rho_s") ;
+  //gravity = GetMaterialProperty("gravity") ;
+  //rho_s   = GetMaterialProperty("rho_s") ;
     
   {
     DataSet_t* dataset = Element_GetDataSet(el) ;
@@ -247,7 +247,7 @@ int SetModelProp(Model_t* model)
   char i ;
   
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */
   for(i = 0 ; i < dim ; i++) {
@@ -860,8 +860,8 @@ Values_d* MPM_t::Integrate(Element_t* el,const double& t,const double& dt,Values
   /* Backup body force */
   {
     {
-      double gravity = GetProperty("gravity") ;
-      double rho_s   = GetProperty("rho_s") ;
+      double gravity = GetMaterialProperty("gravity") ;
+      double rho_s   = GetMaterialProperty("rho_s") ;
       int dim = Element_GetDimensionOfSpace(el) ;
       double* f_mass = val.BodyForce ;
       

@@ -15,74 +15,37 @@ struct Nodes_t;
 struct Solver_t;
 
 
-extern IterProcess_t*  (IterProcess_New)(void) ;
+extern IterProcess_t*  (IterProcess_New)(ObVals_t*) ;
 extern IterProcess_t*  (IterProcess_Create)(DataFile_t*,ObVals_t*) ;
+extern void            (IterProcess_Scan)(IterProcess_t*,DataFile_t*);
 extern void            (IterProcess_Delete)(void*) ;
 extern int             (IterProcess_SetCurrentError)(IterProcess_t*,Nodes_t*,Solver_t*) ;
 extern void            (IterProcess_PrintCurrentError)(IterProcess_t*) ;
 
 
-#define IterProcess_GetNbOfIterations(IPR)           ((IPR)->niter)
-#define IterProcess_GetNbOfRepetitions(IPR)          ((IPR)->nrecom)
-#define IterProcess_GetTolerance(IPR)                ((IPR)->tol)
-#define IterProcess_GetRepetitionIndex(IPR)          ((IPR)->irecom)
-#define IterProcess_GetIterationIndex(IPR)           ((IPR)->iter)
-#define IterProcess_GetError(IPR)                    ((IPR)->error)
-#define IterProcess_GetObValIndexOfCurrentError(IPR) ((IPR)->obvalindex)
-#define IterProcess_GetNodeIndexOfCurrentError(IPR)  ((IPR)->nodeindex)
-#define IterProcess_GetNodeOfCurrentError(IPR)       ((IPR)->node)
-#define IterProcess_GetObVals(IPR)                   ((IPR)->obvals)
+#define IterProcess_GetNbOfIterations(IPR)           ((IPR)->GetNbOfIterations())
+#define IterProcess_GetNbOfRepetitions(IPR)          ((IPR)->GetNbOfRepetitions())
+#define IterProcess_GetTolerance(IPR)                ((IPR)->GetTolerance())
+#define IterProcess_GetRepetitionIndex(IPR)          ((IPR)->GetRepetitionIndex())
+#define IterProcess_GetIterationIndex(IPR)           ((IPR)->GetIterationIndex())
+#define IterProcess_GetError(IPR)                    ((IPR)->GetError())
+#define IterProcess_GetObValIndexOfCurrentError(IPR) ((IPR)->GetObValIndexOfCurrentError())
+#define IterProcess_GetNodeIndexOfCurrentError(IPR)  ((IPR)->GetNodeIndexOfCurrentError())
+#define IterProcess_GetNodeOfCurrentError(IPR)       ((IPR)->GetNodeOfCurrentError())
+#define IterProcess_GetObVals(IPR)                   ((IPR)->GetObVals())
 
+#define IterProcess_SetNbOfIterations(IPR,A)           ((IPR)->SetNbOfIterations(A))
+#define IterProcess_SetNbOfRepetitions(IPR,A)          ((IPR)->SetNbOfRepetitions(A))
+#define IterProcess_SetTolerance(IPR,A)                ((IPR)->SetTolerance(A))
+#define IterProcess_SetRepetitionIndex(IPR,A)          ((IPR)->SetRepetitionIndex(A))
+#define IterProcess_SetIterationIndex(IPR,A)           ((IPR)->SetIterationIndex(A))
+#define IterProcess_SetError(IPR,A)                    ((IPR)->SetError(A))
+#define IterProcess_SetObValIndexOfCurrentError(IPR,A) ((IPR)->SetObValIndexOfCurrentError(A))
+#define IterProcess_SetNodeIndexOfCurrentError(IPR,A)  ((IPR)->SetNodeIndexOfCurrentError(A))
+#define IterProcess_SetNodeOfCurrentError(IPR,A)       ((IPR)->SetNodeOfCurrentError(A))
+#define IterProcess_SetObVals(IPR,A)                   ((IPR)->SetObVals(A))
 
-#define IterProcess_SetNbOfIterations(IPR,A) \
-        do {\
-          IterProcess_GetNbOfIterations(IPR) = A;\
-        } while(0)
-        
-#define IterProcess_SetNbOfRepetitions(IPR,A) \
-        do {\
-          IterProcess_GetNbOfRepetitions(IPR) = A;\
-        } while(0)
-        
-#define IterProcess_SetTolerance(IPR,A) \
-        do {\
-          IterProcess_GetTolerance(IPR) = A;\
-        } while(0)
-        
-#define IterProcess_SetRepetitionIndex(IPR,A) \
-        do {\
-          IterProcess_GetRepetitionIndex(IPR) = A;\
-        } while(0)
-        
-#define IterProcess_SetIterationIndex(IPR,A) \
-        do {\
-          IterProcess_GetIterationIndex(IPR) = A;\
-        } while(0)
-        
-#define IterProcess_SetError(IPR,A) \
-        do {\
-          IterProcess_GetError(IPR) = A;\
-        } while(0)
-        
-#define IterProcess_SetObValIndexOfCurrentError(IPR,A) \
-        do {\
-          IterProcess_GetObValIndexOfCurrentError(IPR) = A;\
-        } while(0)
-        
-#define IterProcess_SetNodeIndexOfCurrentError(IPR,A) \
-        do {\
-          IterProcess_GetNodeIndexOfCurrentError(IPR) = A;\
-        } while(0)
-        
-#define IterProcess_SetNodeOfCurrentError(IPR,A) \
-        do {\
-          IterProcess_GetNodeOfCurrentError(IPR) = A;\
-        } while(0)
-        
-#define IterProcess_SetObVals(IPR,A) \
-        do {\
-          IterProcess_GetObVals(IPR) = A;\
-        } while(0)
+#define IterProcess_Set(IPR,...)                       ((IPR)->Set(__VA_ARGS__))
         
 
 
@@ -92,24 +55,24 @@ extern void            (IterProcess_PrintCurrentError)(IterProcess_t*) ;
 
 /* Operations on iterations */
 #define IterProcess_IncrementIterationIndex(IPR) \
-        (IterProcess_GetIterationIndex(IPR)++)
+        (IterProcess_SetIterationIndex(IPR,IterProcess_GetIterationIndex(IPR)+1))
 
 #define IterProcess_LastIterationIsNotReached(IPR) \
         (IterProcess_GetIterationIndex(IPR) < IterProcess_GetNbOfIterations(IPR))
 
 #define IterProcess_InitializeIterations(IPR) \
-        (IterProcess_GetIterationIndex(IPR) = 0)
+        (IterProcess_SetIterationIndex(IPR,0))
 
 
 /* Operations on repetitions */
 #define IterProcess_IncrementRepetitionIndex(IPR) \
-       (IterProcess_GetRepetitionIndex(IPR)++)
+       (IterProcess_SetRepetitionIndex(IPR,IterProcess_GetRepetitionIndex(IPR)+1))
 
 #define IterProcess_LastRepetitionIsNotReached(IPR) \
         (IterProcess_GetRepetitionIndex(IPR) < IterProcess_GetNbOfRepetitions(IPR))
 
 #define IterProcess_InitializeRepetitions(IPR) \
-        (IterProcess_GetRepetitionIndex(IPR) = 0)
+        (IterProcess_SetRepetitionIndex(IPR,0))
 
 
 /* Operations on convergence */
@@ -126,16 +89,47 @@ extern void            (IterProcess_PrintCurrentError)(IterProcess_t*) ;
 
 
 struct IterProcess_t {        /* Iterative process */
-  int    niter ;              /* Max nb of iterations */
-  int    iter ;               /* Current iteration index */
-  int    nrecom ;             /* Max nb of repetitions */
-  int    irecom ;             /* Current repetition index */
-  double tol ;                /* Tolerance */
-  double error ;              /* Current error */
-  int    obvalindex ;         /* Objective value index pertaining to the greatest error */
-  size_t nodeindex ;          /* Node index pertaining to the greatest error */
-  Node_t* node ;              /* Node pertaining to the greatest error */
-  ObVals_t* obvals ;          /* Objective variations */
+  int    _niter ;              /* Max nb of iterations */
+  int    _iter ;               /* Current iteration index */
+  int    _nrecom ;             /* Max nb of repetitions */
+  int    _irecom ;             /* Current repetition index */
+  double _tol ;                /* Tolerance */
+  double _error ;              /* Current error */
+  int    _obvalindex ;         /* Objective value index pertaining to the greatest error */
+  size_t _nodeindex ;          /* Node index pertaining to the greatest error */
+  Node_t* _node ;              /* Node pertaining to the greatest error */
+  ObVals_t* _obvals ;          /* Objective variations */
+
+  int    GetNbOfIterations(){return _niter ;}
+  int    GetIterationIndex(){return _iter ;}
+  int    GetNbOfRepetitions(){return _nrecom ;}
+  int    GetRepetitionIndex(){return _irecom ;}
+  double GetTolerance(){return _tol ;}
+  double GetError(){return _error ;}
+  int    GetObValIndexOfCurrentError(){return _obvalindex ;}
+  size_t GetNodeIndexOfCurrentError(){return _nodeindex ;}
+  Node_t* GetNodeOfCurrentError(){return _node ;}
+  ObVals_t* GetObVals(){return _obvals ;}
+
+  void SetNbOfIterations(int a){_niter = a;}
+  void SetIterationIndex(int a){_iter = a;}
+  void SetNbOfRepetitions(int a){_nrecom = a;}
+  void SetRepetitionIndex(int a){_irecom = a;}
+  void SetTolerance(double a){_tol = a;}
+  void SetError(double a){_error = a;}
+  void SetObValIndexOfCurrentError(int a){_obvalindex = a;}
+  void SetNodeIndexOfCurrentError(size_t a){_nodeindex = a;}
+  void SetNodeOfCurrentError(Node_t* a){_node = a;}
+  void SetObVals(ObVals_t* a){_obvals = a;}
+
+  void Set(int const& iter,double const& tol,int const& rep){
+    /* Iterations */
+    SetNbOfIterations(iter) ;
+    /* Tolerance */
+    SetTolerance(tol) ;
+    /* Repetitions */
+    SetNbOfRepetitions(rep) ;
+  }
 } ;
 
 

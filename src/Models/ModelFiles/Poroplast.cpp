@@ -11,7 +11,7 @@
 #define TITLE "Poroplasticity with hardening (2019)"
 #define AUTHORS "Dangla"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 
 /* Nb of equations */
@@ -154,7 +154,7 @@ static int     plasticmodel ;
          } while(0)
 
 
-#define GetProperty(a)      Element_GetPropertyValue(el,a)
+#define GetMaterialProperty(a)      Element_GetPropertyValue(el,a)
 
 
 
@@ -223,19 +223,19 @@ int pm(const char *s)
 
 void GetProperties(Element_t* el,double t)
 {
-  gravite = GetProperty("gravity") ;
-  phi0    = GetProperty("porosity") ;
-  k_int   = GetProperty("k_int") ;
-  mu_l    = GetProperty("mu_l") ;
-  rho_l0  = GetProperty("rho_l") ;
-  k_l     = GetProperty("k_l") ;
-  rho_s   = GetProperty("rho_s") ;
-  p_l0    = GetProperty("p_l0") ;
-  biot    = GetProperty("b") ;
-  N       = GetProperty("N") ;
-  beta    = GetProperty("beta") ;
-  sig0    = &GetProperty("sig0") ;
-  //hardv0  = GetProperty("hardv0") ;
+  gravite = GetMaterialProperty("gravity") ;
+  phi0    = GetMaterialProperty("porosity") ;
+  k_int   = GetMaterialProperty("k_int") ;
+  mu_l    = GetMaterialProperty("mu_l") ;
+  rho_l0  = GetMaterialProperty("rho_l") ;
+  k_l     = GetMaterialProperty("k_l") ;
+  rho_s   = GetMaterialProperty("rho_s") ;
+  p_l0    = GetMaterialProperty("p_l0") ;
+  biot    = GetMaterialProperty("b") ;
+  N       = GetMaterialProperty("N") ;
+  beta    = GetMaterialProperty("beta") ;
+  sig0    = &GetMaterialProperty("sig0") ;
+  //hardv0  = GetMaterialProperty("hardv0") ;
   
   plasty = Element_FindMaterialData(el,"Plasticity") ;
   {
@@ -257,7 +257,7 @@ int SetModelProp(Model_t* model)
   int i ;
   
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */
   Model_CopyNameOfEquation(model,E_MASS,"liq") ;
@@ -271,8 +271,8 @@ int SetModelProp(Model_t* model)
     Model_CopyNameOfUnknown(model,U_DISP + i,name_unk[i]) ;
   }
   
-  Model_GetComputePropertyIndex(model) = &pm ;
-  Model_GetComputeMaterialProperties(model) = &GetProperties;
+  Model_SetComputePropertyIndex(model,&pm) ;
+  Model_SetComputeMaterialProperties(model,&GetProperties);
     
   return(0) ;
 }

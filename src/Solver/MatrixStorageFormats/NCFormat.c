@@ -24,7 +24,8 @@ NCFormat_t* (NCFormat_Create)(Mesh_t* mesh,const int imatrix)
   NCFormat_t* ncformat = (NCFormat_t*) Mry_New(NCFormat_t) ;
   size_t n_col = Mesh_GetNbOfMatrixColumns(mesh)[imatrix] ;
   /* Working memory */
-  size_t*   colptr0 = (size_t*) Mry_New(size_t,n_col + 1) ;
+  size_t* colptr0 = (size_t*) Mry_New(size_t,n_col + 1) ;
+  size_t nnz_max;
   
   if(imatrix >= Mesh_GetNbOfMatrices(mesh)) {
     arret("NCFormat_Create") ;
@@ -69,6 +70,8 @@ NCFormat_t* (NCFormat_Create)(Mesh_t* mesh,const int imatrix)
      * the column in stored non-zero terms of the matrix. So an
      * over-estimated nb of terms for the matrix is colptr0[n_col] */
     for(size_t i = 0 ; i < n_col ; i++) colptr0[i+1] += colptr0[i] ;
+
+    nnz_max = colptr0[n_col];
   }
 
 
@@ -81,7 +84,6 @@ NCFormat_t* (NCFormat_Create)(Mesh_t* mesh,const int imatrix)
     
   /* Allocation of space for rowind */
   {
-    size_t nnz_max = colptr0[n_col] ;
     size_t* rowind = (size_t*) Mry_New(size_t,nnz_max) ;
     
     NCFormat_GetRowIndexOfNonZeroValue(ncformat) = rowind ;
@@ -175,7 +177,7 @@ NCFormat_t* (NCFormat_Create)(Mesh_t* mesh,const int imatrix)
     }
   }
 
-  free(colptr0) ;
+  Mry_Free(colptr0) ;
 
 
   {
@@ -189,7 +191,7 @@ NCFormat_t* (NCFormat_Create)(Mesh_t* mesh,const int imatrix)
   {
     size_t* rowind = NCFormat_GetRowIndexOfNonZeroValue(ncformat) ;
     size_t nnz = NCFormat_GetNbOfNonZeroValues(ncformat) ;
-    size_t* rowind1 = (size_t*) Mry_Realloc(rowind,nnz*sizeof(size_t)) ;
+    size_t* rowind1 = (size_t*) Mry_Realloc(rowind,nnz_max*sizeof(size_t),nnz*sizeof(size_t)) ;
     
     if(rowind1 != rowind) {
       NCFormat_GetRowIndexOfNonZeroValue(ncformat) = rowind1 ;
@@ -216,9 +218,9 @@ void (NCFormat_Delete)(void* self)
 {
   NCFormat_t* a = (NCFormat_t*) self ;
   
-  free(NCFormat_GetFirstNonZeroValueIndexOfColumn(a)) ;
-  free(NCFormat_GetRowIndexOfNonZeroValue(a)) ;
-  free(NCFormat_GetNonZeroValue(a)) ;
+  Mry_Free(NCFormat_GetFirstNonZeroValueIndexOfColumn(a)) ;
+  Mry_Free(NCFormat_GetRowIndexOfNonZeroValue(a)) ;
+  Mry_Free(NCFormat_GetNonZeroValue(a)) ;
 }
 
 

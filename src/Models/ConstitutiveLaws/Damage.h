@@ -158,7 +158,8 @@ struct Damage_t {
 #endif
 
 #include "Arg.h"
-#include "DamageModels/ListOfDamageModels.h"
+//#include "DamageModels/ListOfDamageModels.h"
+#include "ListOfDamageModels.h"
 #include "Elasticity.h"
 #include "Message.h"
 #endif

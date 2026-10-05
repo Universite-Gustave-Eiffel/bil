@@ -36,13 +36,13 @@ void (Result_Delete)(void* self)
 {
   Result_t* result = (Result_t*) self ;
   
-  free(Result_GetValue(result)) ;
+  Mry_Free(Result_GetValue(result)) ;
   
   {
     View_t* view = Result_GetView(result) ;
   
     View_Delete(view) ;
-    free(view) ;
+    Mry_Free(view) ;
   }
 }
 

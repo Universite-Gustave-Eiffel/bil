@@ -11,15 +11,15 @@
 
 
 
-DataFile_t*  (DataFile_Create)(char* filename)
+DataFile_t*  (DataFile_New)(char const* filename)
 {
   DataFile_t* datafile = (DataFile_t*) Mry_New(DataFile_t) ;
   
   /* Memory space for textfile */
   {
-    TextFile_t* textfile = TextFile_Create(filename) ;
+    TextFile_t* textfile = TextFile_New(filename) ;
     
-    DataFile_GetTextFile(datafile) = textfile ;
+    DataFile_SetTextFile(datafile,textfile) ;
   }
   
   
@@ -29,16 +29,17 @@ DataFile_t*  (DataFile_Create)(char* filename)
     
     if(filename) {
       TextFile_t* textfile = DataFile_GetTextFile(datafile) ;
-      
-      n = TextFile_CountTheMaxNbOfCharactersPerLine(textfile) ;
+      size_t n1 = TextFile_CountTheMaxNbOfCharactersPerLine(textfile) ;
+
+      if(n1 > n) n = n1;
     }
     
-    DataFile_GetMaxLengthOfTextLine(datafile) = n ;
+    DataFile_SetMaxLengthOfTextLine(datafile,n) ;
     
     {
       char* line = (char*) Mry_New(char,n+1) ;
     
-      DataFile_GetTextLine(datafile) = line ;
+      DataFile_SetTextLine(datafile,line) ;
     }
   }
   
@@ -48,7 +49,6 @@ DataFile_t*  (DataFile_Create)(char* filename)
     TextFile_t* textfile = DataFile_GetTextFile(datafile) ;
     
     TextFile_StoreFileContent(textfile) ;
-    //DataFile_GetFileContent(datafile) = TextFile_GetFileContent(textfile) ;
   }
   
   return(datafile) ;
@@ -65,8 +65,8 @@ void (DataFile_Delete)(void* self)
     
     if(textfile) {
       TextFile_Delete(textfile) ;
-      free(textfile) ;
-      DataFile_GetTextFile(datafile) = NULL ;
+      Mry_Free(textfile) ;
+      DataFile_SetTextFile(datafile,NULL) ;
     }
   }
   
@@ -74,8 +74,8 @@ void (DataFile_Delete)(void* self)
     char* line = DataFile_GetTextLine(datafile) ;
     
     if(line) {
-      free(line) ;
-      DataFile_GetTextLine(datafile) = NULL ;
+      Mry_Free(line) ;
+      DataFile_SetTextLine(datafile,NULL) ;
     }
   }
 }

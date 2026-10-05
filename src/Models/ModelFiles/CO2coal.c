@@ -12,7 +12,7 @@
 #define TITLE   "CO2 storage in dual porosity coal seam"
 #define AUTHORS "Nikoosokhan-Espinoza-Dangla"
 
-#include "PredefinedModelMethods.h"
+#include "PredeclaredModelMethods.h.in"
 
 /* Nb of equations of the model */
 #define NEQ   (dim+1)
@@ -190,27 +190,27 @@ static void    GetProperties(Element_t*) ;
 void GetProperties(Element_t* el)
 {
 /* To retrieve the material properties */
-#define GetProperty(a)   (Element_GetProperty(el)[pm(a)])
+#define GetMaterialProperty(a)   (Element_GetProperty(el)[pm(a)])
 
-  gravity = GetProperty("gravity") ;
-  young   = GetProperty("young") ;
-  K_m     = GetProperty("K_m") ;
-  poisson = GetProperty("poisson") ;
-  young_3   = GetProperty("young_3") ;
-  poisson_3 = GetProperty("poisson_3") ;
-  shear_3   = GetProperty("shear_3") ;
-  phi0_M  = GetProperty("phi0_M") ;
-  k_int   = GetProperty("k_int") ;
-  mu_co2  = GetProperty("mu_co2") ;
-  rho_s   = GetProperty("rho_s") ;
-  p0_co2  = GetProperty("p0_co2") ;
-  sig0    = &GetProperty("sig0") ;
-  axis_3  = (short int) GetProperty("axis_3") - 1 ;
+  gravity = GetMaterialProperty("gravity") ;
+  young   = GetMaterialProperty("young") ;
+  K_m     = GetMaterialProperty("K_m") ;
+  poisson = GetMaterialProperty("poisson") ;
+  young_3   = GetMaterialProperty("young_3") ;
+  poisson_3 = GetMaterialProperty("poisson_3") ;
+  shear_3   = GetMaterialProperty("shear_3") ;
+  phi0_M  = GetMaterialProperty("phi0_M") ;
+  k_int   = GetMaterialProperty("k_int") ;
+  mu_co2  = GetMaterialProperty("mu_co2") ;
+  rho_s   = GetMaterialProperty("rho_s") ;
+  p0_co2  = GetMaterialProperty("p0_co2") ;
+  sig0    = &GetMaterialProperty("sig0") ;
+  axis_3  = (short int) GetMaterialProperty("axis_3") - 1 ;
   axis_1  = (axis_3 + 1) % 3 ;
   axis_2  = (axis_3 + 2) % 3 ;
   
-  alpha_h  = GetProperty("alpha_h") ;
-  alpha_v  = GetProperty("alpha_v") ;
+  alpha_h  = GetMaterialProperty("alpha_h") ;
+  alpha_v  = GetMaterialProperty("alpha_v") ;
   
 
   {
@@ -235,7 +235,7 @@ void GetProperties(Element_t* el)
   adsorptionstresscurve = Element_FindCurve(el,"stress_ads") ;
   tangentbiotcoefcurve = Element_FindCurve(el,"tangent_biot") ;
   
-#undef GetProperty
+#undef GetMaterialProperty
 }
 
 
@@ -326,7 +326,7 @@ int SetModelProp(Model_t* model)
   int i ;
   
   /** Number of equations to be solved */
-  Model_GetNbOfEquations(model) = NEQ ;
+  Model_SetNbOfEquations(model,NEQ) ;
   
   /** Names of these equations */
   Model_CopyNameOfEquation(model,E_CO2,"co2") ;

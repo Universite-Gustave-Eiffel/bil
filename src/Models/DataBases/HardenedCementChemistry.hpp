@@ -947,7 +947,8 @@ inline void (HardenedCementChemistry_ComputeSystem_CaO_SiO2_Na2O_K2O_SO3_Al2O3_C
 #include "Curves.h"
 #include "Utils.h"
 
-
-#include "HardenedCementChemistry.h.in"
+#define HARDENEDCEMENTCHEMISTRY_IN_H
+#include "HardenedCementChemistry.in.h"
+#undef HARDENEDCEMENTCHEMISTRY_IN_H
 
 #endif

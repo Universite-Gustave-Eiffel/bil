@@ -50,7 +50,7 @@ Initialization
 
 Functions
 1
-N = 3  F(0) = 1  F(1) = 10 F(2) = 0.1
+Type = piecewiseaffine  N = 3  F(0) = 1  F(1) = 10 F(2) = 0.1
 
 
 Boundary Conditions
