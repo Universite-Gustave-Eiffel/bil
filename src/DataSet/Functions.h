@@ -40,7 +40,7 @@ struct Functions_t {
   public:
   size_t GetCapacity() {return Functions_MaxNbOfFunctions;}
   template<typename... Args>
-  void EmplaceBack(const std::string&,const Args&...);
+  void EmplaceBack(const std::string&,Args&&...);
 
   public:
   size_t GetNbOfFunctions() const {return _n_fn;}
@@ -56,17 +56,18 @@ struct Functions_t {
 } ;
 
 
+#include <utility>
 #include "Function.h"
 
   template<typename... Args>
-  inline void Functions_t::EmplaceBack(const std::string& type,const Args&... args) {
+  inline void Functions_t::EmplaceBack(const std::string& type,Args&&... args) {
     Function_t* function = _fn + _n_fn;
     
     if(_n_fn >= GetCapacity()) {
       throw std::length_error("Maximum number of functions reached");
     }
 
-    Function_Set(function,type,args...);
+    Function_Set(function,type,std::forward<Args>(args)...);
     _n_fn++;
   }
 

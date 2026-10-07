@@ -88,8 +88,8 @@ void (Field_Scan)(Field_t* field,DataFile_t* datafile)
      * ------------ */
     if(String_Is(type,"affine")) {
       double v;
-      std::vector<double> g = {0.,0.,0.};
-      std::vector<double> x = {0.,0.,0.};
+      double g[3] = {0.,0.,0.};
+      double x[3] = {0.,0.,0.};
       
       /* Value */
       {

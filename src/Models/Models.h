@@ -66,7 +66,7 @@ struct Models_t {
   public:
   size_t GetCapacity(){return _maxn_model ;}
   template<typename... Args>
-  Model_t* EmplaceBack(const Args&...);
+  Model_t* EmplaceBack(Args&&...);
 
   size_t GetMaxNbOfModels(){return _maxn_model ;}
   size_t GetNbOfModels(){return _n_model ;}
@@ -87,6 +87,7 @@ struct Models_t {
 } ;
 
 
+#include <utility>
 #include "Model.h"
 
   inline size_t Models_t::FindModelIndex(const char* codename){
@@ -148,14 +149,14 @@ struct Models_t {
   #endif
 
   template<typename... Args>
-  inline Model_t* Models_t::EmplaceBack(const Args&... args) {
+  inline Model_t* Models_t::EmplaceBack(Args&&... args) {
     Model_t* model = _model + _n_model;
     
     if(_n_model >= GetCapacity()) {
       throw std::length_error("Maximum number of models reached");
     }
 
-    Model_Set(model,args...);
+    Model_Set(model,std::forward<Args>(args)...);
     _n_model++;
     return(model);
   }

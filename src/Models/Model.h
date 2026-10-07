@@ -293,10 +293,7 @@ struct Model_t {
   void SetObjectiveValue(ObVal_t* a){_obval = a;}
   void SetViews(Views_t* a){_views = a;}
 
-  template<typename... Args>
-  void Set(Args... args) {
-    throw std::runtime_error("Model_t::Set: Not implemented");
-  }
+  void Set(...) = delete;
   void Set(char const* codename){
     Initialize(codename) ;
   }

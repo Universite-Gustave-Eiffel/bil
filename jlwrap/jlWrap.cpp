@@ -111,7 +111,7 @@ JLCXX_MODULE define_julia_module(jlcxx::Module& mod) {
   
   /* Functions */
   MEM_METHOD(Functions,EmplaceBack,std::string const&,size_t const&,double const*,double const*);
-  MEM_METHOD(Functions,EmplaceBack,std::string const&,std::string const&);
+  MEM_METHOD(Functions,EmplaceBack,std::string const&,char const*);
 
   /* Geometry */
   MEM_METHOD(Geometry,Set,unsigned short int,std::string&);

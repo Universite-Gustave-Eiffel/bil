@@ -1,11 +1,11 @@
 /* compilation:
 
-c++ -std=c++17 Elast.cpp -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lbil-2.13-Debug -DBASENAME=" " -fpermissive -g
+c++ -std=c++17 Elast.cpp -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lbil-2.14-Release -DBASENAME=" " -fpermissive
 
 or if petsc and mpi are included in the library, use:
 mpic++ -std=c++17 Elast.cpp -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lbil-2.13-Debug -DBASENAME=" " -fpermissive -lpetsc_real -g
 or
-c++ -std=c++17 Elast.cpp -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lbil-2.13-Debug -DBASENAME=" " -fpermissive -lpetsc_real -lmpi_cxx -lmpi -g
+c++ -std=c++17 Elast.cpp -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lbil-2.14-Release -DBASENAME=" " -fpermissive -lpetsc_real -lmpi_cxx -lmpi
 */
 
 #include <bil/bil.h>
@@ -37,9 +37,19 @@ int main()
   
   Mesh_WriteInversePermutation(mesh,"out","hsl");
  
-  Fields_EmplaceBack(fields,"affine",1.e6,(double[]){0.,0.,0.},(double[]){0.,0.,0.});
+  {
+    double g[3] = {0,0,0};
+    double x[3] = {0,0,0};
+    
+    Fields_EmplaceBack(fields,"affine",1.e6,g,x);
+  }
 
-  Functions_EmplaceBack(functions,"piecewiseaffine",(std::vector<double>){0,1,2},(std::vector<double>){1,10,0.1});
+  {
+    std::vector<double> t = {0,1,2};
+    std::vector<double> f = {1,10,0.1};
+    
+    Functions_EmplaceBack(functions,"piecewiseaffine",t,f);
+  }
 
 
   BConds_EmplaceBack(bconds,"80","u_2",0,0);
@@ -110,7 +120,7 @@ int main()
 
   DataSet_PrintData(d,"all") ;
   
-  Options_Set(opt,"-solver petscksp -ksp_type cg -pc_type sor");
+  //Options_Set(opt,"-solver petscksp -ksp_type cg -pc_type sor");
   
   Module_ComputeProblem(modul,d);
   

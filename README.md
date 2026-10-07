@@ -185,6 +185,17 @@ Internal libraries
 This package contains some fortran routines provided by HSL: "HSL, a collection of Fortran codes for large-scale scientific computation". See http://www.hsl.rl.ac.uk/.
 
 
+Julia wrappers and julia module BilWrap.jl
+==========================================
+
+From version 2.14 it is possible to execute bil from julia using the module BilWrap.jl. To make it work, firstly enable jlcxx in OPTIONS, secondly generate a specific library by typing from within the build directory:
+
+        make jlwrap
+        make install_jlwrap
+
+These directives will produce and install a specific library, "libbil-VERSION-BUILDTYPE_julia.so", which will be used by the module BilWrap.jl.
+
+
 Usage
 =====
 

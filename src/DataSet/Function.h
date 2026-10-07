@@ -68,17 +68,13 @@ struct FunctionPiecewiseAffine_t {
   public:
   void Delete(void);
 
-  template<typename... Args>
-  void Set(Args...) {
-    throw std::invalid_argument("FunctionPiecewseAffine_t::Set: unknown type") ;
-  }
   void Set(const std::vector<double>& t,const std::vector<double>& f){
     size_t n = std::min(t.size(),f.size());
     
     Set(n,t.data(),f.data());
   }
   void Set(size_t const&,double const*,double const*);
-  void Set(std::string const& filestr){Set(filestr.c_str());}
+  //void Set(std::string const& filestr){Set(filestr.c_str());}
   void Set(char const*);
 
   size_t ReadInFile(char*);
@@ -181,7 +177,7 @@ struct Function_t {
 
   public:
   template<typename... Args>
-  void Set(const std::string&,const Args&...);
+  void Set(const std::string&,Args&&...);
 
   double ComputeValue(double const& t) {
     std::string type(_type);
@@ -205,6 +201,8 @@ struct Function_t {
   }
 } ;
 
+
+#include <utility>
 #include "Curves.h"
 #include "Curve.h"
 #include "Mry.h"
@@ -223,14 +221,14 @@ struct Function_t {
   }
 
   template<typename... Args>
-  inline void Function_t::Set(const std::string& type,const Args&... args){
+  inline void Function_t::Set(const std::string& type,Args&&... args){
     DeleteStorage();
     
     strcpy(_type,type.c_str());
 
     if(type.compare("piecewiseaffine") == 0) {
       _store = (FunctionPiecewiseAffine_t*) Mry_New(FunctionPiecewiseAffine_t) ;
-      ((FunctionPiecewiseAffine_t*)_store)->Set(args...) ;
+      ((FunctionPiecewiseAffine_t*)_store)->Set(std::forward<Args>(args)...) ;
 
     } else {
       throw std::runtime_error("Function_t::Set: unknown type") ;

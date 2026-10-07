@@ -1,3 +1,12 @@
+News in 2.14: Introduction of julia wrapper functions and the julia module: 
+BilWrap.jl to be used with julia. Some examples are included in folder base.
+
+News in 2.13: The documention using MkDocs is introduced.
+
+News in 2.12: Introduction of the interface "MaterialPointMethod.h" which 
+simplifies significantly the implementation of models. For example, see how to 
+proceed in models like: Duracem, Plast, BBMGas, Frostsoil, Ficknew, Poroplast...
+
 News in 2.10: Reorganization of the header files regarding the dependencies that 
 only require to be forward declared and those that need to be #included.
 

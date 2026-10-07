@@ -20,6 +20,7 @@ module BilWrap
   # 2. Distribution Check: Ensure the user's local build stage occurred
   if !isfile(deps_config_file)
     error("MyPackage dependencies are unbuilt. Please resolve by running: import Pkg; Pkg.build(\"MyPackage\")")
+    # exit(0)
   end
 
   # 3. Splice the generated file into scope (provides 'CPP_SHARED_LIB_PATH')

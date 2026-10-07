@@ -1,5 +1,5 @@
-[ Info: MyPackage configured for C++ binary: libbil-2.13-Release_julia.so
+[ Info: MyPackage configured for C++ binary: libbil-2.14-Release_julia.so
 lib_prefix = "lib"
-bil_version = "2.13"
+bil_version = "2.14"
 bil_buildtype = "Release"
 lib_ext = ".so"

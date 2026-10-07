@@ -89,7 +89,7 @@ modul = DataSet_GetModule(d)
   
   DataSet_Finalize(d)
   
-  Options_Set(opt,"-solver petscksp -ksp_type cg -pc_type sor")
+  #Options_Set(opt,"-solver petscksp -ksp_type cg -pc_type sor")
   
   Module_ComputeProblem(modul,d)
   

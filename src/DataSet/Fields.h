@@ -44,7 +44,7 @@ struct Fields_t {
   public:
   size_t GetCapacity() {return Fields_MaxNbOfFields;}
   template<typename... Args>
-  void EmplaceBack(const std::string&,const Args&...);
+  void EmplaceBack(const std::string&,Args&&...);
 
   public:
   size_t GetNbOfFields() const {return _n_ch;}
@@ -60,17 +60,18 @@ struct Fields_t {
 } ;
 
 
+#include <utility>
 #include "Field.h"
 
   template<typename... Args>
-  inline void Fields_t::EmplaceBack(const std::string& type,const Args&... args) {
+  inline void Fields_t::EmplaceBack(const std::string& type,Args&&... args) {
     Field_t* field = _ch + _n_ch;
     
     if(_n_ch >= GetCapacity()) {
       throw std::length_error("Maximum number of fields reached");
     }
 
-    Field_Set(field,type,args...);
+    Field_Set(field,type,std::forward<Args>(args)...);
     _n_ch++;
   }
 

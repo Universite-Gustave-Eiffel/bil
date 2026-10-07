@@ -1,6 +1,10 @@
 #ifndef MPIMANAGER_H
 #define MPIMANAGER_H
 
+#include "BilConfig.h"
+
+#if defined HAVE_MPI
+
 #include <mpi.h>
 #include <stdexcept>
 #include <iostream>
@@ -116,4 +120,5 @@ struct MPIManager_t {
     return(rank);
   }
 };
+#endif
 #endif

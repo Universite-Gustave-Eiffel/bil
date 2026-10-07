@@ -46,7 +46,7 @@ extern void           (Field_Scan)                 (Field_t*,DataFile_t*) ;
 #define FieldAffine_SetGradient(FLD,A)     ((FLD)->_g = (A))
 #define FieldAffine_SetCoordinate(FLD,A)   ((FLD)->_x = (A))
 
-#define FieldAffine_Set(FLD,A,B,C)           ((FLD)->Set(A,B,C))
+#define FieldAffine_Set(FLD,...)           ((FLD)->Set(__VA_ARGS__))
 
 
 /* FieldGrid */
@@ -72,7 +72,7 @@ extern FieldGrid_t*   (FieldGrid_Create)(char const*) ;
 #define FieldGrid_SetCoordinateAlongZ(FLD,A)  ((FLD)->_z = (A))
 #define FieldGrid_SetValue(FLD,A)             ((FLD)->_v = (A))
 
-#define FieldGrid_Set(FLD,A)       ((FLD)->Set(A))
+#define FieldGrid_Set(FLD,...)       ((FLD)->Set(__VA_ARGS__))
 #define FieldGrid_Delete(FLD)      (((FieldGrid_t*)FLD)->Delete())
 
 
@@ -83,7 +83,7 @@ extern FieldGrid_t*   (FieldGrid_Create)(char const*) ;
 #define FieldConstant_SetValue(FLD,A)               ((FLD)->_v = (A))
 #define FieldConstant_SetRandomRangeLength(FLD,A)   ((FLD)->_ranlen = (A))
 
-#define FieldConstant_Set(FLD,A,B)           ((FLD)->Set(A,B))
+#define FieldConstant_Set(FLD,...)           ((FLD)->Set(__VA_ARGS__))
 
 //#include<variant>
 //using FieldFormat_t = std::variant<FieldAffine_t,FieldGrid_t,FieldRandom_t> ;
@@ -98,12 +98,11 @@ struct FieldAffine_t {
   double _x[3] ;              /* coordinates of A */
 
   public:
-  template<typename... Args>
-  void Set(Args...) {
-    throw std::runtime_error("FieldAffine_t::Set: unknown type") ;
+  void Set(std::string const&){
+    throw std::invalid_argument("FieldAffine_t::Set: unknown type") ;
   }
-  void Set(double const& v,const std::vector<double>& g,const std::vector<double>& x) {
-    Set(v,g.data(),x.data());
+  void Set(double const&,double const& = 0) {
+    throw std::invalid_argument("FieldAffine_t::Set: unknown type") ;
   }
   void Set(double const& v,double const* g,double const* x) {
     _v = v ;
@@ -149,9 +148,11 @@ struct FieldGrid_t {
   public:
   void Delete();
 
-  template<typename... Args>
-  void Set(Args...) {
-    throw std::runtime_error("FieldGrid_t::Set: unknown type") ;
+  void Set(double const&,double const& = 0) {
+    throw std::invalid_argument("FieldGrid_t::Set: unknown type") ;
+  }
+  void Set(double const&,double const*,double const*) {
+    throw std::invalid_argument("FieldGrid_t::Set: unknown type") ;
   }
   void Set(std::string const&);
 
@@ -266,9 +267,11 @@ struct FieldRandom_t {      /* Random field */
   double _ranlen ;           /* Random range length */
 
   public:
-  template<typename... Args>
-  void Set(Args...) {
-    throw std::runtime_error("FieldRandom_t::Set: unknown type") ;
+  void Set(double const&,double const*,double const*) {
+    throw std::invalid_argument("FieldRandom_t::Set: unknown type") ;
+  }
+  void Set(std::string const&){
+    throw std::invalid_argument("FieldRandom_t::Set: unknown type") ;
   }
   void Set(double const& v,double const& ranlen = 0) {
     _v = v ;
@@ -293,6 +296,7 @@ struct FieldRandom_t {      /* Random field */
 
 #include <string>
 #include <tuple>
+#include <stdexcept>
 
 struct Field_t {
   private:
@@ -310,7 +314,7 @@ struct Field_t {
   void DeleteStorage();
 
   template<typename... Args>
-  void Set(const std::string&,const Args&...);
+  void Set(const std::string&,Args&&...);
 
   double ComputeValueAtPoint(double* x,const int& dim = 3){
     std::string type(_type);
@@ -323,7 +327,7 @@ struct Field_t {
     } else if(type.compare("random") == 0) {
       v = ((FieldRandom_t*)_store)->ComputeValueAtPoint(x) ;
     } else {
-      throw std::runtime_error("Field_t::ComputeValueAtPoint: unknown type") ;
+      throw std::invalid_argument("Field_t::ComputeValueAtPoint: unknown type") ;
     }
 
     return(v) ;
@@ -338,11 +342,13 @@ struct Field_t {
     } else if(type.compare("random") == 0) {
       ((FieldRandom_t*)_store)->Print() ;
     } else {
-      throw std::runtime_error("Field_t::Print: unknown type") ;
+      throw std::invalid_argument("Field_t::Print: unknown type") ;
     }
   }
 } ;
 
+
+#include <utility>
 #include "Mry.h"
 
   inline void FieldGrid_t::Delete(){
@@ -385,25 +391,25 @@ struct Field_t {
   }
 
   template<typename... Args>
-  inline void Field_t::Set(const std::string& type,const Args&... args){
+  inline void Field_t::Set(const std::string& type,Args&&... args){
     DeleteStorage();
 
     strcpy(_type,type.c_str());
 
     if(type.compare("affine") == 0) {
       _store = (FieldAffine_t*) Mry_New(FieldAffine_t) ;
-    ((FieldAffine_t*)_store)->Set(args...) ;
+    ((FieldAffine_t*)_store)->Set(std::forward<Args>(args)...) ;
 
     } else if(type.compare("grid") == 0) {
       _store = (FieldGrid_t*) Mry_New(FieldGrid_t) ;
-      ((FieldGrid_t*)_store)->Set(args...) ;
+      ((FieldGrid_t*)_store)->Set(std::forward<Args>(args)...) ;
 
     } else if(type.compare("random") == 0) {
       _store = (FieldRandom_t*) Mry_New(FieldRandom_t) ;
-      ((FieldRandom_t*)_store)->Set(args...) ;
+      ((FieldRandom_t*)_store)->Set(std::forward<Args>(args)...) ;
 
     } else {
-      throw std::runtime_error("Field_t::Set: unknown type") ;
+      throw std::invalid_argument("Field_t::Set: unknown type") ;
     }
   }
 
