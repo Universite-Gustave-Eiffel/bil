@@ -215,10 +215,6 @@ struct Material_t {           /* material */
   void SetParentMaterials(Materials_t* a){_parentmaterials = a ;}
   void SetModelIndex(size_t const& a){_modelindex = a ;}
 
-  template<typename... Args>
-  void Set(Args... args) {
-    throw std::runtime_error("Material_t::Set: Not implemented");
-  }
   void Set(std::string const& name){Set(name.c_str());}
   void Set(char const*);
   void Set(Model_t*,size_t const&);
@@ -226,9 +222,6 @@ struct Material_t {           /* material */
   void Set(char const*,double const&);
   void Set(std::string const& name,std::string const& line){Set(name.c_str(),line.c_str());}
   void Set(char const*,char const*);
-  #if 0
-  void Set(DataFile_t*);
-  #endif
   void Finalize(void);
 
   void Print(void);

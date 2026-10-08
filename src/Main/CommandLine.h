@@ -52,8 +52,6 @@ struct CommandLine_t {
   void SetNbOfArgs(int argc){_argc = argc;}
   void SetArg(char** argv){_argv = argv;}
 
-  void Set(...) = delete;
-
   void Set(std::vector<std::string>& args) {
     Set(static_cast<std::vector<std::string> const&>(args));
   }

@@ -26,13 +26,13 @@ namespace jlcxx {
   MIRROR(Module_t);
   MIRROR(ObVals_t);
   MIRROR(Options_t);
+  MIRROR(Periodicities_t);
   MIRROR(Points_t);
   MIRROR(PosFilesForGMSH_t);
   MIRROR(Session_t);
   MIRROR(TextFile_t);
   MIRROR(TimeStep_t);
   MIRROR(Units_t);
-  //MIRROR(InternationalSystemOfUnits_t);
   
   //template<> struct DefaultConstructible<Module_t> : std::false_type {};
 }
@@ -59,13 +59,13 @@ JLCXX_MODULE define_julia_module(jlcxx::Module& mod) {
   ADD_TYPE(Module_t);
   ADD_TYPE(ObVals_t);
   ADD_TYPE(Options_t);
+  ADD_TYPE(Periodicities_t);
   ADD_TYPE(Points_t);
   ADD_TYPE(PosFilesForGMSH_t);
   ADD_TYPE(Session_t);
   ADD_TYPE(TextFile_t);
   ADD_TYPE(TimeStep_t);
   ADD_TYPE(Units_t);
-  //ADD_TYPE(InternationalSystemOfUnits_t);
   
   
 
@@ -101,7 +101,9 @@ JLCXX_MODULE define_julia_module(jlcxx::Module& mod) {
   
   /* Dates */
   MEM_METHOD(Dates,Set,size_t const&,double const*);
-  mod.method(JLNAME(Dates,Set),[](Dates_t* o,jlcxx::ArrayRef<double> a1) {std::vector<double> b1(a1.begin(),a1.end());return o->Set(b1);});
+  mod.method(JLNAME(Dates,Set),[](Dates_t* o,jlcxx::ArrayRef<double> a1) {
+  std::vector<double> b1(a1.begin(),a1.end());
+  return o->Set(b1);});
   
   /* Fields */
   MEM_METHOD(Fields,EmplaceBack,std::string const&,double const&,double const*,double const*);
@@ -111,10 +113,15 @@ JLCXX_MODULE define_julia_module(jlcxx::Module& mod) {
   
   /* Functions */
   MEM_METHOD(Functions,EmplaceBack,std::string const&,size_t const&,double const*,double const*);
+  mod.method(JLNAME(Functions,EmplaceBack),[](Functions_t* o,std::string const& a1,jlcxx::ArrayRef<double> a2,jlcxx::ArrayRef<double> a3) {
+  std::vector<double> b2(a2.begin(),a2.end());
+  std::vector<double> b3(a3.begin(),a3.end());
+  return o->EmplaceBack(a1,b2,b3);});
   MEM_METHOD(Functions,EmplaceBack,std::string const&,char const*);
 
   /* Geometry */
   MEM_METHOD(Geometry,Set,unsigned short int,std::string&);
+  MEM_METHOD(Geometry,GetPeriodicities);
 
   /* IConds */
   MEM_METHOD(IConds,EmplaceBack,std::string const&,std::string const&,size_t const&,size_t const&);
@@ -153,6 +160,9 @@ JLCXX_MODULE define_julia_module(jlcxx::Module& mod) {
   /* Options */
   MEM_METHOD(Options,Set,char const*);
   
+  /* Periodicities */
+  MEM_METHOD(Periodicities,EmplaceBack,char const*,char const*,double const*);
+  
   /* Points */
   MEM_METHOD(Points,EmplaceBack,double const*);
   MEM_METHOD(Points,EmplaceBack,double const*,char const*);
@@ -166,6 +176,7 @@ JLCXX_MODULE define_julia_module(jlcxx::Module& mod) {
   
   /* Session */
   MEM_STATICMETHOD(Session,Open);
+  MEM_STATICMETHOD(Session,Close);
   
   /* TimeStep */
   MEM_METHOD(TimeStep,Set,double const&,double const&);

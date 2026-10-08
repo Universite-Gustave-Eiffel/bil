@@ -237,7 +237,7 @@
 
 struct String_t {
   /* inline specifier is used to define the variables 
-   * otherside they would have been declared only. */
+   * otherwise they would have been declared only. */
   private:
   inline static char* _tokens[String_MaxNbOfKeyWords];
   inline static char  _save[String_MaxLengthOfKeyWords];

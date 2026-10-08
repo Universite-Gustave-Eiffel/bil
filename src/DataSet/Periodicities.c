@@ -34,51 +34,12 @@ Periodicities_t* (Periodicities_New)(void)
     Periodicity_t* periodicity = Mry_Create(Periodicity_t,n,Periodicity_New()) ;
 
     Periodicities_SetPeriodicity(periodicities,periodicity) ;
-    Periodicities_SetNbOfPeriodicities(periodicities,n) ;
   }
   
   return(periodicities) ;
 }
 
 
-#if 0
-Periodicities_t* (Periodicities_Create)(DataFile_t* datafile)
-{
-  char* filecontent = DataFile_GetFileContent(datafile) ;
-  char* c = String_FindToken(filecontent,"PERIODICITIES,Periodicities",",") ;
-  size_t   n_per = (c = String_SkipLine(c)) ? String_ToSize_t(c) : 0 ;
-  Periodicities_t* periodicities = Periodicities_New() ;
-  
-  {
-    int i = String_ToInt(c) ;
-
-    if(i <= 0) return(periodicities) ;
-  }
-  
-  Message_Direct("Enter in %s","Periodicities") ;
-  Message_Direct("\n") ;
-
-
-  /* Scan the datafile */
-  {    
-    c = String_SkipLine(c) ;
-      
-    DataFile_SetCurrentPositionInFileContent(datafile,c) ;
-    
-    Periodicities_SetNbOfPeriodicities(periodicities,n_per) ;
-    for(size_t i = 0 ; i < n_per ; i++) {
-      Periodicity_t* periodicity = Periodicities_GetPeriodicity(periodicities) + i ;
-      
-      Message_Direct("Enter in %s %d","Periodicity",i+1) ;
-      Message_Direct("\n") ;
-
-      Periodicity_Scan(periodicity,datafile) ;
-    }
-  }
-  
-  return(periodicities) ;
-}
-#else
 Periodicities_t* (Periodicities_Create)(DataFile_t* datafile)
 {
   Periodicities_t* periodicities = Periodicities_New() ;
@@ -87,7 +48,6 @@ Periodicities_t* (Periodicities_Create)(DataFile_t* datafile)
 
   return(periodicities) ;
 }
-#endif
 
 
 

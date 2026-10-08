@@ -34,7 +34,7 @@ module BilWrap
     @initcxx
   end
   
-  export Session_Open
+  export BConds_EmplaceBack
   
   export DataSet_New,
          DataSet_Delete,
@@ -59,47 +59,51 @@ module BilWrap
          DataSet_Finalize,
          DataSet_Print
   
-  export Options_Set
-  
-  export Units_EmplaceBack
-  
-  export Geometry_Set
-  
-  export Mesh_Set,
-         Mesh_WriteInversePermutation
+  export Dates_Set
   
   export Fields_EmplaceBack
   
   export Functions_EmplaceBack
   
+  export Geometry_Set,
+         Geometry_GetPeriodicities
+  
   export IConds_EmplaceBack
-  
-  export BConds_EmplaceBack
-  
-  export Loads_EmplaceBack
-  
-  export Dates_Set
-  
-  export Points_EmplaceBack
-  
-  export ObVals_EmplaceBack
-  
-  export PosFilesForGMSH_Create,
-         PosFilesForGMSH_Delete,
-         PosFilesForGMSH_ParsedFileFormat,
-         PosFilesForGMSH_ASCIIFileFormat
   
   export IterProcess_Set
   
-  export TimeStep_Set
-  
-  export Models_EmplaceBack
+  export Loads_EmplaceBack
   
   export Materials_EmplaceBack
   
   export Material_Set,
          Material_Finalize
   
+  export Mesh_Set,
+         Mesh_WriteInversePermutation
+  
+  export Models_EmplaceBack
+  
   export Module_Set,
          Module_ComputeProblem
+  
+  export ObVals_EmplaceBack
+  
+  export Options_Set
+  
+  export Periodicities_EmplaceBack
+  
+  export Points_EmplaceBack
+  
+  export PosFilesForGMSH_Create,
+         PosFilesForGMSH_Delete,
+         PosFilesForGMSH_ParsedFileFormat,
+         PosFilesForGMSH_ASCIIFileFormat
+  
+  export Session_Open,
+         Session_Close
+  
+  export TimeStep_Set
+  
+  export Units_EmplaceBack
 end

@@ -90,7 +90,6 @@ struct Geometry_t {
   void  Set(unsigned short int dim,const std::string& isym) {
     SetDimension(dim);
     SetNoSymmetry();
-    SetPeriodicities(nullptr);
 
     /* The symmetry */
     if(dim > 0 && dim < 3) {
@@ -101,11 +100,11 @@ struct Geometry_t {
           return std::tolower(c);
       });
 
-      if(!sym.compare("plane")){
+      if(sym == "plane"){
         SetPlaneSymmetry();
-      } else if(!sym.compare("axis")){
+      } else if(sym == "axis"){
         SetCylindricalSymmetry();
-      } else if(!sym.compare("sphe")){
+      } else if(sym == "sphe"){
         SetSphericalSymmetry();
       } else {
         SetPlaneSymmetry();

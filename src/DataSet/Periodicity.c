@@ -16,7 +16,7 @@ Periodicity_t* (Periodicity_New)(void)
   {
     double* vector = (double*) Mry_New(double,3) ;
     
-    Periodicity_GetPeriodVector(periodicity) = vector ;
+    Periodicity_SetPeriodVector(periodicity,vector) ;
   }
   
   
@@ -24,8 +24,8 @@ Periodicity_t* (Periodicity_New)(void)
   {
     char* name = (char*) Mry_New(char,2*Periodicity_MaxLengthOfRegionName) ;
     
-    Periodicity_GetMasterRegionName(periodicity) = name ;
-    Periodicity_GetSlaveRegionName(periodicity) = name + Periodicity_MaxLengthOfRegionName ;
+    Periodicity_SetMasterRegionName(periodicity,name) ;
+    Periodicity_SetSlaveRegionName(periodicity,name + Periodicity_MaxLengthOfRegionName) ;
   }
   
   return(periodicity) ;
@@ -66,7 +66,7 @@ void (Periodicity_Scan)(Periodicity_t* periodicity,DataFile_t* datafile)
       int n = String_FindAndScanExp(line,"MasterRegion",","," = %s",name) ;
         
       if(n) {
-        Periodicity_GetMasterRegion(periodicity) = atoi(name) ;
+        Periodicity_SetMasterRegion(periodicity,atoi(name)) ;
         strncpy(Periodicity_GetMasterRegionName(periodicity),name,Periodicity_MaxLengthOfRegionName)  ;
       } else {
         arret("Periodicity_Scan: no master region") ;
@@ -80,7 +80,7 @@ void (Periodicity_Scan)(Periodicity_t* periodicity,DataFile_t* datafile)
       int n = String_FindAndScanExp(line,"SlaveRegion",","," = %s",name) ;
         
       if(n) {
-        Periodicity_GetSlaveRegion(periodicity) = atoi(name) ;
+        Periodicity_SetSlaveRegion(periodicity,atoi(name)) ;
         strncpy(Periodicity_GetSlaveRegionName(periodicity),name,Periodicity_MaxLengthOfRegionName)  ;
       } else {
         arret("Periodicity_Scan: no slave region") ;
