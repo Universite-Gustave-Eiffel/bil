@@ -95,6 +95,8 @@ int SetModelProp(Model_t* model)
       Model_CopyNameOfUnknown(model,i,name) ;
     }
   }
+
+  Model_SetComputePropertyIndex(model,&pm);
   
   return(0) ;
 }
@@ -106,7 +108,9 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
 {
   int  NbOfProp = 100 ;
   
-  Material_ScanProperties(mat,datafile,pm) ;
+  if(datafile) {
+    Material_ScanProperties(mat,datafile,pm) ;
+  }
   
   /* Number of equations */
   {

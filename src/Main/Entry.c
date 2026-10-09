@@ -160,7 +160,7 @@ void Entry_CLI(Entry_t* entry)
     char** argv = (char**) Context_GetPrintModel(ctx) ;
     
     /* The standard requires that argv[argc] be a null pointer */
-    if(argv[1]) {
+    if(argv[1] && strcmp(argv[1],"")) {
       if(!strncmp(argv[1],"all",strlen(argv[1]))) {
         Models_PrintAll(NULL,stdout) ;
       } else {
@@ -177,7 +177,7 @@ void Entry_CLI(Entry_t* entry)
     char** argv = (char**) Context_GetPrintModule(ctx) ;
     
     /* The standard requires that argv[argc] be a null pointer */
-    if(argv[1]) {
+    if(argv[1] && strcmp(argv[1],"")) {
       if(!strncmp(argv[1],"all",strlen(argv[1]))) {
         Modules_PrintAll(NULL) ;
       } else {

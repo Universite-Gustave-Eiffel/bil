@@ -105,6 +105,8 @@ int SetModelProp(Model_t *model)
   for(i = 0 ; i < dim ; i++) {
     Model_GetSequentialIndexOfUnknown(model)[E_mec+i] = 0 ;
   }
+
+  Model_SetComputePropertyIndex(model,&pm);
   
   return(0) ;
 }
@@ -114,7 +116,9 @@ int ReadMatProp(Material_t *mat,DataFile_t *datafile)
 {
   int  NbOfProp = 15 ;
   
-  Material_ScanProperties(mat,datafile,pm) ;
+  if(datafile){
+    Material_ScanProperties(mat,datafile,pm) ;
+  }
   
   return(NbOfProp) ;
 }

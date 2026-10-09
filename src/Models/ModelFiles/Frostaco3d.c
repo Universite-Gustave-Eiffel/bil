@@ -447,7 +447,7 @@ int SetModelProp(Model_t* model)
     Model_CopyNameOfUnknown(model,U_Mech + i,name_unk[i]) ;
   }
   
-  Model_SetComputePropertyIndex(model,pm) ;
+  Model_SetComputePropertyIndex(model,&pm) ;
   
   Model_GetSequentialIndexOfUnknown(model)[E_The] = 0 ;
   Model_GetSequentialIndexOfUnknown(model)[E_Mass] = 1 ;
@@ -468,23 +468,19 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
   int  NbOfProp = 12 ;
 
   /* By default */
-  {
-    int i ;
-    
-    for(i = 0 ; i < NbOfProp ; i++) {
+  if(datafile){    
+    for(int i = 0 ; i < NbOfProp ; i++) {
       Material_GetProperty(mat)[i] = 0. ;
     }
-  }
   
-  ComputePhysicoChemicalProperties() ;
+    ComputePhysicoChemicalProperties() ;
   
-  /* Pre-initialization */
-  {
+    /* Pre-initialization */
     Material_GetProperty(mat)[pm("p0")]  = p_m ;
     Material_GetProperty(mat)[pm("T0")]  = T_m ;
-  }
   
-  Material_ScanProperties(mat,datafile,pm) ;
+    Material_ScanProperties(mat,datafile,pm) ;
+  }
   
   if(Material_GetProperty(mat)[pm("Young")] == 0) {
     double k_s  = Material_GetPropertyValue(mat,"k_s") ;

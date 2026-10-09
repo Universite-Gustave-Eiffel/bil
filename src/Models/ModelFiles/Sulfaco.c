@@ -779,6 +779,8 @@ int SetModelProp(Model_t* model)
     Model_CopyNameOfUnknown(model,E_eneutral, "c_oh") ;
   #endif
 #endif
+
+  Model_SetComputePropertyIndex(model,&pm);
   
   return(0) ;
 }
@@ -789,7 +791,7 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
 {
   int  NbOfProp = 28 ;
 
-  {
+  if(datafile){
     /* Self-initialization */
     Material_GetProperty(mat)[pm("N_CH")]   = 1 ;
     Material_GetProperty(mat)[pm("N_Si")]   = 1 ;
@@ -810,6 +812,9 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
     Material_GetProperty(mat)[pm("B_p")] = -1 ;
 
     Material_ScanProperties(mat,datafile,pm) ;
+  }
+
+  {
     
     if(Material_GetProperty(mat)[pm("B_r")] < 0) {
       double c = Material_GetProperty(mat)[pm("A_r")] ;

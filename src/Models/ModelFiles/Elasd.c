@@ -287,14 +287,15 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
  *  Return the nb of (scalar) properties of the model */
 {
   int NbOfProp = 36 ;
-  int i ;
 
   /* Par defaut tout a 0 */
-  for(i = 0 ; i < NbOfProp ; i++) Material_GetProperty(mat)[i] = 0. ;
+  if(datafile){
+    for(int i = 0 ; i < NbOfProp ; i++) Material_GetProperty(mat)[i] = 0. ;
   
-  damagemodel = -1 ;
+    damagemodel = -1 ;
   
-  Material_ScanProperties(mat,datafile,pm) ;
+    Material_ScanProperties(mat,datafile,pm) ;
+  }
   
   
   

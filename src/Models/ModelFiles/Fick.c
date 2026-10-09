@@ -251,7 +251,7 @@ int SetModelProp(Model_t* model)
 #endif
 
 
-  Model_SetComputePropertyIndex(model,pm) ;
+  Model_SetComputePropertyIndex(model,&pm) ;
   
   ComputePhysicoChemicalProperties(TEMPERATURE) ;
   
@@ -268,13 +268,13 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
   
     
   /* Default initialization */
-  {
+  if(datafile){
     ComputePhysicoChemicalProperties(TEMPERATURE) ;
     
     Material_GetPropertyValue(mat,"d_solute") = d_solute ;
-  }
 
-  Material_ScanProperties(mat,datafile,pm) ;
+    Material_ScanProperties(mat,datafile,pm) ;
+  }
   
   return(n_donnees) ;
 }

@@ -685,6 +685,7 @@ int SetModelProp(Model_t* model)
   #endif
 #endif
 
+  Model_SetComputePropertyIndex(model,&pm);
   Model_SetComputeMaterialProperties(model,&GetProperties);
   
   return(0) ;
@@ -696,7 +697,7 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
 {
   int  NbOfProp = ((int) sizeof(Parameters_t)/sizeof(double)) ;
 
-  {
+  if(datafile){
     /* Self-initialization */
     Material_GetProperty(mat)[pm("InitialContent_CH")]   = 1 ;
     Material_GetProperty(mat)[pm("InitialContent_CSH")]   = 1 ;
@@ -717,7 +718,9 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
     Material_GetProperty(mat)[pm("DissolutionRateAtPoreWall_AFt")] = -1 ;
 
     Material_ScanProperties(mat,datafile,pm) ;
-    
+  }
+
+  {
     if(Material_GetProperty(mat)[pm("DissolutionRateAtInterface_AFt")] < 0) {
       double c = Material_GetProperty(mat)[pm("PrecipitationRateAtInterface_AFt")] ;
       

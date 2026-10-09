@@ -137,6 +137,8 @@ int SetModelProp(Model_t *model)
     sprintf(name_unk,"u_%d",i + 1) ;
     Model_CopyNameOfUnknown(model,I_u + i,name_unk) ;
   }
+
+  Model_SetComputePropertyIndex(model,&pm);
   
   return(0) ;
 }
@@ -147,11 +149,11 @@ int ReadMatProp(Material_t *mat,DataFile_t *datafile)
 /** Read the material properties in the stream file ficd */
 {
   int NbOfProp = 12 ;
-  int i ;
 
   /* Par defaut tout a 0 */
-  for(i = 0 ; i < NbOfProp ; i++) Material_GetProperty(mat)[i] = 0. ;
-  { /* initialisation automatique (a completer) SAEID */
+  if(datafile){
+    for(int i = 0 ; i < NbOfProp ; i++) Material_GetProperty(mat)[i] = 0. ;
+    /* initialisation automatique (a completer) SAEID */
     Material_GetProperty(mat)[pm("K_m")]     = 2.e8 ;
     Material_GetProperty(mat)[pm("mu_co2")]  = 1.e-3 ;
     Material_GetProperty(mat)[pm("gravite")] = 0;
@@ -164,9 +166,9 @@ int ReadMatProp(Material_t *mat,DataFile_t *datafile)
     Material_GetProperty(mat)[pm("sig0_33")] = 0 ;
     Material_GetProperty(mat)[pm("young")]   = 0.8e9;
     Material_GetProperty(mat)[pm("poisson")] = 0.25;
-  }
 
-  Material_ScanProperties(mat,datafile,pm) ;
+    Material_ScanProperties(mat,datafile,pm) ;
+  }
   
   /* Create a new curve: the tangent Biot's coefficient 
    * by deriving adsorption induced pressure */

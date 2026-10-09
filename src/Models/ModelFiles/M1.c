@@ -81,6 +81,8 @@ int SetModelProp(Model_t *model)
   Model_SetNbOfEquations(model,NEQ) ;
   Model_CopyNameOfEquation(model,E_liq,"liq") ;
   Model_CopyNameOfUnknown(model,I_p_l,"p_l") ;
+
+  Model_SetComputePropertyIndex(model,&pm);
   
   return(0) ;
 }
@@ -94,8 +96,10 @@ int ReadMatProp(Material_t *mat,DataFile_t *datafile)
 
   if(dim > 1) arret("ReadMatProp : dimension > 1 non prevue") ;
   
-  Material_GetProperty(mat)[pm("schema")] = -1 ;
-  Material_ScanProperties(mat,datafile,pm) ;
+  if(datafile){
+    Material_GetProperty(mat)[pm("schema")] = -1 ;
+    Material_ScanProperties(mat,datafile,pm) ;
+  }
   
   return(n_donnees) ;
 }

@@ -264,15 +264,9 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
 {
   int  NbOfProp = ((int) sizeof(Parameters_t)/sizeof(double)) ;
   
-    
-  /* Default initialization */
-  {
-    //ComputePhysicoChemicalProperties(TEMPERATURE) ;
-    
-    //Material_GetPropertyValue(mat,"d_solute") = d_solute ;
+  if(datafile){
+    Material_ScanProperties(mat,datafile,pm) ;
   }
-
-  Material_ScanProperties(mat,datafile,pm) ;
   
   return(NbOfProp) ;
 }

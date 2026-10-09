@@ -235,7 +235,7 @@ int SetModelProp(Model_t* model)
     Model_CopyNameOfUnknown(model,U_u + i,name_unk[i]) ;
   }
   
-  Model_SetComputePropertyIndex(model,pm) ;
+  Model_SetComputePropertyIndex(model,&pm) ;
     
   return(0) ;
 }
@@ -247,12 +247,13 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
  *  Return the nb of (scalar) properties of the model */
 {
   int  NbOfProp = 21 ;
-  int i ;
 
   /* Par defaut tout a 0 */
-  for(i = 0 ; i < NbOfProp ; i++) Material_GetProperty(mat)[i] = 0. ;
+  if(datafile){
+    for(int i = 0 ; i < NbOfProp ; i++) Material_GetProperty(mat)[i] = 0. ;
   
-  Material_ScanProperties(mat,datafile,pm) ;
+    Material_ScanProperties(mat,datafile,pm) ;
+  }
   
   
   /* Plasticity */

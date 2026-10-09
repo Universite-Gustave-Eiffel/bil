@@ -230,6 +230,8 @@ int SetModelProp(Model_t *model)
 
   Model_CopyNameOfUnknown(model,U_P_L,"p_l") ;
   Model_CopyNameOfUnknown(model,U_P_G,"p_g") ;
+
+  Model_SetComputePropertyIndex(model,&pm);
   
   return(0) ;
 }
@@ -240,14 +242,13 @@ int ReadMatProp(Material_t *mat,DataFile_t *datafile)
 {
   int  NbOfProp = 6 ;
   
-  
-  {
+  if(datafile){
     /* Self-initialization */
     Material_GetProperty(mat)[pm("kg_int")] = 0 ;
     Material_GetProperty(mat)[pm("Temperature")] = 293 ;
-  }
 
-  Material_ScanProperties(mat,datafile,pm) ;
+    Material_ScanProperties(mat,datafile,pm) ;
+  }
 
   {
     kg_int = Material_GetProperty(mat)[pm("kg_int")] ;

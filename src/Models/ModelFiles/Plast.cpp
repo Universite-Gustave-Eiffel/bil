@@ -382,9 +382,11 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
   #endif
 
   /* Par defaut tout a 0 */
-  Material_SetPropertiesToZero(mat,NbOfProp);
-  plasticmodel = None ;
-  Material_ScanProperties(mat,datafile,pm) ;
+  if(datafile){
+    Material_SetPropertiesToZero(mat,NbOfProp);
+    plasticmodel = None ;
+    Material_ScanProperties(mat,datafile,pm) ;
+  }
 
   /* Plasticity */
   {

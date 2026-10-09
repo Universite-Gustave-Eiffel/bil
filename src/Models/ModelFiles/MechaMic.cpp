@@ -262,21 +262,13 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
   int NbOfProp = 21 ;
 
   /* Par defaut tout a 0 */
-  {
-    int i ;
-    
-    for(i = 0 ; i < NbOfProp ; i++) {
+  if(datafile){   
+    for(int i = 0 ; i < NbOfProp ; i++) {
       Material_GetProperty(mat)[i] = 0. ;
     }
-  }
-  
-  /* Pre-initialization */
-  {
-    //Material_GetProperty(mat)[pm("charlen")] = 1 ;
-  }
-  
 
-  Material_ScanProperties(mat,datafile,pm) ;
+    Material_ScanProperties(mat,datafile,pm) ;
+  }
 
 
   /* The dataset and solver for the microstructure */

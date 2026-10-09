@@ -845,7 +845,7 @@ int SetModelProp(Model_t* model)
 #endif
   
   
-  Model_SetComputePropertyIndex(model,pm) ;
+  Model_SetComputePropertyIndex(model,&pm) ;
   
   Model_GetSequentialIndexOfUnknown(model)[E_Sulfur] = 0 ;
   Model_GetSequentialIndexOfUnknown(model)[E_Calcium] = 0 ;
@@ -873,7 +873,7 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
 {
   int  NbOfProp = 40 ;
 
-  {
+  if(datafile){
     /* Self-initialization */
     Material_GetProperty(mat)[pm("N_CH")]   = 1 ;
     Material_GetProperty(mat)[pm("N_Si")]   = 1 ;
@@ -896,6 +896,9 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
     damagemodel = -1 ;
     
     Material_ScanProperties(mat,datafile,pm) ;
+  }
+
+  {
     
     if(Material_GetProperty(mat)[pm("B_i")] < 0) {
       double c = Material_GetProperty(mat)[pm("A_i")] ;

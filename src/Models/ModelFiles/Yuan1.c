@@ -444,6 +444,8 @@ int SetModelProp(Model_t *model)
   Model_CopyNameOfUnknown(model,I_C_K,    "c_k"     ) ;
   Model_CopyNameOfUnknown(model,I_C_Cl,   "c_cl"    ) ;
 
+  Model_SetComputePropertyIndex(model,&pm);
+
   {
     double temperature = 293 ;
     
@@ -461,7 +463,7 @@ int ReadMatProp(Material_t *mat,DataFile_t *datafile)
 {
   int  NbOfProp = 6 ;
 
-  {
+  if(datafile){
     /* Self-initialization */
     Material_GetProperty(mat)[pm("N_CH")]  = 1 ;
     Material_GetProperty(mat)[pm("N_Si")]  = 1 ;
@@ -469,7 +471,9 @@ int ReadMatProp(Material_t *mat,DataFile_t *datafile)
     Material_GetProperty(mat)[pm("T_CaS")] = 600 ;
   
     Material_ScanProperties(mat,datafile,pm) ;
+  }
 
+  {
     t_ch     = Material_GetProperty(mat)[pm("T_CH")] ;
     t_cas    = Material_GetProperty(mat)[pm("T_CaS")] ;
 

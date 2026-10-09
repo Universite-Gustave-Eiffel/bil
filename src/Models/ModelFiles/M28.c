@@ -318,6 +318,8 @@ int SetModelProp(Model_t *model)
 
   Model_CopyNameOfUnknown(model,U_H_r,"h_r") ;
   Model_CopyNameOfUnknown(model,U_C_s,"c_s") ;
+
+  Model_SetComputePropertyIndex(model,&pm);
   
   return(0) ;
 }
@@ -334,7 +336,9 @@ int ReadMatProp(Material_t *mat,DataFile_t *datafile)
     if(dim > 1) arret("M28: dimension > 1 not available") ;
   }
 
-  Material_ScanProperties(mat,datafile,pm) ;
+  if(datafile){
+    Material_ScanProperties(mat,datafile,pm) ;
+  }
 
 
 #ifdef NOTDEFINED

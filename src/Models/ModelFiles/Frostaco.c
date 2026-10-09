@@ -442,12 +442,12 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
   ComputePhysicoChemicalProperties() ;
   
   /* Pre-initialization */
-  {
+  if(datafile){
     Material_GetProperty(mat)[pm("p0")]  = p_m ;
     Material_GetProperty(mat)[pm("T0")]  = T_m ;
-  }
   
-  Material_ScanProperties(mat,datafile,pm) ;
+    Material_ScanProperties(mat,datafile,pm) ;
+  }
   
   return(NbOfProp) ;
 }

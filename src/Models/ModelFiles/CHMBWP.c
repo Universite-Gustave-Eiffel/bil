@@ -512,8 +512,11 @@ int SetModelProp(Model_t *model)
 int ReadMatProp(Material_t *mat,DataFile_t *datafile)
 /* Reading of material properties in file ficd */
 {
-  int  NbOfProp = 35;     
-  Material_ScanProperties(mat,datafile,pm) ;
+  int  NbOfProp = 35;
+
+  if(datafile){
+    Material_ScanProperties(mat,datafile,pm) ;
+  }
   return(NbOfProp) ;
 }
 

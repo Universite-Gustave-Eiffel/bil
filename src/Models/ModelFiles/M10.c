@@ -151,6 +151,8 @@ int SetModelProp(Model_t *model)
   Model_CopyNameOfEquation(model,E_liq, "liq") ;
 
   Model_CopyNameOfUnknown(model,U_P_L,"p_l") ;
+
+  Model_SetComputePropertyIndex(model,&pm);
   
   return(0) ;
 }
@@ -162,9 +164,11 @@ int ReadMatProp(Material_t *mat,DataFile_t *datafile)
   int  NbOfProp = 7 ;
 
   /* Par defaut tout a 0 */
-  for(int i = 0 ; i < NbOfProp ; i++) Material_GetProperty(mat)[i] = 0. ;
+  if(datafile){
+    for(int i = 0 ; i < NbOfProp ; i++) Material_GetProperty(mat)[i] = 0. ;
 
-  Material_ScanProperties(mat,datafile,pm) ;
+    Material_ScanProperties(mat,datafile,pm) ;
+  }
   
   return(NbOfProp) ;
 }

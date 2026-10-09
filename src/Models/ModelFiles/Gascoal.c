@@ -366,6 +366,8 @@ int SetModelProp(Model_t* model)
   for(i = 0 ; i < dim ; i++) {
     Model_CopyNameOfUnknown(model,U_dis + i,name_unk[i]) ;
   }
+
+  Model_SetComputePropertyIndex(model,&pm);
   
   return(0) ;
 }
@@ -379,18 +381,14 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
   int dim = Material_GetDimension(mat) ;
 
   /* By default */
-  {
-    int i ;
-    
-    for(i = 0 ; i < NbOfProp ; i++) {
+  if(datafile){   
+    for(int i = 0 ; i < NbOfProp ; i++) {
       Material_GetProperty(mat)[i] = 0. ;
     }
-  }
   
-  ComputePhysicoChemicalProperties() ;
+    ComputePhysicoChemicalProperties() ;
   
-  /* Pre-initialization */
-  {
+    /* Pre-initialization */
     Material_GetProperty(mat)[pm("thickness")] = 1 ;
     Material_GetProperty(mat)[pm("K_m")]     = 2.e8 ;
     Material_GetProperty(mat)[pm("mu_g")]  = 1.e-3 ;
@@ -401,9 +399,9 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
     Material_GetProperty(mat)[pm("poisson")] = 0.25 ;
     
     Material_GetProperty(mat)[pm("axis_3")]  = dim ;
-  }
 
-  Material_ScanProperties(mat,datafile,pm) ;
+    Material_ScanProperties(mat,datafile,pm) ;
+  }
   
   /* Create a new curve: the tangent Biot's coefficient 
    * by deriving adsorption induced pressure */

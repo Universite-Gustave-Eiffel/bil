@@ -587,26 +587,22 @@ int ReadMatProp(Material_t* mat,DataFile_t* datafile)
   int  NbOfProp = ((int) sizeof(Parameters_t)/sizeof(double)) ;
 
   /* By default */
-  {
-    int i ;
-    
-    for(i = 0 ; i < NbOfProp ; i++) {
+  if(datafile){   
+    for(int i = 0 ; i < NbOfProp ; i++) {
       Material_GetProperty(mat)[i] = 0. ;
     }
-  }
   
-  ComputePhysicoChemicalProperties() ;
+    ComputePhysicoChemicalProperties() ;
   
-  /* Pre-initialization */
-  {
+    /* Pre-initialization */
     Material_GetProperty(mat)[pm("Young")] = -1 ;
     Material_GetProperty(mat)[pm("YoungFraction")] = 1 ;
     Material_GetProperty(mat)[pm("thickness")] = 1 ;
     Material_GetProperty(mat)[pm("p0")]  = p_m ;
     Material_GetProperty(mat)[pm("T0")]  = T_m ;
-  }
   
-  Material_ScanProperties(mat,datafile,pm) ;
+    Material_ScanProperties(mat,datafile,pm) ;
+  }
   
   if(Material_GetProperty(mat)[pm("Young")] < 0) {
     double k_s  = Material_GetPropertyValue(mat,"k_s") ;

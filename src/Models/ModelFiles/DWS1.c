@@ -495,12 +495,12 @@ int ReadMatProp(Material_t *mat,DataFile_t *datafile)
     if(dim > 1) arret("DWS1: dimension > 1 not available") ;
   }
   
-  {
+  if(datafile){
     /* Self-initialization */
     Material_GetProperty(mat)[pm("kg_int")] = 0 ;
-  }
 
-  Material_ScanProperties(mat,datafile,pm) ;
+    Material_ScanProperties(mat,datafile,pm) ;
+  }
 
   {
     kg_int = Material_GetProperty(mat)[pm("kg_int")] ;

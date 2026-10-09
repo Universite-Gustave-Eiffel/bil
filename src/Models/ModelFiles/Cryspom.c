@@ -454,8 +454,9 @@ int ReadMatProp(Material_t *mat,DataFile_t *datafile)
 {
   int    NbOfProp = 6 ;
 
-
-  Material_ScanProperties(mat,datafile,pm) ;
+  if(datafile){
+    Material_ScanProperties(mat,datafile,pm) ;
+  }
 
   {
     ComputePhysicoChemicalProperties(TEMPERATURE) ;
