@@ -699,14 +699,16 @@ void ComputeMicrostructure(DataSet_t* dataset,double* macrograd,double* sig)
     
       for(size_t j = 0 ; j < nmats ; j++) {
         Material_t* mat = Materials_GetMaterial(mats) + j ;
-        Model_t* model = Material_GetModel(mat) ;
-        Model_ComputePropertyIndex_t* pidx = Model_GetComputePropertyIndex(model) ;
         
         {
-          double* grd = Material_GetProperty(mat) + pidx("macro-gradient") ;
-          int i ;
+          int idx_grd = Material_ComputePropertyIndex(mat,"macro-gradient") ;
+          double* grd = Material_GetProperty(mat) + idx_grd ;
+
+          if(idx_grd < 0) {
+            Message_FatalError("ComputeMicrostructure: material property not found") ;
+          }
     
-          for(i = 0 ; i < 9 ; i++) {
+          for(int i = 0 ; i < 9 ; i++) {
             grd[i] = macrograd[i] ;
           }
         }
@@ -743,18 +745,15 @@ void CheckMicrostructureDataSet(DataSet_t* dataset)
     
       for(size_t j = 0 ; j < nmats ; j++) {
         Material_t* mat = Materials_GetMaterial(mats) + j ;
-        Model_t* model = Material_GetModel(mat) ;
-        Model_ComputePropertyIndex_t* pidx = Model_GetComputePropertyIndex(model) ;
-        
-        if(!pidx) {
-          arret("ComputeMicrostructure(1): Model_GetComputePropertyIndex(model) undefined") ;
-        }
           
         {
-          int k = pidx("macro-fctindex") ;
-          int i ;
+          int k = Material_ComputePropertyIndex(mat,"macro-fctindex") ;
+
+          if(k < 0) {
+            Message_FatalError("ComputeMicrostructure: material property not found") ;
+          }
             
-          for(i = 0 ; i < 9 ; i++) {
+          for(int i = 0 ; i < 9 ; i++) {
             Material_GetProperty(mat)[k + i] = 1 ;
           }
         }

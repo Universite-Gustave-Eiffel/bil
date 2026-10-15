@@ -23,9 +23,16 @@ Models_t* (Models_New)(Geometry_t* geom,DataFile_t* datafile)
   Models_SetModel(models,NULL) ;
   Models_SetGeometry(models,geom) ;
   Models_SetDataFile(models,datafile) ;
-    
+  
   {
-    Model_t* model = Mry_Create(Model_t,Models_MaxNbOfModels,Model_New(models)) ;
+    //Model_t* model = Mry_Create(Model_t,Models_MaxNbOfModels,Model_New(models)) ;
+    Model_t* model = (Model_t*) Mry_New(Model_t,Models_MaxNbOfModels) ;
+
+     /* Mry_New does'nt initialize the virtual table pointer, 
+        so we use placement new to call the constructor */
+    for(size_t i = 0 ; i < Models_MaxNbOfModels ; i++) {
+      new(model + i) Model_t(models);
+    }
 
     Models_SetModel(models,model) ;
   }
@@ -53,43 +60,7 @@ void  (Models_Delete)(void* self)
 }
 
 
-#if 0
-Models_t* (Models_Create)(Geometry_t* geom,DataFile_t* datafile)
-{
-  size_t n_models = DataFile_CountMainTokens(datafile,"Models",",") ;
-  Models_t* models  = Models_New(geom,datafile) ;
-    
-  if(n_models <= 0) {
-    return(models) ;
-  }
-  
-  
-  Message_Direct("Enter in %s","Models") ;
-  Message_Direct("\n") ;
 
-
-  {    
-    Models_SetNbOfModels(models,n_models);
-
-    /* Read the models */
-    for(size_t i = 0 ; i < n_models ; i++) {
-      Model_t* model = Models_GetModel(models) + i ;
-      char* c = DataFile_FindNthToken(datafile,"Model",",",i + 1) ;
-      
-      c = String_SkipLine(c) ;
-      
-      DataFile_SetCurrentPositionInFileContent(datafile,c) ;
-      
-      Message_Direct("Enter in %s %lu","Model",i+1) ;
-      Message_Direct("\n") ;
-      
-      Model_Scan(model,datafile) ;
-    }
-  }
-  
-  return(models) ;
-}
-#else
 Models_t* (Models_Create)(Geometry_t* geom,DataFile_t* datafile)
 {
   Models_t* models  = Models_New(geom,datafile) ;
@@ -98,7 +69,6 @@ Models_t* (Models_Create)(Geometry_t* geom,DataFile_t* datafile)
   
   return(models) ;
 }
-#endif
 
 
 
@@ -153,7 +123,7 @@ Models_t* (Models_CreateAll)(Geometry_t* geom)
     for(size_t i = 0 ; i < n ; i++) {
       Model_t* model_i = Models_GetModel(models) + i ;
       
-      Model_Initialize(model_i,modelnames[i]) ;
+      Model_Set(model_i,modelnames[i]) ;
     }
   }
   
@@ -187,7 +157,7 @@ void (Models_PrintAll)(char* codename,FILE* ficd)
       
       if(ficd) {
         printf("Model = %s : ",Model_GetCodeNameOfModel(model_i)) ;
-        Model_PrintModelProp(model_i,ficd) ;
+        Model_PrintModelProperties(model_i,ficd) ;
         printf("=============================================") ;
         printf("\n\n") ;
       }
@@ -198,7 +168,7 @@ void (Models_PrintAll)(char* codename,FILE* ficd)
     
     if(model_i) {
       printf("Model = %s : ",codename) ;
-      Model_PrintModelProp(model_i,ficd) ;
+      Model_PrintModelProperties(model_i,ficd) ;
     }
   }
   

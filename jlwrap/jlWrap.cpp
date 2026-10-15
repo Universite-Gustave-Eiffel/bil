@@ -135,6 +135,7 @@ JLCXX_MODULE define_julia_module(jlcxx::Module& mod) {
   
   /* Materials */
   MEM_METHOD(Materials,EmplaceBack,std::string const&);
+  MEM_METHOD(Materials,EmplaceBack,Model_t*);
   
   /* Material */
   MEM_METHOD(Material,Set,std::string const&,double const&);

@@ -30,6 +30,8 @@ int main()
   Module_t* modul = DataSet_GetModule(d);
   Options_t* opt = DataSet_GetOptions(d);
   
+  Model_t* mod1;
+  
   Session_Open();
 
   Geometry_Set(geom,2,"axis") ;
@@ -73,11 +75,10 @@ int main()
   
   TimeStep_Set(timestep,1.,100000);
   
-  Models_EmplaceBack(models,"Elast");
-  
+  mod1 = Models_EmplaceBack(models,"Elast");
   
   {
-    Material_t* mat1 = Materials_EmplaceBack(materials,"Elast");
+    Material_t* mat1 = Materials_EmplaceBack(materials,mod1);
     
     Material_Set(mat1,"gravity",0.);
     Material_Set(mat1,"rho_s",0.);
@@ -90,7 +91,7 @@ int main()
   }
   
   {
-    Material_t* mat2 = Materials_EmplaceBack(materials,"Elast");
+    Material_t* mat2 = Materials_EmplaceBack(materials,mod1);
     
     Material_Set(mat2,"gravity",0.);
     Material_Set(mat2,"rho_s",0.);
@@ -103,7 +104,7 @@ int main()
   }
   
   {
-    Material_t* mat3 = Materials_EmplaceBack(materials,"Elast");
+    Material_t* mat3 = Materials_EmplaceBack(materials,mod1);
     
     Material_Set(mat3,"gravity",0.);
     Material_Set(mat3,"rho_s",0.);

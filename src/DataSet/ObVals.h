@@ -3,15 +3,13 @@
 
 
 /* Forward declarations */
-struct ObVals_t; //typedef struct ObVals_t       ObVals_t ;
+struct ObVals_t;
 struct DataFile_t;
-struct Mesh_t;
 struct Materials_t;
 struct ObVal_t;
 
 
 extern ObVals_t*  (ObVals_New)(void) ;
-extern ObVals_t*  (ObVals_Create)(DataFile_t*,Mesh_t*,Materials_t*) ;
 extern void       (ObVals_Scan)(ObVals_t*,DataFile_t*);
 extern void       (ObVals_Delete)(void*) ;
 extern int        (ObVals_FindObValIndex)(ObVals_t*,char*) ;

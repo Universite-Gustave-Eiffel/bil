@@ -116,27 +116,6 @@ struct Models_t {
     return(NULL) ;
   }
 
-  #if 0
-  inline Model_t* Models_t::FindOrAppendModel(const char* codename){
-    Model_t* model = FindModel(codename) ;
-      
-    if(!model) {
-      Model_t* model0 = GetModel() ;
-      size_t nmax = GetMaxNbOfModels() ;
-      size_t n = GetNbOfModels() ;
-    
-      if(n < nmax) {
-        model = model0 + n ;
-        Model_Initialize(model,codename) ;
-        SetNbOfModels(n + 1) ;
-      } else {
-        arret("Models_t::FindOrAppendModel: cannot append") ;
-      }
-    }
-
-    return(model) ;
-  }
-  #else
   inline Model_t* Models_t::FindOrAppendModel(const char* codename){
     Model_t* model = FindModel(codename) ;
       
@@ -146,7 +125,6 @@ struct Models_t {
 
     return(model) ;
   }
-  #endif
 
   template<typename... Args>
   inline Model_t* Models_t::EmplaceBack(Args&&... args) {

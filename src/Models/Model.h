@@ -10,12 +10,6 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#ifdef __CPLUSPLUS
-extern "C" {
-#endif
-
-
-/* Vacuous declarations and typedef names */
 
 /* Forward declarations */
 struct Model_t;
@@ -78,7 +72,6 @@ using Model_ComputeOutputs_t = std::variant<Model_ComputeOutputs_t1,Model_Comput
 
 extern Model_t*  (Model_New)       (Models_t*) ;
 extern void      (Model_Delete)    (void*) ;
-//extern Model_t*  (Model_Initialize)(Model_t*,const char*) ;
 extern void      (Model_Scan)(Model_t*,DataFile_t*) ;
 extern  Model_SetModelProperties_t  Model_ListOfSetModelProp ;
 
@@ -96,19 +89,19 @@ extern  Model_SetModelProperties_t  Model_ListOfSetModelProp ;
 #define Model_GetObjectiveValue(MOD)       ((MOD)->GetObjectiveValue())
 #define Model_GetViews(MOD)                ((MOD)->GetViews())
 
-#define Model_GetSetModelProperties(MOD)      ((MOD)->GetSetModelProperties())
-#define Model_GetReadMaterialProperties(MOD)  ((MOD)->GetReadMaterialProperties())
-#define Model_GetPrintModelProperties(MOD)    ((MOD)->GetPrintModelProperties())
-#define Model_GetDefineElementProperties(MOD) ((MOD)->GetDefineElementProperties())
-#define Model_GetComputeInitialState(MOD)     ((MOD)->GetComputeInitialState())
-#define Model_GetComputeExplicitTerms(MOD)    ((MOD)->GetComputeExplicitTerms())
-#define Model_GetComputeImplicitTerms(MOD)    ((MOD)->GetComputeImplicitTerms())
-#define Model_GetComputeMatrix(MOD)           ((MOD)->GetComputeMatrix())
-#define Model_GetComputeResidu(MOD)           ((MOD)->GetComputeResidu())
-#define Model_GetComputeLoads(MOD)            ((MOD)->GetComputeLoads())
-#define Model_GetComputeOutputs(MOD)          ((MOD)->GetComputeOutputs())
-#define Model_GetComputePropertyIndex(MOD)    ((MOD)->GetComputePropertyIndex())
-#define Model_GetComputeMaterialProperties(MOD) ((MOD)->GetComputeMaterialProperties())
+//#define Model_GetSetModelProperties(MOD)      ((MOD)->GetSetModelProperties())
+//#define Model_GetReadMaterialProperties(MOD)  ((MOD)->GetReadMaterialProperties())
+//#define Model_GetPrintModelProperties(MOD)    ((MOD)->GetPrintModelProperties())
+//#define Model_GetDefineElementProperties(MOD) ((MOD)->GetDefineElementProperties())
+//#define Model_GetComputeInitialState(MOD)     ((MOD)->GetComputeInitialState())
+//#define Model_GetComputeExplicitTerms(MOD)    ((MOD)->GetComputeExplicitTerms())
+//#define Model_GetComputeImplicitTerms(MOD)    ((MOD)->GetComputeImplicitTerms())
+//#define Model_GetComputeMatrix(MOD)           ((MOD)->GetComputeMatrix())
+//#define Model_GetComputeResidu(MOD)           ((MOD)->GetComputeResidu())
+//#define Model_GetComputeLoads(MOD)            ((MOD)->GetComputeLoads())
+//#define Model_GetComputeOutputs(MOD)          ((MOD)->GetComputeOutputs())
+//#define Model_GetComputePropertyIndex(MOD)    ((MOD)->GetComputePropertyIndex())
+//#define Model_GetComputeMaterialProperties(MOD) ((MOD)->GetComputeMaterialProperties())
 
 
 /* The setters */
@@ -185,26 +178,19 @@ extern  Model_SetModelProperties_t  Model_ListOfSetModelProp ;
 
 
 /* Short hands */
-#define Model_SetModelProperties(MOD) \
-        do {\
-          if(Model_GetSetModelProperties(MOD)) {\
-            Model_GetSetModelProperties(MOD)(MOD);\
-          }\
-        } while(0)
-
-#define Model_PrintModelProp(MOD,...) \
-        do {\
-          if(Model_GetPrintModelProperties(MOD)) {\
-            Model_GetPrintModelProperties(MOD)(MOD,__VA_ARGS__);\
-          }\
-        } while(0)
-
-#define Model_ComputeMaterialProperties(MOD,...) \
-        do {\
-          if(Model_GetComputeMaterialProperties(MOD)) {\
-            Model_GetComputeMaterialProperties(MOD)(__VA_ARGS__);\
-          }\
-        } while(0)
+#define Model_SetModelProperties(MOD)  (MOD)->SetModelProperties()
+#define Model_PrintModelProperties(MOD,...)  (MOD)->PrintModelProperties(__VA_ARGS__)
+#define Model_ComputeMaterialProperties(MOD,...)  (MOD)->ComputeMaterialProperties(__VA_ARGS__)
+#define Model_ReadMaterialProperties(MOD,...)  (MOD)->ReadMaterialProperties(__VA_ARGS__)
+#define Model_DefineElementProperties(MOD,...) (MOD)->DefineElementProperties(__VA_ARGS__)
+#define Model_ComputeInitialState(MOD,...)     (MOD)->ComputeInitialState(__VA_ARGS__)
+#define Model_ComputeExplicitTerms(MOD,...)    (MOD)->ComputeExplicitTerms(__VA_ARGS__)
+#define Model_ComputeImplicitTerms(MOD,...)    (MOD)->ComputeImplicitTerms(__VA_ARGS__)
+#define Model_ComputeMatrix(MOD,...)           (MOD)->ComputeMatrix(__VA_ARGS__)
+#define Model_ComputeResidu(MOD,...)           (MOD)->ComputeResidu(__VA_ARGS__)
+#define Model_ComputeLoads(MOD,...)            (MOD)->ComputeLoads(__VA_ARGS__)
+#define Model_ComputeOutputs(MOD,...)          (MOD)->ComputeOutputs(__VA_ARGS__)
+#define Model_ComputePropertyIndex(MOD,...)    (MOD)->ComputePropertyIndex(__VA_ARGS__)
 
 
 #include <string.h>
@@ -214,6 +200,7 @@ extern  Model_SetModelProperties_t  Model_ListOfSetModelProp ;
 #include <sstream>
 
 struct Model_t {
+  private:
   Model_SetModelProperties_t*       _setmodelprop ;
   Model_ReadMaterialProperties_t*   _readmatprop ;
   Model_PrintModelProperties_t*     _printmodelprop ;
@@ -240,6 +227,9 @@ struct Model_t {
   ObVal_t* _obval ;            /* Objective values of unknowns */
   Views_t* _views ;            /* Views */
 
+  public:
+  Model_t(Models_t*);
+  virtual ~Model_t();
   /* The getters */
   Model_SetModelProperties_t*       GetSetModelProperties(){return _setmodelprop ;}
   Model_ReadMaterialProperties_t*   GetReadMaterialProperties(){return _readmatprop ;}
@@ -293,12 +283,95 @@ struct Model_t {
   void SetObjectiveValue(ObVal_t* a){_obval = a;}
   void SetViews(Views_t* a){_views = a;}
 
+  /* The callers */
+  virtual int SetModelProperties(){
+    if(_setmodelprop) {
+      return _setmodelprop(this);
+    }
+    return(-1);
+  }
+  virtual int PrintModelProperties(FILE* file){
+    if(_printmodelprop) {
+      return _printmodelprop(this,file);
+    }
+    return(-1);
+  }
+  virtual void ComputeMaterialProperties(Element_t* elem,double t){
+    if(_ComputeMaterialProperties) {
+      return _ComputeMaterialProperties(elem,t);
+    }
+  }
+  virtual int ReadMaterialProperties(Material_t* mat,DataFile_t* datafile){
+    if(_readmatprop) {
+      return _readmatprop(mat,datafile);
+    }
+    return(0);
+  }
+  virtual int DefineElementProperties(Element_t* elem,IntFcts_t* intfcts,ShapeFcts_t* shapefcts){
+    if(_defineelementprop) {
+      return _defineelementprop(elem,intfcts,shapefcts);
+    }
+    return(-1);
+  }
+  virtual int ComputeInitialState(Element_t* elem,double time){
+    if(_computeinitialstate) {
+      return _computeinitialstate(elem,time);
+    }
+    return(-1);
+  }
+  virtual int ComputeExplicitTerms(Element_t* elem,double time){
+    if(_computeexplicitterms) {
+      return _computeexplicitterms(elem,time);
+    }
+    return(-1);
+  }
+  virtual int ComputeImplicitTerms(Element_t* elem,double time,double dt){
+    if(_computeimplicitterms) {
+      return _computeimplicitterms(elem,time,dt);
+    }
+    return(-1);
+  }
+  virtual int ComputeMatrix(Element_t* elem,double time,double dt,double* matrix){
+    if(_computematrix) {
+      return _computematrix(elem,time,dt,matrix);
+    }
+    return(-1);
+  }
+  virtual int ComputeResidu(Element_t* elem,double time,double dt,double* residu){
+    if(_computeresidu) {
+      return _computeresidu(elem,time,dt,residu);
+    }
+    return(-1);
+  }
+  virtual int ComputeLoads(Element_t* elem,double time,double dt,Load_t* load,double* loadvec){
+    if(_computeloads) {
+      return _computeloads(elem,time,dt,load,loadvec);
+    }
+    return(-1);
+  }
+  virtual int ComputeOutputs(Element_t* elem,double time,double* outputs,Result_t* result){
+    if(_computeoutputs) {
+      return _computeoutputs(elem,time,outputs,result);
+    }
+    return(0);
+  }
+  virtual int ComputePropertyIndex(const char* name){
+    if(_computepropertyindex) {
+      return _computepropertyindex(name);
+    }
+    return(-1);
+  }
+
   void Set(...) = delete;
   void Set(char const* codename){
-    Initialize(codename) ;
+    strcpy(GetCodeNameOfModel(),codename);
+    if(SetModelProperties() < 0) {
+      Initialize(codename) ;
+      SetModelProperties();
+    }
   }
   void Set(std::string const& codename){
-    Initialize(codename.c_str()) ;
+    Set(codename.c_str()) ;
   }
   void Set(char const* codename,size_t n,char const* const* name_equ,char const* const* name_unk){
     std::string name_str{codename};
@@ -320,7 +393,7 @@ struct Model_t {
   }
   void Set(std::string const& codename,std::vector<std::string> const& name_equ,std::vector<std::string> const& name_unk){
     /* Code name of the model */
-    Initialize(codename.c_str()) ;
+    Set(codename.c_str()) ;
       
     {
       size_t neq = GetNbOfEquations() ;
@@ -338,11 +411,7 @@ struct Model_t {
     }
 
     /* To account for the new unknown and equation names */ 
-    if(GetSetModelProperties()) {
-      GetSetModelProperties()(this);
-    } else {
-      throw std::runtime_error("Model_t::Set: No SetModelProperties method defined");
-    }
+    SetModelProperties();
   }
 
   void Initialize(char const* codename){
@@ -354,15 +423,10 @@ struct Model_t {
     while(i < n_models && strcmp(modelnames[i],codename)) i++ ;
     
     if(i < n_models) {
-      strcpy(GetCodeNameOfModel(),modelnames[i]);
+      strcpy(GetCodeNameOfModel(),codename);
       SetSetModelProperties(xModel_SetModelProperties[i]) ;
-      /* Call to SetModelProperties */
-      if(GetSetModelProperties()) {
-        GetSetModelProperties()(this);
-      } else {
-        throw std::runtime_error("Model_t::Initialize: No SetModelProperties method defined");
-      }
     } else {
+      strcpy(GetCodeNameOfModel(),"\0");
       printf("No model named %s",codename) ;
     }
   }
@@ -401,16 +465,205 @@ struct Model_t {
 } ;
 
 
+#include <cstring>
+#include "Mry.h"
+#include "Views.h"
+#include "Models.h"
+#include "ObVal.h"
+
+inline Model_t::Model_t(Models_t* models)
+{
+  SetParentModels(models);
+  
+  {
+    /* Allocation of space for name of equations */
+    {
+      char** names = (char**) Mry_New(char*,Model_MaxNbOfEquations) ;
+      
+      SetNameOfEquation(names) ;
+    }
+      
+    {
+      char* name = (char*) Mry_New(char,Model_MaxLengthOfKeyWord*Model_MaxNbOfEquations) ;
+    
+      {
+        for(int j = 0 ; j < Model_MaxNbOfEquations ; j++) {
+          char* name_j = name + j*Model_MaxLengthOfKeyWord;
+
+          strcpy(name_j,"\0");
+          GetNameOfEquation()[j] = name_j;
+        }
+      }
+    }
+    
+    
+    /* Allocation of space for name of unknowns */
+    {
+      char** names = (char**) Mry_New(char*,Model_MaxNbOfEquations) ;
+    
+      SetNameOfUnknown(names) ;
+    }
+      
+    {
+      char* name = (char*) Mry_New(char,Model_MaxLengthOfKeyWord*Model_MaxNbOfEquations) ;
+    
+      {
+        for(int j = 0 ; j < Model_MaxNbOfEquations ; j++) {
+          char* name_j = name + j*Model_MaxLengthOfKeyWord;
+          
+          strcpy(name_j,"\0");
+          GetNameOfUnknown()[j]  = name_j;
+        }
+      }
+    }
+    
+    
+    /* Allocation of space for the sequential indexes of unknowns/equations */
+    {
+      int* ind = (int*) Mry_New(int,Model_MaxNbOfEquations) ;
+    
+      SetSequentialIndexOfUnknown(ind) ;
+    }
+    
+    
+    /* Allocation of space for code name of the model */
+    {
+      char* name = (char*) Mry_New(char,Model_MaxLengthOfKeyWord) ;
+      
+      SetCodeNameOfModel(name) ;
+    }
+  
+    
+    /* Allocation of space for short title of the model */
+    {
+      char* name = (char*) Mry_New(char,Model_MaxLengthOfShortTitle) ;
+      
+      strcpy(name,"\0");
+      SetShortTitle(name) ;
+    }
+  
+    
+    /* Allocation of space for name of authors */
+    {
+      char* name = (char*) Mry_New(char,Model_MaxLengthOfAuthorNames) ;
+    
+      SetNameOfAuthors(name) ;
+      strcpy(name,"\0") ;
+    }
+    
+    
+    /* Allocation of space for objective values */
+    {
+      ObVal_t* obval = (ObVal_t*) Mry_New(ObVal_t,Model_MaxNbOfEquations) ;
+    
+      SetObjectiveValue(obval) ;
+    }
+    
+    
+    /* Allocation of space for views */
+    {
+      Views_t* views = Views_Create(Model_MaxNbOfViews) ;
+      
+      SetViews(views) ;
+    }
+  }
+}
+
+inline  Model_t::~Model_t()
+{ 
+  {
+    {
+      char** names = GetNameOfEquation() ;
+      
+      if(names) {
+        char* name = GetNameOfEquation()[0] ;
+    
+        if(name) {
+          Mry_Free(name) ;
+        }
+
+        Mry_Free(names) ;
+        SetNameOfEquation(nullptr) ;
+      }
+    }
+    
+    {
+      char** names = GetNameOfUnknown() ;
+      
+      if(names) {
+        char* name = GetNameOfUnknown()[0] ;
+    
+        if(name) {
+          Mry_Free(name) ;
+        }
+
+        Mry_Free(names) ;
+        SetNameOfUnknown(nullptr) ;
+      }
+    }
+    
+    {
+      int* ind = GetSequentialIndexOfUnknown() ;
+    
+      if(ind) {
+        Mry_Free(ind) ;
+        SetSequentialIndexOfUnknown(nullptr) ;
+      }
+    }
+    
+    {
+      char* name = GetCodeNameOfModel() ;
+      
+      if(name) {
+        Mry_Free(name) ;
+        SetCodeNameOfModel(nullptr) ;
+      }
+    }
+    
+    {
+      char* name = GetShortTitle() ;
+      
+      if(name) {
+        Mry_Free(name) ;
+        SetShortTitle(nullptr) ;
+      }
+    }
+    
+    {
+      char* name = GetNameOfAuthors() ;
+      
+      if(name) {
+        Mry_Free(name) ;
+        SetNameOfAuthors(nullptr) ;
+      }
+    }
+    
+    {
+      ObVal_t* obval = GetObjectiveValue() ;
+      
+      if(obval) {
+        Mry_Free(obval) ;
+        SetObjectiveValue(nullptr) ;
+      }
+    }
+    
+    {
+      Views_t* views = GetViews() ;
+      
+      if(views) {
+        Views_Delete(views) ;
+        Mry_Free(views) ;
+        SetViews(nullptr) ;
+      }
+    }
+  }
+}
+
+
 /* Old notations which should be eliminated */
 #define MAX_EQUATIONS     Model_MaxNbOfEquations
 
 
-#ifdef __CPLUSPLUS
-}
-#endif
-
 /* Need for the macros */
-#include "Views.h"
 #include "Geometry.h"
-#include "Models.h"
 #endif

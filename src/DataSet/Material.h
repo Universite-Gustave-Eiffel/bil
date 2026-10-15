@@ -98,9 +98,12 @@ extern void        (Material_ScanProperties)  (Material_t*,DataFile_t*,Model_Com
 
 #define Material_FindCurve(MAT,S) \
         Curves_FindCurve(Material_GetCurves(MAT),S)
+
+#define Material_ComputePropertyIndex(MAT,S) \
+        Model_ComputePropertyIndex(Material_GetModel(MAT),S)
         
 #define Material_GetPropertyValue(MAT,S) \
-        (Material_GetProperty(MAT) + Model_GetComputePropertyIndex(Material_GetModel(MAT))(S))[0]
+        (Material_GetProperty(MAT) + Material_ComputePropertyIndex(MAT,S))[0]
 
 #define Material_SetPropertiesToZero(MAT,N) \
         do { \
@@ -112,7 +115,7 @@ extern void        (Material_ScanProperties)  (Material_t*,DataFile_t*,Model_Com
 
 /*
 ** #define Material_ReadProperties(MAT,datafile) \
-*          Model_GetReadMaterialProperties(Material_GetModel(MAT))(MAT,datafile)
+*          Model_ReadMaterialProperties(Material_GetModel(MAT),MAT,datafile)
 */
 
 /* Equations/unknowns */
@@ -217,7 +220,7 @@ struct Material_t {           /* material */
 
   void Set(std::string const& name){Set(name.c_str());}
   void Set(char const*);
-  void Set(Model_t*,size_t const&);
+  void Set(Model_t*);
   void Set(std::string const& name,double const& v){Set(name.c_str(),v);}
   void Set(char const*,double const&);
   void Set(std::string const& name,std::string const& line){Set(name.c_str(),line.c_str());}
@@ -240,37 +243,22 @@ struct Material_t {           /* material */
     Materials_t* materials = GetParentMaterials() ;
     Models_t* usedmodels = Materials_GetUsedModels(materials) ;
     Model_t* matmodel = Models_FindOrAppendModel(usedmodels,modelname) ;
-    size_t modind  = Models_FindModelIndex(usedmodels,modelname) ;
+    //size_t modind  = Models_FindModelIndex(usedmodels,modelname) ;
 
     strcpy(GetCodeNameOfModel(),modelname) ;
     SetModel(matmodel) ;
-    SetModelIndex(modind) ;
+    //SetModelIndex(modind) ;
 
 
     /* for compatibility with old version */
     if(GetModel()) {
       eqn = Material_GetNameOfEquation(this) ;
       inc = Material_GetNameOfUnknown(this) ;
-    }
-
-
-    /* Input material data */
-    /* A model pointing to a null pointer serves to build curves only */
-    #if 0
-    {
-      int n = Material_ReadProperties(mat,datafile) ;
-    
-      Material_SetNbOfProperties(mat,n) ;
-    }
-    #endif
-    
-    
-    /* for compatibility with old version */
-    if(GetModel()) {
       if(Material_GetNbOfEquations(this) == 0) {
         Material_SetNbOfEquations(this,neq) ;
       }
     }
+
     nc = Material_GetNbOfCurves(this) ;
     
     
@@ -279,61 +267,21 @@ struct Material_t {           /* material */
     }
   }
 
-  inline void Material_t::Set(Model_t* matmodel,size_t const& modind){
+  inline void Material_t::Set(Model_t* matmodel){
     char* modelname = Model_GetCodeNameOfModel(matmodel) ;
 
     strcpy(GetCodeNameOfModel(),modelname) ;
     SetModel(matmodel) ;
-    SetModelIndex(modind) ;
+    //SetModelIndex(modind) ;
       
     /* for compatibility with old version */
     if(matmodel) {
       eqn = Material_GetNameOfEquation(this) ;
       inc = Material_GetNameOfUnknown(this) ;
     }
-
-    #if 0
-    /* Input material data */
-    /* A model pointing to a null pointer serves to build curves only */
-    {
-      DataFile_t* datafile = Models_GetDataFile(usedmodels) ;
-      Model_t* model = GetModel();
-
-      if(model) {
-        Model_ReadMaterialProperties_t* readmatprop = Model_GetReadMaterialProperties(model) ;
-    
-        if(readmatprop) {
-          int n = readmatprop(this,datafile) ;
-    
-          if(n > Material_MaxNbOfProperties) {
-            Message_RuntimeError("Material_t::Set: too many properties") ;
-          }
-    
-          SetNbOfProperties(n) ;
-        }
-      } else {
-        Set();
-      }
-    }
-    
-    /* for compatibility with old version */
-    if(GetModel()) {
-      if(Material_GetNbOfEquations(this) == 0) {
-        Material_SetNbOfEquations(this,neq) ;
-      }
-    }
-    
-    nc = Material_GetNbOfCurves(this) ;
-    
-    if(!GetModel()) {
-      throw std::runtime_error("Material_t::Set: Model not known") ;
-    }
-    #endif
   }
 
   inline void Material_t::Set(char const* mot,double const& value){
-    Model_t* model = GetModel() ;
-    Model_ComputePropertyIndex_t* pm = Model_GetComputePropertyIndex(model) ;
     int  nd = GetNbOfProperties() ;
     
     if(strlen(mot) > Material_MaxLengthOfKeyWord) {
@@ -349,8 +297,11 @@ struct Material_t {           /* material */
       throw std::runtime_error("Material_t::Set: reserved keyword") ;
       
     /* Reading the material properties and storing through pm */
-    } else if(pm) {
-      int i = (*pm)(mot) ;
+    //} else if(pm) {
+    } else {
+      Model_t* model = GetModel() ;
+      //int i = (*pm)(mot) ;
+      int i = Model_ComputePropertyIndex(model,mot) ;
         
       if(i >= 0) {  
         GetProperty()[i] = value ;
@@ -358,8 +309,6 @@ struct Material_t {           /* material */
       } else {
         throw std::runtime_error("Material_t::Set: property is not known") ;
       }
-    } else {
-      throw std::runtime_error("Material_t::Set: pm is not known") ;
     }
 
     SetNbOfProperties(nd) ;
@@ -403,53 +352,18 @@ struct Material_t {           /* material */
       throw std::runtime_error("Material_t::Set: property is not known") ;
     }
   }
-  #if 0
-  inline void Material_t::Set(DataFile_t* datafile){
-    /* Input material data */
-    /* A model pointing to a null pointer serves to build curves only */
-    Models_t* usedmodels = GetUsedModels() ;
-    DataFile_t* datafile = Models_GetDataFile(usedmodels) ;
-    Model_t* model = GetModel();
-    ptrdiff_t nth = this - Materials_GetMaterial(GetParentMaterials()) ;
-    char* c = DataFile_FindNthToken(datafile,"MATE,Material",",",nth + 1) ;
-      
-    c = String_SkipLine(c) ;
-      
-    DataFile_SetCurrentPositionInFileContent(datafile,c) ;
-
-    if(model) {
-      Model_ReadMaterialProperties_t* readmatprop = Model_GetReadMaterialProperties(model) ;
-    
-      if(readmatprop) {
-        int n = readmatprop(this,datafile) ;
-    
-        if(n > Material_MaxNbOfProperties) {
-          throw std::runtime_error("Material_t::Set: too many properties") ;
-        }
-    
-        SetNbOfProperties(n) ;
-      }
-    } else {
-      throw std::runtime_error("Material_t::Set: Model not known") ;
-    }
-  }
-  #endif
 
   inline void Material_t::Finalize(void){
     Model_t* model = GetModel();
 
     if(model) {
-      Model_ReadMaterialProperties_t* rmp = Model_GetReadMaterialProperties(model) ;
-    
-      if(rmp) {
-        int n = rmp(this,nullptr) ;
+        int n = Model_ReadMaterialProperties(model,this,nullptr) ;
     
         if(n > Material_MaxNbOfProperties) {
           throw std::runtime_error("Material_t::Finalize: too many properties") ;
         }
     
         SetNbOfProperties(n) ;
-      }
     } else {
       throw std::runtime_error("Material_t::Finalize: Model not known") ;
     }

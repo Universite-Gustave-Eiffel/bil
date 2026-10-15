@@ -58,18 +58,6 @@ void (Materials_Delete)(void* self)
         Materials_SetMaterial(materials,NULL) ;
       }
     }
-  
-    #if 0
-    {
-      Models_t* usedmodels = Materials_GetUsedModels(materials) ;
-    
-      if(usedmodels) {
-        Models_Delete(usedmodels) ;
-        Mry_Free(usedmodels) ;
-        Materials_SetUsedModels(materials,NULL) ;
-      }
-    }
-    #endif
   }
 }
 

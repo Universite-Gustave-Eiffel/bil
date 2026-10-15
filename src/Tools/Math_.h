@@ -7,7 +7,7 @@ extern "C" {
 
 
 /* Forward declarations */
-struct Math_t; //typedef struct Math_t   Math_t;
+struct Math_t;
 struct Buffers_t;
 
 
@@ -116,11 +116,11 @@ extern int dgeev_(const char*,const char*,int*,double*,int*,double*, double*,dou
 
 #include "GenericObject.h"
 
-struct Math_t {          /* some math methods */
+struct Math_t {
   void* outputs ;
-  Buffers_t*  buffers ;         /* Buffer */
+  Buffers_t*  buffers ;
   GenericObject_Delete_t* Delete ;
-} ;
+};
 
 
 
@@ -182,9 +182,6 @@ inline int      (Math_ComputePolynomialEquationRoots)(T*,int const) ;
 #include "Exception.h"
 #include "Mry.h"
 #include "autodiff.h"
-
-//#include "Math_.h.in"
-
 
 
 template<typename T>

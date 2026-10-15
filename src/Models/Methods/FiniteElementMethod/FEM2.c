@@ -406,19 +406,19 @@ void (FEM2_InitializeMicrostructureDataSet)(FEM2_t* fem2)
     
       for(size_t j = 0 ; j < nmats ; j++) {
         Material_t* mat = Materials_GetMaterial(mats) + j ;
-        Model_t* model = Material_GetModel(mat) ;
-        Model_ComputePropertyIndex_t* pidx = Model_GetComputePropertyIndex(model) ;
-        
-        if(!pidx) {
-          arret("FEM2_InitializeMicrostructureDataSet: Model_GetComputePropertyIndex(model) undefined") ;
-        }
         
         {
-          double* grd = Material_GetProperty(mat) + pidx("macro-gradient") ;
-          double* fid = Material_GetProperty(mat) + pidx("macro-fctindex") ;
-          int i ;
+          double* prop = Material_GetProperty(mat);
+          int idx_grd = Material_ComputePropertyIndex(mat,"macro-gradient") ;
+          int idx_fid = Material_ComputePropertyIndex(mat,"macro-fctindex") ;
+          double* grd = prop + idx_grd ;
+          double* fid = prop + idx_fid ;
+
+          if(idx_grd < 0 || idx_fid < 0) {
+            Message_FatalError("FEM2_InitializeMicrostructureDataSet: material property not found") ;
+          }
     
-          for(i = 0 ; i < 9 ; i++) {
+          for(int i = 0 ; i < 9 ; i++) {
             grd[i] = 1 ;
             fid[i] = i + 1 ;
           }

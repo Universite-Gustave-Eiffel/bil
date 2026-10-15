@@ -56,6 +56,7 @@ extern void      (ObVal_Scan)   (ObVal_t*,DataFile_t*) ;
 
 #include <string>
 #include <optional>
+#include <stdexcept>
 
 struct ObVal_t {              /* Objective variation */
   char    _type ;              /* Type = a(bsolute) or r(elative) */
@@ -80,7 +81,13 @@ struct ObVal_t {              /* Objective variation */
       Set(name.c_str(),v);
     }
   }
-  void Set(char const* name,double const& v,char const* type = nullptr,double const& r = 0){
+  void Set(char const*,double const&,char const* = nullptr,double const& = 0);
+} ;
+
+
+#include "String_.h"
+
+  inline void ObVal_t::Set(char const* name,double const& v,char const* type = nullptr,double const& r = 0){
     /* Unknown */
     if(strlen(name) > ObVal_MaxLengthOfKeyWord-1)  {
       throw std::runtime_error("ObVal_t::Set: too long name of unknown") ;
@@ -122,7 +129,6 @@ struct ObVal_t {              /* Objective variation */
       SetRelaxationFactor(r) ;
     }
   }
-} ;
 
 
 #include <math.h>

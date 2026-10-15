@@ -18,6 +18,10 @@
 Model_t* (Model_New)(Models_t* models)
 {
   Model_t* model = (Model_t*) Mry_New(Model_t) ;
+
+  /* Mry_New does'nt initialize the virtual table pointer, 
+     so we use placement new to call the constructor */
+  new(model) Model_t(models);
   
   Model_SetParentModels(model,models);
   

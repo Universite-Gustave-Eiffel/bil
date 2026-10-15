@@ -314,28 +314,28 @@ extern double*     (Element_ComputeInternodeDistances)             (Element_t co
 
 /* Methods and procedures */
 #define Element_DefineProperties(ELT,...) \
-        (Model_GetDefineElementProperties(Element_GetModel(ELT)))(ELT,__VA_ARGS__)
+        Model_DefineElementProperties(Element_GetModel(ELT),ELT,__VA_ARGS__)
         
 #define Element_ComputeInitialState(ELT,...) \
-        (Model_GetComputeInitialState(Element_GetModel(ELT)))(ELT,__VA_ARGS__)
+        Model_ComputeInitialState(Element_GetModel(ELT),ELT,__VA_ARGS__)
         
 #define Element_ComputeExplicitTerms(ELT,...) \
-        (Model_GetComputeExplicitTerms(Element_GetModel(ELT)))(ELT,__VA_ARGS__)
+        Model_ComputeExplicitTerms(Element_GetModel(ELT),ELT,__VA_ARGS__)
 
 #define Element_ComputeImplicitTerms(ELT,...) \
-        (Model_GetComputeImplicitTerms(Element_GetModel(ELT)))(ELT,__VA_ARGS__)
+        Model_ComputeImplicitTerms(Element_GetModel(ELT),ELT,__VA_ARGS__)
 
 #define Element_ComputeMatrix(ELT,...) \
-        (Model_GetComputeMatrix(Element_GetModel(ELT)))(ELT,__VA_ARGS__)
+        Model_ComputeMatrix(Element_GetModel(ELT),ELT,__VA_ARGS__)
 
 #define Element_ComputeResidu(ELT,...) \
-        (Model_GetComputeResidu(Element_GetModel(ELT)))(ELT,__VA_ARGS__)
+        Model_ComputeResidu(Element_GetModel(ELT),ELT,__VA_ARGS__)
 
 #define Element_ComputeOutputs(ELT,...) \
-        (Model_GetComputeOutputs(Element_GetModel(ELT)))(ELT,__VA_ARGS__)
+        Model_ComputeOutputs(Element_GetModel(ELT),ELT,__VA_ARGS__)
 
 #define Element_ComputeLoads(ELT,...) \
-        (Model_GetComputeLoads(Element_GetModel(ELT)))(ELT,__VA_ARGS__)
+        Model_ComputeLoads(Element_GetModel(ELT),ELT,__VA_ARGS__)
 
 
 /* Submanifold */

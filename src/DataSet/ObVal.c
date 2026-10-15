@@ -48,69 +48,6 @@ void (ObVal_Delete)(void* self)
 
 
 
-#if 0
-void  (ObVal_Scan)(ObVal_t* obval,DataFile_t* datafile)
-{
-  char* line = DataFile_ReadLineFromCurrentFilePositionInString(datafile) ;
-
-    
-  /* Unknown and value */
-  {
-    char name[ObVal_MaxLengthOfKeyWord] ;
-    double v ;
-    int n = String_Scan(line," %s = %le",name,&v) ;
-        
-    if(n) {
-      strcpy(ObVal_GetNameOfUnknown(obval),name) ;
-      ObVal_SetValue(obval,v) ;
-    } else {
-      arret("ObVal_Scan: no unknown") ;
-    }
-      
-    if(strlen(name) > ObVal_MaxLengthOfKeyWord-1)  {
-      arret("ObVal_Scan: too long name of unknown") ;
-    }
-        
-    if(ObVal_GetValue(obval) < 0.) {
-      arret("ObVal_Scan: negative value") ;
-    }
-  }
-  
-  
-  line = String_GetAdvancedPosition ;
-  
-  
-  /* Absolute or relative? */
-  {
-    char type[ObVal_MaxLengthOfKeyWord] ;
-    int n = String_Scan(line," %s",type) ;
-      
-    /* Set default type */
-    ObVal_SetTypeToAbsolute(obval) ;
-          
-    /* Read the type "absolute" */
-    if(String_CaseIgnoredIs(type,"Absolute",3)) {
-      ObVal_SetTypeToAbsolute(obval) ;
-    }
-          
-    /* Read the type "relative" */
-    if(String_CaseIgnoredIs(type,"Relative",3)) {
-      ObVal_SetTypeToRelative(obval) ;
-    }
-  }
-  
-  
-  /* Relaxation factor (if any) */
-  {
-    double r ;
-    int n = String_FindAndScanExp(line,"Relax",","," = %le",&r) ;
-    
-    if(n) {
-      ObVal_SetRelaxationFactor(obval,r) ;
-    }
-  }
-}
-#else
 void  (ObVal_Scan)(ObVal_t* obval,DataFile_t* datafile)
 {
   char* line = DataFile_ReadLineFromCurrentFilePositionInString(datafile) ;
@@ -142,4 +79,3 @@ void  (ObVal_Scan)(ObVal_t* obval,DataFile_t* datafile)
 
   ObVal_Set(obval,name,v,type,r);
 }
-#endif

@@ -55,84 +55,6 @@ void  (ObVals_Delete)(void* self)
 
 
 
-#if 0
-ObVals_t*  (ObVals_Create)(DataFile_t* datafile,Mesh_t* mesh,Materials_t* materials)
-{
-  char* filecontent = DataFile_GetFileContent(datafile) ;
-  char* c  = String_FindToken(filecontent,"OBJE,Objective Variations",",") ;
-  ObVals_t* obvals = ObVals_New() ;
-  
-  
-  if(!c) {
-    Message_FatalError("No Objective Variations") ;
-  }
-  
-  
-  Message_Direct("Enter in %s","Objective Variations") ;
-  Message_Direct("\n") ;
-
-
-
-  c = String_SkipLine(c) ;
-
-  DataFile_SetCurrentPositionInFileContent(datafile,c) ;
-
-
-
-  /* Scan the datafile for objective values */
-  {
-    ObVal_t* obval = ObVals_GetObVal(obvals) ;
-    Nodes_t* nodes = Mesh_GetNodes(mesh) ;
-    size_t n_obvals = Nodes_ComputeNbOfUnknownFields(nodes) ;
-  
-    ObVals_SetNbOfObVals(obvals,n_obvals);
-  
-    for(size_t i = 0 ; i < n_obvals ; i++) {
-      /* Check if a keyword is given twice */
-      {
-        char* line = DataFile_GetCurrentPositionInFileContent(datafile) ;
-        char  name[ObVal_MaxLengthOfKeyWord] ;
-        
-        String_Scan(line," %s",name) ;
-    
-        if(strlen(name) > ObVal_MaxLengthOfKeyWord) {
-          arret("ObVals_Create: too long keyword") ;
-        }
-    
-        for(size_t j = 0 ; j < i ; j++) {
-          if(!strcmp(name,ObVal_GetNameOfUnknown(obval + j))) {
-            arret("ObVals_Create: keyword %s given twice",name) ;
-          }
-        }
-      }
-      
-      ObVal_Scan(obval+i,datafile) ;
-    }
-  }
-  
-  Nodes_LinkUpToObVals(Mesh_GetNodes(mesh),obvals);
-  Materials_LinkUpToObVals(materials,obvals);
-  
-  return(obvals) ;
-}
-#else
-ObVals_t*  (ObVals_Create)(DataFile_t* datafile,Mesh_t* mesh,Materials_t* materials)
-{
-  //Nodes_t* nodes = Mesh_GetNodes(mesh) ;
-  //size_t n_obvals = Nodes_ComputeNbOfUnknownFields(nodes) ;
-  ObVals_t* obvals = ObVals_New() ;
-
-  ObVals_Scan(obvals,datafile);
-  
-  Nodes_LinkUpToObVals(Mesh_GetNodes(mesh),obvals);
-  Materials_LinkUpToObVals(materials,obvals);
-  
-  return(obvals) ;
-}
-#endif
-
-
-
 
 void  (ObVals_Scan)(ObVals_t* obvals,DataFile_t* datafile)
 {
@@ -171,12 +93,12 @@ void  (ObVals_Scan)(ObVals_t* obvals,DataFile_t* datafile)
         String_Scan(line," %s",name) ;
     
         if(strlen(name) > ObVal_MaxLengthOfKeyWord) {
-          arret("ObVals_Create: too long keyword") ;
+          arret("ObVals_Scan: too long keyword") ;
         }
     
         for(size_t j = 0 ; j < i ; j++) {
           if(!strcmp(name,ObVal_GetNameOfUnknown(obval + j))) {
-            arret("ObVals_Create: keyword %s given twice",name) ;
+            arret("ObVals_Scan: keyword %s given twice",name) ;
           }
         }
       }
@@ -187,19 +109,19 @@ void  (ObVals_Scan)(ObVals_t* obvals,DataFile_t* datafile)
     {
       char* line = DataFile_GetCurrentPositionInFileContent(datafile) ;
 
-      /* Check if a keyword is given twice */
       while(String_FindChar(String_CopyLine(line),'=')) {
         char name[ObVal_MaxLengthOfKeyWord] ;
         
         String_Scan(line," %s",name) ;
     
         if(strlen(name) > ObVal_MaxLengthOfKeyWord) {
-          arret("ObVals_Create: too long keyword") ;
+          arret("ObVals_Scan: too long keyword") ;
         }
     
+        /* Check if a keyword is given twice */
         for(size_t j = 0 ; j < n_obvals ; j++) {
           if(!strcmp(name,ObVal_GetNameOfUnknown(obval + j))) {
-            arret("ObVals_Create: keyword %s given twice",name) ;
+            arret("ObVals_Scan: keyword %s given twice",name) ;
           }
         }
       

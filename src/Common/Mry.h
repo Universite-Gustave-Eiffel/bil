@@ -9,10 +9,32 @@
 
 /* Mry_New(T[N]) is also valid */
 #define Mry_New1(T) \
-        Mry_AllocateZeroed(1,sizeof(T))
+        Mry_AllocateZeroed(sizeof(T),1)
 
 #define Mry_New2(T,N) \
-        Mry_AllocateZeroed((size_t) (N),sizeof(T))
+        Mry_AllocateZeroed(sizeof(T),(size_t) (N))
+
+
+/* Using a placement new */
+#if 0
+#define Mry_New1(T) \
+        ({\
+          T* Mry_v = Mry_AllocateZeroed(sizeof(T),1);\
+          new (&Mry_v[0]) T() ; \
+          Mry_v;\
+        })
+
+#define Mry_New2(T,N) \
+        ({\
+          T* Mry_v = Mry_AllocateZeroed(sizeof(T),(size_t) (N));\
+          do { \
+            for(size_t Mry_i = 0 ; Mry_i < N ; Mry_i++) { \
+              new (&Mry_v[Mry_i]) T() ; \
+            } \
+          } while(0); \
+          Mry_v;\
+        })
+#endif
 
 
 /* We use a C extension provided by GNU C:
@@ -21,11 +43,11 @@
  * (https://gcc.gnu.org/onlinedocs/gcc/Statement-Exprs.html#Statement-Exprs) */
 #define Mry_Create(T,N,CREATE) \
         ({ \
-          T* Mry_v = (T*) Mry_New(T,N) ; \
+          T* Mry_v = static_cast<T*>(Mry_New(T,N)) ; \
           do { \
             for(size_t Mry_i = 0 ; Mry_i < N ; Mry_i++) { \
               T* Mry_v0 = CREATE ; \
-              Mry_v[Mry_i] = Mry_v0[0] ; \
+              std::memcpy(&Mry_v[Mry_i],Mry_v0,sizeof(T)); \
               Mry_Free(Mry_v0) ; \
             } \
           } while(0); \
@@ -53,10 +75,9 @@
 #include <assert.h>
 #include <cstring>
 
-#define _INLINE_ inline
 
 #if 0
-_INLINE_ void* Mry_Allocate(size_t size)
+inline void* Mry_Allocate(size_t size)
 {
   void* ptr ;
 
@@ -69,7 +90,7 @@ _INLINE_ void* Mry_Allocate(size_t size)
   return(ptr);
 }
 
-_INLINE_ void* Mry_AllocateZeroed(size_t num,size_t size)
+inline void* Mry_AllocateZeroed(size_t size,size_t num = 1)
 {
   void* ptr;
 
@@ -82,7 +103,7 @@ _INLINE_ void* Mry_AllocateZeroed(size_t num,size_t size)
   return(ptr);
 }
 
-_INLINE_ void* Mry_Realloc(void* old_ptr,size_t old_size,size_t new_size)
+inline void* Mry_Realloc(void* old_ptr,size_t old_size,size_t new_size)
 {
   void* new_ptr;
 
@@ -95,7 +116,7 @@ _INLINE_ void* Mry_Realloc(void* old_ptr,size_t old_size,size_t new_size)
   return(new_ptr);
 }
 
-_INLINE_ void Mry_Free(void* ptr)
+inline void Mry_Free(void* ptr)
 {
   if(ptr) free(ptr);
 }
@@ -104,7 +125,7 @@ _INLINE_ void Mry_Free(void* ptr)
 #include <algorithm>
 #include <new>
 
-_INLINE_ void* Mry_Allocate(size_t size)
+inline void* Mry_Allocate(size_t size)
 {
   void* ptr ;
 
@@ -117,7 +138,7 @@ _INLINE_ void* Mry_Allocate(size_t size)
   return(ptr);
 }
 
-_INLINE_ void* Mry_AllocateZeroed(size_t num,size_t size)
+inline void* Mry_AllocateZeroed(size_t size,size_t num = 1)
 {
   void* ptr ;
 
@@ -135,7 +156,25 @@ _INLINE_ void* Mry_AllocateZeroed(size_t num,size_t size)
 }
 
 
-_INLINE_ void* Mry_Realloc(void* old_ptr,size_t old_size,size_t new_size)
+#if 0
+template<typename T,typename... Args>
+inline T* Mry_Create_(size_t N, T* (*CREATE)(Args...),Args&&... args)
+{
+  T* v = static_cast<T*>(Mry_AllocateZeroed(sizeof(T),N));
+
+  for(size_t i = 0 ; i < N ; i++) {
+    T* v0 = CREATE(std::forward<Args>(args)...);
+
+    v[i] = v0[0] ;
+    Mry_Free(v0) ;
+  }
+
+  return(v);
+}
+#endif
+
+
+inline void* Mry_Realloc(void* old_ptr,size_t old_size,size_t new_size)
 {
   void* new_ptr;
 
@@ -151,13 +190,11 @@ _INLINE_ void* Mry_Realloc(void* old_ptr,size_t old_size,size_t new_size)
 }
 
 
-_INLINE_ void Mry_Free(void* ptr)
+inline void Mry_Free(void* ptr)
 {
   if(ptr) ::operator delete(ptr);
 }
 #endif
-
-#undef _INLINE_
 
 
 /* For the macros */

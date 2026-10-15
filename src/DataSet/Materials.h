@@ -7,11 +7,12 @@ extern "C" {
 
 
 /* Forward declarations */
-struct Materials_t; //typedef struct Materials_t    Materials_t ;
+struct Materials_t;
 struct DataFile_t;
 struct Fields_t;
 struct Functions_t;
 struct Models_t;
+struct Model_t;
 struct Material_t;
 struct ObVals_t;
 
@@ -65,6 +66,7 @@ struct Materials_t {
     return(EmplaceBack(name.c_str()));
   }
   Material_t* EmplaceBack(char const*);
+  Material_t* EmplaceBack(Model_t*);
 
   public:
   size_t GetNbOfMaterials() const {return _n_mat;}
@@ -91,53 +93,20 @@ struct Materials_t {
 #include "Models.h"
 
   inline Material_t* Materials_t::EmplaceBack(char const* modelname){
-    Material_t* material = _mat + _n_mat;
     Models_t* usedmodels = GetUsedModels() ;
     Model_t* model = Models_FindOrAppendModel(usedmodels,modelname) ;
-    size_t modind  = Models_FindModelIndex(usedmodels,modelname) ;
+    
+    return EmplaceBack(model) ;
+  }
+
+  inline Material_t* Materials_t::EmplaceBack(Model_t* model){
+    Material_t* material = _mat + _n_mat;
     
     if(_n_mat >= GetCapacity()) {
       throw std::length_error("Maximum number of materials reached");
     }
 
-    Material_Set(material,model,modind) ;
-
-    #if 0
-    /* Input material data */
-    /* A model pointing to a null pointer serves to build curves only */
-    {
-      DataFile_t* datafile = Models_GetDataFile(usedmodels) ;
-
-      if(model) {
-        Model_ReadMaterialProperties_t* readmatprop = Model_GetReadMaterialProperties(model) ;
-    
-        if(readmatprop) {
-          int n = readmatprop(this,datafile) ;
-    
-          if(n > Material_MaxNbOfProperties) {
-            Message_RuntimeError("Material_t::Set: too many properties") ;
-          }
-    
-          SetNbOfProperties(n) ;
-        }
-      } else {
-        Material_Set();
-      }
-    }
-    
-    /* for compatibility with old version */
-    if(GetModel()) {
-      if(Material_GetNbOfEquations(this) == 0) {
-        Material_SetNbOfEquations(this,neq) ;
-      }
-    }
-    
-    nc = Material_GetNbOfCurves(this) ;
-    
-    if(!GetModel()) {
-      throw std::runtime_error("Material_t::Set: Model not known") ;
-    }
-    #endif
+    Material_Set(material,model) ;
 
     _n_mat++;
     return material;

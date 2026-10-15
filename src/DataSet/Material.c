@@ -118,135 +118,6 @@ void (Material_Delete)(void* self)
 }
 
 
-#if 0
-void (Material_Scan)(Material_t* mat,DataFile_t* datafile)
-{
-  char* line = DataFile_ReadLineFromCurrentFilePositionInString(datafile) ;
-  char  modelname[Material_MaxLengthOfKeyWord] ;
-        
-  /* Read and store the code name of the model */
-  {
-    char  codename[Material_MaxLengthOfKeyWord] ;
-    char*  code = codename + 1 ;
-    //int n = String_FindAndScanExp(line,"Model =,",","," %s",codename+1) ;
-      
-    if(String_Is(line,"Model",5)) {
-      char* c = String_FindAndSkipToken(line,"=") ;
-          
-      String_ScanStringUntil(c,codename + 1,"(" String_SpaceChars) ;
-      //String_Scan(line,"%*[^= ] = %s",codename + 1) ;
-    } else {
-      String_Scan(line,"%s",codename + 1) ;
-    }
-      
-    if(isdigit(codename[1])) {
-      codename[0] = 'm' ;
-      code = codename ;
-    }
-      
-    /* Code name of the model */
-    strcpy(modelname,code) ;
-    strcpy(Material_GetCodeNameOfModel(mat),code) ;
-  }
-      
-      
-  /* Find or append a model and point to it */
-  {
-    char*  code = Material_GetCodeNameOfModel(mat) ;
-    Models_t* usedmodels = Material_GetUsedModels(mat) ;
-    Model_t* matmodel = Models_FindOrAppendModel(usedmodels,code) ;
-    size_t modind  = Models_FindModelIndex(usedmodels,code) ;
-        
-    Material_SetModel(mat,matmodel) ;
-    Material_SetModelIndex(mat,modind) ;
-  }
-      
-      
-  /* Read and store the user-defined name of unknowns */
-  {
-    char* c = String_FindChar(line,'(') ;
-        
-    if(c) {
-      Model_t* matmodel = Material_GetModel(mat) ;
-      size_t neq = Model_GetNbOfEquations(matmodel) ;
-          
-      c[0] = ' ' ;
-      for(size_t i = 0 ; i < neq ; i++) {
-        char name[Material_MaxLengthOfKeyWord] ;
-        char* c1 = String_FindAnyChar(c,",)\n") ;
-            
-        if(c1) {
-          c1[0] = ' ' ;
-          String_Scan(c,"%s",name) ;
-          Model_CopyNameOfUnknown(matmodel,i,name) ;
-          c = c1 ;
-        } else {
-          Message_FatalError("Material_Scan") ;
-        }
-      }
-    }
-  }
-  /* Read and store the user-defined name of equations */
-  {
-    char* c = String_FindChar(line,'(') ;
-    c = String_FindChar(c,'(') ;
-        
-    if(c) {
-      Model_t* matmodel = Material_GetModel(mat) ;
-      size_t neq = Model_GetNbOfEquations(matmodel) ;
-          
-      c[0] = ' ' ;
-      for(size_t i = 0 ; i < neq ; i++) {
-        char name[Material_MaxLengthOfKeyWord] ;
-        char* c1 = String_FindAnyChar(c,",)\n") ;
-            
-        if(c1) {
-          c1[0] = ' ' ;
-          String_Scan(c,"%s",name) ;
-          Model_CopyNameOfEquation(matmodel,i,name) ;
-          c = c1 ;
-        } else {
-          Message_FatalError("Material_Scan") ;
-        }
-      }
-    }
-  }
-
-
-  /* for compatibility with old version */
-  {
-    if(Material_GetModel(mat)) {
-      mat->eqn = Material_GetNameOfEquation(mat) ;
-      mat->inc = Material_GetNameOfUnknown(mat) ;
-    }
-  }
-
-
-  /* Input material data */
-  /* A model pointing to a null pointer serves to build curves only */
-  {
-    int n = Material_ReadProperties(mat,datafile) ;
-    
-    Material_SetNbOfProperties(mat,n) ;
-  }
-    
-    
-  /* for compatibility with old version */
-  {
-    if(Material_GetModel(mat)) {
-      if(Material_GetNbOfEquations(mat) == 0) {
-        Material_SetNbOfEquations(mat,mat->neq) ;
-      }
-    }
-  }
-  mat->nc = Material_GetNbOfCurves(mat) ;
-    
-    
-  if(!Material_GetModel(mat)) {
-    Message_FatalError("Material_Scan: Model not known") ;
-  }
-}
-#else
 void (Material_Scan)(Material_t* mat,DataFile_t* datafile)
 {
   char* line = DataFile_ReadLineFromCurrentFilePositionInString(datafile) ;
@@ -287,7 +158,7 @@ void (Material_Scan)(Material_t* mat,DataFile_t* datafile)
 
   strcpy(Material_GetCodeNameOfModel(mat),modelname) ;
   Material_SetModel(mat,matmodel) ;
-  Material_SetModelIndex(mat,modind) ;
+  //Material_SetModelIndex(mat,modind) ;
 
 
   /* for compatibility with old version */
@@ -319,7 +190,6 @@ void (Material_Scan)(Material_t* mat,DataFile_t* datafile)
     Message_FatalError("Material_Scan: Model not known") ;
   }
 }
-#endif
 
 
 
@@ -328,17 +198,13 @@ int  (Material_ReadProperties)(Material_t* material,DataFile_t* datafile)
   Model_t* model = Material_GetModel(material) ;
   
   if(model) {
-    Model_ReadMaterialProperties_t* readmatprop = Model_GetReadMaterialProperties(model) ;
-    
-    if(readmatprop) {
-      int n = readmatprop(material,datafile) ;
+      int n = Model_ReadMaterialProperties(model,material,datafile) ;
     
       if(n > Material_MaxNbOfProperties) {
         Message_RuntimeError("Material_ReadProperties: too many properties") ;
       }
     
       return(n) ;
-    }
   }
   
   Material_ScanProperties(material,datafile,NULL) ;
