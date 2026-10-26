@@ -68,10 +68,7 @@ int (Unit_Scan)(Unit_t* unit,DataFile_t* datafile)
     int n = String_FindAndScanExp(line,"Length",","," = %s",value) ;
         
     if(n) {
-      std::string value_str(value);
-      std::string name = "Length";
-    
-      Unit_Set(unit,name,value_str) ;
+      Unit_Set(unit,"Length",value) ;
       return(1);
     }
   }
@@ -81,10 +78,7 @@ int (Unit_Scan)(Unit_t* unit,DataFile_t* datafile)
     int n = String_FindAndScanExp(line,"Time",","," = %s",value) ;
         
     if(n) {
-      std::string value_str(value);
-      std::string name = "Time";
-    
-      Unit_Set(unit,name,value_str) ;
+      Unit_Set(unit,"Time",value) ;
       return(1);
     }
   }
@@ -94,10 +88,7 @@ int (Unit_Scan)(Unit_t* unit,DataFile_t* datafile)
     int n = String_FindAndScanExp(line,"Mass",","," = %s",value) ;
         
     if(n) {
-      std::string value_str(value);
-      std::string name = "Mass";
-    
-      Unit_Set(unit,name,value_str) ;
+      Unit_Set(unit,"Mass",value) ;
       return(1);
     }
   }
@@ -107,7 +98,7 @@ int (Unit_Scan)(Unit_t* unit,DataFile_t* datafile)
 
 
 
-Unit_t* (Unit_Create)(std::string& name,std::string& value)
+Unit_t* (Unit_Create)(char const* name,char const* value)
 {
   Unit_t* unit = Unit_New() ;
 

@@ -38,6 +38,8 @@ extern void      (Models_PrintAll)(char*,FILE *) ;
 #define Models_GetModel(MODS)         ((MODS)->GetModel())
 #define Models_GetGeometry(MODS)      ((MODS)->GetGeometry())
 #define Models_GetDataFile(MODS)      ((MODS)->GetDataFile())
+#define Models_GetVectorOfPointersToModels(MODS) ((MODS)->GetVectorOfPointersToModels())
+#define Models_GetModelAt(MODS,I)        ((MODS)->GetModelAt(I))
 
 #define Models_SetMaxNbOfModels(MODS,A) ((MODS)->SetMaxNbOfModels(A))
 #define Models_SetNbOfModels(MODS,A)    ((MODS)->SetNbOfModels(A))
@@ -53,26 +55,38 @@ extern void      (Models_PrintAll)(char*,FILE *) ;
 #define Models_Print(MODS)               ((MODS)->Print())
 
 
+
+#include <string>
+#include <utility>
 #include <stdexcept>
+#include <type_traits>
+#include <vector>
 
 struct Models_t {
   private:
   size_t _maxn_model ;
   size_t _n_model ;
+  /* Non-contiguous, non-owing container */
+  std::vector<Model_t*> _pmodel_vec;
+  /* Contiguous, owing container */
   Model_t* _model ;
   Geometry_t* _geometry  ;
   DataFile_t* _datafile ;
 
   public:
-  size_t GetCapacity(){return _maxn_model ;}
+  size_t GetCapacity(){return _pmodel_vec.capacity();}
+  Model_t* EmplaceBack();
   template<typename... Args>
-  Model_t* EmplaceBack(Args&&...);
+  Model_t* EmplaceBack(char const*,Args&&...);
+  Model_t* EmplaceBack(Model_t&);
 
-  size_t GetMaxNbOfModels(){return _maxn_model ;}
-  size_t GetNbOfModels(){return _n_model ;}
-  Model_t* GetModel(){return _model ;}
-  Geometry_t* GetGeometry(){return _geometry  ;}
-  DataFile_t* GetDataFile(){return _datafile ;}
+  size_t GetMaxNbOfModels(){return _pmodel_vec.capacity();}
+  size_t GetNbOfModels(){return _pmodel_vec.size();}
+  std::vector<Model_t*>& GetVectorOfPointersToModels(){return _pmodel_vec;}
+  Model_t* GetModel(){return _model;}
+  Model_t* GetModelAt(size_t&);
+  Geometry_t* GetGeometry(){return _geometry;}
+  DataFile_t* GetDataFile(){return _datafile;}
 
   void SetMaxNbOfModels(size_t const& a){_maxn_model = a;}
   void SetNbOfModels(size_t const& a){_n_model = a;}
@@ -87,15 +101,18 @@ struct Models_t {
 } ;
 
 
-#include <utility>
 #include "Model.h"
 
+  inline Model_t* Models_t::GetModelAt(size_t& i){
+    //return GetModel() + i;
+    return _pmodel_vec.at(i);
+  }
+
   inline size_t Models_t::FindModelIndex(const char* codename){
-    Model_t* model = GetModel() ;
     size_t n_models = GetNbOfModels() ;
     size_t j = 0 ;
   
-    while(j < n_models && strcmp(Model_GetCodeNameOfModel(model + j),codename)) j++ ;
+    while(j < n_models && strcmp(Model_GetCodeNameOfModel(GetModelAt(j)),codename)) j++ ;
   
     if(j < n_models) {
       return(j) ;
@@ -108,9 +125,7 @@ struct Models_t {
     size_t j = FindModelIndex(codename) ;
   
     if(j < GetNbOfModels()) {
-      Model_t* model = GetModel() ;
-    
-      return(model + j) ;
+      return(GetModelAt(j));
     }
 
     return(NULL) ;
@@ -126,30 +141,50 @@ struct Models_t {
     return(model) ;
   }
 
-  template<typename... Args>
-  inline Model_t* Models_t::EmplaceBack(Args&&... args) {
-    Model_t* model = _model + _n_model;
-    
-    if(_n_model >= GetCapacity()) {
-      throw std::length_error("Maximum number of models reached");
-    }
+  inline Model_t* Models_t::EmplaceBack() {
+    Model_t* model = _model + GetNbOfModels();
 
-    Model_Set(model,std::forward<Args>(args)...);
-    _n_model++;
+     _pmodel_vec.push_back(model);
+    
+    Model_SetParentModels(model,this);
+
+    return(model);
+  }
+
+  template<typename... Args>
+  inline Model_t* Models_t::EmplaceBack(char const* name,Args&&... args) {
+    Model_t* model = _model + GetNbOfModels();
+
+     _pmodel_vec.push_back(model);
+
+    Model_SetParentModels(model,this);
+    Model_Set(model,name,std::forward<Args>(args)...);
+
+    return(model);
+  }
+
+  inline Model_t* Models_t::EmplaceBack(Model_t& m) {
+    Model_t* model;
+
+    _pmodel_vec.push_back(&m);
+    model = _pmodel_vec.back();
+
+    Model_SetParentModels(model,this);
+    Model_SetModelProperties(model);
+
     return(model);
   }
 
   inline void Models_t::Print(){
     #define PRINT(...) fprintf(stdout,__VA_ARGS__)
     size_t n_models = GetNbOfModels() ;
-    Model_t* model = GetModel() ;
 
     PRINT("Models:\n") ;
     PRINT("\t Nb of models = %lu\n",n_models) ;
     PRINT("\n") ;
     
     for(size_t i = 0 ; i < n_models ; i++) {
-      Model_Print(model + i) ;
+      Model_Print(GetModelAt(i));
       PRINT("\n") ;
     }
     #undef PRINT

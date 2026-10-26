@@ -86,15 +86,7 @@ struct BCond_t {
   void SetRegionName(char* a){_RegionName = a;}
   void SetNameOfUnknown(char* a){_NameOfUnknown = a;}
   void SetNameOfEquation(char* a){_NameOfEquation = a;}
-  //void SetFunctionIndex(int a){_FunctionIndex = a;}
-  //void SetFieldIndex(int a){_FieldIndex = a;}
 
-  void Set(std::string const& region,std::string const& equation,std::string const& unknown,size_t const& fieldindex,size_t const& functionindex){
-    Set(region.c_str(),equation.c_str(),unknown.c_str(),fieldindex,functionindex);
-  }
-  void Set(std::string const& region,std::string const& unknown,size_t const& fieldindex,size_t const& functionindex){
-    Set(region.c_str(),unknown.c_str(),fieldindex,functionindex);
-  }
   void Set(char const* region,char const* unknown,size_t const& fieldindex,size_t const& functionindex){
     Set(region," ",unknown,fieldindex,functionindex);
   }

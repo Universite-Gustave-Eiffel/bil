@@ -33,8 +33,6 @@ namespace jlcxx {
   MIRROR(TextFile_t);
   MIRROR(TimeStep_t);
   MIRROR(Units_t);
-  
-  //template<> struct DefaultConstructible<Module_t> : std::false_type {};
 }
   
 JLCXX_MODULE define_julia_module(jlcxx::Module& mod) {
@@ -68,17 +66,16 @@ JLCXX_MODULE define_julia_module(jlcxx::Module& mod) {
   ADD_TYPE(Units_t);
   
   
-
   /* BConds */
-  MEM_METHOD(BConds,EmplaceBack,std::string const&,std::string const&,std::string const&,size_t const&,size_t const&);
-  MEM_METHOD(BConds,EmplaceBack,std::string const&,std::string const&,size_t const&,size_t const&);
+  MEM_METHOD(BConds,EmplaceBack,char const*,char const*,char const*,size_t const&,size_t const&);
+  MEM_METHOD(BConds,EmplaceBack,char const*,char const*,size_t const&,size_t const&);
   
   /* DataSet */
-  FREE_METHOD(DataSet,New,std::string const&,Context_t*);
-  FREE_METHOD(DataSet,New,std::string const&);
+  FREE_METHOD(DataSet,New,char const*,Context_t*);
+  FREE_METHOD(DataSet,New,char const*);
   FREE_METHOD(DataSet,Delete,void*);
   FREE_METHOD(DataSet,Delete,DataSet_t*);
-  FREE_METHOD(DataSet,PrintData,DataSet_t*,std::string const&);
+  FREE_METHOD(DataSet,PrintData,DataSet_t*,char const*);
   MEM_METHOD(DataSet,GetUnits);
   MEM_METHOD(DataSet,GetDataFile);
   MEM_METHOD(DataSet,GetGeometry);
@@ -106,57 +103,58 @@ JLCXX_MODULE define_julia_module(jlcxx::Module& mod) {
   return o->Set(b1);});
   
   /* Fields */
-  MEM_METHOD(Fields,EmplaceBack,std::string const&,double const&,double const*,double const*);
-  MEM_METHOD(Fields,EmplaceBack,std::string const&,std::string const&);
-  MEM_METHOD(Fields,EmplaceBack,std::string const&,double const&,double const&);
-  MEM_METHOD(Fields,EmplaceBack,std::string const&,double const&);
+  MEM_METHOD(Fields,EmplaceBack,char const*,double const&,double const*,double const*);
+  MEM_METHOD(Fields,EmplaceBack,char const*,char const*);
+  MEM_METHOD(Fields,EmplaceBack,char const*,double const&,double const&);
+  MEM_METHOD(Fields,EmplaceBack,char const*,double const&);
   
   /* Functions */
-  MEM_METHOD(Functions,EmplaceBack,std::string const&,size_t const&,double const*,double const*);
-  mod.method(JLNAME(Functions,EmplaceBack),[](Functions_t* o,std::string const& a1,jlcxx::ArrayRef<double> a2,jlcxx::ArrayRef<double> a3) {
+  MEM_METHOD(Functions,EmplaceBack,char const*,size_t const&,double const*,double const*);
+  mod.method(JLNAME(Functions,EmplaceBack),[](Functions_t* o,char const* a1,jlcxx::ArrayRef<double> a2,jlcxx::ArrayRef<double> a3) {
   std::vector<double> b2(a2.begin(),a2.end());
   std::vector<double> b3(a3.begin(),a3.end());
   return o->EmplaceBack(a1,b2,b3);});
-  MEM_METHOD(Functions,EmplaceBack,std::string const&,char const*);
+  MEM_METHOD(Functions,EmplaceBack,char const*,char const*);
 
   /* Geometry */
-  MEM_METHOD(Geometry,Set,unsigned short int,std::string&);
+  MEM_METHOD(Geometry,Set,unsigned short int,char const*);
   MEM_METHOD(Geometry,GetPeriodicities);
 
   /* IConds */
-  MEM_METHOD(IConds,EmplaceBack,std::string const&,std::string const&,size_t const&,size_t const&);
-  MEM_METHOD(IConds,EmplaceBack,std::string const&,std::string const&,std::string const&,size_t const&);
+  MEM_METHOD(IConds,EmplaceBack,char const*,char const*,size_t const&,size_t const&);
+  MEM_METHOD(IConds,EmplaceBack,char const*,char const*,char const*,size_t const&);
   
   /* IterProcess */
   MEM_METHOD(IterProcess,Set,int const&,double const&,int const&);
   
   /* Loads */
-  MEM_METHOD(Loads,EmplaceBack,std::string const&,std::string const&,std::string const&,size_t const&,size_t const&);
+  MEM_METHOD(Loads,EmplaceBack,char const*,char const*,char const*,size_t const&,size_t const&);
   
   /* Materials */
-  MEM_METHOD(Materials,EmplaceBack,std::string const&);
+  MEM_METHOD(Materials,EmplaceBack,char const*);
   MEM_METHOD(Materials,EmplaceBack,Model_t*);
   
   /* Material */
-  MEM_METHOD(Material,Set,std::string const&,double const&);
-  MEM_METHOD(Material,Set,std::string const&,std::string const&);
+  MEM_METHOD(Material,Set,char const*,double const&);
+  MEM_METHOD(Material,Set,char const*,char const*);
   MEM_METHOD(Material,Finalize);
   
   /* Mesh */
-  FREE_METHOD(Mesh,Set,Mesh_t*,std::string const&);
+  FREE_METHOD(Mesh,Set,Mesh_t*,char const*);
   FREE_METHOD(Mesh,WriteInversePermutation,Mesh_t*,char const*,char const*);
   
   /* Models */
-  MEM_METHOD(Models,EmplaceBack,std::string const&);
-  MEM_METHOD(Models,EmplaceBack,std::string const&,std::string const&,std::string const&);
+  MEM_METHOD(Models,EmplaceBack,char const*);
+  MEM_METHOD(Models,EmplaceBack,char const*,char const*,char const*);
+  MEM_METHOD(Models,EmplaceBack,Model_t&);
   
   /* Module */
-  MEM_METHOD(Module,Set,std::string const&);
+  MEM_METHOD(Module,Set,char const*);
   MEM_METHOD(Module,ComputeProblem,DataSet_t*);
   
   /* ObVals */
-  MEM_METHOD(ObVals,EmplaceBack,std::string const&,double const&,std::string const&,double const&);
-  MEM_METHOD(ObVals,EmplaceBack,std::string const&,double const&);
+  MEM_METHOD(ObVals,EmplaceBack,char const*,double const&,char const*,double const&);
+  MEM_METHOD(ObVals,EmplaceBack,char const*,double const&);
   
   /* Options */
   MEM_METHOD(Options,Set,char const*);
@@ -183,5 +181,5 @@ JLCXX_MODULE define_julia_module(jlcxx::Module& mod) {
   MEM_METHOD(TimeStep,Set,double const&,double const&);
   
   /* Units */
-  MEM_METHOD(Units,EmplaceBack,std::string const&,std::string const&);
+  MEM_METHOD(Units,EmplaceBack,char const*,char const*);
 }

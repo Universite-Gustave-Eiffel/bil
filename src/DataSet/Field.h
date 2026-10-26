@@ -98,7 +98,7 @@ struct FieldAffine_t {
   double _x[3] ;              /* coordinates of A */
 
   public:
-  void Set(std::string const&){
+  void Set(char const*){
     throw std::invalid_argument("FieldAffine_t::Set: unknown type") ;
   }
   void Set(double const&,double const& = 0) {
@@ -154,7 +154,7 @@ struct FieldGrid_t {
   void Set(double const&,double const*,double const*) {
     throw std::invalid_argument("FieldGrid_t::Set: unknown type") ;
   }
-  void Set(std::string const&);
+  void Set(char const*);
 
   double ComputeValueAtPoint(double* p,const int& dim){
     #define V(i,j,k) (_v[(i) + (j)*_n_x + (k)*_n_x*_n_y])
@@ -270,7 +270,7 @@ struct FieldRandom_t {      /* Random field */
   void Set(double const&,double const*,double const*) {
     throw std::invalid_argument("FieldRandom_t::Set: unknown type") ;
   }
-  void Set(std::string const&){
+  void Set(char const*){
     throw std::invalid_argument("FieldRandom_t::Set: unknown type") ;
   }
   void Set(double const& v,double const& ranlen = 0) {
@@ -314,7 +314,7 @@ struct Field_t {
   void DeleteStorage();
 
   template<typename... Args>
-  void Set(const std::string&,Args&&...);
+  void Set(char const*,Args&&...);
 
   double ComputeValueAtPoint(double* x,const int& dim = 3){
     std::string type(_type);
@@ -370,8 +370,8 @@ struct Field_t {
     }
   }
 
-  inline void FieldGrid_t::Set(std::string const& filestr) {
-    FieldGrid_t* grid = FieldGrid_Create(filestr.c_str()) ;
+  inline void FieldGrid_t::Set(char const* file) {
+    FieldGrid_t* grid = FieldGrid_Create(file) ;
 
     this[0] = grid[0];
     Mry_Free(grid);
@@ -391,20 +391,20 @@ struct Field_t {
   }
 
   template<typename... Args>
-  inline void Field_t::Set(const std::string& type,Args&&... args){
+  inline void Field_t::Set(char const* type,Args&&... args){
     DeleteStorage();
 
-    strcpy(_type,type.c_str());
+    strcpy(_type,type);
 
-    if(type.compare("affine") == 0) {
+    if(strcmp(type,"affine") == 0) {
       _store = (FieldAffine_t*) Mry_New(FieldAffine_t) ;
     ((FieldAffine_t*)_store)->Set(std::forward<Args>(args)...) ;
 
-    } else if(type.compare("grid") == 0) {
+    } else if(strcmp(type,"grid") == 0) {
       _store = (FieldGrid_t*) Mry_New(FieldGrid_t) ;
       ((FieldGrid_t*)_store)->Set(std::forward<Args>(args)...) ;
 
-    } else if(type.compare("random") == 0) {
+    } else if(strcmp(type,"random") == 0) {
       _store = (FieldRandom_t*) Mry_New(FieldRandom_t) ;
       ((FieldRandom_t*)_store)->Set(std::forward<Args>(args)...) ;
 

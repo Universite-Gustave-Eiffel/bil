@@ -37,7 +37,7 @@ struct Units_t {
   public:
   Unit_t& operator[](size_t);
   size_t GetCapacity() const {return Units_MaxNbOfUnits;}
-  void EmplaceBack(const std::string&, const std::string&);
+  void EmplaceBack(char const*,char const*);
 
   public:
   size_t GetNbOfUnits() const {return _n_units;}
@@ -62,7 +62,7 @@ struct Units_t {
     return(_unit[n]);
   }
 
-  inline void Units_t::EmplaceBack(const std::string& name, const std::string& value) {
+  inline void Units_t::EmplaceBack(char const* name,char const* value) {
     Unit_t* unit = _unit + _n_units;
 
     if(_n_units >= GetCapacity()) {

@@ -214,9 +214,12 @@ int  (Material_ReadProperties)(Material_t* material,DataFile_t* datafile)
 
 
 
-void (Material_ScanProperties)(Material_t* mat,DataFile_t* datafile,int (*pm)(const char*))
+void (Material_ScanProperties)(Material_t* mat,DataFile_t* datafile,int (*pm0)(const char*))
 /** Read the material properties in the string of the file content */
 {
+  Model_t* model = Material_GetModel(mat) ;
+  Model_ComputePropertyIndex_t* pm1 = Model_GetComputePropertyIndex(model) ;
+  Model_ComputePropertyIndex_t* pm = (pm0) ? pm0 : pm1 ;
   int    nd = Material_GetNbOfProperties(mat) ;
   short int    cont = 1 ;
   

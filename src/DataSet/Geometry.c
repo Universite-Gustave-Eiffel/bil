@@ -154,10 +154,9 @@ void  (Geometry_Scan)(Geometry_t* geom,DataFile_t* datafile)
       char* pline = line ;
       char sym[TextFile_MaxLengthOfTextLine] ;
       int n = String_Scan(line,"%s",sym) ;
-      std::string sym_str(sym);
 
       if(n) {
-        Geometry_Set(geom,dim,sym_str) ;
+        Geometry_Set(geom,dim,sym) ;
       }
     }
   }

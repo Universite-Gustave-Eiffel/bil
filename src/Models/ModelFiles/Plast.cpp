@@ -53,7 +53,7 @@ using Values_t = CustomValues_t<T,ImplicitValues_t,ExplicitValues_t,ConstantValu
 
 using Values_d = Values_t<double> ;
 
-#define Values_Index(V)  CustomValues_Index(Values_t,V)
+#define Values_Index(V)  static_cast<int>(CustomValues_Index(Values_t,V))
 
 
 
@@ -187,7 +187,7 @@ static enum {
 
 int pm(const char *s)
 {
-#define Parameters_Index(V)  CustomValues_Index(Parameters_t,V,double)
+#define Parameters_Index(V)  static_cast<int>(CustomValues_Index(Parameters_t,V,double))
          if(!strcmp(s,"gravity")) { 
     return (Parameters_Index(Gravity)) ;
   } else if(!strcmp(s,"rho_s")) { 
@@ -199,7 +199,7 @@ int pm(const char *s)
   } else if(!strncmp(s,"sig0_",5)) {
     int i = (strlen(s) > 5) ? s[5] - '1' : 0 ;
     int j = (strlen(s) > 6) ? s[6] - '1' : 0 ;
-    return(Parameters_Index(InitialStress[3*i + j])) ;
+    return(Parameters_Index(InitialStress[0]) + 3*i + j) ;
   } else if(!strcmp(s,"poisson"))       { 
     return (Parameters_Index(PoissonRatio)) ;
   } else if(!strcmp(s,"macro-gradient")) {
@@ -207,13 +207,13 @@ int pm(const char *s)
   } else if(!strncmp(s,"macro-gradient_",15)) {
     int i = (strlen(s) > 15) ? s[15] - '1' : 0 ;
     int j = (strlen(s) > 16) ? s[16] - '1' : 0 ;
-    return(Parameters_Index(MacroStrainGradient[3*i + j])) ;
+    return(Parameters_Index(MacroStrainGradient[0]) + 3*i + j) ;
   } else if(!strcmp(s,"macro-fctindex")) {
     return(Parameters_Index(MacroFunctionIndex[0])) ;
   } else if(!strncmp(s,"macro-fctindex_",15)) {
     int i = (strlen(s) > 15) ? s[15] - '1' : 0 ;
     int j = (strlen(s) > 16) ? s[16] - '1' : 0 ;
-    return(Parameters_Index(MacroFunctionIndex[3*i + j])) ;
+    return(Parameters_Index(MacroFunctionIndex[0]) + 3*i + j) ;
     
     /* Model 1: Drucker-Prager */
   } else if(!strcmp(s,"initial_cumulative_plastic_shear_strain")) {

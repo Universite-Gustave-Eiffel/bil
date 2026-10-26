@@ -255,5 +255,5 @@ void (Model_Scan)(Model_t* model,DataFile_t* datafile)
     }
   }
 
-  Model_Set(model,codename,equ_vec,unk_vec) ;
+  Model_Set(model,codename.c_str(),equ_vec,unk_vec) ;
 }

@@ -143,7 +143,7 @@ void (PosFilesForGMSH_ASCIIFileFormatVersion2_2)(PosFilesForGMSH_t* pf4gmsh)
       Material_t* mat = Element_GetMaterial(elt) ;
       char* codename = Material_GetCodeNameOfModel(mat) ;
       size_t usedmodelindex = Models_FindModelIndex(usedmodels,codename) ;
-      Model_t*  usedmodel = Models_GetModel(usedmodels) + usedmodelindex ;
+      Model_t*  usedmodel = Models_GetModelAt(usedmodels,usedmodelindex) ;
       Views_t*  views = Model_GetViews(usedmodel) ;
       int nviews = Views_GetNbOfViews(views) ;
       View_t*   view  = Views_GetView(views) ;
@@ -282,7 +282,7 @@ void (PosFilesForGMSH_ASCIIFileFormatVersion2_2)(PosFilesForGMSH_t* pf4gmsh)
           Material_t* mat = Element_GetMaterial(elt) ;
           char* codename = Material_GetCodeNameOfModel(mat) ;
           size_t usedmodelindex = Models_FindModelIndex(usedmodels,codename) ;
-          Model_t*  usedmodel = Models_GetModel(usedmodels) + usedmodelindex ;
+          Model_t*  usedmodel = Models_GetModelAt(usedmodels,usedmodelindex) ;
           Views_t*  views = Model_GetViews(usedmodel) ;
           int nviews = Views_GetNbOfViews(views) ;
           View_t*   view  = Views_GetView(views) ;
@@ -507,7 +507,7 @@ void (PosFilesForGMSH_ParsedFileFormatVersion2)(PosFilesForGMSH_t* pf4gmsh)
       Material_t* mat = Element_GetMaterial(elt) ;
       char* codename = Material_GetCodeNameOfModel(mat) ;
       size_t usedmodelindex = Models_FindModelIndex(usedmodels,codename) ;
-      Model_t*  usedmodel = Models_GetModel(usedmodels) + usedmodelindex ;
+      Model_t*  usedmodel = Models_GetModelAt(usedmodels,usedmodelindex) ;
       Views_t*  views = Model_GetViews(usedmodel) ;
       int nviews = Views_GetNbOfViews(views) ;
       View_t*   view  = Views_GetView(views) ;

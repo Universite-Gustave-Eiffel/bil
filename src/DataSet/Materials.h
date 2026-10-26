@@ -44,11 +44,6 @@ extern void         (Materials_LinkUpToObVals)(Materials_t*,ObVals_t*);
 #define Materials_Print(MATS)              ((MATS)->Print())
 
 
-#define Materials_GetNbOfUsedModels(MATS) \
-        Models_GetNbOfModels(Materials_GetUsedModels(MATS))
-        
-#define Materials_GetUsedModel(MATS) \
-        Models_GetModel(Materials_GetUsedModels(MATS))
 
 #include <string>
 
@@ -62,9 +57,6 @@ struct Materials_t {
 
   public:
   size_t GetCapacity() {return Materials_MaxNbOfMaterials;}
-  Material_t* EmplaceBack(std::string const& name){
-    return(EmplaceBack(name.c_str()));
-  }
   Material_t* EmplaceBack(char const*);
   Material_t* EmplaceBack(Model_t*);
 
@@ -131,12 +123,13 @@ struct Materials_t {
     {
       Models_t* usedmodels = GetUsedModels() ;
       size_t n_usedmodels = Models_GetNbOfModels(usedmodels) ;
-      Model_t* usedmodel = Models_GetModel(usedmodels) ;
       
       PRINT("Nb of used models = %lu\n",n_usedmodels) ;
     
       for(size_t i = 0 ; i < n_usedmodels ; i++) {
-        PRINT("\t Used model(%lu): %s\n",i,Model_GetCodeNameOfModel(usedmodel+i)) ;
+        Model_t* model_i = Models_GetModelAt(usedmodels,i);
+
+        PRINT("\t Used model(%lu): %s\n",i,Model_GetCodeNameOfModel(model_i)) ;
       }
     }
     #undef PRINT

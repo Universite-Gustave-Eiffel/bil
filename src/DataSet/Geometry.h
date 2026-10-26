@@ -87,13 +87,13 @@ struct Geometry_t {
     Symmetry_SetSphericalSymmetry(_symmetry);
     CoorSys_SetSpherical(_coorsys);
   }
-  void  Set(unsigned short int dim,const std::string& isym) {
+  void  Set(unsigned short int dim,char const* isym) {
     SetDimension(dim);
     SetNoSymmetry();
 
     /* The symmetry */
     if(dim > 0 && dim < 3) {
-      std::string sym = isym;
+      std::string sym(isym);
 
       // Convert the string to lowercase in-place
       std::transform(sym.begin(), sym.end(), sym.begin(), [](unsigned char c) {

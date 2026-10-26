@@ -73,7 +73,7 @@ using Values_t = CustomValues_t<T,ImplicitValues_t,ExplicitValues_t,ConstantValu
 
 using Values_d = Values_t<double> ;
 
-#define Values_Index(V)  CustomValues_Index(Values_d,V,double)
+#define Values_Index(V)  static_cast<int>(CustomValues_Index(Values_d,V,double))
 
 
 struct MPM_t: public MaterialPointMethod_t<Values_d> {
@@ -197,7 +197,7 @@ static Elasticity_t* elasty ;
 static int  pm(const char* s) ;
 int pm(const char* s)
 {
-#define Parameters_Index(V)  CustomValues_Index(Parameters_t,V,double)
+#define Parameters_Index(V)  static_cast<int>(CustomValues_Index(Parameters_t,V,double))
        if(!strcmp(s,"prop1")) {
     return (Parameters_Index(Coef1)) ;
   } else if(!strcmp(s,"prop2")) {
@@ -209,7 +209,7 @@ int pm(const char* s)
   } else if(!strncmp(s,"sig0_",5)) {
     int i = (strlen(s) > 5) ? s[5] - '1' : 0 ;
     int j = (strlen(s) > 6) ? s[6] - '1' : 0 ;
-    return(Parameters_Index(InitialStress[3*i + j])) ;
+    return(Parameters_Index(InitialStress[0]) + 3*i + j) ;
   } else return(-1) ;
 #undef Parameters_Index
 }

@@ -39,13 +39,6 @@ struct ObVals_t {
 
   public:
   size_t GetCapacity(){return ObVals_MaxNbOfObVals;}
-  void EmplaceBack(std::string const& name,double const& v,std::optional<std::string> const& type = std::nullopt,double const& r = 0){
-    if(type) {
-      EmplaceBack(name.c_str(),v,type->c_str(),r);
-    } else {
-      EmplaceBack(name.c_str(),v);
-    }
-  }
   void EmplaceBack(char const*,double const&,char const* = nullptr,double const& = 0);
   size_t GetNbOfObVals(){return _n_obj ;}
   ObVal_t* GetObVal(){return _obj ;}

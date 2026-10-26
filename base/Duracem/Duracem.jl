@@ -1,4 +1,4 @@
-include("../../BilWrap/src/BilWrap.jl")
+include("../../BilWrap.jl/src/BilWrap.jl")
 using .BilWrap
 
 d = DataSet_New("out")

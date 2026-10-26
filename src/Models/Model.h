@@ -89,19 +89,19 @@ extern  Model_SetModelProperties_t  Model_ListOfSetModelProp ;
 #define Model_GetObjectiveValue(MOD)       ((MOD)->GetObjectiveValue())
 #define Model_GetViews(MOD)                ((MOD)->GetViews())
 
-//#define Model_GetSetModelProperties(MOD)      ((MOD)->GetSetModelProperties())
-//#define Model_GetReadMaterialProperties(MOD)  ((MOD)->GetReadMaterialProperties())
-//#define Model_GetPrintModelProperties(MOD)    ((MOD)->GetPrintModelProperties())
-//#define Model_GetDefineElementProperties(MOD) ((MOD)->GetDefineElementProperties())
-//#define Model_GetComputeInitialState(MOD)     ((MOD)->GetComputeInitialState())
-//#define Model_GetComputeExplicitTerms(MOD)    ((MOD)->GetComputeExplicitTerms())
-//#define Model_GetComputeImplicitTerms(MOD)    ((MOD)->GetComputeImplicitTerms())
-//#define Model_GetComputeMatrix(MOD)           ((MOD)->GetComputeMatrix())
-//#define Model_GetComputeResidu(MOD)           ((MOD)->GetComputeResidu())
-//#define Model_GetComputeLoads(MOD)            ((MOD)->GetComputeLoads())
-//#define Model_GetComputeOutputs(MOD)          ((MOD)->GetComputeOutputs())
-//#define Model_GetComputePropertyIndex(MOD)    ((MOD)->GetComputePropertyIndex())
-//#define Model_GetComputeMaterialProperties(MOD) ((MOD)->GetComputeMaterialProperties())
+#define Model_GetSetModelProperties(MOD)      ((MOD)->GetSetModelProperties())
+#define Model_GetReadMaterialProperties(MOD)  ((MOD)->GetReadMaterialProperties())
+#define Model_GetPrintModelProperties(MOD)    ((MOD)->GetPrintModelProperties())
+#define Model_GetDefineElementProperties(MOD) ((MOD)->GetDefineElementProperties())
+#define Model_GetComputeInitialState(MOD)     ((MOD)->GetComputeInitialState())
+#define Model_GetComputeExplicitTerms(MOD)    ((MOD)->GetComputeExplicitTerms())
+#define Model_GetComputeImplicitTerms(MOD)    ((MOD)->GetComputeImplicitTerms())
+#define Model_GetComputeMatrix(MOD)           ((MOD)->GetComputeMatrix())
+#define Model_GetComputeResidu(MOD)           ((MOD)->GetComputeResidu())
+#define Model_GetComputeLoads(MOD)            ((MOD)->GetComputeLoads())
+#define Model_GetComputeOutputs(MOD)          ((MOD)->GetComputeOutputs())
+#define Model_GetComputePropertyIndex(MOD)    ((MOD)->GetComputePropertyIndex())
+#define Model_GetComputeMaterialProperties(MOD) ((MOD)->GetComputeMaterialProperties())
 
 
 /* The setters */
@@ -131,6 +131,8 @@ extern  Model_SetModelProperties_t  Model_ListOfSetModelProp ;
 #define Model_SetComputePropertyIndex(MOD,A)    ((MOD)->SetComputePropertyIndex(A))
 #define Model_SetComputeMaterialProperties(MOD,A) ((MOD)->SetComputeMaterialProperties(A))
 
+
+/* Other member functions */
 #define Model_Set(MOD,...)                      ((MOD)->Set(__VA_ARGS__))
 #define Model_Initialize(MOD,...)               ((MOD)->Initialize(__VA_ARGS__))
 #define Model_Print(MOD)                        ((MOD)->Print())
@@ -228,7 +230,7 @@ struct Model_t {
   Views_t* _views ;            /* Views */
 
   public:
-  Model_t(Models_t*);
+  Model_t(Models_t* = nullptr);
   virtual ~Model_t();
   /* The getters */
   Model_SetModelProperties_t*       GetSetModelProperties(){return _setmodelprop ;}
@@ -370,17 +372,9 @@ struct Model_t {
       SetModelProperties();
     }
   }
-  void Set(std::string const& codename){
-    Set(codename.c_str()) ;
-  }
-  void Set(char const* codename,size_t n,char const* const* name_equ,char const* const* name_unk){
-    std::string name_str{codename};
-    std::vector<std::string> name_equ_vec(name_equ,name_equ+n);
-    std::vector<std::string> name_unk_vec(name_unk,name_unk+n);
-
-    Set(name_str,name_equ_vec,name_unk_vec) ;
-  }
-  void Set(std::string const& codename,std::string const& name_equ,std::string const& name_unk){
+  void Set(char const* codename,char const* name_equ,char const* name_unk){
+    std::string name_equ_str(name_equ);
+    std::string name_unk_str(name_unk);
     auto split = [](const std::string& s) {
       std::vector<std::string> v;
       std::stringstream ss(s);
@@ -389,11 +383,11 @@ struct Model_t {
       return v;
     };
 
-    Set(codename,split(name_equ),split(name_unk)) ;
+    Set(codename,split(name_equ_str),split(name_unk_str)) ;
   }
-  void Set(std::string const& codename,std::vector<std::string> const& name_equ,std::vector<std::string> const& name_unk){
+  void Set(char const* codename,std::vector<std::string> const& name_equ,std::vector<std::string> const& name_unk){
     /* Code name of the model */
-    Set(codename.c_str()) ;
+    Set(codename) ;
       
     {
       size_t neq = GetNbOfEquations() ;

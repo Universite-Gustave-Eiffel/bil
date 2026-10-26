@@ -260,7 +260,7 @@ work1:
 
 grep:
 	for i in ${BASE_DIRS}; do (\
-	grep -H -n "${OPT}" $$i/$$i \
+	grep -H -n "${opt}" $$i/$$i \
 	); done
 
 

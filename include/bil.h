@@ -175,6 +175,7 @@
 #include "TypeId.h"
 #include "Unit.h"
 #include "Units.h"
+#include "UserModel.h"
 #include "Utils.h"
 #include "VectorStorageFormat.h"
 #include "View.h"

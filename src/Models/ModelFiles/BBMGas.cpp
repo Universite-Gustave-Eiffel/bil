@@ -67,7 +67,7 @@ using Values_t = CustomValues_t<T,ImplicitValues_t,ExplicitValues_t,ConstantValu
 
 using Values_d = Values_t<double> ;
 
-#define Values_Index(V)  CustomValues_Index(Values_d,V,double)
+#define Values_Index(V)  static_cast<int>(CustomValues_Index(Values_d,V,double))
 
 
 struct MPM_t: public MaterialPointMethod_t<Values_t> {
@@ -304,7 +304,7 @@ void ComputePhysicoChemicalProperties(double TK)
 
 int pm(const char *s)
 {
-#define Parameters_Index(V)  CustomValues_Index(Parameters_t,V,double)
+#define Parameters_Index(V)  static_cast<int>(CustomValues_Index(Parameters_t,V,double))
          if(!strcmp(s,"gravity"))    { 
     return (Parameters_Index(Gravity)) ;
   } else if(!strcmp(s,"initial_porosity")) {
@@ -325,7 +325,7 @@ int pm(const char *s)
     int i = (strlen(s) > 15) ? s[15] - '1' : 0 ;
     int j = (strlen(s) > 16) ? s[16] - '1' : 0 ;
     
-    return(Parameters_Index(InitialStress[3*i + j])) ;
+    return(Parameters_Index(InitialStress[0]) + 3*i + j) ;
   } else if(!strcmp(s,"kg_int"))      { 
     return (Parameters_Index(IntrinsicPermeability_gas)) ;
   } else if(!strcmp(s,"mu_g"))       { 

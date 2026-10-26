@@ -135,9 +135,6 @@ void  (Mesh_Scan)(Mesh_t* mesh,DataFile_t* datafile)
 
 
 
-void  (Mesh_Set)(Mesh_t* mesh,std::string const& filestr){
-  Mesh_Set(mesh,filestr.c_str());
-}
 void  (Mesh_Set)(Mesh_t* mesh,char const* filename)
 {
   char*  nom_mail = String_CopyLine(filename) ;

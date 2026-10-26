@@ -37,9 +37,6 @@ struct Loads_t {
 
   public:
   size_t GetCapacity(){return Loads_MaxNbOfLoads;}
-  void EmplaceBack(std::string const& region,std::string const& equation,std::string const& type,size_t const& fieldindex,size_t const& functionindex){
-    EmplaceBack(region.c_str(),equation.c_str(),type.c_str(),fieldindex,functionindex);
-  }
   void EmplaceBack(char const*,char const*,char const*,size_t const&,size_t const&);
 
   size_t GetNbOfLoads() const {return _n_cg;}

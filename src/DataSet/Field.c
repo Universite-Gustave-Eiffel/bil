@@ -132,9 +132,7 @@ void (Field_Scan)(Field_t* field,DataFile_t* datafile)
       }
 
       {
-        std::string type_str = "affine";
-
-        Field_Set(field,type_str,v,g,x) ;
+        Field_Set(field,type,v,g,x) ;
       }
       
       return ;
@@ -161,10 +159,7 @@ void (Field_Scan)(Field_t* field,DataFile_t* datafile)
       }
 
       {
-        std::string type_str = "grid";
-        std::string name_str = name;
-
-        Field_Set(field,type_str,name_str);
+        Field_Set(field,type,name);
       }
       
       return ;
@@ -198,9 +193,7 @@ void (Field_Scan)(Field_t* field,DataFile_t* datafile)
       }
 
       {
-        std::string type_str = "random";
-
-        Field_Set(field,type_str,v,ranlen);
+        Field_Set(field,type,v,ranlen);
       }
       
       return ;

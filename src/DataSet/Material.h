@@ -25,9 +25,7 @@ extern Material_t* (Material_New)             (Materials_t*) ;
 extern void        (Material_Delete)          (void*) ;
 extern void        (Material_Scan)            (Material_t*,DataFile_t*) ;
 extern int         (Material_ReadProperties)  (Material_t*,DataFile_t*) ;
-extern void        (Material_ScanProperties)  (Material_t*,DataFile_t*,Model_ComputePropertyIndex_t*) ;
-//extern void        (Material_ScanProperties1) (Material_t*,FILE*,Model_ComputePropertyIndex_t*,int) ;
-//extern void        (Material_ScanProperties2) (Material_t*,FILE*,Model_ComputePropertyIndex_t*,int,int) ;
+extern void        (Material_ScanProperties)  (Material_t*,DataFile_t*,Model_ComputePropertyIndex_t* = nullptr) ;
 
 
 
@@ -48,6 +46,7 @@ extern void        (Material_ScanProperties)  (Material_t*,DataFile_t*,Model_Com
 #define Material_GetGenericData(MAT)      ((MAT)->GetGenericData())
 #define Material_GetModelIndex(MAT)       ((MAT)->GetModelIndex())
 #define Material_GetParentMaterials(MAT)  ((MAT)->GetParentMaterials())
+#define Material_GetProperties(MAT,T)     ((MAT)->GetProperties<T>())
 
 /* The setters */
 #define Material_SetNbOfProperties(MAT,A)  ((MAT)->SetNbOfProperties(A))
@@ -101,6 +100,9 @@ extern void        (Material_ScanProperties)  (Material_t*,DataFile_t*,Model_Com
 
 #define Material_ComputePropertyIndex(MAT,S) \
         Model_ComputePropertyIndex(Material_GetModel(MAT),S)
+
+#define Material_GetPropertyIndex(MAT,T,V) \
+        CustomValues_Index(Material_GetProperties(MAT,T),V,double)
         
 #define Material_GetPropertyValue(MAT,S) \
         (Material_GetProperty(MAT) + Material_ComputePropertyIndex(MAT,S))[0]
@@ -172,8 +174,6 @@ extern void        (Material_ScanProperties)  (Material_t*,DataFile_t*,Model_Com
  * A compound statement enclosed in parentheses may appear 
  * as an expression in GNU C.
  * (https://gcc.gnu.org/onlinedocs/gcc/Statement-Exprs.html#Statement-Exprs) */
-#define Material_PropertyIndex(PAR,V) \
-        CustomValues_Index(PAR,V,double)
 
 
 #include <string>
@@ -206,6 +206,8 @@ struct Material_t {           /* material */
   Model_t* GetModel(){return _model ;}
   Materials_t* GetParentMaterials(){return _parentmaterials ;}
   size_t GetModelIndex(){return _modelindex ;}
+  template<typename T>
+  T& GetProperties(){return ((T*) _pr)[0];}
 
   /* The setters */
   void SetCodeNameOfModel(char* a){_codenameofmodel = a ;}
@@ -218,12 +220,9 @@ struct Material_t {           /* material */
   void SetParentMaterials(Materials_t* a){_parentmaterials = a ;}
   void SetModelIndex(size_t const& a){_modelindex = a ;}
 
-  void Set(std::string const& name){Set(name.c_str());}
   void Set(char const*);
   void Set(Model_t*);
-  void Set(std::string const& name,double const& v){Set(name.c_str(),v);}
   void Set(char const*,double const&);
-  void Set(std::string const& name,std::string const& line){Set(name.c_str(),line.c_str());}
   void Set(char const*,char const*);
   void Finalize(void);
 
@@ -437,6 +436,7 @@ struct Material_t {           /* material */
 #include "GenericData.h"
 #include "Materials.h"
 #include "Models.h"
+#include "CustomValues.h"
 
 
 #endif

@@ -2,6 +2,7 @@
 #define CUSTOMVALUES_H
 
 #include <type_traits>
+#include <cstddef>
 
 
 /* Primary template */
@@ -39,7 +40,10 @@ struct alignas(T) CustomValues_t<T,IM,EX,CO,OT...>: IM<T>,EX<T>,CO<T>,OT<T>... {
 #define CustomValues_Index2(TCV,V) \
         CustomValues_Index3(TCV<char>,V,char)
         
-#define CustomValues_Index3(CV,V,T)  ((int) ((T*)&((CV*)(0))->V - (T*)0))
+#define CustomValues_Index3(CV,V,T)  ((size_t) ((T*)&((CV*)(0))->V - (T*)0))
+//#define CustomValues_Index3(CV,V,T)  ((size_t) (CustomValues_Offset(CV,V)/sizeof(T)))
+
+#define CustomValues_Offset(CV,M)    (offsetof(CV,M))
 
 
 #define CustomValues_TypeOfImplicitValues(CV)   typename CV::ImplicitValues_type
@@ -83,6 +87,38 @@ struct alignas(T) CustomValues_t<T,IM,EX,CO,OT...>: IM<T>,EX<T>,CO<T>,OT<T>... {
 #undef CUSTOMVALUES_NONMEMBEROPERATIONS_IN_H
 #undef CLASSDEF
 #undef CLASSLIST
+
+
+
+
+/* Usage:
+   CV cv;
+   or
+   CV* cv;
+   auto i = CustomValues_SafeOffset(cv,&CV::m);
+*/
+template <typename CV, typename MemberType>
+inline std::size_t CustomValues_SafeOffset(const CV& cv,const MemberType CV::* m) {
+  const char* base = reinterpret_cast<const char*>(&cv);
+  const char* addr = reinterpret_cast<const char*>(&(cv.*m));
+  return static_cast<std::size_t>(addr - base);
+}
+template <typename CV, typename MemberType, typename T = double>
+inline std::size_t CustomValues_SafeIndex(const CV& cv,const MemberType CV::* m){
+  return static_cast<std::size_t>(CustomValues_SafeOffset(cv,m)/sizeof(T));
+}
+
+template <typename CV, typename MemberType>
+inline std::size_t CustomValues_SafeOffset(const CV* cv,const MemberType CV::* m) {
+  const char* base = reinterpret_cast<const char*>(cv);
+  const char* addr = reinterpret_cast<const char*>(&(cv->*m));
+  return static_cast<std::size_t>(addr - base);
+}
+template <typename CV, typename MemberType, typename T = double>
+inline std::size_t CustomValues_SafeIndex(const CV* cv,const MemberType CV::* m){
+  return static_cast<std::size_t>(CustomValues_SafeOffset(cv,m)/sizeof(T));
+}
+
 
 
 #endif

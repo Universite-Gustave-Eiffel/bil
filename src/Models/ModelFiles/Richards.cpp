@@ -54,7 +54,7 @@ using Values_t = CustomValues_t<T,ImplicitValues_t,ExplicitValues_t,ConstantValu
 
 using Values_d = Values_t<double> ;
 
-#define Values_Index(V)  CustomValues_Index(Values_t,V)
+#define Values_Index(V)  static_cast<int>(CustomValues_Index(Values_t,V))
 
 
 
@@ -177,7 +177,7 @@ double* MacroGrad(Element_t* el,double t)
 
 
 int pm(const char *s) {
-#define Parameters_Index(V)  CustomValues_Index(Parameters_t,V,double)
+#define Parameters_Index(V)  static_cast<int>(CustomValues_Index(Parameters_t,V,double))
   if(!strcmp(s,"Gravity")) {
     return (Parameters_Index(Gravity)) ;
   } else if(!strcmp(s,"Porosity")) {
@@ -197,7 +197,7 @@ int pm(const char *s) {
     
     if(i < 0 || i >= 3) i = 0 ;
     
-    return(Parameters_Index(MacroGradient[i]));
+    return(Parameters_Index(MacroGradient[0])+i);
   } else if(!strcmp(s,"MacroFunctionIndex")) {
     return(Parameters_Index(MacroFunctionIndex[0])) ;
   } else if(!strncmp(s,"MacroFunctionIndex_",19)) {
@@ -205,7 +205,7 @@ int pm(const char *s) {
     
     if(i < 0 || i >= 3) i = 0 ;
     
-    return(Parameters_Index(MacroFunctionIndex[i]));
+    return(Parameters_Index(MacroFunctionIndex[0])+i);
   } else return(-1) ;
 #undef Parameters_Index
 }
@@ -239,7 +239,7 @@ int ReadMatProp(Material_t *mat,DataFile_t *datafile)
 
   if(datafile) {
     /* Par defaut tout a 0 */
-    for(int i = 0 ; i < NbOfProp ; i++) Material_GetProperty(mat)[i] = 0. ;
+    Material_SetPropertiesToZero(mat,NbOfProp);
 
     Material_ScanProperties(mat,datafile,pm) ;
   }

@@ -242,7 +242,7 @@ using Values_t = CustomValues_t<T,ImplicitValues_t,ExplicitValues_t,ConstantValu
 
 using Values_d = Values_t<double> ;
 
-#define Values_Index(V)  CustomValues_Index(Values_t,V)
+#define Values_Index(V)  static_cast<int>(CustomValues_Index(Values_t,V))
 
 
 
@@ -746,7 +746,7 @@ void ComputePhysicoChemicalProperties(double TK)
 
 int pm(const char* s)
 {
-#define Parameters_Index(V)  CustomValues_Index(Parameters_t,V,double)
+#define Parameters_Index(V)  static_cast<int>(CustomValues_Index(Parameters_t,V,double))
                if(!strcmp(s,"InitialPorosity")) {
     return (Parameters_Index(InitialPorosity)) ;
   } else       if(!strcmp(s,"IntrinsicPermeability")) {

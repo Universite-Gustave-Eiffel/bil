@@ -47,12 +47,6 @@ struct IConds_t {
 
   public:
   size_t GetCapacity(){return IConds_MaxNbOfIConds;}
-  void EmplaceBack(std::string const& region,std::string const& unknown,size_t const& ifld,size_t const& ifct){
-    EmplaceBack(region.c_str(),unknown.c_str(),ifld,ifct);
-  }
-  void EmplaceBack(std::string const& region,std::string const& unknown,std::string const& filename,size_t const& ifct){
-    EmplaceBack(region.c_str(),unknown.c_str(),filename.c_str(),ifct);
-  }
   void EmplaceBack(char const*,char const*,size_t const&,size_t const&);
   void EmplaceBack(char const*,char const*,char const*,size_t const&);
 

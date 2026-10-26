@@ -4,7 +4,7 @@ c++ -std=c++17 Duracem.cpp -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lbil-2.13
 or if petsc and mpi are included in the library, use:
 mpic++ -std=c++17 Duracem.cpp -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lbil-2.13-Debug -DBASENAME=" " -fpermissive -lpetsc_real -g
 or
-c++ -std=c++17 Duracem.cpp -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lbil-2.13-Debug -DBASENAME=" " -fpermissive -lpetsc_real -lmpi_cxx -lmpi -g
+c++ -std=c++17 Duracem.cpp -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lbil-2.14-Debug -DBASENAME=" " -fpermissive -lpetsc_real -lmpi_cxx -lmpi -g
 */
 
 #include <bil/bil.h>
@@ -30,12 +30,15 @@ int main()
   Models_t* models = DataSet_GetModels(d);
   Module_t* modul = DataSet_GetModule(d);
   
+  Model_t* mod1;
+  
   Session_Open();
   
   Units_EmplaceBack(units,"Length","decimeter");
   Units_EmplaceBack(units,"Mass","hectogram");
 
   Geometry_Set(geom,1,"plane");
+  
   Mesh_Set(mesh,"3 0. 0. 0.6\n0.0002\n1 100\n1 1");
  
   Fields_EmplaceBack(fields,"affine",1.,(double[]){0.,0.,0.},(double[]){0.,0.,0.});
@@ -53,7 +56,7 @@ int main()
 
   IConds_EmplaceBack(iconds,"2","logc_co2",1,2);
   IConds_EmplaceBack(iconds,"2","p_l",8,0);
-  IConds_EmplaceBack(iconds,"2","psi",0,0);
+  IConds_EmplaceBack(iconds,"2","psi",(size_t) 0,0);
   IConds_EmplaceBack(iconds,"2","z_si",6,0);
   IConds_EmplaceBack(iconds,"2","z_ca",7,0);
   IConds_EmplaceBack(iconds,"2","logc_oh",9,0);
@@ -77,10 +80,15 @@ int main()
   
   TimeStep_Set(timestep,10.,3600);
   
-  Models_EmplaceBack(models,(std::string)"Duracem",std::vector<std::string>{"carbon","silicon"},std::vector<std::string> {"logc_co2","z_si"});
+  {
+    std::vector<std::string> equ = {"carbon","silicon"};
+    std::vector<std::string> unk = {"logc_co2","z_si"};
+    
+    mod1 = Models_EmplaceBack(models,"Duracem",equ,unk);
+  }
   
   {
-    Material_t* mat1 = Materials_EmplaceBack(materials,"Duracem");
+    Material_t* mat1 = Materials_EmplaceBack(materials,mod1);
     
     Material_Set(mat1,"InitialPorosity",0.379);
     Material_Set(mat1,"IntrinsicPermeability_liquid",1.4e-17);
@@ -100,7 +108,7 @@ int main()
   
   DataSet_Finalize(d);
 
-  //DataSet_PrintData(d,"all") ;
+  DataSet_PrintData(d,"all") ;
   
   //Module_Set(modul,"Monolithic");
   //Module_Set(modul,"SNIA");

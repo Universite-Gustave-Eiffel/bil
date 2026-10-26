@@ -547,9 +547,6 @@ DataSet_t*  (DataSet_Create1)(char* filename,Options_t* opt)
 #define N_NO          Mesh_GetNbOfNodes(MESH)
 #define NO            Mesh_GetNode(MESH)
 
-#define N_MODELS      Models_GetNbOfModels(MODELS)
-#define MODEL         Models_GetModel(MODELS)
-
 #define N_MAT         Materials_GetNbOfMaterials(MATERIALS)
 #define MAT           Materials_GetMaterial(MATERIALS)
 

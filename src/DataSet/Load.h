@@ -84,9 +84,6 @@ struct Load_t {
   void SetFunctions(Functions_t* a){_Functions = a;}
   void SetFields(Fields_t* a){_Fields = a;}
 
-  void Set(std::string const& region,std::string const& equation,std::string const& type,size_t const& fieldindex,size_t const& functionindex){
-    Set(region.c_str(),equation.c_str(),type.c_str(),fieldindex,functionindex);
-  }
   void Set(char const* region,char const* equation,char const* type,size_t const& fieldindex,size_t const& functionindex){
     /* Region */
     if(strlen(region) > Load_MaxLengthOfKeyWord) {

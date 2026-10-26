@@ -490,7 +490,6 @@ Views_t* (OutputFiles_CreateGlobalViews)(OutputFiles_t* outputfiles,Models_t* us
  * Return a pointer to Views_t.
  */
 {
-  Model_t*  usedmodel  = Models_GetModel(usedmodels) ;
   size_t n_usedmodels = Models_GetNbOfModels(usedmodels) ;
   
   int    nbofviews ;
@@ -504,7 +503,7 @@ Views_t* (OutputFiles_CreateGlobalViews)(OutputFiles_t* outputfiles,Models_t* us
   {
     char*  pline ;
     int    imodel = -1 ;
-    int    usedmodelindex ;
+    size_t usedmodelindex ;
     
     nbofviews = 0 ;
       
@@ -535,7 +534,7 @@ Views_t* (OutputFiles_CreateGlobalViews)(OutputFiles_t* outputfiles,Models_t* us
           
           /* We store the number of views in the current used model */
           {
-            Model_t* model = usedmodel + usedmodelindex ;
+            Model_t* model = Models_GetModelAt(usedmodels,usedmodelindex) ;
             Views_t*  views = Model_GetViews(model) ;
             
             Views_GetNbOfViews(views) = n ;
@@ -544,16 +543,15 @@ Views_t* (OutputFiles_CreateGlobalViews)(OutputFiles_t* outputfiles,Models_t* us
         /* Nb of components per view */
         } else if(strstr(pline,"nombres de composantes/vue") || \
                   strstr(pline,"Numbers of components per view")) {
-          Model_t* model = usedmodel + usedmodelindex ;
+          Model_t* model = Models_GetModelAt(usedmodels,usedmodelindex) ;
           Views_t*  views = Model_GetViews(model) ;
           View_t*   view  = Views_GetView(views) ;
           int nviews = Views_GetNbOfViews(views) ;
-          int i ;
           
           pline = strchr(pline,'=') + 1 ;
                     
           /* We store the number of components in the current used model */
-          for(i = 0 ; i < nviews ; i++) {
+          for(int i = 0 ; i < nviews ; i++) {
             int n ;
             
             sscanf(pline,"%d",&n) ;
@@ -566,16 +564,15 @@ Views_t* (OutputFiles_CreateGlobalViews)(OutputFiles_t* outputfiles,Models_t* us
         /* Name of views */
         } else if(strstr(pline,"coordonnees") || \
                   strstr(pline,"Coordinates")) {
-          Model_t* model = usedmodel + usedmodelindex ;
+          Model_t* model = Models_GetModelAt(usedmodels,usedmodelindex) ;
           Views_t*  views = Model_GetViews(model) ;
           View_t*   view  = Views_GetView(views) ;
           int nviews = Views_GetNbOfViews(views) ;
-          int i ;
           
           pline = strstr(pline,"(1)") + strlen("(1)") ;
           
           /* We store the view names in the current used model */
-          for(i = 0 ; i < nviews ; i++) {
+          for(int i = 0 ; i < nviews ; i++) {
             int    n = View_GetNbOfComponents(view + i) ;
             char*  name = View_GetNameOfView(view + i) ;
             char*  p ;
@@ -622,9 +619,8 @@ Views_t* (OutputFiles_CreateGlobalViews)(OutputFiles_t* outputfiles,Models_t* us
   {
     Views_t* views = Views_Create(nbofviews) ;
     View_t*  view  = Views_GetView(views) ;
-    int i ;
     
-    for(i = 0 ; i < nbofviews ; i++) {
+    for(int i = 0 ; i < nbofviews ; i++) {
       View_t* vi = view + i ;
       char* name = View_GetNameOfView(vi) ;
       

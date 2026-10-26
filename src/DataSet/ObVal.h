@@ -74,20 +74,13 @@ struct ObVal_t {              /* Objective variation */
   void  SetValue(double const &a){_val = a;}
   void  SetRelaxationFactor(double const& a){_relaxfactor = a;}
 
-  void Set(std::string const& name,double const& v,std::optional<std::string> const& type = std::nullopt,double const& r = 0){
-    if(type) {
-      Set(name.c_str(),v,type->c_str(),r);
-    } else {
-      Set(name.c_str(),v);
-    }
-  }
   void Set(char const*,double const&,char const* = nullptr,double const& = 0);
 } ;
 
 
 #include "String_.h"
 
-  inline void ObVal_t::Set(char const* name,double const& v,char const* type = nullptr,double const& r = 0){
+  inline void ObVal_t::Set(char const* name,double const& v,char const* type,double const& r){
     /* Unknown */
     if(strlen(name) > ObVal_MaxLengthOfKeyWord-1)  {
       throw std::runtime_error("ObVal_t::Set: too long name of unknown") ;

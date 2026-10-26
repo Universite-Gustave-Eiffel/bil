@@ -7,10 +7,9 @@
 struct Unit_t; //typedef struct Unit_t         Unit_t ;
 struct DataFile_t;
 
-#include <string>
 
 extern Unit_t* (Unit_New)     (void) ;
-extern Unit_t* (Unit_Create)  (std::string&,std::string&);
+extern Unit_t* (Unit_Create)  (char const*,char const*);
 extern void    (Unit_Delete)  (void*) ;
 extern int     (Unit_Scan)    (Unit_t*,DataFile_t*) ;
 
@@ -44,29 +43,29 @@ struct Unit_t {           /* unit */
   void SetQuantity(char* quantity) {_quantity = quantity;}
   void SetName(char* name) {_name = name;}
   
-  void Set(std::string const&,std::string const&);
+  void Set(char const*,char const*);
 } ;
 
 
 #include "InternationalSystemOfUnits.h"
 
-  inline void Unit_t::Set(std::string const& quantity,std::string const& name){
-    strcpy(_quantity,quantity.c_str());
-    strcpy(_name,name.c_str());
+  inline void Unit_t::Set(char const* quantity,char const* name){
+    strcpy(_quantity,quantity);
+    strcpy(_name,name);
 
     /* Length */ 
-    if(quantity.compare("Length") == 0) {
-      InternationalSystemOfUnits_UseAsLength(name.c_str()) ;
+    if(strcmp(quantity,"Length") == 0) {
+      InternationalSystemOfUnits_UseAsLength(name) ;
     }
   
     /* Time */ 
-    if(quantity.compare("Time") == 0) {
-      InternationalSystemOfUnits_UseAsTime(name.c_str()) ;
+    if(strcmp(quantity,"Time") == 0) {
+      InternationalSystemOfUnits_UseAsTime(name) ;
     }
   
     /* Mass */  
-    if(quantity.compare("Mass") == 0) {
-      InternationalSystemOfUnits_UseAsMass(name.c_str()) ;
+    if(strcmp(quantity,"Mass") == 0) {
+      InternationalSystemOfUnits_UseAsMass(name) ;
     }
   }
 

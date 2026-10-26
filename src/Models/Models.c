@@ -37,6 +37,13 @@ Models_t* (Models_New)(Geometry_t* geom,DataFile_t* datafile)
     Models_SetModel(models,model) ;
   }
 
+  {
+    Model_t* model = Models_GetModel(models);
+    std::vector<Model_t*>& pmodels = Models_GetVectorOfPointersToModels(models);
+
+    pmodels.reserve(Models_MaxNbOfModels);
+  }
+
   return(models) ;
 }
 
@@ -86,11 +93,12 @@ void (Models_Scan)(Models_t* models,DataFile_t* datafile)
 
 
   {    
-    Models_SetNbOfModels(models,n_models);
+    //Models_SetNbOfModels(models,n_models);
 
     /* Read the models */
     for(size_t i = 0 ; i < n_models ; i++) {
-      Model_t* model = Models_GetModel(models) + i ;
+      //Model_t* model = Models_GetModelAt(models,i) ;
+      Model_t* model = Models_EmplaceBack(models);
       char* c = DataFile_FindNthToken(datafile,"Model",",",i + 1) ;
       
       c = String_SkipLine(c) ;
@@ -117,13 +125,9 @@ Models_t* (Models_CreateAll)(Geometry_t* geom)
   {
     size_t n = Model_NbOfListedModels ;
     const char* modelnames[] = {Model_ListOfNames} ;
-    
-    Models_SetNbOfModels(models,n);
   
     for(size_t i = 0 ; i < n ; i++) {
-      Model_t* model_i = Models_GetModel(models) + i ;
-      
-      Model_Set(model_i,modelnames[i]) ;
+      Models_EmplaceBack(models,modelnames[i]) ;
     }
   }
   
@@ -138,7 +142,6 @@ void (Models_PrintAll)(char* codename,FILE* ficd)
   Geometry_t* geom = Geometry_New() ;
   Models_t* models = Models_CreateAll(geom) ;
   size_t n_models = Models_GetNbOfModels(models) ;
-  Model_t* model = Models_GetModel(models) ;
 
   if(!codename) { /* all */    
     if(!ficd) {
@@ -148,7 +151,7 @@ void (Models_PrintAll)(char* codename,FILE* ficd)
     }
 
     for(size_t i = 0 ; i < n_models ; i++) {
-      Model_t* model_i = model + i ;
+      Model_t* model_i = Models_GetModelAt(models,i) ;
       
       printf("  %-14.14s|",Model_GetCodeNameOfModel(model_i)) ;
       printf("  %-14.14s|",Model_GetNameOfAuthors(model_i)) ;

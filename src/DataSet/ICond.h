@@ -76,9 +76,6 @@ struct ICond_t {
   void SetNameOfUnknown(char* a){_NameOfUnknown = a;}
   void SetFileNameOfNodalValues(char* a){_FileNameOfNodalValues = a;}
 
-  void Set(std::string const& region,std::string const& unknown,size_t const& ifld,size_t const& ifct) {
-    Set(region.c_str(),unknown.c_str(),ifld,ifct);
-  }
   void Set(char const* region,char const* unknown,size_t const& ifld,size_t const& ifct) {
     /* Region */
     {
@@ -136,9 +133,6 @@ struct ICond_t {
     }
   }
 
-  void Set(std::string const& region,std::string const& unknown,std::string const& filename,size_t const& ifct) {
-    Set(region.c_str(),unknown.c_str(),filename.c_str(),ifct);
-  }
   void Set(char const* region,char const* unknown,char const* filename,size_t const& ifct) {
     /* Region */
     {

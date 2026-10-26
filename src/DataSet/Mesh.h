@@ -27,7 +27,6 @@ extern Mesh_t*  (Mesh_Create)(DataFile_t*,Geometry_t*,Materials_t* = nullptr) ;
 extern void     (Mesh_Scan)(Mesh_t*,DataFile_t*) ;
 extern void     (Mesh_CreateMore)(Mesh_t*,Materials_t*) ;
 extern void     (Mesh_Delete)(void*) ;
-extern void     (Mesh_Set)(Mesh_t*,std::string const&) ;
 extern void     (Mesh_Set)(Mesh_t*,char const*) ;
 extern void     (Mesh_SetNodeConnectivities)(Mesh_t*) ;
 extern void     (Mesh_SetMatrixRowColumnIndexes)(Mesh_t*,BConds_t*) ;

@@ -133,7 +133,6 @@ void (Function_Scan)(Function_t* function,DataFile_t* datafile)
   /* PiecewiseAffine function
    * ------------------------ */
   if(String_Is(type,"piecewiseaffine")) {
-    std::string type_str = "piecewiseaffine";
     char* pline = String_FindToken(line,"N");
 
     if(!pline) pline = String_FindToken(line,"F");
@@ -166,7 +165,7 @@ void (Function_Scan)(Function_t* function,DataFile_t* datafile)
         }
       }
 
-      Function_Set(function,type_str,t_vec,f_vec) ;
+      Function_Set(function,type,t_vec,f_vec) ;
       return;
     }
 
@@ -183,7 +182,7 @@ void (Function_Scan)(Function_t* function,DataFile_t* datafile)
       {
         char* c = String_FindAndSkipToken(line,"=") ;
 
-        Function_Set(function,type_str,c) ;
+        Function_Set(function,type,c) ;
       }
       return ;
     }
