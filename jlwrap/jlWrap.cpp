@@ -73,11 +73,9 @@ JLCXX_MODULE define_julia_module(jlcxx::Module& mod) {
   /* DataSet */
   FREE_METHOD(DataSet,New,char const*,Context_t*);
   FREE_METHOD(DataSet,New,char const*);
-  FREE_METHOD(DataSet,Delete,void*);
   FREE_METHOD(DataSet,Delete,DataSet_t*);
   FREE_METHOD(DataSet,PrintData,DataSet_t*,char const*);
   MEM_METHOD(DataSet,GetUnits);
-  MEM_METHOD(DataSet,GetDataFile);
   MEM_METHOD(DataSet,GetGeometry);
   MEM_METHOD(DataSet,GetModule);
   MEM_METHOD(DataSet,GetMesh);
@@ -170,7 +168,6 @@ JLCXX_MODULE define_julia_module(jlcxx::Module& mod) {
   FREE_METHOD(PosFilesForGMSH,Create,DataSet_t*);
   FREE_METHOD(PosFilesForGMSH,ParsedFileFormat,PosFilesForGMSH_t*);
   FREE_METHOD(PosFilesForGMSH,ASCIIFileFormat,PosFilesForGMSH_t*);
-  FREE_METHOD(PosFilesForGMSH,Delete,void*);
   FREE_METHOD(PosFilesForGMSH,Delete,PosFilesForGMSH_t*);
   
   /* Session */

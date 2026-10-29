@@ -69,10 +69,9 @@ IterProcess_Set(iterprocess,20,1.e-3,0)
   
 TimeStep_Set(timestep,10.,3600)
   
-Models_EmplaceBack(models,"Duracem","carbon,silicon","logc_co2,z_si")
+mod1 = Models_EmplaceBack(models,"Duracem")
   
-
-  mat1 = Materials_EmplaceBack(materials,"Duracem")
+  mat1 = Materials_EmplaceBack(materials,mod1)
     
   Material_Set(mat1,"InitialPorosity",0.379)
   Material_Set(mat1,"IntrinsicPermeability_liquid",1.4e-17)
@@ -94,6 +93,8 @@ DataSet_Finalize(d)
 
 
 DataSet_PrintData(d,"all")
+  
+#Options_Set(options,"-solver petscksp -ksp_type cg -pc_type sor")
 
 Module_ComputeProblem(modul,d)
 

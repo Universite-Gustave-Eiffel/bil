@@ -52,3 +52,4 @@ site
 
 # BilWrap
 deps_vars.jl
+Manifest.toml

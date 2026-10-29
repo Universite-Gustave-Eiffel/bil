@@ -56,8 +56,7 @@ module BilWrap
          DataSet_GetMaterials,
          DataSet_GetModels,
          DataSet_GetModule,
-         DataSet_Finalize,
-         DataSet_Print
+         DataSet_Finalize
   
   export Dates_Set
   
