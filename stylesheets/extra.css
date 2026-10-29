@@ -1,0 +1,30 @@
+/* Hide the redundant section title at the top of the left sidebar */
+.md-nav--primary > .md-nav__title {
+  display: none;
+}
+
+/* Increase indentation for nested nav items in the sidebar */
+.md-nav__item .md-nav__item {
+  padding-left: 0.6rem;
+}
+
+.md-nav__item .md-nav__item .md-nav__item {
+  padding-left: 0.6rem;
+}
+
+/* Style thematic section titles (Flow, Mechanics, …) as prominent headers */
+.md-nav__item--section > .md-nav__link {
+  font-weight: 700;
+  color: var(--md-primary-fg-color);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-top: 0.6rem;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid var(--md-primary-fg-color--light);
+}
+
+/* Slightly indent the items under each section */
+.md-nav__item--section > .md-nav {
+  padding-left: 0.5rem;
+}
