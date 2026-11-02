@@ -33,6 +33,8 @@ extern void           (Periodicity_Scan)(Periodicity_t*,DataFile_t*) ;
 #define Periodicity_Set(P,...)                 ((P)->Set(__VA_ARGS__))
 
 
+#include <cstring>
+
 struct Periodicity_t {
   int     _MasterRegion ;
   int     _SlaveRegion ;
@@ -54,7 +56,7 @@ struct Periodicity_t {
   void SetSlaveRegionName(char* a){_SlaveRegionName = a;}
   void SetPeriodVector(double* a){_PeriodVector = a;}
 
-  Set(char const* masterreg,char const* slavereg,double const* periodvector) {
+  void Set(char const* masterreg,char const* slavereg,double const* periodvector) {
     strcpy(_MasterRegionName,masterreg) ;
     strcpy(_SlaveRegionName,slavereg) ;
     for(int i = 0 ; i < 3 ; i++) {

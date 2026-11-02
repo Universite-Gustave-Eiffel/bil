@@ -32,6 +32,7 @@ extern void             (Periodicities_UpdateGraph)(Mesh_t*,Graph_t*) ;
 
 
 #include <stdexcept>
+#include <vector>
 
 struct Periodicities_t {
   private:
@@ -56,11 +57,13 @@ struct Periodicities_t {
 #include "Periodicity.h"
 
   inline void Periodicities_t::EmplaceBack(char const* masterreg,char const* slavereg,double const* periodvector) {
+    Periodicity_t* periodicity = _periodicity + _nbperiod ;
+
     if(_nbperiod >= GetCapacity()) {
+      printf("In if: _nbperiod=%zu GetCapacity()=%zu\n",_nbperiod,GetCapacity()) ;
       throw std::length_error("Maximum number of periodicities reached");
     }
-    
-    Periodicity_t* periodicity = _periodicity + _nbperiod ;
+
     Periodicity_Set(periodicity,masterreg,slavereg,periodvector) ;
     _nbperiod += 1 ;
   }
