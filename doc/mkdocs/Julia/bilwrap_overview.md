@@ -16,13 +16,19 @@ The module relies on a shared library built from the C++ wrapper code. The build
 
 ```julia
 import Pkg
-Pkg.build("BilWrap")
+Pkg.build("https://github.com/Universite-Gustave-Eiffel/bil:BilWrap.jl")
 ```
 
-Then load the module. In the examples, it is included directly from its source file:
+Then use the module:
 
 ```julia
-include("../../BilWrap.jl/src/BilWrap.jl")
+using BilWrap
+```
+
+In some examples, it is included directly from its source file:
+
+```julia
+include("path/to/bil-master/BilWrap.jl/src/BilWrap.jl")
 using .BilWrap
 ```
 
@@ -98,8 +104,7 @@ A script always follows the same sequence.
 The shortest complete script is the elastic problem `Elast` (see [Julia examples](bilwrap_examples.md) for the full version with comments). Its structure is:
 
 ```julia
-include("../../BilWrap.jl/src/BilWrap.jl")
-using .BilWrap
+using BilWrap
 
 d = DataSet_New("out")
 geom, mesh, fields = DataSet_GetGeometry(d), DataSet_GetMesh(d), DataSet_GetFields(d)

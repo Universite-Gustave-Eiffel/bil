@@ -129,14 +129,14 @@ Appends a field defined on a grid read from a file (example: `"CN_satb"` in Dura
 
 Shorter forms, taking only one or two scalar values after the type. They are not used in the examples.
 
-### `Functions_EmplaceBack(functions, "piecewiseaffine", [n,] t::Vector, f::Vector)`
+### `Functions_EmplaceBack(functions, "piecewiseaffine", [n], t::Vector, f::Vector)`
 
 Appends a piecewise affine function of time through the points `(t[i], f[i])`. The number of points `n` is optional: when it is omitted, it is deduced from the length of the vectors. Both forms are found in the examples: with `n` (Elast, Duracem) and without it (Richards-2d).
 
 A third form, `Functions_EmplaceBack(functions, type::String, s::String)`, takes a string in place of the vectors. It is not used in the examples.
 
 ```julia
-Functions_EmplaceBack(functions, "piecewiseaffine", 3, [0.,1.,2.], [1.,10.,0.1])
+Functions_EmplaceBack(functions, "piecewiseaffine", 3 , [0.,1.,2.], [1.,10.,0.1])
 Functions_EmplaceBack(functions, "piecewiseaffine", [0.,360.], [1.,0.])
 ```
 
