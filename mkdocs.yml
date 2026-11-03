@@ -108,3 +108,7 @@ nav:
     #  - M2 VoronoiFVM: Specialized/M2_VoronoiFVM.md
   - Code Architecture: code_architecture.md
   - How to Add a New Model: adding_a_model.md
+  - Julia interface (BilWrap.jl):
+    - Overview: Julia/bilwrap_overview.md
+    - Function reference: Julia/bilwrap_reference.md
+    - Julia examples: Julia/bilwrap_examples.md
