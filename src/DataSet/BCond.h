@@ -90,7 +90,15 @@ struct BCond_t {
   void Set(char const* region,char const* unknown,size_t const& fieldindex,size_t const& functionindex){
     Set(region," ",unknown,fieldindex,functionindex);
   }
-  void Set(char const* region,char const* equation,char const* unknown,size_t const& fieldindex,size_t const& functionindex){
+  void Set(char const*,char const*,char const*,size_t const&,size_t const&);
+} ;
+
+
+#include "Region.h"
+#include "Fields.h"
+#include "Functions.h"
+
+  inline void BCond_t::Set(char const* region,char const* equation,char const* unknown,size_t const& fieldindex,size_t const& functionindex){
     /* Region */
     if(strlen(region) > BCond_MaxLengthOfKeyWord) {
       throw std::runtime_error("BCond_t::Set: name %s too long") ;
@@ -163,7 +171,6 @@ struct BCond_t {
       }
     }
   }
-} ;
 
 
 /* Old notations which I try to eliminate little by little */
@@ -173,6 +180,4 @@ struct BCond_t {
 #ifdef __CPLUSPLUS
 }
 #endif
-
-#include "Region.h"
 #endif

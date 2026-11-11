@@ -202,6 +202,7 @@ struct Function_t {
 
 
 #include <utility>
+#include "String_.h"
 #include "Curves.h"
 #include "Curve.h"
 #include "Mry.h"

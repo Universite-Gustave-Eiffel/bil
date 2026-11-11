@@ -84,7 +84,16 @@ struct Load_t {
   void SetFunctions(Functions_t* a){_Functions = a;}
   void SetFields(Fields_t* a){_Fields = a;}
 
-  void Set(char const* region,char const* equation,char const* type,size_t const& fieldindex,size_t const& functionindex){
+  void Set(char const*,char const*,char const*,size_t const&,size_t const&);
+} ;
+
+#include "Region.h"
+#include "String_.h"
+#include "Fields.h"
+#include "Functions.h"
+
+
+  inline void Load_t::Set(char const* region,char const* equation,char const* type,size_t const& fieldindex,size_t const& functionindex){
     /* Region */
     if(strlen(region) > Load_MaxLengthOfKeyWord) {
       throw std::runtime_error("Load_t::Set: region name too long") ;
@@ -160,11 +169,9 @@ struct Load_t {
       }
     }
   }
-} ;
 
 
 /* Old notations which I try to eliminate little by little */
 #define char_t    Load_t
 
-#include "Region.h"
 #endif

@@ -1,10 +1,6 @@
 /* compilation:
 
-c++ -std=c++17 Duracem.cpp -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lbil-2.13-Debug -DBASENAME=" " -fpermissive -g
-or if petsc and mpi are included in the library, use:
-mpic++ -std=c++17 Duracem.cpp -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lbil-2.13-Debug -DBASENAME=" " -fpermissive -lpetsc_real -g
-or
-c++ -std=c++17 Duracem.cpp -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lbil-2.14-Debug -DBASENAME=" " -fpermissive -lpetsc_real -lmpi_cxx -lmpi -g
+c++ -std=c++17 Duracem.cpp -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lbil-2.14-Release -DBASENAME=" " -fpermissive
 */
 
 #include <bil/bil.h>

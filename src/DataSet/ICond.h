@@ -76,7 +76,47 @@ struct ICond_t {
   void SetNameOfUnknown(char* a){_NameOfUnknown = a;}
   void SetFileNameOfNodalValues(char* a){_FileNameOfNodalValues = a;}
 
-  void Set(char const* region,char const* unknown,size_t const& ifld,size_t const& ifct) {
+  void Set(char const*,char const*,size_t const&,size_t const&);
+  void Set(char const*,char const*,char const*,size_t const&);
+
+
+  void Print(void){
+    #define PRINT(...) fprintf(stdout,__VA_ARGS__)
+    char* reg = GetRegionName() ;
+    char* name_unk = GetNameOfUnknown() ;
+    Field_t* ch = GetField() ;
+    Function_t* fn = GetFunction() ;
+      
+    PRINT("\t Region  = %s\n",reg) ;
+    PRINT("\t Unknown = %s\n",name_unk) ;
+      
+    if(ch) {
+      Fields_t* chs = GetFields() ;
+      ptrdiff_t n = ch - Fields_GetField(chs);
+        
+      PRINT("\t Field = %td (type %s)\n",n,Field_GetType(ch)) ;
+    } else {
+      PRINT("\t Natural initial condition (null)\n") ;
+    }
+      
+    if(fn) {
+      Functions_t* fns = GetFunctions() ;
+      ptrdiff_t n = fn - Functions_GetFunction(fns) ;
+        
+      PRINT("\t Function = %td\n",n) ;
+    } else {
+      PRINT("\t Function unity (f(t) = 1)\n") ;
+    }
+    #undef PRINT
+  }
+} ;
+
+
+#include "Region.h"
+#include "Fields.h"
+#include "Functions.h"
+
+  inline void ICond_t::Set(char const* region,char const* unknown,size_t const& ifld,size_t const& ifct) {
     /* Region */
     {
       strncpy(GetRegionName(),region,ICond_MaxLengthOfRegionName)  ;
@@ -133,7 +173,7 @@ struct ICond_t {
     }
   }
 
-  void Set(char const* region,char const* unknown,char const* filename,size_t const& ifct) {
+  inline void ICond_t::Set(char const* region,char const* unknown,char const* filename,size_t const& ifct) {
     /* Region */
     {
       strncpy(GetRegionName(),region,ICond_MaxLengthOfRegionName)  ;
@@ -183,37 +223,5 @@ struct ICond_t {
     }
   }
 
-  void Print(void){
-    #define PRINT(...) fprintf(stdout,__VA_ARGS__)
-    char* reg = GetRegionName() ;
-    char* name_unk = GetNameOfUnknown() ;
-    Field_t* ch = GetField() ;
-    Function_t* fn = GetFunction() ;
-      
-    PRINT("\t Region  = %s\n",reg) ;
-    PRINT("\t Unknown = %s\n",name_unk) ;
-      
-    if(ch) {
-      Fields_t* chs = GetFields() ;
-      ptrdiff_t n = ch - Fields_GetField(chs);
-        
-      PRINT("\t Field = %td (type %s)\n",n,Field_GetType(ch)) ;
-    } else {
-      PRINT("\t Natural initial condition (null)\n") ;
-    }
-      
-    if(fn) {
-      Functions_t* fns = GetFunctions() ;
-      ptrdiff_t n = fn - Functions_GetFunction(fns) ;
-        
-      PRINT("\t Function = %td\n",n) ;
-    } else {
-      PRINT("\t Function unity (f(t) = 1)\n") ;
-    }
-    #undef PRINT
-  }
-} ;
 
-
-#include "Region.h"
 #endif

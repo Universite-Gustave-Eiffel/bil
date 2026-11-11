@@ -19,7 +19,7 @@ module BilWrap
 
   # 2. Distribution Check: Ensure the user's local build stage occurred
   if !isfile(deps_config_file)
-    error("MyPackage dependencies are unbuilt. Please resolve by running: import Pkg; Pkg.build(\"MyPackage\")")
+    error("BilWrap dependencies are unbuilt. Please resolve by running: import Pkg; Pkg.build(\"BilWrap\")")
     # exit(0)
   end
 

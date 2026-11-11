@@ -16,6 +16,7 @@ The module relies on a shared library built from the C++ wrapper code. The build
 
 ```julia
 import Pkg
+Pkg.add("CxxWrap")
 Pkg.build("https://github.com/Universite-Gustave-Eiffel/bil:BilWrap.jl")
 ```
 

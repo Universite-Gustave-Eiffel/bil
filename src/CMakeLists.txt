@@ -6,7 +6,7 @@ include(SetCompilerFlags)
 # Options (disabled by default)
 # -----------------------------
 option(ENABLE_OPENMP   "Enable OpenMP parallelization"    OFF)
-option(ENABLE_PTHREADS "Enable Pthreads parallelization"  OFF)
+option(ENABLE_PTHREAD  "Enable Pthreads parallelization"  OFF)
 option(ENABLE_MPI      "Enable MPI parallelization"       OFF)
 option(ENABLE_AUTODIFF "Enable autodiff interface"        OFF)
 option(ENABLE_FLTK     "Enable FLTK for GUI"              OFF)

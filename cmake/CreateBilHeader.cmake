@@ -14,6 +14,6 @@ macro(create_bil_header headers bilheader)
 
     #message("base: ${base}")
     
-    file(APPEND ${bilheader} "#include \"${base}\"\n")
+    file(APPEND ${bilheader} "#include <bil/${base}>\n")
   endforeach()
 endmacro()

@@ -1,10 +1,5 @@
 /* compilation:
-c++ -std=c++17 Richards-2d.cpp -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lbil-2.14-Release -DBASENAME=" " -fpermissive
-
-or if petsc and mpi are included in the library, use:
-mpic++ -std=c++17 Richards-2d.cpp -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lbil-2.14-Debug -DBASENAME=" " -fpermissive -lpetsc_real -g
-or
-c++ -std=c++17 RichardsIncluded.cpp -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lbil-2.14-Debug -DBASENAME="MyRichards" -fpermissive -lpetsc_real -lmpi_cxx -lmpi -g
+c++ -std=c++17 RichardsIncluded.cpp -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lbil-2.14-Release -DBASENAME="MyRichards" -fpermissive
 */
 
 #include <bil/bil.h>
