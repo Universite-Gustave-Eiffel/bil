@@ -12,7 +12,12 @@ The problem is described with the same concepts as in [Running Bil](running_bil.
 
 ## Installation
 
-The module relies on a shared library built from the C++ wrapper code. The build step generates the file `deps/deps_vars.jl` that gives the location of this library (`CPP_SHARED_LIB_PATH`). If this file is missing, loading the module stops with an error asking you to build the package first:
+The module relies on two shared libraries:
+
+- `libbil-<version>-<buildtype>.so`, the library of Bil, which contains all the code of Bil,
+- `libbil-<version>-<buildtype>_julia.so`, the **Julia library**, built from the C++ wrapper code (`jlWrap.cpp`) with CxxWrap. It contains only the wrappers and depends on the first library.
+
+Both must be built and installed beforehand, with the option `ENABLE_JLCXX` of the build, see [The Julia library](../library/bil_library.md#the-julia-library). The build step of the Julia package then generates the file `deps/deps_vars.jl` that gives the location of the wrapper library (`CPP_SHARED_LIB_PATH`). If this file is missing, loading the module stops with an error asking you to build the package first:
 
 ```julia
 import Pkg
@@ -20,20 +25,14 @@ Pkg.add("CxxWrap")
 Pkg.build("https://github.com/Universite-Gustave-Eiffel/bil:BilWrap.jl")
 ```
 
-Then use the module:
-
-```julia
-using BilWrap
-```
-
-In some examples, it is included directly from its source file:
+Then load the module. In the examples, it is included directly from its source file:
 
 ```julia
 include("path/to/bil-master/BilWrap.jl/src/BilWrap.jl")
 using .BilWrap
 ```
 
-All the functions described in the [function reference](bilwrap_reference.md) are exported by `BilWrap`.
+All the functions described in the [function reference](bilwrap_reference.md) are exported by `BilWrap`. They are the Julia counterparts of the C/C++ functions of the Bil library, which can also be used directly in a C++ program, see [Using the Bil library](../library/bil_library.md).
 
 * * *
 
@@ -69,7 +68,7 @@ Command line options map onto functions as follows.
 | `bil -post GmshParsed my_file`   | `PosFilesForGMSH_Create` + `PosFilesForGMSH_ParsedFileFormat` |
 | `bil -post GmshASCII my_file`    | `PosFilesForGMSH_Create` + `PosFilesForGMSH_ASCIIFileFormat` |
 | `bil -debug all my_file`         | `DataSet_PrintData(d, "all")`                                |
-| `bil -with "Monolithic N"`       | `Module_Set(modul, name)` |
+| `bil -with "Monolithic N"`       | `Module_Set(modul, "Monolithic")` |
 
 * * *
 

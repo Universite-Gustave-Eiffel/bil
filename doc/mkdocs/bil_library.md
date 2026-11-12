@@ -13,6 +13,8 @@ The build produces two targets from the same sources:
 | library      | `libbil-<version>-<buildtype>.so`      | all the code of Bil (models, modules, solvers, ...)     |
 | executable   | `bil-<version>-<buildtype>.exe`        | the command line program, linked to the library        |
 
+A third library, for Julia, can be built on request (see [The Julia library](#the-julia-library)).
+
 `<version>` is the version of Bil and `<buildtype>` is the CMake build type (`Release` by default, or `Debug`, ...). At installation, a symbolic link `bil` to the executable is created in the `bin` directory, which is the name used in the rest of this documentation.
 
 The installation also copies all the header files of Bil into the directory `<prefix>/include/bil`, together with a header `bil.h` which includes all of them. A program using the library only needs
@@ -20,6 +22,32 @@ The installation also copies all the header files of Bil into the directory `<pr
 ```cpp
 #include <bil/bil.h>
 ```
+
+### The Julia library
+
+The Julia wrappers described in [BilWrap.jl](../julia/bilwrap_overview.md) need a second shared library, built from the wrapper code `jlWrap.cpp`:
+
+| File                                        | Role                                              |
+|---------------------------------------------|---------------------------------------------------|
+| `libbil-<version>-<buildtype>_julia.so`     | wrappers of the functions of Bil, loaded by Julia through CxxWrap |
+
+This library contains **only the wrappers**, not the code of Bil. It depends on `libbil-<version>-<buildtype>.so` (which it finds through its `rpath`), on CxxWrap (`libcxxwrap_julia`) and on the Julia library. Both `libbil-<version>-<buildtype>.so` and `libbil-<version>-<buildtype>_julia.so` must therefore be installed for BilWrap.jl to work.
+
+!!! warning "Not for C/C++ programs"
+    A C/C++ program must be linked to `libbil-<version>-<buildtype>.so`, as described in [Compiling and linking](#compiling-and-linking). Linking it to the Julia library instead fails with undefined references, since the functions of Bil are not in that file.
+
+The Julia library is not part of the default build. It is enabled with the option `ENABLE_JLCXX`, which requires Julia and the Julia package CxxWrap (the location of CxxWrap is obtained by running `julia`, which must be in the `PATH`), and is built and installed with two additional targets:
+
+```
+cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_JLCXX=ON ..
+make
+make install
+make jlwrap            # builds libbil-<version>-<buildtype>_julia.so
+make install_jlwrap    # installs it
+```
+
+!!! note "SuperLU"
+    The wrapper cannot be built with the SuperLU option: the configuration stops with an error because of conflicting types in SuperLU and CxxWrap. Keep `ENABLE_SUPERLU` set to `OFF`.
 
 ### Options of the build
 
@@ -37,7 +65,7 @@ The external libraries needed by the library are chosen at configuration time. T
 | `ENABLE_AUTODIFF`  | automatic differentiation interface                         | `autodiff` and Eigen3                          |
 | `ENABLE_EIGEN`     | Eigen for linear algebra                                    |                                                |
 | `ENABLE_FLTK`      | FLTK for the graphical interface                            | FLTK                                           |
-| `ENABLE_JLCXX`     | Julia wrapper, see [BilWrap.jl](../julia/bilwrap_overview.md) | CxxWrap / libcxxwrap-julia                   |
+| `ENABLE_JLCXX`     | Julia library, see [The Julia library](#the-julia-library) and [BilWrap.jl](../julia/bilwrap_overview.md) | Julia, CxxWrap; **incompatible with `ENABLE_SUPERLU`** |
 
 All options are `OFF` by default. The file `OPTIONS` lists the options enabled in a given build, for instance:
 
@@ -174,7 +202,7 @@ c++ -std=c++17 Elast.cpp -L/usr/local/lib -Wl,-rpath,/usr/local/lib \
     -lbil-<version>-Release -DBASENAME=" " -fpermissive
 ```
 
-The same command is used whatever the external libraries included in `libbil` (PETSc, MPI, SuperLU, BLAS, LAPACK, ...): they are dependencies of the library, and the headers do not call them from the code of the program. There is no need to add `-lpetsc_real`, `-lmpi`, ..., nor to use `mpic++`.
+The same command is used whatever the external libraries included in `libbil` (PETSc, MPI, SuperLU, BLAS, LAPACK, ...): they are dependencies of the library, and the headers do not call them from the code of the program. There is no need to add `-lpetsc_real`, `-lmpi`, ..., nor to use `mpic++`. The library to link is `libbil-<version>-<buildtype>.so` and not the Julia library `libbil-<version>-<buildtype>_julia.so`, which is used by BilWrap.jl only.
 
 | Flag                            | Role                                                                 |
 |---------------------------------|----------------------------------------------------------------------|

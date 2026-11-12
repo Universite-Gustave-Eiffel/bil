@@ -92,7 +92,7 @@ set_target_properties(${BIL_LIB_JULIA}
 
 #target_link_libraries(${BIL_LIB_JULIA} ${BIL_LIB} ${EXTERNAl_LIBS} ${BIL_EXTRALIBS})
 #target_link_libraries(${BIL_LIB_JULIA} ${BIL_LIB})
-target_link_libraries(${BIL_LIB_JULIA} ${BIL_LIB} ${JULIA_LIB})
+target_link_libraries(${BIL_LIB_JULIA} PRIVATE ${BIL_LIB} ${JULIA_LIB})
 
       
 add_custom_target(install_jlwrap
