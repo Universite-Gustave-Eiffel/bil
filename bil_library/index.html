@@ -1,0 +1,3027 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A modeling platform based on finite element/volume methods">
+      
+      
+        <meta name="author" content="P. Dangla (Université Gustave Eiffel)">
+      
+      
+      
+        <link rel="prev" href="../adding_a_model/">
+      
+      
+        <link rel="next" href="../Julia/bilwrap_overview/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>The Bil library - Bil - documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#using-the-bil-library-in-a-cc-program" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Bil - documentation" class="md-header__button md-logo" aria-label="Bil - documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Bil - documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              The Bil library
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Universite-Gustave-Eiffel/bil" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Universite-Gustave-Eiffel/bil
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Introduction
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../running_bil/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Running Bil
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../examples/" class="md-tabs__link">
+          
+  
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../code_architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../adding_a_model/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  How to Add a New Model
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  The Bil library
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../Julia/bilwrap_overview/" class="md-tabs__link">
+          
+  
+  
+  Julia interface (BilWrap.jl)
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Bil - documentation" class="md-nav__button md-logo" aria-label="Bil - documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Bil - documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Universite-Gustave-Eiffel/bil" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Universite-Gustave-Eiffel/bil
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../running_bil/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Running Bil
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flow
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Flow
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Flow/flow_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Flow/M1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Flow/M2_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Flow/Fick_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fick
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Flow/Richards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Richards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mechanics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mechanics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Mechanics/mechanics_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Mechanics/Elast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Mechanics/Elasd_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elasd
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Mechanics/Plast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Mechanics/BBM_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BBM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poromechanics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Poromechanics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Poromechanics/poromechanics_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Poromechanics/M7_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    M7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Poromechanics/Poroplast_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poroplast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Phase change
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase change
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PhaseChange/phasechange_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PhaseChange/Frostaco_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frostaco
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PhaseChange/Frostaco3d_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frostaco3d
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durability & Chemistry
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Durability & Chemistry
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Durability/durability_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Durability/Duracem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Duracem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Durability/Chloricem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chloricem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Durability/Sulfaco_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfaco
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Durability/Sulfuricem_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfuricem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Durability/Sulfaconew_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sulfaconew
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Coupled Transfers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Coupled Transfers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CoupledTransfers/coupledtransfers_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CoupledTransfers/DWS1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DWS1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CoupledTransfers/Yuan1_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Yuan1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CoupledTransfers/Shen_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CoupledTransfers/usoil_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    usoil
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8" id="__nav_3_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specialized
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Specialized
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Specialized/specialized_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Specialized/MechaMic_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MechaMic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../code_architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adding_a_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to Add a New Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Bil library
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Bil library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-built" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is built
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What is built">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-julia-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Julia library
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options-of-the-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options of the build
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#building-and-installing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building and installing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#structure-of-a-program" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structure of a program
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Structure of a program">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#passing-arrays-and-strings-in-c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passing arrays and strings in C++
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-with-given-equations-and-unknowns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model with given equations and unknowns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compiling-and-linking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compiling and linking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#defining-your-own-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Defining your own model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Defining your own model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-the-model-in-the-program" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using the model in the program
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#structure-of-a-model-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structure of a model file
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Julia interface (BilWrap.jl)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Julia interface (BilWrap.jl)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Julia/bilwrap_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Julia/bilwrap_reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Function reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Julia/bilwrap_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Julia examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-built" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is built
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What is built">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-julia-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Julia library
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options-of-the-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options of the build
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#building-and-installing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building and installing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#structure-of-a-program" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structure of a program
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Structure of a program">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#passing-arrays-and-strings-in-c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passing arrays and strings in C++
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-with-given-equations-and-unknowns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model with given equations and unknowns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compiling-and-linking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compiling and linking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#defining-your-own-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Defining your own model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Defining your own model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-the-model-in-the-program" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using the model in the program
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#structure-of-a-model-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structure of a model file
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="using-the-bil-library-in-a-cc-program">Using the Bil library in a C/C++ program</h1>
+<p>The command line <code>bil my_file</code> described in <a href="../running_bil.md">Running Bil</a> reads the problem from an input file. The same computation can be done from a program of your own, in which the dataset is defined by function calls and the problem is solved without reading any input file. This is made possible by the shared library built together with the executable.</p>
+<hr />
+<h2 id="what-is-built">What is built</h2>
+<p>The build produces two targets from the same sources:</p>
+<table>
+<thead>
+<tr>
+<th>Target</th>
+<th>File</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>library</td>
+<td><code>libbil-&lt;version&gt;-&lt;buildtype&gt;.so</code></td>
+<td>all the code of Bil (models, modules, solvers, ...)</td>
+</tr>
+<tr>
+<td>executable</td>
+<td><code>bil-&lt;version&gt;-&lt;buildtype&gt;.exe</code></td>
+<td>the command line program, linked to the library</td>
+</tr>
+</tbody>
+</table>
+<p>A third library, for Julia, can be built on request (see <a href="#the-julia-library">The Julia library</a>).</p>
+<p><code>&lt;version&gt;</code> is the version of Bil and <code>&lt;buildtype&gt;</code> is the CMake build type (<code>Release</code> by default, or <code>Debug</code>, ...). At installation, a symbolic link <code>bil</code> to the executable is created in the <code>bin</code> directory, which is the name used in the rest of this documentation.</p>
+<p>The installation also copies all the header files of Bil into the directory <code>&lt;prefix&gt;/include/bil</code>, together with a header <code>bil.h</code> which includes all of them. A program using the library only needs</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;bil/bil.h&gt;</span>
+</code></pre></div>
+<h3 id="the-julia-library">The Julia library</h3>
+<p>The Julia wrappers described in <a href="../julia/bilwrap_overview.md">BilWrap.jl</a> need a second shared library, built from the wrapper code <code>jlWrap.cpp</code>:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>libbil-&lt;version&gt;-&lt;buildtype&gt;_julia.so</code></td>
+<td>wrappers of the functions of Bil, loaded by Julia through CxxWrap</td>
+</tr>
+</tbody>
+</table>
+<p>This library contains <strong>only the wrappers</strong>, not the code of Bil. It depends on <code>libbil-&lt;version&gt;-&lt;buildtype&gt;.so</code> (which it finds through its <code>rpath</code>), on CxxWrap (<code>libcxxwrap_julia</code>) and on the Julia library. Both <code>libbil-&lt;version&gt;-&lt;buildtype&gt;.so</code> and <code>libbil-&lt;version&gt;-&lt;buildtype&gt;_julia.so</code> must therefore be installed for BilWrap.jl to work.</p>
+<div class="admonition warning">
+<p class="admonition-title">Not for C/C++ programs</p>
+<p>A C/C++ program must be linked to <code>libbil-&lt;version&gt;-&lt;buildtype&gt;.so</code>, as described in <a href="#compiling-and-linking">Compiling and linking</a>. Linking it to the Julia library instead fails with undefined references, since the functions of Bil are not in that file.</p>
+</div>
+<p>The Julia library is not part of the default build. It is enabled with the option <code>ENABLE_JLCXX</code>, which requires Julia and the Julia package CxxWrap (the location of CxxWrap is obtained by running <code>julia</code>, which must be in the <code>PATH</code>), and is built and installed with two additional targets:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_JLCXX=ON ..
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>make
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>make install
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>make jlwrap            # builds libbil-&lt;version&gt;-&lt;buildtype&gt;_julia.so
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>make install_jlwrap    # installs it
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">SuperLU</p>
+<p>The wrapper cannot be built with the SuperLU option: the configuration stops with an error because of conflicting types in SuperLU and CxxWrap. Keep <code>ENABLE_SUPERLU</code> set to <code>OFF</code>.</p>
+</div>
+<h3 id="options-of-the-build">Options of the build</h3>
+<p>The external libraries needed by the library are chosen at configuration time. They are linked into <code>libbil</code> itself, which records them as its own dependencies: a program using the library does not have to list them on its link line (see <a href="#compiling-and-linking">Compiling and linking</a>).</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Effect</th>
+<th>Requirements</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ENABLE_MPI</code></td>
+<td>MPI parallelization</td>
+<td>an MPI installation</td>
+</tr>
+<tr>
+<td><code>ENABLE_PETSC</code></td>
+<td>PETSc linear solvers</td>
+<td>PETSc library and <code>petsc.h</code>; <strong>needs <code>ENABLE_MPI</code></strong></td>
+</tr>
+<tr>
+<td><code>ENABLE_SUPERLU</code></td>
+<td>SuperLU solver</td>
+<td>SuperLU library and <code>slu_ddefs.h</code></td>
+</tr>
+<tr>
+<td><code>ENABLE_BLAS</code></td>
+<td>BLAS for linear algebra</td>
+<td>BLAS, and a Fortran compiler</td>
+</tr>
+<tr>
+<td><code>ENABLE_LAPACK</code></td>
+<td>LAPACK for linear algebra</td>
+<td>LAPACK, and a Fortran compiler</td>
+</tr>
+<tr>
+<td><code>ENABLE_OPENMP</code></td>
+<td>OpenMP parallelization</td>
+<td>OpenMP-capable compiler</td>
+</tr>
+<tr>
+<td><code>ENABLE_PTHREAD</code></td>
+<td>Pthreads parallelization</td>
+<td>Threads</td>
+</tr>
+<tr>
+<td><code>ENABLE_AUTODIFF</code></td>
+<td>automatic differentiation interface</td>
+<td><code>autodiff</code> and Eigen3</td>
+</tr>
+<tr>
+<td><code>ENABLE_EIGEN</code></td>
+<td>Eigen for linear algebra</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ENABLE_FLTK</code></td>
+<td>FLTK for the graphical interface</td>
+<td>FLTK</td>
+</tr>
+<tr>
+<td><code>ENABLE_JLCXX</code></td>
+<td>Julia library, see <a href="#the-julia-library">The Julia library</a> and <a href="../julia/bilwrap_overview.md">BilWrap.jl</a></td>
+<td>Julia, CxxWrap; <strong>incompatible with <code>ENABLE_SUPERLU</code></strong></td>
+</tr>
+</tbody>
+</table>
+<p>All options are <code>OFF</code> by default. The file <code>OPTIONS</code> lists the options enabled in a given build, for instance:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ENABLE_MPI      = ON
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ENABLE_PETSC    = ON
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ENABLE_JLCXX    = ON
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>ENABLE_OPENMP   = OFF
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>...
+</code></pre></div>
+<p>If PETSc is enabled while MPI is not, the configuration stops with an error.</p>
+<h3 id="building-and-installing">Building and installing</h3>
+<p>In-source builds are refused. Build in a separate directory:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>mkdir build
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>cd build
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_MPI=ON -DENABLE_PETSC=ON ..
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>make
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>make install
+</code></pre></div>
+<p>By default the library goes to <code>&lt;prefix&gt;/lib</code> (<code>/usr/local/lib</code>) and the headers to <code>&lt;prefix&gt;/include/bil</code>. Some systems use <code>lib64</code> instead of <code>lib</code>, as chosen by <code>GNUInstallDirs</code>; check the directory where <code>libbil-&lt;version&gt;-&lt;buildtype&gt;.so</code> has been installed. The library is installed with an <code>rpath</code>, so that the executable <code>bil</code> finds it without <code>ldconfig</code>.</p>
+<hr />
+<h2 id="structure-of-a-program">Structure of a program</h2>
+<p>A program defines the dataset exactly as an input file does, section by section (see <a href="../julia/bilwrap_overview.md#from-the-input-file-to-julia">From the input file to Julia</a> for the correspondence between the input file keywords and the sections). The sequence is the same as in the Julia interface:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;bil/bil.h&gt;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">{</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="cm">/* 1. dataset and its sections */</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="n">DataSet_t</span><span class="o">*</span><span class="w">     </span><span class="n">d</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="n">DataSet_New</span><span class="p">(</span><span class="s">"out"</span><span class="p">);</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="n">Geometry_t</span><span class="o">*</span><span class="w">    </span><span class="n">geom</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">DataSet_GetGeometry</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="n">Mesh_t</span><span class="o">*</span><span class="w">        </span><span class="n">mesh</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">DataSet_GetMesh</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="n">Fields_t</span><span class="o">*</span><span class="w">      </span><span class="n">fields</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">DataSet_GetFields</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="n">Functions_t</span><span class="o">*</span><span class="w">   </span><span class="n">functions</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">DataSet_GetFunctions</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="n">IConds_t</span><span class="o">*</span><span class="w">      </span><span class="n">iconds</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">DataSet_GetIConds</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="n">BConds_t</span><span class="o">*</span><span class="w">      </span><span class="n">bconds</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">DataSet_GetBConds</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span><span class="n">Loads_t</span><span class="o">*</span><span class="w">       </span><span class="n">loads</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="n">DataSet_GetLoads</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span><span class="n">Dates_t</span><span class="o">*</span><span class="w">       </span><span class="n">dates</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="n">DataSet_GetDates</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span><span class="n">Points_t</span><span class="o">*</span><span class="w">      </span><span class="n">points</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">DataSet_GetPoints</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">  </span><span class="n">ObVals_t</span><span class="o">*</span><span class="w">      </span><span class="n">obvals</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">DataSet_GetObVals</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">  </span><span class="n">IterProcess_t</span><span class="o">*</span><span class="w"> </span><span class="n">iterprocess</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DataSet_GetIterProcess</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span><span class="n">TimeStep_t</span><span class="o">*</span><span class="w">    </span><span class="n">timestep</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">DataSet_GetTimeStep</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span><span class="n">Materials_t</span><span class="o">*</span><span class="w">   </span><span class="n">materials</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">DataSet_GetMaterials</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">  </span><span class="n">Models_t</span><span class="o">*</span><span class="w">      </span><span class="n">models</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">DataSet_GetModels</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">  </span><span class="n">Module_t</span><span class="o">*</span><span class="w">      </span><span class="n">modul</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="n">DataSet_GetModule</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">  </span><span class="n">Options_t</span><span class="o">*</span><span class="w">     </span><span class="n">opt</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="n">DataSet_GetOptions</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">  </span><span class="cm">/* (Units_t* units = DataSet_GetUnits(d) if needed) */</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">  </span><span class="cm">/* 2. session */</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="w">  </span><span class="n">Session_Open</span><span class="p">();</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">  </span><span class="cm">/* 3. fill the sections */</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">  </span><span class="n">Geometry_Set</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="s">"axis"</span><span class="p">);</span>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="w">  </span><span class="n">Mesh_Set</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span><span class="s">"cylinder.msh"</span><span class="p">);</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="w">  </span><span class="cm">/* ... fields, functions, conditions, loads, points, dates, ... */</span>
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="w">  </span><span class="cm">/* 4. model and materials */</span>
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="w">  </span><span class="n">Model_t</span><span class="o">*</span><span class="w"> </span><span class="n">mod1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Models_EmplaceBack</span><span class="p">(</span><span class="n">models</span><span class="p">,</span><span class="s">"Elast"</span><span class="p">);</span>
+<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a><span class="w">  </span><span class="n">Material_t</span><span class="o">*</span><span class="w"> </span><span class="n">mat1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Materials_EmplaceBack</span><span class="p">(</span><span class="n">materials</span><span class="p">,</span><span class="n">mod1</span><span class="p">);</span>
+<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a><span class="w">  </span><span class="n">Material_Set</span><span class="p">(</span><span class="n">mat1</span><span class="p">,</span><span class="s">"young"</span><span class="p">,</span><span class="mf">10.</span><span class="n">e9</span><span class="p">);</span>
+<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a><span class="w">  </span><span class="n">Material_Set</span><span class="p">(</span><span class="n">mat1</span><span class="p">,</span><span class="s">"poisson"</span><span class="p">,</span><span class="mf">0.26</span><span class="p">);</span>
+<a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a><span class="w">  </span><span class="n">Material_Finalize</span><span class="p">(</span><span class="n">mat1</span><span class="p">);</span>
+<a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a>
+<a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a><span class="w">  </span><span class="cm">/* 5. finalize the dataset, and solve */</span>
+<a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a><span class="w">  </span><span class="n">DataSet_Finalize</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+<a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a><span class="w">  </span><span class="n">DataSet_PrintData</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="s">"all"</span><span class="p">);</span>
+<a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a><span class="w">  </span><span class="n">Module_ComputeProblem</span><span class="p">(</span><span class="n">modul</span><span class="p">,</span><span class="n">d</span><span class="p">);</span>
+<a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a>
+<a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a><span class="w">  </span><span class="cm">/* 6. post-processing files, and clean up */</span>
+<a id="__codelineno-4-46" name="__codelineno-4-46" href="#__codelineno-4-46"></a><span class="w">  </span><span class="n">PosFilesForGMSH_t</span><span class="o">*</span><span class="w"> </span><span class="n">pf4gmsh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PosFilesForGMSH_Create</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+<a id="__codelineno-4-47" name="__codelineno-4-47" href="#__codelineno-4-47"></a><span class="w">  </span><span class="n">PosFilesForGMSH_ParsedFileFormat</span><span class="p">(</span><span class="n">pf4gmsh</span><span class="p">);</span>
+<a id="__codelineno-4-48" name="__codelineno-4-48" href="#__codelineno-4-48"></a>
+<a id="__codelineno-4-49" name="__codelineno-4-49" href="#__codelineno-4-49"></a><span class="w">  </span><span class="n">DataSet_Delete</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+<a id="__codelineno-4-50" name="__codelineno-4-50" href="#__codelineno-4-50"></a><span class="w">  </span><span class="n">Mry_Free</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+<a id="__codelineno-4-51" name="__codelineno-4-51" href="#__codelineno-4-51"></a><span class="p">}</span>
+</code></pre></div>
+<p>The functions are those described in the <a href="../julia/bilwrap_reference.md">function reference</a>, which was written for Julia but follows the C++ names and arguments one to one (<code>Fields_EmplaceBack(fields, ...)</code>, <code>Material_Set(mat, ...)</code>, ...). The meaning of every argument is the same; only the way arrays are passed differs (see below).</p>
+<p>The solver and the other run options of the command line can be set with <code>Options_Set</code>, and the resolution module can be chosen with <code>Module_Set</code>; both are shown, commented, in the examples:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">//Options_Set(opt,"-solver petscksp -ksp_type cg -pc_type sor");</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1">//Module_Set(modul,"Monolithic");    // or "SNIA"</span>
+</code></pre></div>
+<h3 id="passing-arrays-and-strings-in-c">Passing arrays and strings in C++</h3>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>C++ type and example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gradient and point of an affine field</td>
+<td><code>double g[3] = {0,-9810.,0};</code> then <code>Fields_EmplaceBack(fields,"affine",0.,g,x);</code></td>
+</tr>
+<tr>
+<td>times and values of a function</td>
+<td><code>std::vector&lt;double&gt;</code>: <code>Functions_EmplaceBack(functions,"piecewiseaffine",t,f);</code></td>
+</tr>
+<tr>
+<td>output dates</td>
+<td>initializer list: <code>Dates_Set(dates,{0,1,2});</code></td>
+</tr>
+<tr>
+<td>output point</td>
+<td>initializer list: <code>Points_EmplaceBack(points,{0.15,0.15,0},"600");</code></td>
+</tr>
+<tr>
+<td>regions, unknowns, properties</td>
+<td>C strings (<code>"80"</code>, <code>"u_2"</code>, <code>"young"</code>)</td>
+</tr>
+<tr>
+<td>field and function indices</td>
+<td>integers, numbered from 1; <code>0</code> means none</td>
+</tr>
+</tbody>
+</table>
+<p>Two points deserve attention.</p>
+<ul>
+<li><code>IConds_EmplaceBack</code> has two overloads with four arguments, whose third argument is either an integer or a string. A literal <code>0</code> is then ambiguous, and must be written <code>(size_t) 0</code>, as in <code>IConds_EmplaceBack(iconds,"2","psi",(size_t) 0,0);</code> in <code>Duracem.cpp</code>.</li>
+<li>At the end of the program, <code>DataSet_Delete(d)</code> is followed by <code>Mry_Free(d)</code> in all the examples.</li>
+</ul>
+<h3 id="model-with-given-equations-and-unknowns">Model with given equations and unknowns</h3>
+<p>In <code>Duracem.cpp</code>, the model is declared with the names of the equations and of the unknowns to be used, passed as two vectors of strings:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">equ</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">"carbon"</span><span class="p">,</span><span class="s">"silicon"</span><span class="p">};</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">unk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">"logc_co2"</span><span class="p">,</span><span class="s">"z_si"</span><span class="p">};</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="n">mod1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Models_EmplaceBack</span><span class="p">(</span><span class="n">models</span><span class="p">,</span><span class="s">"Duracem"</span><span class="p">,</span><span class="n">equ</span><span class="p">,</span><span class="n">unk</span><span class="p">);</span>
+</code></pre></div>
+<p>For the models of the other examples, the name alone is enough: <code>Models_EmplaceBack(models,"Elast")</code>.</p>
+<hr />
+<h2 id="compiling-and-linking">Compiling and linking</h2>
+<p>The program is compiled with a C++17 compiler, and linked to the library:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>c++ -std=c++17 Elast.cpp -L/usr/local/lib -Wl,-rpath,/usr/local/lib \
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    -lbil-&lt;version&gt;-Release -DBASENAME=" " -fpermissive
+</code></pre></div>
+<p>The same command is used whatever the external libraries included in <code>libbil</code> (PETSc, MPI, SuperLU, BLAS, LAPACK, ...): they are dependencies of the library, and the headers do not call them from the code of the program. There is no need to add <code>-lpetsc_real</code>, <code>-lmpi</code>, ..., nor to use <code>mpic++</code>. The library to link is <code>libbil-&lt;version&gt;-&lt;buildtype&gt;.so</code> and not the Julia library <code>libbil-&lt;version&gt;-&lt;buildtype&gt;_julia.so</code>, which is used by BilWrap.jl only.</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-std=c++17</code></td>
+<td>the library is built with C++17, and so are the examples</td>
+</tr>
+<tr>
+<td><code>-L&lt;dir&gt;</code>, <code>-l bil-&lt;version&gt;-&lt;buildtype&gt;</code></td>
+<td>location and name of the library (without <code>lib</code> and <code>.so</code>)</td>
+</tr>
+<tr>
+<td><code>-Wl,-rpath,&lt;dir&gt;</code></td>
+<td>lets the program find the library at run time</td>
+</tr>
+<tr>
+<td><code>-DBASENAME=...</code></td>
+<td>name used by the headers for the namespace of the model code; <code>" "</code> when no external model is included, see <a href="#defining-your-own-model">Defining your own model</a></td>
+</tr>
+<tr>
+<td><code>-fpermissive</code></td>
+<td>needed by g++ for some constructs used in the examples (for instance the compound literals <code>(double[]){0.,0.,0.}</code> of <code>Duracem.cpp</code>)</td>
+</tr>
+<tr>
+<td><code>-g</code></td>
+<td>debugging information (for the <code>Debug</code> build)</td>
+</tr>
+</tbody>
+</table>
+<p>For a <code>Debug</code> build, use the library <code>-lbil-&lt;version&gt;-Debug</code> and add <code>-g</code>.</p>
+<p>The build type in <code>-lbil-&lt;version&gt;-&lt;buildtype&gt;</code> must be one of those installed. The program is run like any executable, from the directory containing the files it reads (here <code>cylinder.msh</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>./a.out
+</code></pre></div>
+<p>and the output files are those described in <a href="../running_bil.md#output-files">Running Bil</a>.</p>
+<hr />
+<h2 id="examples">Examples</h2>
+<p>Three examples reproduce the problems of the reference base, and each has a counterpart in Julia (see <a href="../julia/bilwrap_examples.md">Julia examples</a>, which describes the problem in detail):</p>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>C++ file</th>
+<th>Julia file</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Elast</td>
+<td><code>base/Elast/Elast.cpp</code></td>
+<td><code>Elast.jl</code></td>
+</tr>
+<tr>
+<td>Duracem</td>
+<td><code>base/Duracem/Duracem.cpp</code></td>
+<td><code>Duracem.jl</code></td>
+</tr>
+<tr>
+<td>Richards-2d</td>
+<td><code>base/Richards-2d/Richards-2d.cpp</code></td>
+<td><code>Richards-2d.jl</code></td>
+</tr>
+</tbody>
+</table>
+<p>Their compilation commands are given in the first lines of each file. <code>Duracem.cpp</code> defines no output point and no load, and the 1D mesh is given inline; <code>Elast.cpp</code> and <code>Richards-2d.cpp</code> also write the inverse permutation of the nodes (<code>Mesh_WriteInversePermutation(mesh,"out","hsl")</code>) and the Gmsh post-processing files.</p>
+<hr />
+<h2 id="defining-your-own-model">Defining your own model</h2>
+<p>A model is the C++ code that defines the equations of a problem. Those of the library (<code>Elast</code>, <code>Richards</code>, <code>Duracem</code>, ...) are listed by <code>bil -model</code>. With the library, a model can also be written <strong>outside of the library</strong>, in the source file of the user program, and used in the dataset like a built-in one. The example <code>base/Richards-2d/RichardsIncluded.cpp</code> solves the problem of <code>Richards-2d.cpp</code> with the model <code>MyRichards</code> of <code>MyRichards.cpp</code>.</p>
+<h3 id="using-the-model-in-the-program">Using the model in the program</h3>
+<p>The file of the model is included after the header of Bil, an instance of the model is created, and it is declared in the dataset with <code>Models_EmplaceBack(models, model)</code>, which returns a <code>Model_t*</code> to be used for the materials, exactly as for a built-in model:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;bil/bil.h&gt;</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">"MyRichards.cpp"</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="p">{</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span><span class="cm">/* ... same dataset as in Richards-2d.cpp ... */</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span><span class="n">MyRichards</span><span class="o">::</span><span class="n">MyRichards</span><span class="w"> </span><span class="n">mod0</span><span class="p">;</span><span class="w">      </span><span class="c1">// the model</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">  </span><span class="n">Model_t</span><span class="o">*</span><span class="w"> </span><span class="n">mod1</span><span class="p">;</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">  </span><span class="n">Session_Open</span><span class="p">();</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">  </span><span class="cm">/* ... */</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">  </span><span class="n">mod1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Models_EmplaceBack</span><span class="p">(</span><span class="n">models</span><span class="p">,</span><span class="n">mod0</span><span class="p">);</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="w">  </span><span class="p">{</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="w">    </span><span class="n">Material_t</span><span class="o">*</span><span class="w"> </span><span class="n">mat1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Materials_EmplaceBack</span><span class="p">(</span><span class="n">materials</span><span class="p">,</span><span class="n">mod1</span><span class="p">);</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="w">    </span><span class="n">Material_Set</span><span class="p">(</span><span class="n">mat1</span><span class="p">,</span><span class="s">"Gravity"</span><span class="p">,</span><span class="mf">-9.81</span><span class="p">);</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="w">    </span><span class="n">Material_Set</span><span class="p">(</span><span class="n">mat1</span><span class="p">,</span><span class="s">"Porosity"</span><span class="p">,</span><span class="mf">0.38</span><span class="p">);</span>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="w">    </span><span class="cm">/* ... the properties read by MyRichards ... */</span>
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a><span class="w">    </span><span class="n">Material_Set</span><span class="p">(</span><span class="n">mat1</span><span class="p">,</span><span class="s">"Curves"</span><span class="p">,</span><span class="s">"billes"</span><span class="p">);</span>
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a><span class="w">    </span><span class="n">Material_Finalize</span><span class="p">(</span><span class="n">mat1</span><span class="p">);</span>
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a><span class="w">  </span><span class="cm">/* ... */</span>
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a><span class="p">}</span>
+</code></pre></div>
+<p>The code of the model is put in a namespace whose name is given by the macro <code>BaseName()</code>, which expands to the value of <code>BASENAME</code>. For this reason the program is compiled with the name of the model file, here <code>MyRichards</code> (this is the namespace in <code>MyRichards::MyRichards</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>c++ -std=c++17 RichardsIncluded.cpp -L/usr/local/lib -Wl,-rpath,/usr/local/lib \
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    -lbil-&lt;version&gt;-Debug -DBASENAME="MyRichards" -fpermissive -g
+</code></pre></div>
+<h3 id="structure-of-a-model-file">Structure of a model file</h3>
+<p><code>MyRichards.cpp</code> is organized in the following parts, which are the same for any model.</p>
+<p><strong>1. Constants.</strong> Title, authors, number of equations and indices of the equations and of the unknowns:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="cp">#define TITLE   "Richards Equation (3D)"</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="cp">#define AUTHORS "Dangla"</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="cp">#define NEQ     (1)</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="cp">#define E_LIQ   (0)      </span><span class="c1">// equation index</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="cp">#define U_LIQ   (0)      </span><span class="c1">// unknown index (generic)</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="cp">#define U_P_L   U_LIQ    </span><span class="c1">// unknown index</span>
+</code></pre></div>
+<p><strong>2. Values at the integration points.</strong> Four structures, templates on the numerical type <code>T</code>, are grouped by <code>CustomValues_t</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">namespace</span><span class="w"> </span><span class="nn">BaseName</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">ImplicitValues_t</span><span class="w"> </span><span class="p">{</span><span class="w">   </span><span class="c1">// evaluated at each iteration</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="n">T</span><span class="w"> </span><span class="n">Pressure_liquid</span><span class="p">;</span><span class="w">  </span><span class="n">T</span><span class="w"> </span><span class="n">GradPressure_liquid</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span><span class="n">T</span><span class="w"> </span><span class="n">Mass_liquid</span><span class="p">;</span><span class="w">      </span><span class="n">T</span><span class="w"> </span><span class="n">MassFlow_liquid</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="p">};</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">ExplicitValues_t</span><span class="w"> </span><span class="p">{</span><span class="w">   </span><span class="c1">// evaluated at the previous time</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span><span class="n">T</span><span class="w"> </span><span class="n">Permeability_liquid</span><span class="p">;</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="p">};</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">ConstantValues_t</span><span class="w"> </span><span class="p">{};</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">OtherValues_t</span><span class="w"> </span><span class="p">{</span><span class="w">      </span><span class="c1">// other terms</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">  </span><span class="n">T</span><span class="w"> </span><span class="n">SaturationDegree_liquid</span><span class="p">;</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="p">};</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="o">&gt;</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="k">using</span><span class="w"> </span><span class="n">Values_t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CustomValues_t</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">ImplicitValues_t</span><span class="p">,</span><span class="n">ExplicitValues_t</span><span class="p">,</span><span class="n">ConstantValues_t</span><span class="p">,</span><span class="n">OtherValues_t</span><span class="o">&gt;</span><span class="p">;</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="p">}</span>
+</code></pre></div>
+<p>The implicit values are the primary variables, their gradients and the terms of the balance equations (mass and mass flow of the liquid). The explicit values are the transfer coefficients: the flux is computed with the permeability of the previous time (<code>val_n.Permeability_liquid</code>), and the permeability of the current time is stored for the next one.</p>
+<p><strong>3. Parameters of the material.</strong> The structure <code>Parameters_t</code> contains the material properties, all of type <code>double</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">struct</span><span class="w"> </span><span class="nc">Parameters_t</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">Porosity</span><span class="p">;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">IntrinsicPermeability</span><span class="p">;</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">ReferenceGasPressure</span><span class="p">;</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">Gravity</span><span class="p">;</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">LiquidMassDensity</span><span class="p">;</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">LiquidViscosity</span><span class="p">;</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">MacroGradient</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">MacroFunctionIndex</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="p">};</span>
+</code></pre></div>
+<p>The function <code>pm(const char* s)</code> gives the index of a property in this structure from its name. The names are those used in the calls <code>Material_Set(mat, "Porosity", 0.38)</code> of the program (and in the input file of the executable). Here <code>MacroGradient</code> and <code>MacroFunctionIndex</code> can be given with a suffix, as in <code>MacroGradient_2</code>, for the problems with periodicities.</p>
+<p><strong>4. The material point method.</strong> The structure <code>MPM_t</code>, derived from <code>MaterialPointMethod_t&lt;Values_t&gt;</code>, gives the constitutive behaviour at an integration point:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SetInputs</code></td>
+<td>computes the pressure and its gradient from the nodal unknowns (and adds the macroscopic gradient for periodic geometries)</td>
+</tr>
+<tr>
+<td><code>Integrate</code></td>
+<td>computes the liquid mass, the fluxes and the permeability from the pressure, with the saturation and relative permeability curves of the material</td>
+</tr>
+<tr>
+<td><code>Initialize</code></td>
+<td>initializes the explicit values (permeability) at the initial time</td>
+</tr>
+<tr>
+<td><code>SetTangentMatrix</code></td>
+<td>derivative of the liquid mass with respect to the unknown</td>
+</tr>
+<tr>
+<td><code>SetTransferMatrix</code></td>
+<td>transfer coefficients for the liquid mass flux</td>
+</tr>
+<tr>
+<td><code>SetIndexOfPrimaryVariables</code></td>
+<td>position of the primary variable in the values</td>
+</tr>
+<tr>
+<td><code>SetIncrementOfPrimaryVariables</code></td>
+<td>increment of the primary variable, here 1% of the objective variation</td>
+</tr>
+</tbody>
+</table>
+<p><code>Integrate</code> is a template on the numerical type. When the library is built with <code>ENABLE_AUTODIFF</code>, it is also instantiated for the type <code>real</code> of the automatic differentiation library.</p>
+<p>The saturation and the relative permeability are given by the two curves of the material (<code>Element_GetCurve(el)</code> and the following one), which are those defined with <code>Material_Set(mat, "Curves", ...)</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="cp">#define SATURATION_CURVE       (Element_GetCurve(el))</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="cp">#define RELATIVEPERM_CURVE     (Element_GetCurve(el) + 1)</span>
+</code></pre></div>
+<p><strong>5. The model.</strong> The model is a structure derived from <code>UserModel_t&lt;MPM_t&gt;</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">namespace</span><span class="w"> </span><span class="nn">BaseName</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="k">struct</span><span class="w"> </span><span class="nc">MyRichards</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">UserModel_t</span><span class="o">&lt;</span><span class="n">MPM_t</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="k">private</span><span class="o">:</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span><span class="n">MPM_t</span><span class="o">&amp;</span><span class="w"> </span><span class="n">mpm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GetInstanceOfMaterialPointMethod</span><span class="p">();</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">  </span><span class="k">public</span><span class="o">:</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">SetModelProperties</span><span class="p">();</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="nf">ReadMatProp</span><span class="p">(</span><span class="n">Material_t</span><span class="o">*</span><span class="w"> </span><span class="n">mat</span><span class="p">,</span><span class="n">DataFile_t</span><span class="o">*</span><span class="w"> </span><span class="n">datafile</span><span class="p">);</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="nf">ComputeMatrix</span><span class="p">(</span><span class="n">Element_t</span><span class="o">*</span><span class="w"> </span><span class="n">el</span><span class="p">,</span><span class="kt">double</span><span class="w"> </span><span class="n">t</span><span class="p">,</span><span class="kt">double</span><span class="w"> </span><span class="n">dt</span><span class="p">,</span><span class="kt">double</span><span class="o">*</span><span class="w"> </span><span class="n">k</span><span class="p">);</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="nf">ComputeResidu</span><span class="p">(</span><span class="n">Element_t</span><span class="o">*</span><span class="w"> </span><span class="n">el</span><span class="p">,</span><span class="kt">double</span><span class="w"> </span><span class="n">t</span><span class="p">,</span><span class="kt">double</span><span class="w"> </span><span class="n">dt</span><span class="p">,</span><span class="kt">double</span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="p">);</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="nf">ComputeOutputs</span><span class="p">(</span><span class="n">Element_t</span><span class="o">*</span><span class="w"> </span><span class="n">el</span><span class="p">,</span><span class="kt">double</span><span class="w"> </span><span class="n">t</span><span class="p">,</span><span class="kt">double</span><span class="o">*</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="n">Result_t</span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="p">);</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="p">};</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="p">}</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SetModelProperties</code></td>
+<td>name of the model (<code>GetCodeNameOfModel</code>, here <code>"MyRichards"</code>), title, authors, number of equations (<code>SetNbOfEquations</code>), names of the equations and of the unknowns, the function <code>pm</code> (<code>SetComputePropertyIndex</code>), the discretization method (here <code>UseFEM()</code>)</td>
+</tr>
+<tr>
+<td><code>ReadMatProp</code></td>
+<td>sets the properties of a material to 0, reads them with <code>Material_ScanProperties(mat,datafile,pm)</code> and returns the number of properties</td>
+</tr>
+<tr>
+<td><code>ComputeMatrix</code></td>
+<td>element matrix; here <code>mpm.ComputeMassConservationMatrixByFEM(el,t,dt,k)</code></td>
+</tr>
+<tr>
+<td><code>ComputeResidu</code></td>
+<td>element residual; here <code>mpm.ComputeMassConservationResiduByFEM(el,t,dt,r,E_LIQ,imass,iflow)</code> for the conservation of the liquid mass</td>
+</tr>
+<tr>
+<td><code>ComputeOutputs</code></td>
+<td>the quantities written in the output files (here <code>pressure</code>, <code>flow</code> and <code>saturation</code>), stored with <code>Result_Store</code></td>
+</tr>
+</tbody>
+</table>
+<p>The name given by <code>GetCodeNameOfModel</code> (<code>"MyRichards"</code>) is the name of the model for Bil; it is different from the built-in <code>"Richards"</code>. Since the model is not part of the library, it is not listed by <code>bil -model</code>; it exists only in the programs which include it.</p>
+<div class="admonition note">
+<p class="admonition-title">Julia</p>
+<p>The models of the library can be used from <a href="../julia/bilwrap_overview.md">BilWrap.jl</a>, but a model written outside the library is C++ code, which must be compiled in a program like <code>RichardsIncluded.cpp</code>.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../adding_a_model/" class="md-footer__link md-footer__link--prev" aria-label="Previous: How to Add a New Model">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                How to Add a New Model
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../Julia/bilwrap_overview/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Overview
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "navigation.footer", "search.highlight", "search.suggest", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
